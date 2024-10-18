@@ -420,6 +420,6 @@ end
 
 # files = ["../TestV1/50/R101_50.txt","../TestV1/50/RC101_50.txt"]
 # print(pwd())
-filePath = "Data/Demo/C101-30.txt"
-model = runModel(filePath, 600,100,10)
+filePath = "Data/Demo/C101-20.txt"
+model = runModel(filePath, 600,200,10)
 
