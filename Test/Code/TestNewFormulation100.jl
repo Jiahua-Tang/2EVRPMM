@@ -4,7 +4,6 @@ set_attribute(model, "CPX_PARAM_EPINT", 1e-8)
 set_optimizer_attribute(model, "CPX_PARAM_MIPSEARCH", 1)
 using Printf
 using Plots
-using ColorTypes
 using Random
 
 x_coor = []
@@ -419,7 +418,7 @@ end
 
 
 # files = ["../TestV1/50/R101_50.txt","../TestV1/50/RC101_50.txt"]
-# print(pwd())
-filePath = "Data/Demo/C101-20.txt"
-model = runModel(filePath, 600,200,10)
+print(pwd())
+filePath = "../../Data/Demo/100/C101.txt"
+model = runModel(filePath, 600,200,20)
 
