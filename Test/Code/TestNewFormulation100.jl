@@ -140,7 +140,7 @@ function displayMap()
     plot!() 
 end
 
-function generateParking(x_coor_customers,y_coor_customers)    
+function randomGenerateParking(x_coor_customers,y_coor_customers)    
     # Define the boundaries of the customer area
     x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
     y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
@@ -171,6 +171,29 @@ function generateParking(x_coor_customers,y_coor_customers)
     return x_coor_parkings, y_coor_parkings
 end
 
+function fixedGenerateParking(x_coor_customers,y_coor_customers)    
+    # Define the boundaries of the customer area
+    x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
+    y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
+
+    # Define the number of divisions (4x4 grid)
+    num_divisions = 5
+    x_step = (x_max - x_min) / num_divisions
+    y_step = (y_max - y_min) / num_divisions
+
+    # Initialize empty arrays to store the parking coordinates
+    x_coor_parkings = []
+    y_coor_parkings = []
+
+    for i in 1:num_divisions-1
+        push!(x_coor_parkings, x_min + i * x_step)
+        push!(y_coor_parkings, y_min + i * y_step)
+    end
+
+    return x_coor_parkings, y_coor_parkings
+end
+
+
 function backTracking(z, colorR, x)
     for k in 2:1+np+nc
         if round(value(z[x,k])) == 1
@@ -190,7 +213,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     global nc 
     nc = length(x_coor_customers)
     # Coordinate (Parking node)
-    x_coor_parkings, y_coor_parkings = generateParking(x_coor_customers, y_coor_customers)
+    x_coor_parkings, y_coor_parkings = fixedGenerateParking(x_coor_customers, y_coor_customers)
     # Number of parking places
     global np 
     np = length(x_coor_parkings)
@@ -208,8 +231,9 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     # Q2 = 2000 #Capacity of SEV
     M = 10000
     global PI 
-    PI = vcat(ones(Int,10),zeros(Int,6))#Initial parking indicator
-    shuffle!(PI)
+    # PI = vcat(ones(Int,10),zeros(Int,6))#Initial parking indicator
+    # shuffle!(PI)
+    PI = [0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1]
     eta1 = 2
     eta2 = 1
 
@@ -243,9 +267,9 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     for i in 1:length(x_coor)
         annotate!(x_coor[i], y_coor[i]+0.3, text(node_labels[i], :center, 4))
     end 
-    plot!()
+ 
     savefig(replace(filePath, ".txt" => "-data.png"))
-
+    plot!()
      #=========================================================================#
      model=Model(CPLEX.Optimizer)
 
@@ -320,7 +344,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
      @constraint(model, [p in P], sum(z[p,j] for j in A2) <= length(V2))
      #16
      #Each SEV departs from parking node at most once
-     @constraint(model, [p in P], sum(z[p,j] for j in A2) <= 1)
+    #  @constraint(model, [p in P], sum(z[p,j] for j in A2) <= 1)
      
      #17
      #Flow conservation at customer node for SEV
@@ -387,10 +411,14 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     time_labels = [string("t= ", round(value(t[i]))) for i in A2]
     node_labels = [string("N.", i) for i in N]
     for i in N
-        annotate!(x_coor[i], y_coor[i]+0.3, text(node_labels[i], :center, 4))
-        if i in A2
-            annotate!(x_coor[i]+1.5, y_coor[i]-0.3, text(time_labels[i-1], :center, 4))
-        end
+        # annotate!(x_coor[i], y_coor[i]+0.3, text(node_labels[i], :center, 4))
+        # if i in A2
+        #     annotate!(x_coor[i]+1.5, y_coor[i]-0.3, text(time_labels[i-1], :center, 4))
+        # end
+        for i in C
+            annotate!(x_coor[i]-0.3, y_coor[i]-0.3, text(demand_labels[i-1-np], :center, 6)) 
+        end 
+        savefig(replace(filePath, ".txt" => "-result.png"))
     end     
 
     # Add FEV arcs between the locations if they are traversed
@@ -410,9 +438,9 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
         colorR = RGBA(rand(),rand(),rand(),1)
         backTracking(z, colorR, i)
     end
-# end
-    
-    savefig(replace(filePath, ".txt" => "-result.png"))
+    # end
+
+
     plot!()
 end
 

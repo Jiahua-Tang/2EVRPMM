@@ -47,6 +47,17 @@ struct Customer
     service_time::Int
 end
 
+function readArgument(value)
+    try
+        parsedInt = parse(Int, value)
+        # println("The argument is as interger as string: ", value)
+        return parsedInt
+    catch e
+        # println("The argument is a true string: ",  value)
+        return 0
+    end
+end
+
 function readFile(file_path)
     # Read the file lines
     lines = open(file_path, "r") do file
@@ -140,7 +151,7 @@ function displayMap()
     plot!() 
 end
 
-function generateParking(x_coor_customers,y_coor_customers)    
+function randomGenerateParking(x_coor_customers,y_coor_customers)    
     # Define the boundaries of the customer area
     x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
     y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
@@ -171,6 +182,30 @@ function generateParking(x_coor_customers,y_coor_customers)
     return x_coor_parkings, y_coor_parkings
 end
 
+function fixedGenerateParking(x_coor_customers,y_coor_customers)    
+    # Define the boundaries of the customer area
+    x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
+    y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
+
+    # Define the number of divisions (4x4 grid)
+    num_divisions = 5
+    x_step = (x_max - x_min) / num_divisions
+    y_step = (y_max - y_min) / num_divisions
+
+    # Initialize empty arrays to store the parking coordinates
+    x_coor_parkings = []
+    y_coor_parkings = []
+
+    for j in 1:num_divisions-1
+        for i in 1:num_divisions-1
+            push!(x_coor_parkings, x_min + i * x_step)
+            push!(y_coor_parkings, y_min + j * y_step)
+        end
+    end
+
+    return x_coor_parkings, y_coor_parkings
+end
+
 function backTracking(z, colorR, x)
     for k in 2:1+np+nc
         if round(value(z[x,k])) == 1
@@ -190,7 +225,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     global nc 
     nc = length(x_coor_customers)
     # Coordinate (Parking node)
-    x_coor_parkings, y_coor_parkings = generateParking(x_coor_customers, y_coor_customers)
+    x_coor_parkings, y_coor_parkings = fixedGenerateParking(x_coor_customers, y_coor_customers)
     # Number of parking places
     global np 
     np = length(x_coor_parkings)
@@ -208,8 +243,9 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     # Q2 = 2000 #Capacity of SEV
     M = 10000
     global PI 
-    PI = vcat(ones(Int,10),zeros(Int,6))#Initial parking indicator
-    shuffle!(PI)
+    # PI = vcat(ones(Int,10),zeros(Int,6))#Initial parking indicator
+    # shuffle!(PI)ß
+    PI = [0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1]
     eta1 = 2
     eta2 = 1
 
@@ -243,9 +279,9 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     for i in 1:length(x_coor)
         annotate!(x_coor[i], y_coor[i]+0.3, text(node_labels[i], :center, 4))
     end 
-    plot!()
+ 
     savefig(replace(filePath, ".txt" => "-data.png"))
-
+    # plot!()
      #=========================================================================#
      model=Model(CPLEX.Optimizer)
 
@@ -320,7 +356,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
      @constraint(model, [p in P], sum(z[p,j] for j in A2) <= length(V2))
      #16
      #Each SEV departs from parking node at most once
-     @constraint(model, [p in P], sum(z[p,j] for j in A2) <= 1)
+    #  @constraint(model, [p in P], sum(z[p,j] for j in A2) <= 1)
      
      #17
      #Flow conservation at customer node for SEV
@@ -366,7 +402,6 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
         return
     end
 
-    
 #    # Open the file in write mode
 #     open("/Users/lenovo1/Library/CloudStorage/OneDrive-UniversitéParis-Saclay/Julia/TestV1/result.txt", "a") do file
 #         # Write some content to the file
@@ -377,7 +412,6 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
 #         println(file, "Total distance traveled: ", objective_value(model))
 #         println("=======================================")
 #         println(" ")
-        
 #     end
  
     displayMap()
@@ -387,38 +421,74 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     time_labels = [string("t= ", round(value(t[i]))) for i in A2]
     node_labels = [string("N.", i) for i in N]
     for i in N
-        annotate!(x_coor[i], y_coor[i]+0.3, text(node_labels[i], :center, 4))
-        if i in A2
-            annotate!(x_coor[i]+1.5, y_coor[i]-0.3, text(time_labels[i-1], :center, 4))
+        # Add node number lable
+        # annotate!(x_coor[i], y_coor[i]+0.3, text(node_labels[i], :center, 4))
+        
+        if i in A1
+            # Add FEV arcs between the locations if they are traversed
+            for j in A1         
+                if round(value(y[i, j])) == 1
+                    plot!([x_coor[i], x_coor[j]], [y_coor[i], y_coor[j]],line=:arrow,color = light_green, linealpha=4, lw=4)
+                end
+                if round(value(x[i, j])) == 1
+                    plot!([x_coor[i], x_coor[j]], [y_coor[i], y_coor[j]],line=:arrow,color = :black,linestyle=:dash)
+                end
+            end
+            # Add SEV arcs between the locations if they are traverse
+            if i in P
+                colorR = RGBA(rand(),rand(),rand(),1)
+                backTracking(z, colorR, i)
+            end
         end
+        
+        # if i in A2
+        #     # Add arriving time lable
+        #     annotate!(x_coor[i]+1.5, y_coor[i]-0.3, text(time_labels[i-1], :center, 4))
+            
+        #     if i in C
+        #         # Add customer demand lable
+        #         annotate!(x_coor[i]-0.3, y_coor[i]-0.3, text(demand_labels[i-1-np], :center, 6)) 
+        #     end 
+        # end
+        
     end     
 
-    # Add FEV arcs between the locations if they are traversed
-    for i in A1
-        for j in A1         
-            if round(value(y[i, j])) == 1
-                plot!([x_coor[i], x_coor[j]], [y_coor[i], y_coor[j]],line=:arrow,color = light_green, linealpha=4, lw=4)
-            end
-            if round(value(x[i, j])) == 1
-                plot!([x_coor[i], x_coor[j]], [y_coor[i], y_coor[j]],line=:arrow,color = :black,linestyle=:dash)
+    # end
+    savefig(replace(filePath, ".txt" => "-result.png"))
+    # plot!()
+end
+
+#=================================================================================================#
+
+println("Number of arguments: ", length(ARGS))
+
+filePath = "../../Data/Demo/C101_10.txt" # use in command
+# filePath = "Data/Demo/C101-20.txt" # use in VSCode
+Q1 = 600
+Q2 = 100
+runningTime = 10
+
+
+
+if length(ARGS) >= 1
+    filePath = "../../Data/" * ARGS[1]
+    # println(filePath)
+    if length(ARGS) >= 2
+        if readArgument(ARGS[2]) != 0 Q1 = readArgument(ARGS[2])  end
+        if length(ARGS) >= 3
+            if readArgument(ARGS[3]) != 0 Q2 = readArgument(ARGS[3])  end
+            if length(ARGS) >= 4
+                if readArgument(ARGS[4]) != 0 runningTime = readArgument(ARGS[4])  end
             end
         end
     end
-    
-    # Add SEV arcs between the locations if they are traverse
-    for i in P
-        colorR = RGBA(rand(),rand(),rand(),1)
-        backTracking(z, colorR, i)
-    end
-# end
-    
-    savefig(replace(filePath, ".txt" => "-result.png"))
-    plot!()
+else
+    println("No arguments provided")
 end
 
-
-# files = ["../TestV1/50/R101_50.txt","../TestV1/50/RC101_50.txt"]
-print(pwd())
-filePath = "../../Data/Demo/50/C101_50.txt"
-model = runModel(filePath, 600,200,10)
+println("\n", "File path: ", filePath)
+println("Capacity of FEV: ",Q1)
+println("Capacity of SEV: ",Q2)
+println("Execution time limit: ",runningTime,"\n")
+model = runModel(filePath, Q1,Q2,runningTime)
 
