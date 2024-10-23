@@ -3,10 +3,8 @@ model = Model(CPLEX.Optimizer)
 set_attribute(model, "CPX_PARAM_EPINT", 1e-8)
 set_optimizer_attribute(model, "CPX_PARAM_MIPSEARCH", 1)
 using Printf
-# using GR
-# # Disable the gksqt window
-# GR.inline()
 using Plots
+using FileIO
 using Random
 
 x_coor = []
@@ -119,8 +117,8 @@ end
 
 function displayMap()
    
-    # default(size=(800, 600))
-    # gr()
+    default(size=(1000, 800))
+    gr()
     
     # Create a customers scatter plot
     scatter(x_coor[2+np:1+nc+np], y_coor[2+np:1+nc+np],
@@ -154,13 +152,42 @@ function displayMap()
     # plot!() 
 end
 
-function randomGenerateParking(x_coor_customers,y_coor_customers)    
+function randomGenerateParking(x_coor_customers,y_coor_customers)   
+    function generatePI(num :: Int)
+        PI = vcat(ones(2),zeros(num-2))
+        shuffle!(PI)
+        for i in 1:num-1
+            p = vcat(ones(2),zeros(num-2))
+            shuffle!(p)
+            PI = vcat(PI,p)
+        end    
+        i=1
+        if num == 4     l = 2
+        else   l = 6     end
+        while i<=l
+            p = rand(1:num^2)
+            if PI[p] == 0
+                PI[p] = 1
+                i = i + 1
+            end
+        end
+        return PI
+    end
+
     # Define the boundaries of the customer area
     x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
     y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
 
-    # Define the number of divisions (4x4 grid)
-    num_divisions = 4
+    # Define the number of divisions (4x4 grid for <=50, 5x5 grid for >50 <=100)
+    if length(x_coor_customers) <=50
+        num_divisions = 4
+    else
+        if length(x_coor_customers) <=100
+            num_divisions = 5      
+        end
+    end
+    PI = generatePI(num_divisions)
+
     x_step = (x_max - x_min) / num_divisions
     y_step = (y_max - y_min) / num_divisions
 
@@ -182,7 +209,10 @@ function randomGenerateParking(x_coor_customers,y_coor_customers)
             push!(y_coor_parkings, rand(y_lower:y_upper))
         end
     end
-    return x_coor_parkings, y_coor_parkings
+    
+    # println("PI : ", PI)
+
+    return x_coor_parkings, y_coor_parkings, PI
 end
 
 function fixedGenerateParking(x_coor_customers,y_coor_customers)    
@@ -190,8 +220,16 @@ function fixedGenerateParking(x_coor_customers,y_coor_customers)
     x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
     y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
 
-    # Define the number of divisions (4x4 grid)
-    num_divisions = 5
+    # Define the number of divisions (4x4 grid for <=50, 5x5 grid for >50 <=100)
+    if length(x_coor_customers) <=50
+        num_divisions = 5
+        PI = [0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1] #10 MM
+    else
+        if length(x_coor_customers)<=100
+            num_divisions = 6
+            PI = [1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1] #16 MM
+        end
+    end
     x_step = (x_max - x_min) / num_divisions
     y_step = (y_max - y_min) / num_divisions
 
@@ -206,7 +244,7 @@ function fixedGenerateParking(x_coor_customers,y_coor_customers)
         end
     end
 
-    return x_coor_parkings, y_coor_parkings
+    return x_coor_parkings, y_coor_parkings, PI
 end
 
 function backTracking(z, colorR, x)
@@ -220,7 +258,7 @@ function backTracking(z, colorR, x)
     end
 end
 
-function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
+function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String)
 
     #===========SET==============================================================#
     x_coor_customers, y_coor_customers, x_coor_depot, y_coor_depot, demands, time_windows, zeta = readFile(filePath)
@@ -228,7 +266,12 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     global nc 
     nc = length(x_coor_customers)
     # Coordinate (Parking node)
-    x_coor_parkings, y_coor_parkings = fixedGenerateParking(x_coor_customers, y_coor_customers)
+    global PI 
+    if case == "r"
+        x_coor_parkings, y_coor_parkings, PI = randomGenerateParking(x_coor_customers, y_coor_customers)
+    else
+        x_coor_parkings, y_coor_parkings, PI = fixedGenerateParking(x_coor_customers, y_coor_customers)
+    end
     # Number of parking places
     global np 
     np = length(x_coor_parkings)
@@ -245,10 +288,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
     # Q1 = 6000 #Capacity of MM
     # Q2 = 2000 #Capacity of SEV
     M = 10000
-    global PI 
-    # PI = vcat(ones(Int,10),zeros(Int,6))#Initial parking indicator
-    # shuffle!(PI)ß
-    PI = [0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1]
+
     eta1 = 2
     eta2 = 1
 
@@ -281,10 +321,27 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
         end 
     end 
 
-    savefig(replace(filePath, ".txt" => "-data.png"))
+    fileName = splitext(basename(filePath))[1]
+    println(fileName)
+    save_dir = joinpath("./Result/", fileName)
+    data_path_svg = joinpath(save_dir,fileName * "-data.svg")
+    result_path_svg = joinpath(save_dir, fileName * "-result.svg")
+    data_path_png = joinpath(save_dir,fileName * "-data.png")
+    result_path_png = joinpath(save_dir, fileName * "-result.png")
+    # println(data_path)
+    # println(result_path)
+    
+    # println(save_dir)
+    # Check if directory exists, if not, create it
+    dir_path = dirname(data_path_png)
+    if !isdir(dir_path)
+        mkdir(dir_path)
+    end
 
+    savefig(data_path_png)
+    savefig(data_path_svg)
 
-     #=========================================================================#
+     #=================================================================================================#
      model=Model(CPLEX.Optimizer)
 
      # Decision variable
@@ -306,12 +363,12 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
          end
      end
      @variable(model, f[A2,A2]>=0,Int) #Load of SEV
-     #=================================================================================================#
+     #======================================================================#
      @objective(model, Min,
          sum(distances[i, j] * x[i, j] for i in A1, j in A1 if i != j) +
          sum(distances[i, j] * y[i, j] for i in A1, j in A1 if i != j) +
          sum(distances[i, j] * z[i, j] for i in A2, j in A2 if i != j))
-     #=================================================================================================#
+     #======================================================================#
      #1 #2
      #Flow conservation at parking for FEV
      @constraint(model, [i in P], sum(x[j,i] for j in A1 if i != j) == sum(x[i,j] for j in A1 if i != j))
@@ -391,18 +448,22 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
 
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60 * minutes)
     # Solve the model
-    optimize!(model)
+    total_time = @elapsed optimize!(model)
     # Check solver status and print results
     if termination_status(model) == MOI.OPTIMAL
         println("Optimal solution found!")
+        println("Total execution time: $total_time seconds")
         println("Total distance traveled: ", objective_value(model))
     elseif primal_status(model) == MOI.FEASIBLE_POINT
         println("Feasible solution found within the time limit!")
+        println("Total execution time: $total_time seconds")
         println("Total distance traveled: ", objective_value(model))
     else
         println("No feasible solution found.")
         return
     end
+
+    println("==========================================================================")
 
 #    # Open the file in write mode
 #     open("/Users/lenovo1/Library/CloudStorage/OneDrive-UniversitéParis-Saclay/Julia/TestV1/result.txt", "a") do file
@@ -454,7 +515,8 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int)
         end     
     end
     
-    savefig(replace(filePath, ".txt" => "-result.png"))
+    savefig(result_path_svu)
+    savefig(result_path_png)
 end
 
 #=================================================================================================#
@@ -463,23 +525,22 @@ println("Number of arguments: ", length(ARGS))
 
 filePath = "../Data/Demo/C101-10.txt" # use in command
 # filePath = "Data/Demo/C101-20.txt" # use in VSCode
+case = "f"
 Q1 = 600
 Q2 = 100
 runningTime = 10
 
-
-
 if length(ARGS) >= 1
-    if length(ARGS[1])>1
-        filePath = "../Data/Demo/" * ARGS[1]
-    end
-    # println(filePath)
+    if length(ARGS[1])>1 filePath = "../Data/Demo/" * ARGS[1]     end
     if length(ARGS) >= 2
         if readArgument(ARGS[2]) != 0 Q1 = readArgument(ARGS[2])  end
         if length(ARGS) >= 3
             if readArgument(ARGS[3]) != 0 Q2 = readArgument(ARGS[3])  end
             if length(ARGS) >= 4
                 if readArgument(ARGS[4]) != 0 runningTime = readArgument(ARGS[4])  end
+                if length(ARGS) >= 5
+                    if ARGS[5] == "r"||"f" case = ARGS[5]  end
+                end
             end
         end
     end
@@ -490,5 +551,6 @@ end
 println("\n", "File path: ", filePath)
 println("Capacity of FEV: ",Q1)
 println("Capacity of SEV: ",Q2)
-println("Execution time limit: ",runningTime,"\n")
-model = runModel(filePath, Q1,Q2,runningTime)
+println("Execution time limit: ",runningTime)
+println("Case: ",case,"\n")
+model = runModel(filePath, Q1,Q2,runningTime,case) 
