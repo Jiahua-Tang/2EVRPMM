@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=testInstance
-#SBATCH --output=./outputSlurm/%x.o%j 
-#SBATCH --time=00:20:00 
+#SBATCH --job-name=test
+#SBATCH --output=./Result/outputSlurm/%x.o%j 
+#SBATCH --time=00:60:00 
 #SBATCH --ntasks=10
 #SBATCH --partition=cpu_short
 

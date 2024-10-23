@@ -1,0 +1,154 @@
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+GKS: cannot open display - headless operation mode active
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               600
+Tried aggregator 2 times.
+MIP Presolve eliminated 1673 rows and 992 columns.
+MIP Presolve modified 1676 coefficients.
+Aggregator did 1 substitutions.
+Reduced MIP has 1153 rows, 1554 columns, and 5939 nonzeros.
+Reduced MIP has 921 binaries, 633 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.01 sec. (7.32 ticks)
+Probing time = 0.01 sec. (2.89 ticks)
+Cover probing fixed 0 vars, tightened 233 bounds.
+Tried aggregator 2 times.
+Detecting symmetries...
+MIP Presolve eliminated 2 rows and 3 columns.
+MIP Presolve modified 239 coefficients.
+Aggregator did 1 substitutions.
+Reduced MIP has 1150 rows, 1550 columns, and 5930 nonzeros.
+Reduced MIP has 921 binaries, 629 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.01 sec. (5.02 ticks)
+Probing time = 0.01 sec. (2.74 ticks)
+Clique table members: 1489.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 32 threads.
+Root relaxation solution time = 0.04 sec. (10.90 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0      146.4657    16                    146.4657      538         
+      0     0      175.4181    55                    Cuts: 21      709         
+      0     0      183.6182    84                    Cuts: 36      771         
+      0     0      190.1350    44                    Cuts: 15      828         
+      0     0      194.5229    65                    Cuts: 11      842         
+      0     0      195.1737    64                     Cuts: 7      850         
+Detecting symmetries...
+      0     0      195.6515    64                     Cuts: 3      854         
+      0     0      196.4112    92                     Cuts: 3      871         
+      0     0      196.7643    73                     Cuts: 8      881         
+      0     0      197.1411    99                     Cuts: 2      894         
+      0     0      197.2509    75                     Cuts: 2      897         
+      0     0      197.2783    68                     Cuts: 2      898         
+*     0+    0                          398.6072      197.2783            50.51%
+*     0+    0                          324.2878      203.7247            37.18%
+      0     0  -1.00000e+75     0      324.2878      203.7247      898   37.18%
+Detecting symmetries...
+      0     2      197.2783    68      324.2878      203.7247      898   37.18%
+Elapsed time = 31.13 sec. (387.29 ticks, tree = 0.02 MB, solutions = 2)
+*    10+    1                          306.8173      203.7247            33.60%
+*    71+   12                          306.4792      203.7247            33.53%
+*    71+   23                          306.4792      203.7247            33.53%
+*   107+   14                          298.5282      203.7247            31.76%
+*  3499  1749      integral     0      286.3191      209.4915    61241   26.83%
+*  7106  3989      integral     0      281.5120      225.6775   127292   19.83%
+*  8201  4596      integral     0      280.5815      225.6775   157081   19.57%
+
+Performing restart 1
+
+Repeating presolve.
+Tried aggregator 1 time.
+MIP Presolve eliminated 5 rows and 5 columns.
+Reduced MIP has 1145 rows, 1545 columns, and 5905 nonzeros.
+Reduced MIP has 916 binaries, 629 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.01 sec. (2.92 ticks)
+Tried aggregator 1 time.
+MIP Presolve modified 113 coefficients.
+Reduced MIP has 1145 rows, 1545 columns, and 5905 nonzeros.
+Reduced MIP has 916 binaries, 629 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.01 sec. (3.80 ticks)
+Represolve time = 0.04 sec. (18.04 ticks)
+*  8257+    0                          252.1117      225.6775            10.49%
+   8257     0      218.1432    74      252.1117      Cuts: 27   175384   10.49%
+   8257     0      222.4628    53      252.1117      Cuts: 23   175482   10.49%
+   8257     0      224.8942    43      252.1117      Cuts: 22   175556   10.49%
+
+Repeating presolve.
+Tried aggregator 1 time.
+MIP Presolve eliminated 222 rows and 464 columns.
+MIP Presolve modified 127 coefficients.
+Reduced MIP has 923 rows, 1081 columns, and 7374 nonzeros.
+Reduced MIP has 644 binaries, 437 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.01 sec. (5.12 ticks)
+Tried aggregator 1 time.
+MIP Presolve modified 1 coefficients.
+Reduced MIP has 923 rows, 1081 columns, and 7374 nonzeros.
+Reduced MIP has 644 binaries, 437 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.01 sec. (4.60 ticks)
+Represolve time = 0.04 sec. (20.07 ticks)
+   8257     0      227.4591    16      252.1117      Cuts: 25   176262    9.78%
+   8257     0      229.3832    80      252.1117       Cuts: 9   176371    9.02%
+   8257     0      229.6879    83      252.1117      Cuts: 29   176406    8.89%
+
+GUB cover cuts applied:  6
+Cover cuts applied:  10
+Implied bound cuts applied:  34
+Flow cuts applied:  16
+Mixed integer rounding cuts applied:  14
+Zero-half cuts applied:  3
+Lift and project cuts applied:  7
+Gomory fractional cuts applied:  4
+
+Root node processing (before b&c):
+  Real time             =   27.20 sec. (386.87 ticks)
+Parallel b&c, 32 threads:
+  Real time             =  165.49 sec. (964.54 ticks)
+  Sync time (average)   =   26.44 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =  192.68 sec. (1351.41 ticks)
+ERROR: LoadError: UndefVarError: `result_path_svu` not defined in `Main`
+Suggestion: check for spelling errors or missing imports.
+Stacktrace:
+ [1] runModel(filePath::String, Q1::Int64, Q2::Int64, minutes::Int64, case::String)
+   @ Main ~/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl:518
+ [2] top-level scope
+   @ ~/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl:556
+in expression starting at /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl:556
+Number of arguments: 0
+No arguments provided
+
+File path: ../Data/Demo/C101-10.txt
+Capacity of FEV: 600
+Capacity of SEV: 100
+Execution time limit: 10
+Case: f
+
+Number of customers: 15
+C101-10
+Optimal solution found!
+Total execution time: 194.963614771 seconds
+Total distance traveled: 252.11169410586515
+==========================================================================
