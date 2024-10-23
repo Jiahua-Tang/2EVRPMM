@@ -6,6 +6,8 @@ using Printf
 using Plots
 using FileIO
 using Random
+using CSV
+using Dates
 
 x_coor = []
 y_coor = []
@@ -328,10 +330,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     result_path_svg = joinpath(save_dir, fileName * "-result.svg")
     data_path_png = joinpath(save_dir,fileName * "-data.png")
     result_path_png = joinpath(save_dir, fileName * "-result.png")
-    # println(data_path)
-    # println(result_path)
-    
-    # println(save_dir)
+
     # Check if directory exists, if not, create it
     dir_path = dirname(data_path_png)
     if !isdir(dir_path)
@@ -452,16 +451,25 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     # Check solver status and print results
     if termination_status(model) == MOI.OPTIMAL
         println("Optimal solution found!")
-        println("Total execution time: $total_time seconds")
-        println("Total distance traveled: ", objective_value(model))
+        
     elseif primal_status(model) == MOI.FEASIBLE_POINT
         println("Feasible solution found within the time limit!")
-        println("Total execution time: $total_time seconds")
-        println("Total distance traveled: ", objective_value(model))
+
     else
         println("No feasible solution found.")
         return
     end
+    println("Total execution time: $total_time seconds")
+    println("Total distance traveled: ", objective_value(model))
+    println("File name: ", fileName)
+    println("Number of customers: ", nc)
+    println("Capacity of FEV: ", Q0)
+    println("Capacity of Microhub: ", Q1)
+    println("Capacity of SEV: ", Q2)
+    println("Number of parkings: ", np)
+    println("Number of microhubs: ", sum(PI))
+    println("Parking generation rule: ", case)
+
 
     println("==========================================================================")
 
@@ -476,7 +484,16 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
 #         println("=======================================")
 #         println(" ")
 #     end
- 
+    # New data to append
+    # Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM /  Total Distance / Execution time 
+
+
+    row_data = [fileName, Q0, Q1, Q2, np, sum(PI), case, objective_value(model), total_time]
+    open("./Result/output.csv", "a") do file
+        println(file, join(row_data, ",")) 
+    end
+
+
    
     if primal_status(model) == MOI.FEASIBLE_POINT
         displayMap()
@@ -515,7 +532,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
         end     
     end
     
-    savefig(result_path_svu)
+    savefig(result_path_svg)
     savefig(result_path_png)
 end
 
