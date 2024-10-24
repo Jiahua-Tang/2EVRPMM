@@ -1,20 +1,23 @@
 #!/bin/bash
 
-#SBATCH --job-name=C101C70Q80
-#SBATCH --output=./Result/outputSlurm/%j.%x 
-#SBATCH --time=00:50:00 
-#SBATCH --ntasks=10
-#SBATCH --partition=cpu_med
-#SBATCH --cpus-per-task=10
+#SBATCH --job-name=test
+#SBATCH --output=/gpfs/users/tangj/2EVRPMM/Code/Result/outputSlurm/%j.%x.out
+#SBATCH --error=/gpfs/users/tangj/2EVRPMM/Code/Result/outputSlurm/%j.%x.err  # Capture standard error in a separate file
+#SBATCH --time=03:00:00 
+#SBATCH --ntasks=1                              # Since Julia typically uses multithreading, setting ntasks to 1
+#SBATCH --cpus-per-task=10                      # Ensure you're using all 10 CPUs
+#SBATCH --partition=cpu_prod
 
-# Load the same modules as environment configuration
+# Load Julia module (uncomment this if the environment requires it)
 #module load julia/1.4.0/gcc-9.2.0
 
-julia configure_env.jl
+# Error handling: If any command fails, exit the script
+set -e
 
-# Run code
-julia 2EVRPMM-V7-2index.jl
-#julia  2EVRPMM-V7-z-2index.jl C101-70.txt 600 80 45  
-#exit()
-#echo "Your job is finished" | mail -s "Job Complete" tangjiahua98@gmail.com
+echo "Hello world"
 
+# Load environment (if needed)
+#julia /gpfs/users/tangj/2EVRPMM/Code/configure_env.jl
+
+# Run the main Julia code
+#julia /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl 
