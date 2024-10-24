@@ -323,13 +323,12 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
         end 
     end 
 
-    fileName = splitext(basename(filePath))[1]
+    fileName = splitext(basename(filePath))[1]  * "-Q" *string(Q2) * "-R" *string(length(V2))
+    # fileName = fileName
     println(fileName)
-    save_dir = joinpath("./Result/", fileName)
+    save_dir = joinpath("./Result/", fileName )
     data_path_svg = joinpath(save_dir,fileName * "-data.svg")
-    result_path_svg = joinpath(save_dir, fileName * "-result.svg")
     data_path_png = joinpath(save_dir,fileName * "-data.png")
-    result_path_png = joinpath(save_dir, fileName * "-result.png")
 
     # Check if directory exists, if not, create it
     dir_path = dirname(data_path_png)
@@ -448,15 +447,20 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60 * minutes)
     # Solve the model
     total_time = @elapsed optimize!(model)
+    resultStatus = ""
     # Check solver status and print results
     if termination_status(model) == MOI.OPTIMAL
         println("Optimal solution found!")
-        
+        resultStatus = "-O"
     elseif primal_status(model) == MOI.FEASIBLE_POINT
         println("Feasible solution found within the time limit!")
-
+        resultStatus = "-F"
     else
         println("No feasible solution found.")
+        row_data = [fileName, Q0, Q1, Q2, np, sum(PI), case, "No feasible solution found"]
+        open("./Result/output.csv", "a") do file
+            println(file, join(row_data, ",")) 
+        end
         return
     end
     println("Total execution time: $total_time seconds")
@@ -468,32 +472,18 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     println("Capacity of SEV: ", Q2)
     println("Number of parkings: ", np)
     println("Number of microhubs: ", sum(PI))
+    println("Number of robots/MM: ", length(V2))
     println("Parking generation rule: ", case)
 
 
     println("==========================================================================")
 
-#    # Open the file in write mode
-#     open("/Users/lenovo1/Library/CloudStorage/OneDrive-UniversitéParis-Saclay/Julia/TestV1/result.txt", "a") do file
-#         # Write some content to the file
-#         filename = splitext(basename(filePath))[1]  # Output: "name"
-
-#         println(file, filename)
-#         println(file, "Solver status: ",status)
-#         println(file, "Total distance traveled: ", objective_value(model))
-#         println("=======================================")
-#         println(" ")
-#     end
     # New data to append
-    # Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM /  Total Distance / Execution time 
-
-
-    row_data = [fileName, Q0, Q1, Q2, np, sum(PI), case, objective_value(model), total_time]
+    # Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM / #Robot / Parking generation rule / Total Distance / Execution time 
+    row_data = [fileName, Q0, Q1, Q2, np, sum(PI), length(V2), case, objective_value(model), total_time]
     open("./Result/output.csv", "a") do file
         println(file, join(row_data, ",")) 
     end
-
-
    
     if primal_status(model) == MOI.FEASIBLE_POINT
         displayMap()
@@ -531,6 +521,10 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
             plot!()
         end     
     end
+
+
+    result_path_svg = joinpath(save_dir, fileName * resultStatus * "-result.svg")
+    result_path_png = joinpath(save_dir, fileName * resultStatus *  "-result.png")
     
     savefig(result_path_svg)
     savefig(result_path_png)
@@ -556,7 +550,11 @@ if length(ARGS) >= 1
             if length(ARGS) >= 4
                 if readArgument(ARGS[4]) != 0 runningTime = readArgument(ARGS[4])  end
                 if length(ARGS) >= 5
-                    if ARGS[5] == "r"||"f" case = ARGS[5]  end
+                    global V2
+                    if readArgument(ARGS[5]) != 0 V2 = 1:readArgument(ARGS[4])  end
+                    if length(ARGS) >= 6
+                        if ARGS[6] == "r"||"f" case = ARGS[6]  end
+                    end
                 end
             end
         end
@@ -568,6 +566,7 @@ end
 println("\n", "File path: ", filePath)
 println("Capacity of FEV: ",Q1)
 println("Capacity of SEV: ",Q2)
+println("Number of Robots/MM: ",length(V2))
 println("Execution time limit: ",runningTime)
 println("Case: ",case,"\n")
 model = runModel(filePath, Q1,Q2,runningTime,case) 
