@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=C101C70F50
+#SBATCH --job-name=C101C70Q80
 #SBATCH --output=./Result/outputSlurm/%x.o%j 
 #SBATCH --time=00:50:00 
 #SBATCH --ntasks=10
@@ -13,6 +13,6 @@
 julia configure_env.jl
 
 # Run code
-julia  2EVRPMM-V7-z-2index.jl C101-70.txt 600 50 45  
-
+julia  2EVRPMM-V7-z-2index.jl C101-70.txt 600 80 45  
+echo "Your job is finished" | mail -s "Job Complete" tangjiahua98@gmail.com
 
