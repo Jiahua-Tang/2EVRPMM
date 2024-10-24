@@ -470,30 +470,12 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     println("Number of microhubs: ", sum(PI))
     println("Parking generation rule: ", case)
 
-
     println("==========================================================================")
-
-#    # Open the file in write mode
-#     open("/Users/lenovo1/Library/CloudStorage/OneDrive-UniversitéParis-Saclay/Julia/TestV1/result.txt", "a") do file
-#         # Write some content to the file
-#         filename = splitext(basename(filePath))[1]  # Output: "name"
-
-#         println(file, filename)
-#         println(file, "Solver status: ",status)
-#         println(file, "Total distance traveled: ", objective_value(model))
-#         println("=======================================")
-#         println(" ")
-#     end
-    # New data to append
-    # Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM /  Total Distance / Execution time 
-
 
     row_data = [fileName, Q0, Q1, Q2, np, sum(PI), case, objective_value(model), total_time]
     open("./Result/output.csv", "a") do file
         println(file, join(row_data, ",")) 
     end
-
-
    
     if primal_status(model) == MOI.FEASIBLE_POINT
         displayMap()
