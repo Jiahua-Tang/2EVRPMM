@@ -323,22 +323,27 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
         end 
     end 
 
-    fileName = splitext(basename(filePath))[1]  * "-Q" *string(Q2) * "-R" *string(length(V2))
-    # fileName = fileName
-    println(fileName)
-    save_dir = joinpath("./Result/", fileName )
-    data_path_svg = joinpath(save_dir,fileName * "-data.svg")
-    data_path_png = joinpath(save_dir,fileName * "-data.png")
+   # Extract the file name (without extension) and create the desired fileName
+    baseName = splitext(basename(filePath))[1]  # This extracts the base name without extension, e.g., C101-10
+    fileName = baseName * "-Q" * string(Q2)  # e.g., C101-10-Q100
 
-    # Check if directory exists, if not, create it
-    dir_path = dirname(data_path_png)
-    if !isdir(dir_path)
-        mkdir(dir_path)
+    # Create the save directory, avoiding duplication of the fileName inside the path
+    save_dir = joinpath("./Result", baseName,fileName)  # Only use baseName for the directory structure
+    println(save_dir)
+    # Paths for saving files
+    data_path_svg = joinpath(save_dir, fileName * "-data.svg")
+    data_path_png = joinpath(save_dir, fileName * "-data.png")
+
+    # Check if the directory exists, if not, create it (use mkpath instead of mkdir)
+    if !isdir(save_dir)
+        mkpath(save_dir)  # mkpath will create all necessary directories along the path
     end
 
+    # Print paths to verify correctness
+    # println("SVG path: ", data_path_svg)
+    # println("PNG path: ", data_path_png)
     savefig(data_path_png)
     savefig(data_path_svg)
-
      #=================================================================================================#
      model=Model(CPLEX.Optimizer)
 
@@ -448,6 +453,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     # Solve the model
     total_time = @elapsed optimize!(model)
     resultStatus = ""
+    currentTime = Dates.format(now(), "dd-mm-yyyy HH:MM")
     # Check solver status and print results
     if termination_status(model) == MOI.OPTIMAL
         println("Optimal solution found!")
@@ -457,7 +463,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
         resultStatus = "-F"
     else
         println("No feasible solution found.")
-        row_data = [fileName, Q0, Q1, Q2, np, sum(PI), case, "No feasible solution found"]
+        row_data = [currentTime, fileName, Q0, Q1, Q2, np, sum(PI), case, minutes, "No feasible solution found"]
         open("./Result/output.csv", "a") do file
             println(file, join(row_data, ",")) 
         end
@@ -474,17 +480,17 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     println("Number of microhubs: ", sum(PI))
     println("Number of robots/MM: ", length(V2))
     println("Parking generation rule: ", case)
-
-
-    println("==========================================================================")
+   
 
     # New data to append
-    # Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM / #Robot / Parking generation rule / Total Distance / Execution time 
-    row_data = [fileName, Q0, Q1, Q2, np, sum(PI), length(V2), case, objective_value(model), total_time]
+    # Time / Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM / #Robot / Parking generation rule / Limit time / Total Distance / Execution time 
+    row_data = [currentTime, fileName, Q0, Q1, Q2, np, sum(PI), length(V2), case, minutes, objective_value(model), total_time]
     open("./Result/output.csv", "a") do file
         println(file, join(row_data, ",")) 
     end
-   
+
+
+   println("==========================================================================")
     if primal_status(model) == MOI.FEASIBLE_POINT
         displayMap()
 #     time_labels = [string("t= ", round(value(t[i]))) for i in A2]
@@ -522,9 +528,8 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
         end     
     end
 
-
-    result_path_svg = joinpath(save_dir, fileName * resultStatus * "-result.svg")
-    result_path_png = joinpath(save_dir, fileName * resultStatus *  "-result.png")
+    result_path_svg = joinpath(save_dir, fileName * resultStatus *string(minutes)* "min-result.svg")
+    result_path_png = joinpath(save_dir, fileName * resultStatus *string(minutes)* "min-result.png")
     
     savefig(result_path_svg)
     savefig(result_path_png)

@@ -14,10 +14,8 @@
 # Error handling: If any command fails, exit the script
 set -e
 
-echo "Hello world"
-
 # Load environment (if needed)
-#julia /gpfs/users/tangj/2EVRPMM/Code/configure_env.jl
+julia /gpfs/users/tangj/2EVRPMM/Code/configure_env.jl
 
 # Run the main Julia code
-#julia /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl 
+julia /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl 
