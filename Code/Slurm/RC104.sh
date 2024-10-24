@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH --job-name=test
+#SBATCH --job-name=RC104C100C50Q50
 #SBATCH --output=/gpfs/users/tangj/2EVRPMM/Code/Result/outputSlurm/%j.%x.out
 #SBATCH --error=/gpfs/users/tangj/2EVRPMM/Code/Result/outputSlurm/%j.%x.err  # Capture standard error in a separate file
-#SBATCH --time=03:00:00 
+#SBATCH --time=06:00:00 
 #SBATCH --ntasks=1                              # Since Julia typically uses multithreading, setting ntasks to 1
 #SBATCH --cpus-per-task=10                      # Ensure you're using all 10 CPUs
 #SBATCH --partition=cpu_prod
@@ -18,4 +18,5 @@ set -e
 julia /gpfs/users/tangj/2EVRPMM/Code/configure_env.jl
 
 # Run the main Julia code
-julia /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl 
+julia /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl 100/RC104.txt , 50 200
+julia /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl 50/RC104_50.txt , 50 140

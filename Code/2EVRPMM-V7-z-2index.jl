@@ -571,7 +571,8 @@ end
 println("\n", "File path: ", filePath)
 println("Capacity of FEV: ",Q1)
 println("Capacity of SEV: ",Q2)
-println("Number of Robots/MM: ",length(V2))
 println("Execution time limit: ",runningTime)
+println("Number of Robots/MM: ",length(V2))
 println("Case: ",case,"\n")
+
 model = runModel(filePath, Q1,Q2,runningTime,case) 
