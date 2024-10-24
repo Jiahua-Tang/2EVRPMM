@@ -510,14 +510,14 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
                 end
             end
             
-    #         # if i in A2
+            if i in A2
     #         #     # Add arriving time lable
     #         #     annotate!(x_coor[i]+1.5, y_coor[i]-0.3, text(time_labels[i-1], :center, 4))
-    #         #     if i in C
-    #         #         # Add customer demand lable
-    #         #         annotate!(x_coor[i]-0.3, y_coor[i]-0.3, text(demand_labels[i-1-np], :center, 6)) 
-    #         #     end 
-    #         # end
+                if i in C
+                    # Add customer demand lable
+                    annotate!(x_coor[i]-0.3, y_coor[i]-0.3, text(demand_labels[i-1-np], :center, 6)) 
+                end 
+            end
             plot!()
         end     
     end
