@@ -1,0 +1,79 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               12000
+Tried aggregator 1 time.
+MIP Presolve eliminated 16134 rows and 11241 columns.
+MIP Presolve modified 28239 coefficients.
+Reduced MIP has 17438 rows, 21511 columns, and 83274 nonzeros.
+Reduced MIP has 10789 binaries, 10722 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.14 sec. (78.73 ticks)
+Probing fixed 8 vars, tightened 8 bounds.
+Probing time = 0.39 sec. (70.45 ticks)
+Cover probing fixed 0 vars, tightened 122 bounds.
+Tried aggregator 2 times.
+Detecting symmetries...
+MIP Presolve eliminated 9 rows and 16 columns.
+MIP Presolve modified 122 coefficients.
+Aggregator did 1 substitutions.
+Reduced MIP has 17428 rows, 21494 columns, and 83209 nonzeros.
+Reduced MIP has 10780 binaries, 10714 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.11 sec. (63.97 ticks)
+Probing fixed 2 vars, tightened 2 bounds.
+Probing time = 0.19 sec. (37.75 ticks)
+Clique table members: 55168.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 32 threads.
+Root relaxation solution time = 2.96 sec. (631.74 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0      980.2505   348                    980.2505       25         
+      0     0        cutoff                                       6806         
+Elapsed time = 7.50 sec. (3606.44 ticks, tree = 0.01 MB, solutions = 0)
+
+Root node processing (before b&c):
+  Real time             =    7.50 sec. (3606.91 ticks)
+Parallel b&c, 32 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
+  Sync time (average)   =    0.00 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =    7.50 sec. (3606.91 ticks)
+Number of arguments: 4
+
+File path: ../Data/Demo/100/RC105.txt
+Capacity of FEV: 600
+Capacity of SEV: 50
+Execution time limit: 200
+Number of Robots/MM: 10
+Case: f
+
+Number of customers: 100
+./Result/RC105/RC105-Q50
+No feasible solution found.
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               8400
+Infeasibility row 'c507':  0  = 1.
+Presolve time = 0.01 sec. (3.00 ticks)
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (5.24 ticks)
+Parallel b&c, 32 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
+  Sync time (average)   =    0.00 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (5.24 ticks)
+Number of arguments: 4
+
+File path: ../Data/Demo/50/RC105_50.txt
+Capacity of FEV: 600
+Capacity of SEV: 50
+Execution time limit: 140
+Number of Robots/MM: 10
+Case: f
+
+Number of customers: 48
+./Result/RC105_50/RC105_50-Q50
+No feasible solution found.

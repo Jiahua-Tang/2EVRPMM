@@ -1,0 +1,34 @@
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+GKS: cannot open display - headless operation mode active
+GKS: cannot open display - headless operation mode active
+ERROR: LoadError: UndefVarError: `light_green` not defined in `Main`
+Suggestion: check for spelling errors or missing imports.
+Stacktrace:
+ [1] runModel(filePath::String, Q1::Int64, Q2::Int64, minutes::Int64, case::String)
+   @ Main ~/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl:506
+ [2] top-level scope
+   @ ~/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl:578
+in expression starting at /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl:578

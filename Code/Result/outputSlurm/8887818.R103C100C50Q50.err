@@ -1,0 +1,27 @@
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+GKS: cannot open display - headless operation mode active
+GKS: cannot open display - headless operation mode active
+/var/spool/slurm//job8887818/slurm_script: line 22: 60468 Bus error               julia /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index.jl 50/R103_50.txt , 50 140
