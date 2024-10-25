@@ -325,7 +325,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
 
    # Extract the file name (without extension) and create the desired fileName
     baseName = splitext(basename(filePath))[1]  # This extracts the base name without extension, e.g., C101-10
-    fileName = baseName * "-Q" * string(Q2)  # e.g., C101-10-Q100
+    fileName = baseName * "-Q" * string(Q2) *"-" *case # e.g., C101-10-Q100
 
     # Create the save directory, avoiding duplication of the fileName inside the path
     save_dir = joinpath("./Result", baseName,fileName)  # Only use baseName for the directory structure
@@ -492,6 +492,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
 
    println("==========================================================================")
     if primal_status(model) == MOI.FEASIBLE_POINT
+        light_green = RGBA(0.5, 1.0, 0.5, 1.0)
         displayMap()
 #     time_labels = [string("t= ", round(value(t[i]))) for i in A2]
 #     node_labels = [string("N.", i) for i in N]
@@ -539,7 +540,7 @@ end
 
 println("Number of arguments: ", length(ARGS))
 
-filePath = "../Data/Demo/C101-10.txt" # use in command
+filePath = "../Data/Demo/Test.txt" # use in command
 # filePath = "Data/Demo/C101-20.txt" # use in VSCode
 case = "f"
 Q1 = 600
@@ -555,11 +556,7 @@ if length(ARGS) >= 1
             if length(ARGS) >= 4
                 if readArgument(ARGS[4]) != 0 runningTime = readArgument(ARGS[4])  end
                 if length(ARGS) >= 5
-                    global V2
-                    if readArgument(ARGS[5]) != 0 V2 = 1:readArgument(ARGS[4])  end
-                    if length(ARGS) >= 6
-                        if ARGS[6] == "r"||"f" case = ARGS[6]  end
-                    end
+                    if ARGS[5] == "r"||"f" case = ARGS[5]  end
                 end
             end
         end
@@ -572,7 +569,6 @@ println("\n", "File path: ", filePath)
 println("Capacity of FEV: ",Q1)
 println("Capacity of SEV: ",Q2)
 println("Execution time limit: ",runningTime)
-println("Number of Robots/MM: ",length(V2))
 println("Case: ",case,"\n")
 
 model = runModel(filePath, Q1,Q2,runningTime,case) 
