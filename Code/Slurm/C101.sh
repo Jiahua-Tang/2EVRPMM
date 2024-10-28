@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=C101MM10P16
-#SBATCH --output=/gpfs/users/tangj/2EVRPMM/Code/Result/outputSlurm/%j.%x.out
-#SBATCH --error=/gpfs/users/tangj/2EVRPMM/Code/Result/outputSlurm/%j.%x.err  # Capture standard error in a separate file
+#SBATCH --output=/gpfs/users/tangj/2EVRPMM/Code/Result/outputSlurm/InstancesResult/%j.%x.out
+#SBATCH --error=/gpfs/users/tangj/2EVRPMM/Code/Result/outputSlurm/InstancesResult/%j.%x.err  # Capture standard error in a separate file
 #SBATCH --time=04:00:00 
 #SBATCH --ntasks=1   # Since Julia typically uses multithreading, setting ntasks to 1
 #SBATCH --cpus-per-task=10                      # Ensure you're using all 10 CPUs

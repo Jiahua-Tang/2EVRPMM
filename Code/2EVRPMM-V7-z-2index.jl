@@ -181,13 +181,13 @@ function randomGenerateParking(x_coor_customers,y_coor_customers)
     y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
 
     # Define the number of divisions (4x4 grid for <=50, 5x5 grid for >50 <=100)
-    if length(x_coor_customers) <=50
+    # if length(x_coor_customers) <=50
         num_divisions = 4
-    else
-        if length(x_coor_customers) <=100
-            num_divisions = 5      
-        end
-    end
+    # else
+    #     if length(x_coor_customers) <=100
+    #         num_divisions = 5      
+    #     end
+    # end
     PI = generatePI(num_divisions)
 
     x_step = (x_max - x_min) / num_divisions
@@ -450,6 +450,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
  #=================================================================================================#
 
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60 * minutes)
+    # set_optimizer_attribute(model, "CPX_PARAM_SOLNPOOLAGAP", 1e+75)
     # Solve the model
     total_time = @elapsed optimize!(model)
     resultStatus = ""
@@ -463,12 +464,14 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
         resultStatus = "-F"
     else
         println("No feasible solution found.")
-        row_data = [currentTime, fileName, Q0, Q1, Q2, np, sum(PI), case, minutes, "No feasible solution found"]
+        row_data = [currentTime, fileName, Q0, Q1, Q2, np, sum(PI), length(V2), case, minutes, "No feasible solution found"]
         open("./Result/output.csv", "a") do file
             println(file, join(row_data, ",")) 
         end
         return
     end
+
+
     println("Total execution time: $total_time seconds")
     println("Total distance traveled: ", objective_value(model))
     println("File name: ", fileName)
@@ -484,7 +487,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
 
     # New data to append
     # Time / Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM / #Robot / Parking generation rule / Limit time / Total Distance / Execution time 
-    row_data = [currentTime, fileName, Q0, Q1, Q2, np, sum(PI), length(V2), case, minutes, objective_value(model), total_time]
+    row_data = [currentTime, fileName, Q0, Q1, Q2, np, sum(PI), length(V2), case, resultStatus * string(minutes), objective_value(model), total_time]
     open("./Result/output.csv", "a") do file
         println(file, join(row_data, ",")) 
     end
@@ -542,7 +545,7 @@ println("Number of arguments: ", length(ARGS))
 
 filePath = "../Data/Demo/Test.txt" # use in command
 # filePath = "Data/Demo/C101-20.txt" # use in VSCode
-case = "f"
+case = "r"
 Q1 = 600
 Q2 = 100
 runningTime = 10

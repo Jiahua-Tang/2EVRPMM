@@ -14,6 +14,8 @@ y_coor = []
 np = 0
 nc = 0
 PI = []
+num_parking = 16
+num_mm = 10
 V2 = 1:10
 
 # Function to calculate distance matrix
@@ -121,7 +123,9 @@ function displayMap()
    
     default(size=(1000, 800))
     gr()
-    
+    num_divisions = 4
+    x_min, x_max = minimum(x_coor[2+np:1+nc+np]), maximum(x_coor[2+np:1+nc+np])
+    y_min, y_max = minimum(y_coor[2+np:1+nc+np]), maximum(y_coor[2+np:1+nc+np])
     # Create a customers scatter plot
     scatter(x_coor[2+np:1+nc+np], y_coor[2+np:1+nc+np],
                    title = "Coordinate Plot",
@@ -130,6 +134,22 @@ function displayMap()
                    legend = false, markersize = 6, markercolor = :pink, 
                    marker=:utriangle, markerstrokecolor = :transparent, 
                    markerstrokewidth=0, label = "Customers")
+
+
+    x_step = (x_max - x_min) / num_divisions
+    y_step = (y_max - y_min) / num_divisions
+    # Add vertical grid lines
+    for i in 1:num_divisions-1
+        x_line = x_min + i * x_step
+        vline!([x_line], lw=1, lc=:gray, ls=:dot, label="")
+    end
+
+    # Add horizontal grid lines
+    for j in 1:num_divisions-1
+        y_line = y_min + j * y_step
+        hline!([y_line], lw=1, lc=:gray, ls=:dot, label="")
+    end
+
 
     # Create a parking scatter plot
     scatter!(x_coor[2:1+np], y_coor[2:1+np], 
@@ -154,29 +174,113 @@ function displayMap()
     # plot!() 
 end
 
-
-function fixedGenerateParking(x_coor_customers,y_coor_customers)    
+function randomGenerateParking(x_coor_customers,y_coor_customers)   
     # Define the boundaries of the customer area
     x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
     y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
 
-    # Define the number of divisions (4x4 grid for <=50, 5x5 grid for >50 <=100)
-    num_divisions = 5
-    PI = [0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1] #10 MM
-    
+    # Define the number of divisions (4x4 grid for <=50)
+    num_divisions = 4
+
     x_step = (x_max - x_min) / num_divisions
     y_step = (y_max - y_min) / num_divisions
 
     # Initialize empty arrays to store the parking coordinates
     x_coor_parkings = []
     y_coor_parkings = []
+    # Initialize a dictionary to track the number of points in each cell
+    point_count = Dict{Tuple{Int, Int}, Int}()
 
-    for j in 1:num_divisions-1
-        for i in 1:num_divisions-1
-            push!(x_coor_parkings, x_min + i * x_step)
-            push!(y_coor_parkings, y_min + j * y_step)
+    # Loop over the grid and generate one random point in each sub-area
+    for i in 0:num_divisions-1
+        for j in 0:num_divisions-1
+            # Define the boundaries of the current sub-area
+            x_lower = x_min + i * x_step
+            x_upper = x_min + (i + 1) * x_step
+            y_lower = y_min + j * y_step
+            y_upper = y_min + (j + 1) * y_step
+
+            # Generate a random point within the current sub-area
+            push!(x_coor_parkings, rand(x_lower:x_upper))
+            push!(y_coor_parkings, rand(y_lower:y_upper))
+
+            # Track that this cell now contains one point
+            point_count[(i, j)] = 1
+        end
+        
+    end
+
+    # Add additional points randomly to the grid
+    remaining_points = num_parking - length(x_coor_parkings)  # Adjust to add up to a total of 9 points
+
+    while remaining_points > 0
+        # Select a random cell in the grid
+        i = rand(0:num_divisions-1)
+        j = rand(0:num_divisions-1)
+        
+        # Only add a point if the cell has less than 2 points
+        if point_count[(i, j)] < 2
+            # Define the boundaries of the current sub-area
+            x_lower = x_min + i * x_step
+            x_upper = x_min + (i + 1) * x_step
+            y_lower = y_min + j * y_step
+            y_upper = y_min + (j + 1) * y_step
+
+            # Generate a random point within the current sub-area
+            push!(x_coor_parkings, rand(x_lower:x_upper))
+            push!(y_coor_parkings, rand(y_lower:y_upper))
+
+            # Increment the point count for this cell
+            point_count[(i, j)] += 1
+            remaining_points -= 1
         end
     end
+
+    # Initialize the PI array with zeros
+    PI = zeros(Int, length(x_coor_parkings))
+
+    # Shuffle the indices for random selection of occupied spots
+    indices = collect(1:length(PI))
+    shuffle!(indices)
+
+    # Create a dictionary to count the number of occupied spots per cell
+    occupancy_count = Dict{Tuple{Int, Int}, Int}()
+
+    # Determine the maximum occupancy per cell
+    max_per_cell = if num_mm <= 16
+        1
+    else
+        2
+    end
+
+    # Set the appropriate number of spots to 1 based on num_mm
+    occupied_spots = 0
+    for idx in indices
+        # Calculate grid cell coordinates (i, j) for the parking spot at idx
+        x = x_coor_parkings[idx]
+        y = y_coor_parkings[idx]
+        i = Int(floor((x - x_min) / x_step))
+        j = Int(floor((y - y_min) / y_step))
+        
+        # Initialize the count for this cell if it hasn't been set yet
+        if !haskey(occupancy_count, (i, j))
+            occupancy_count[(i, j)] = 0
+        end
+
+        # Only occupy if the cell has fewer than the maximum allowed `1`s
+        if occupancy_count[(i, j)] < max_per_cell
+            PI[idx] = 1
+            occupancy_count[(i, j)] += 1
+            occupied_spots += 1
+        end
+
+        # Stop once we've reached the desired number of occupied spots
+        if occupied_spots >= num_mm
+            break
+        end
+    end
+
+    println("PI array:", PI)
 
     return x_coor_parkings, y_coor_parkings, PI
 end
@@ -474,7 +578,7 @@ println("Number of arguments: ", length(ARGS))
 
 filePath = "../Data/Demo/Test.txt" # use in command
 # filePath = "Data/Demo/C101-20.txt" # use in VSCode
-case = "f"
+case = "r"
 Q1 = 600
 Q2 = 100
 runningTime = 10
@@ -489,6 +593,18 @@ if length(ARGS) >= 1
                 if readArgument(ARGS[4]) != 0 runningTime = readArgument(ARGS[4])  end
                 if length(ARGS) >= 5
                     if ARGS[5] == "r"||"f" case = ARGS[5]  end
+                    if length(ARGS) >= 6
+                        if readArgument(ARGS[6]) != 0
+                            global num_mm
+                            num_mm = readArgument(ARGS[6])  
+                            if length(ARGS) >= 7
+                                if readArgument(ARGS[7]) != 0
+                                    global num_parking
+                                    num_parking = readArgument(ARGS[7])
+                                end
+                            end
+                        end
+                    end
                 end
             end
         end
