@@ -1,0 +1,24 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               20400
+Infeasibility row 'c517':  0  = 1.
+Presolve time = 0.01 sec. (3.10 ticks)
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (4.60 ticks)
+Parallel b&c, 32 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
+  Sync time (average)   =    0.00 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (4.60 ticks)
+Number of arguments: 4
+
+File path: ../Data/Demo/50/RC101_50.txt
+Capacity of FEV: 600
+Capacity of SEV: 50
+Execution time limit: 340
+Case: r
+
+Number of customers: 49
+./Result/RC101_50/RC101_50-Q50-r
+No feasible solution found.

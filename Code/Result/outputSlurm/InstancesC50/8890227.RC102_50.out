@@ -1,0 +1,132 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               20400
+Tried aggregator 1 time.
+MIP Presolve eliminated 3689 rows and 2653 columns.
+MIP Presolve modified 9192 coefficients.
+Reduced MIP has 5608 rows, 6197 columns, and 25438 nonzeros.
+Reduced MIP has 3140 binaries, 3057 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.05 sec. (24.63 ticks)
+Probing fixed 176 vars, tightened 84 bounds.
+Probing changed sense of 18 constraints.
+Probing time = 0.13 sec. (23.12 ticks)
+Cover probing fixed 0 vars, tightened 1 bounds.
+Tried aggregator 3 times.
+Detecting symmetries...
+MIP Presolve eliminated 312 rows and 309 columns.
+MIP Presolve modified 79 coefficients.
+Aggregator did 5 substitutions.
+Reduced MIP has 5291 rows, 5883 columns, and 23755 nonzeros.
+Reduced MIP has 2957 binaries, 2926 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.08 sec. (44.59 ticks)
+Probing fixed 728 vars, tightened 704 bounds.
+Probing changed sense of 3 constraints.
+Probing time = 0.10 sec. (20.67 ticks)
+Cover probing fixed 54 vars, tightened 294 bounds.
+Clique table members: 16435.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 32 threads.
+Root relaxation solution time = 0.85 sec. (120.93 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0      896.2893   186                    896.2893     2392         
+      0     0      957.2175   236                   Cuts: 284     2811         
+      0     0      985.7075   294                   Cuts: 216     3179         
+Detecting symmetries...
+
+Repeating presolve.
+Tried aggregator 2 times.
+MIP Presolve eliminated 1384 rows and 1658 columns.
+MIP Presolve modified 352 coefficients.
+Aggregator did 3 substitutions.
+Reduced MIP has 3904 rows, 4222 columns, and 17343 nonzeros.
+Reduced MIP has 2110 binaries, 2112 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.05 sec. (29.15 ticks)
+Probing fixed 88 vars, tightened 50 bounds.
+Probing time = 0.05 sec. (14.56 ticks)
+Cover probing fixed 0 vars, tightened 1 bounds.
+Tried aggregator 1 time.
+MIP Presolve eliminated 91 rows and 139 columns.
+MIP Presolve modified 116 coefficients.
+Reduced MIP has 3813 rows, 4083 columns, and 16872 nonzeros.
+Reduced MIP has 2022 binaries, 2061 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.03 sec. (17.21 ticks)
+Probing fixed 1 vars, tightened 1 bounds.
+Probing time = 0.04 sec. (11.58 ticks)
+Tried aggregator 1 time.
+Detecting symmetries...
+MIP Presolve eliminated 2 rows and 2 columns.
+MIP Presolve modified 4 coefficients.
+Reduced MIP has 3811 rows, 4081 columns, and 16861 nonzeros.
+Reduced MIP has 2021 binaries, 2060 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.02 sec. (10.59 ticks)
+Represolve time = 0.30 sec. (118.12 ticks)
+Probing time = 0.02 sec. (4.71 ticks)
+Clique table members: 14101.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 32 threads.
+Root relaxation solution time = 1.45 sec. (245.60 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0      985.9386   291                    985.9386     3205         
+      0     0      998.2789   298                   Cuts: 205     3657         
+      0     0     1008.0834   340                   Cuts: 169     3983         
+      0     0     1012.0261   310                   Cuts: 188     4188         
+      0     0     1014.2943   331                    Cuts: 86     4320         
+      0     0     1015.8038   334                    Cuts: 64     4430         
+      0     0     1017.7455   333                    Cuts: 74     4567         
+      0     0     1018.5189   345                    Cuts: 45     4665         
+      0     0     1019.1374   345                    Cuts: 56     4764         
+      0     0     1019.7776   343                    Cuts: 70     4832         
+      0     0     1020.3322   340                    Cuts: 19     4910         
+      0     0     1020.9518   338                    Cuts: 24     4971         
+      0     0     1021.1986   331                    Cuts: 23     5028         
+      0     0     1024.5453   321                    Cuts: 28     5209         
+      0     0     1027.1727   368                    Cuts: 77     5403         
+      0     0     1029.8176   348                   Cuts: 103     5576         
+      0     0     1030.2168   325                    Cuts: 62     5687         
+      0     0     1030.3333   333                    Cuts: 32     5739         
+      0     0     1030.3424   334                    Cuts: 18     5750         
+Detecting symmetries...
+      0     2     1030.3424   334                   1033.7846     5750         
+Elapsed time = 14.49 sec. (3711.51 ticks, tree = 0.02 MB, solutions = 0)
+      3     4     1085.9167   263                   1033.7846     7203         
+     40    16     1097.1858   244                   1033.7846    11026         
+    410    19    infeasible                         1033.7846    37382         
+    448    13     1040.6649   325                   1033.7846    40767         
+    457     8     1225.7367   248                   1033.7846    46488         
+
+Clique cuts applied:  13
+Cover cuts applied:  1
+Implied bound cuts applied:  380
+Flow cuts applied:  205
+Mixed integer rounding cuts applied:  103
+Flow path cuts applied:  1
+Zero-half cuts applied:  15
+Lift and project cuts applied:  19
+Gomory fractional cuts applied:  5
+
+Root node processing (before b&c):
+  Real time             =    8.70 sec. (3670.17 ticks)
+Parallel b&c, 32 threads:
+  Real time             =   29.43 sec. (1480.06 ticks)
+  Sync time (average)   =   23.28 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =   38.12 sec. (5150.23 ticks)
+Number of arguments: 4
+
+File path: ../Data/Demo/50/RC102_50.txt
+Capacity of FEV: 600
+Capacity of SEV: 50
+Execution time limit: 340
+Case: r
+
+Number of customers: 48
+./Result/RC102_50/RC102_50-Q50-r
+No feasible solution found.

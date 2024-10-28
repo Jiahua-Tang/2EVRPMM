@@ -1,0 +1,71 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               20400
+Tried aggregator 1 time.
+MIP Presolve eliminated 13331 rows and 9271 columns.
+MIP Presolve modified 24060 coefficients.
+Reduced MIP has 15001 rows, 18351 columns, and 71230 nonzeros.
+Reduced MIP has 9262 binaries, 9089 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.15 sec. (88.50 ticks)
+Probing fixed 777 vars, tightened 946 bounds.
+Probing changed sense of 7 constraints.
+Probing time = 0.57 sec. (118.07 ticks)
+Cover probing fixed 370 vars, tightened 0 bounds.
+Tried aggregator 2 times.
+MIP Presolve eliminated 1421 rows and 2099 columns.
+MIP Presolve modified 78 coefficients.
+Aggregator did 6 substitutions.
+Reduced MIP has 13574 rows, 16246 columns, and 63185 nonzeros.
+Reduced MIP has 8110 binaries, 8136 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.07 sec. (41.72 ticks)
+Probing time = 0.07 sec. (10.12 ticks)
+Tried aggregator 1 time.
+Detecting symmetries...
+Reduced MIP has 13574 rows, 16246 columns, and 63185 nonzeros.
+Reduced MIP has 8110 binaries, 8136 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.07 sec. (38.30 ticks)
+Probing time = 0.06 sec. (9.94 ticks)
+Clique table members: 43154.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 32 threads.
+Root relaxation solution time = 2.73 sec. (500.13 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     1193.0864   397                   1193.0864       27         
+      0     0     1249.0913   572                   Cuts: 697     1480         
+      0     0     1276.9685   647                   Cuts: 752     2604         
+      0     0     1355.9514   595                   Cuts: 550     5823         
+      0     0        cutoff                                       5833         
+Elapsed time = 12.93 sec. (6813.38 ticks, tree = 0.01 MB, solutions = 0)
+
+Clique cuts applied:  14
+Cover cuts applied:  1
+Implied bound cuts applied:  566
+Flow cuts applied:  259
+Mixed integer rounding cuts applied:  107
+Flow path cuts applied:  3
+Zero-half cuts applied:  23
+Lift and project cuts applied:  8
+Gomory fractional cuts applied:  8
+
+Root node processing (before b&c):
+  Real time             =   12.94 sec. (6813.89 ticks)
+Parallel b&c, 32 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
+  Sync time (average)   =    0.00 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =   12.94 sec. (6813.89 ticks)
+Number of arguments: 4
+
+File path: ../Data/Demo/100/R102.txt
+Capacity of FEV: 600
+Capacity of SEV: 50
+Execution time limit: 340
+Case: r
+
+Number of customers: 100
+./Result/R102/R102-Q50-r
+No feasible solution found.

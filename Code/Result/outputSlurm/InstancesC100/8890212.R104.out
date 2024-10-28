@@ -1,0 +1,62 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               20400
+Tried aggregator 1 time.
+MIP Presolve eliminated 4573 rows and 2763 columns.
+MIP Presolve modified 41488 coefficients.
+Reduced MIP has 23756 rows, 24859 columns, and 106770 nonzeros.
+Reduced MIP has 12420 binaries, 12439 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.17 sec. (94.17 ticks)
+Probing fixed 184 vars, tightened 859 bounds.
+Probing changed sense of 18 constraints.
+Probing time = 5.76 sec. (64.21 ticks)
+Tried aggregator 2 times.
+Detecting symmetries...
+MIP Presolve eliminated 1097 rows and 1050 columns.
+MIP Presolve modified 16 coefficients.
+Aggregator did 7 substitutions.
+Reduced MIP has 22652 rows, 23802 columns, and 101597 nonzeros.
+Reduced MIP has 12232 binaries, 11570 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.17 sec. (93.36 ticks)
+Probing fixed 1945 vars, tightened 1185 bounds.
+Probing time = 7.82 sec. (54.54 ticks)
+Clique table members: 65605.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 32 threads.
+Root relaxation solution time = 3.90 sec. (649.94 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     1248.7155   348                   1248.7155       30         
+      0     0        cutoff                                       1329         
+Elapsed time = 21.74 sec. (3276.02 ticks, tree = 0.01 MB, solutions = 0)
+
+Clique cuts applied:  4
+Cover cuts applied:  3
+Implied bound cuts applied:  210
+Flow cuts applied:  174
+Mixed integer rounding cuts applied:  62
+Zero-half cuts applied:  30
+Lift and project cuts applied:  16
+Gomory fractional cuts applied:  90
+
+Root node processing (before b&c):
+  Real time             =   21.74 sec. (3277.01 ticks)
+Parallel b&c, 32 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
+  Sync time (average)   =    0.00 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =   21.74 sec. (3277.01 ticks)
+Number of arguments: 4
+
+File path: ../Data/Demo/100/R104.txt
+Capacity of FEV: 600
+Capacity of SEV: 50
+Execution time limit: 340
+Case: r
+
+Number of customers: 100
+./Result/R104/R104-Q50-r
+No feasible solution found.

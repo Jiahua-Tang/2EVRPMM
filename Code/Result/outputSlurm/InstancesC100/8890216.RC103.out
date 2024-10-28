@@ -1,0 +1,52 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               20400
+Tried aggregator 1 time.
+MIP Presolve eliminated 7397 rows and 5162 columns.
+MIP Presolve modified 35986 coefficients.
+Reduced MIP has 20932 rows, 22460 columns, and 94846 nonzeros.
+Reduced MIP has 11232 binaries, 11228 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.16 sec. (85.23 ticks)
+Probing fixed 514 vars, tightened 691 bounds.
+Probing changed sense of 19 constraints.
+Probing time = 0.77 sec. (186.26 ticks)
+Cover probing fixed 0 vars, tightened 74 bounds.
+Tried aggregator 2 times.
+Detecting symmetries...
+MIP Presolve eliminated 1189 rows and 1209 columns.
+MIP Presolve modified 9556 coefficients.
+Aggregator did 11 substitutions.
+Reduced MIP has 19732 rows, 21240 columns, and 88955 nonzeros.
+Reduced MIP has 10711 binaries, 10529 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.14 sec. (75.97 ticks)
+Probing fixed 1391 vars, tightened 1119 bounds.
+Probing time = 0.65 sec. (166.87 ticks)
+Clique table members: 59617.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 32 threads.
+Root relaxation solution time = 5.49 sec. (1122.02 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0    infeasible                                      10333         
+
+Root node processing (before b&c):
+  Real time             =    8.41 sec. (2292.18 ticks)
+Parallel b&c, 32 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
+  Sync time (average)   =    0.00 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =    8.41 sec. (2292.18 ticks)
+Number of arguments: 4
+
+File path: ../Data/Demo/100/RC103.txt
+Capacity of FEV: 600
+Capacity of SEV: 50
+Execution time limit: 340
+Case: r
+
+Number of customers: 100
+./Result/RC103/RC103-Q50-r
+No feasible solution found.

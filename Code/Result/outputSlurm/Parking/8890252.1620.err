@@ -1,0 +1,32 @@
+    Updating registry at `~/.julia/registries/General.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+GKS: cannot open display - headless operation mode active
+
+[171695] signal 7 (2): Bus error
+in expression starting at /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-compare-result-parking.jl:622
+Allocations: 35993237 (Pool: 35992233; Big: 1004); GC: 19
+/var/spool/slurm//job8890252/slurm_script: line 22: 171695 Killed                  julia /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-compare-result-parking.jl 100/C101.txt 600 50 340 r 16 20
+slurmstepd: error: Detected 1 oom-kill event(s) in step 8890252.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.

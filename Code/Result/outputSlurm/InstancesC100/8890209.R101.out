@@ -1,0 +1,29 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               20400
+Tried aggregator 2 times.
+MIP Presolve eliminated 19730 rows and 14020 columns.
+MIP Presolve modified 10331 coefficients.
+Aggregator did 1 substitutions.
+Reduced MIP has 8599 rows, 13601 columns, and 45006 nonzeros.
+Reduced MIP has 6798 binaries, 6803 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.11 sec. (60.54 ticks)
+
+Root node processing (before b&c):
+  Real time             =    0.51 sec. (296.25 ticks)
+Parallel b&c, 32 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
+  Sync time (average)   =    0.00 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =    0.51 sec. (296.25 ticks)
+Number of arguments: 4
+
+File path: ../Data/Demo/100/R101.txt
+Capacity of FEV: 600
+Capacity of SEV: 50
+Execution time limit: 340
+Case: r
+
+Number of customers: 100
+./Result/R101/R101-Q50-r
+No feasible solution found.
