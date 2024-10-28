@@ -15,6 +15,8 @@ np = 0
 nc = 0
 PI = []
 V2 = 1:10
+Q1 = 0
+Q2 = 0
 
 # Function to calculate distance matrix
 function calculate_distance_matrix(x,y,nc)
@@ -88,7 +90,8 @@ function readFile(file_path)
             if i == start_index + 1
                 push!(x_coor_depot, parse(Int, fields[2]))
                 push!(y_coor_depot, parse(Int, fields[3]))
-                zeta = parse(Int, fields[6])
+                # zeta = parse(Int, fields[6])
+                zeta = 100000
             else
                 # Customers
                 customer = Customer(
@@ -113,6 +116,58 @@ function readFile(file_path)
         push!(time_windows, (customer.ready_time, customer.due_date))
     end
     
+    return x_coor_customers, y_coor_customers, x_coor_depot, y_coor_depot, demands, time_windows, zeta
+    
+end
+
+function readSetE(file_path)
+    # Read the file lines
+    lines = open(file_path, "r") do file
+        readlines(file)
+    end
+
+    # Find the index where the customer data starts
+    start_index_c = findfirst(contains.(lines, "NODE_COORD_SECTION"))
+    start_index_d = findfirst(contains.(lines, "DEMAND_SECTION"))
+    global Q1
+   # Find the line containing "CAPACITY" and extract the integer value
+    Q1 = parse(Int, split(strip(lines[findfirst(contains.(lines, "CAPACITY"))]))[end])*2
+    # println(Q1)
+    # Q1 = Q1*2
+
+    x_coor_customers = []
+    x_coor_depot = []
+    y_coor_customers = []
+    y_coor_depot = []
+    demands = []
+    time_windows = []
+    zeta = 0
+
+    # Parse the customer data
+    for i in start_index_c+1:length(lines)-4
+        line = strip(lines[i])
+        if !isempty(line)
+            fields = split(line)
+            # Depot
+            if i == start_index_c + 1
+                push!(x_coor_depot, parse(Int, fields[2]))
+                push!(y_coor_depot, parse(Int, fields[3]))
+                # zeta = parse(Int, fields[6])
+                zeta = 100000
+            # Coord
+            elseif i< start_index_d
+                push!(x_coor_customers, parse(Int, fields[2]))
+                push!(y_coor_customers, parse(Int, fields[3]))
+            elseif i>start_index_d +1
+                if parse(Int, fields[2]) != 0
+                    push!(demands, parse(Int, fields[2]))
+                end
+            end
+        end
+    end
+    global Q2
+    println(maximum(demands) , " ", minimum(demands))
+    Q2 = maximum(demands) + minimum(demands)
     return x_coor_customers, y_coor_customers, x_coor_depot, y_coor_depot, demands, time_windows, zeta
     
 end
@@ -213,7 +268,6 @@ function randomGenerateParking(x_coor_customers,y_coor_customers)
     end
     
     # println("PI : ", PI)
-
     return x_coor_parkings, y_coor_parkings, PI
 end
 
@@ -260,10 +314,11 @@ function backTracking(z, colorR, x)
     end
 end
 
-function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String)
+function runModel(filePath::String, minutes::Int)
 
     #===========SET==============================================================#
-    x_coor_customers, y_coor_customers, x_coor_depot, y_coor_depot, demands, time_windows, zeta = readFile(filePath)
+    x_coor_customers, y_coor_customers, x_coor_depot, y_coor_depot, demands, time_windows, zeta = readSetE(filePath)
+    println(x_coor_depot, " ", y_coor_depot)
     # Number of customers
     global nc 
     nc = length(x_coor_customers)
@@ -286,9 +341,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     N = 1:np+nc+1 #Set of nodes
 
     #===========PARAMETER========================================================#
-    Q0 = 10000 #Capacity of FEV
-    # Q1 = 6000 #Capacity of MM
-    # Q2 = 2000 #Capacity of SEV
+    Q0 = sum(demands)#Capacity of FEV
     M = 10000
 
     eta1 = 2
@@ -300,8 +353,9 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     y_coor = vcat(y_coor_depot, y_coor_parkings, y_coor_customers)
 
     node_labels = [string("N.", i) for i in N]
-    demand_labels = [string(demands[i-1-np]," ",time_windows[i-1-np]) for i in C]
-
+    # demand_tw_labels = [string(demands[i-1-np]," ",time_windows[i-1-np]) for i in C]
+    demand_labels = [string(demands[i-1-np]) for i in C]
+    # tw_labels = [string(time_windows[i-1-np]) for i in C]
     # Disatance matrix
     distances = calculate_distance_matrix(x_coor,y_coor,nc)
     Vitesse1 = 1
@@ -311,15 +365,12 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
 
     println("Number of customers: ",nc)
     displayMap()
-
-    demand_labels = [string(demands[i-1-np]) for i in C]
-    tw_labels = [string(time_windows[i-1-np]) for i in C]
     
     for i in N
         annotate!(x_coor[i], y_coor[i]+0.3, text(node_labels[i], :center, 4))
         if i in C
             annotate!(x_coor[i]-0.3, y_coor[i]-0.3, text(demand_labels[i-1-np], :center, 6)) 
-            annotate!(x_coor[i]-0.3, y_coor[i]-2, text(tw_labels[i-1-np], :center, 4)) 
+            # annotate!(x_coor[i]-0.3, y_coor[i]-2, text(tw_labels[i-1-np], :center, 4)) 
         end 
     end 
 
@@ -338,7 +389,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
     if !isdir(save_dir)
         mkpath(save_dir)  # mkpath will create all necessary directories along the path
     end
-
+    ##=
     # Print paths to verify correctness
     # println("SVG path: ", data_path_svg)
     # println("PNG path: ", data_path_png)
@@ -371,7 +422,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
          sum(distances[i, j] * x[i, j] for i in A1, j in A1 if i != j) +
          sum(distances[i, j] * y[i, j] for i in A1, j in A1 if i != j) +
          sum(distances[i, j] * z[i, j] for i in A2, j in A2 if i != j))
-     #======================================================================#
+    #========================================================================#
      #1 #2
      #Flow conservation at parking for FEV
      @constraint(model, [i in P], sum(x[j,i] for j in A1 if i != j) == sum(x[i,j] for j in A1 if i != j))
@@ -438,7 +489,7 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
      @constraint(model, [i in P, j in P], t[i] + eta1*(1-x[i,j]) + TT1[i,j]*x[i,j] <= t[j] + M*(1 - x[i,j]))
      #23
      #Time constraint for SEV and MTZ
-     @constraint(model, [i in C, j in C], t[i]+eta2*(1-z[i,j])+TT2[i,j]*z[i,j] <= t[j]+M * (1 - z[i,j]))
+     @constraint(model, [i in C, j in C], t[i]+eta2*(1-z[i,j]) + TT2[i,j]*z[i,j] <= t[j]+M * (1 - z[i,j]))
     #  #24
     #  @constraint(model, [i in C], t[i] >= time_windows[i-1-np][1])
     #  @constraint(model, [i in C], t[i] <= time_windows[i-1-np][2])
@@ -471,7 +522,6 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
         return
     end
 
-
     println("Total execution time: $total_time seconds")
     println("Total distance traveled: ", objective_value(model))
     println("File name: ", fileName)
@@ -499,6 +549,13 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
         displayMap()
 #     time_labels = [string("t= ", round(value(t[i]))) for i in A2]
 #     node_labels = [string("N.", i) for i in N]
+        for i in A1
+            for j in A1
+                if round(value(x[i, j])) == 1 print("x[",i,",",j,"]=",round(value(x[i,j]))," ") end
+                if round(value(y[i, j])) == 1 print("y[",i,",",j,"]=",round(value(y[i,j]))," ") end
+            end
+            # print("\n")
+        end
         for i in N
             # Add node number lable
             # annotate!(x_coor[i], y_coor[i]+0.3, text(node_labels[i], :center, 4))
@@ -528,50 +585,38 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
                     annotate!(x_coor[i]-0.3, y_coor[i]-0.3, text(demand_labels[i-1-np], :center, 6)) 
                 end 
             end
-            plot!()
+            
         end     
     end
 
+    plot!()
     result_path_svg = joinpath(save_dir, fileName * resultStatus *string(minutes)* "min-result.svg")
     result_path_png = joinpath(save_dir, fileName * resultStatus *string(minutes)* "min-result.png")
     
     savefig(result_path_svg)
     savefig(result_path_png)
+    
 end
 
 #=================================================================================================#
 
 println("Number of arguments: ", length(ARGS))
 
-filePath = "../Data/Demo/Test.txt" # use in command
+filePath = "../Data/E/E-n22-k4.vrp" # use in command
 # filePath = "Data/Demo/C101-20.txt" # use in VSCode
 case = "r"
-Q1 = 600
-Q2 = 100
 runningTime = 10
 
 if length(ARGS) >= 1
-    if length(ARGS[1])>1 filePath = "../Data/Demo/" * ARGS[1]     end
+    if length(ARGS[1])>1 filePath = "../Data/E/" * ARGS[1]     end
     if length(ARGS) >= 2
-        if readArgument(ARGS[2]) != 0 Q1 = readArgument(ARGS[2])  end
-        if length(ARGS) >= 3
-            if readArgument(ARGS[3]) != 0 Q2 = readArgument(ARGS[3])  end
-            if length(ARGS) >= 4
-                if readArgument(ARGS[4]) != 0 runningTime = readArgument(ARGS[4])  end
-                if length(ARGS) >= 5
-                    if ARGS[5] == "r"||"f" case = ARGS[5]  end
-                end
-            end
-        end
+        if readArgument(ARGS[2]) != 0 runningTime = readArgument(ARGS[2])  end
     end
 else
     println("No arguments provided")
 end
 
 println("\n", "File path: ", filePath)
-println("Capacity of FEV: ",Q1)
-println("Capacity of SEV: ",Q2)
 println("Execution time limit: ",runningTime)
-println("Case: ",case,"\n")
 
-model = runModel(filePath, Q1,Q2,runningTime,case) 
+model = runModel(filePath, runningTime) 

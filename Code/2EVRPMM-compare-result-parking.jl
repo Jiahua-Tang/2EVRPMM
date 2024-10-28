@@ -465,19 +465,19 @@ function runModel(filePath::String, Q1::Int, Q2::Int, minutes::Int, case::String
      #19
      #Connection and capacity limit for SEV
      @constraint(model, [i in A2, j in A2], f[i,j] <= Q2 * sum(z[i,j]))
-     #20 #21
-     #Total working time cannot exceed the length of planning horizon
-     @constraint(model, sum(TT1[i,j]*x[i,j] for i in A1 for j in A1) + eta1*sum(PI[p-1]*x[i,p] for p in P for i in A1)<= zeta)
-     @constraint(model, [i in C, j in P], t[i]+TT2[i,j]+eta2 <= zeta + M*(1 - z[i,j]))
+    #  #20 #21
+    #  #Total working time cannot exceed the length of planning horizon
+    #  @constraint(model, sum(TT1[i,j]*x[i,j] for i in A1 for j in A1) + eta1*sum(PI[p-1]*x[i,p] for p in P for i in A1)<= zeta)
+    #  @constraint(model, [i in C, j in P], t[i]+TT2[i,j]+eta2 <= zeta + M*(1 - z[i,j]))
      #22
      #Time constraint for FEV and MTZ
      @constraint(model, [i in P, j in P], t[i] + eta1*(1-x[i,j]) + TT1[i,j]*x[i,j] <= t[j] + M*(1 - x[i,j]))
      #23
      #Time constraint for SEV and MTZ
      @constraint(model, [i in C, j in C], t[i]+eta2*(1-z[i,j])+TT2[i,j]*z[i,j] <= t[j]+M * (1 - z[i,j]))
-     #24
-     @constraint(model, [i in C], t[i] >= time_windows[i-1-np][1])
-     @constraint(model, [i in C], t[i] <= time_windows[i-1-np][2])
+    #  #24
+    #  @constraint(model, [i in C], t[i] >= time_windows[i-1-np][1])
+    #  @constraint(model, [i in C], t[i] <= time_windows[i-1-np][2])
      #25 26
      #Arrival time initialization
      @constraint(model, [i in P], TT1[1,i] * x[1,i] <= t[i])
