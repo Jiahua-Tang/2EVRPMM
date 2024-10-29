@@ -1,0 +1,49 @@
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+ERROR: LoadError: SystemError: opening file "../Data/E/E-n22-k3.vrp": No such file or directory
+Stacktrace:
+  [1] systemerror(p::String, errno::Int32; extrainfo::Nothing)
+    @ Base ./error.jl:176
+  [2] systemerror
+    @ ./error.jl:175 [inlined]
+  [3] open(fname::String; lock::Bool, read::Bool, write::Nothing, create::Nothing, truncate::Nothing, append::Nothing)
+    @ Base ./iostream.jl:295
+  [4] open
+    @ ./iostream.jl:277 [inlined]
+  [5] open(fname::String, mode::String; lock::Bool)
+    @ Base ./iostream.jl:358
+  [6] open(fname::String, mode::String)
+    @ Base ./iostream.jl:357
+  [7] open(::var"#4#5", ::String, ::Vararg{String}; kwargs::@Kwargs{})
+    @ Base ./io.jl:408
+  [8] open
+    @ ./io.jl:407 [inlined]
+  [9] readSetE(file_path::String)
+    @ Main ~/2EVRPMM/Code/2EVRPMM-V7-z-2index-setE.jl:125
+ [10] runModel(filePath::String, minutes::Int64)
+    @ Main ~/2EVRPMM/Code/2EVRPMM-V7-z-2index-setE.jl:320
+ [11] top-level scope
+    @ ~/2EVRPMM/Code/2EVRPMM-V7-z-2index-setE.jl:622
+in expression starting at /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index-setE.jl:622

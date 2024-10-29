@@ -1,0 +1,44 @@
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+ERROR: LoadError: MethodError: no method matching +(::Nothing, ::Int64)
+The function `+` exists, but no method is defined for this combination of argument types.
+
+Closest candidates are:
+  +(::Any, ::Any, !Matched::Any, !Matched::Any...)
+   @ Base operators.jl:596
+  +(!Matched::MutableArithmetics.Zero, ::Any)
+   @ MutableArithmetics ~/.julia/packages/MutableArithmetics/sjjl8/src/rewrite.jl:64
+  +(::Any, !Matched::MutableArithmetics.Zero)
+   @ MutableArithmetics ~/.julia/packages/MutableArithmetics/sjjl8/src/rewrite.jl:65
+  ...
+
+Stacktrace:
+ [1] readSetE(file_path::String)
+   @ Main ~/2EVRPMM/Code/2EVRPMM-V7-z-2index-setE.jl:147
+ [2] runModel(filePath::String, minutes::Int64)
+   @ Main ~/2EVRPMM/Code/2EVRPMM-V7-z-2index-setE.jl:320
+ [3] top-level scope
+   @ ~/2EVRPMM/Code/2EVRPMM-V7-z-2index-setE.jl:622
+in expression starting at /gpfs/users/tangj/2EVRPMM/Code/2EVRPMM-V7-z-2index-setE.jl:622
