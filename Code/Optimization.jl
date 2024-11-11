@@ -58,9 +58,22 @@ function resolve(model, x, y, t, w, z, f, minutes)
         A1 = 1 : 1+np #Set of FE arcs
         A2 = 2 : 1+np+nc #Set of SE arcs
         N = 1:np+nc+1 #Set of nodes
+        
         node_labels = [string("N.", i) for i in N]
         demand_labels = [string("D= ",demands[i-np-1]) for i in C]
-        time_labels = [string("t= ", round(value(t[i]))) for i in A2]
+        # Time window label
+
+        # x
+        # y
+        # z
+        # f
+        # w
+
+        for i in P
+            println("$i: ", totalDuration(i))
+        end
+        
+        time_labels = [string("t= ", round(value(t[i]))) for i in A2] # t
 
         for i in N
             # Add node number lable

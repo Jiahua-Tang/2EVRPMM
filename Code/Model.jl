@@ -3,7 +3,16 @@ model = Model(CPLEX.Optimizer)
 set_attribute(model, "CPX_PARAM_EPINT", 1e-8)
 set_optimizer_attribute(model, "CPX_PARAM_MIPSEARCH", 1)
 
-
+function totalDuration(z, x, d)
+    for k in 2:1+np+nc
+        if round(value(z[x,k])) == 1
+            d = d + distances[x,k]
+            if k in 2:1+np   return d  end
+            totalDuration(z, k)           
+        end
+    end
+    return d
+end
 
 function buildModel()
     P = 2 : np+1 #Set of parking place
@@ -117,6 +126,10 @@ function buildModel()
     #Arrival time initialization
     @constraint(model, [i in P], TT1[1,i] * x[1,i] <= t[i])
     @constraint(model, [p in P, j in C], t[p] + TT2[p,j] * z[p,j] <= t[j])
+
+    #27
+    #Max duration
+    # @constraint(model, [i in P], totalDuration(z, i, 0)<=2000)
 
     return model, x, y, t, w, z, f
 
