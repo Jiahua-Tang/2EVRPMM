@@ -3,6 +3,7 @@ include("Utiles.jl")
 include("Model.jl")
 using Dates
 using JuMP, CPLEX
+using Plots.PlotMeasures 
 
 function resolve(model, x, y, t, w, z, f, minutes,tau)
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60 * minutes)
@@ -53,8 +54,25 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
     if primal_status(model) == MOI.FEASIBLE_POINT
         light_green = RGBA(0.5, 1.0, 0.5, 1.0)
         displayMap()
-        # xlims, ylims = Plots.xlims(p), Plots.ylims(p)
-        annotate!(300,700, "Note on the right")  
+        num_y = maximum(y_coor)
+        num_y =printText(num_y,"File name: "*fileName)
+        if termination_status(model) == MOI.OPTIMAL
+            num_y = printText(num_y,"Optimal solution found!")
+        else
+            num_y = printText(num_y,"Feasible solution found within the time limit: $runningTime")
+        end
+        num_y =printText(num_y,"Objective: "*objective_value(model))
+        num_y =printText(num_y,"Execution time: "*string(total_time))
+        num_y =printText(num_y,"Number of customers: "*string(nc))
+        num_y =printText(num_y,"Capacity of FEV: "*string(Q0))
+        num_y =printText(num_y,"Capacity of Microhub: "*string(Q1))
+        num_y =printText(num_y,"Capacity of SEV: "*string(Q2))
+        num_y =printText(num_y,"Number of parkings: "*string(np))
+        num_y =printText(num_y,"Number of microhubs: "*string(sum(PI)))
+        num_y =printText(num_y,"Number of robots/MM: "*string(length(V2)))
+        num_y =printText(num_y,"Parking generation rule: "*string(case))
+        # num_y =printText(num_y,"Max duration of SEV: "*string(maxDuration))
+        
         title!(fileName)
         P = 2 : np+1 #Set of parking place
         C = np+2 : np+nc+1 #Set of customers
@@ -82,7 +100,7 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
                     formatted_iti = join([i; iti], " -> ")
                     
                     # Print the formatted output
-
+                    num_y = printText(num_y,"total distance of $formatted_iti is : "*string(round(dis, digits=2)))
                     println("total distance of $formatted_iti is : ", round(dis, digits=2))
                 end
             end

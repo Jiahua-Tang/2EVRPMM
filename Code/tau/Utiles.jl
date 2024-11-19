@@ -138,7 +138,7 @@ function displayMap()
                 title = "Coordinate Plot",
                 legend = false, markersize = 6, markercolor = :pink, 
                 marker=:utriangle, markerstrokecolor = :transparent, 
-                markerstrokewidth=0, label = "Customers")
+                markerstrokewidth=0, label = "Customers",right_margin=50mm)
 
     # Create a parking scatter plot
     scatter!(x_coor[2:1+np], y_coor[2:1+np], 
@@ -270,4 +270,15 @@ function backTracking(z, colorR, x)
         end
     end
 
+end
+
+function printText(num_y,text::String)
+    annotate!(maximum(x_coor[2+np:1+nc+np]) +5,
+                                num_y,
+                                Plots.text(
+                                text,
+                                :left,
+                                color=:black,
+                                4))
+    return num_y -1
 end
