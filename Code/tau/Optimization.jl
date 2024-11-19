@@ -37,7 +37,7 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
         # New data to append
         # Time / Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM / #Robot / Parking generation rule / Limit time / Result 
         row_data = [currentTime, fileName, Q0, Q1, Q2, np, sum(PI), length(V2), case, minutes, "No feasible solution found"]
-        open("../Result/output.csv", "a") do file
+        open("../../Result/output.csv", "a") do file
             println(file, join(row_data, ",")) 
         end
         return
@@ -53,6 +53,9 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
     if primal_status(model) == MOI.FEASIBLE_POINT
         light_green = RGBA(0.5, 1.0, 0.5, 1.0)
         displayMap()
+        # xlims, ylims = Plots.xlims(p), Plots.ylims(p)
+        annotate!(300,700, "Note on the right")  
+        title!(fileName)
         P = 2 : np+1 #Set of parking place
         C = np+2 : np+nc+1 #Set of customers
         A1 = 1 : 1+np #Set of FE arcs
@@ -79,6 +82,7 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
                     formatted_iti = join([i; iti], " -> ")
                     
                     # Print the formatted output
+
                     println("total distance of $formatted_iti is : ", round(dis, digits=2))
                 end
             end

@@ -11,7 +11,7 @@ case = "r"
 runningTime = 10 # minute
 
 if length(ARGS) >= 1
-    if length(ARGS[1])>1 filePath = "../../Data/Demo/" * ARGS[1]     end
+    if length(ARGS[1])>1 filePath = "../../Data/" * ARGS[1]     end
     if length(ARGS) >= 2
         if readArgument(ARGS[2]) != 0 runningTime = readArgument(ARGS[2])  end
     end
@@ -32,3 +32,5 @@ model, x, y, t, w, z, f, tau = buildModel()
 
 # Run model, note result
 resolve(model, x, y, t, w, z, f, runningTime, tau)
+
+println("\nrsync -avz tangj@129.175.109.2:/gpfs/users/tangj/2EVRPMM/Result  ~/Downloads/")

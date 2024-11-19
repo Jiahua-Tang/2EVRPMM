@@ -136,16 +136,12 @@ function displayMap()
     # Create a customers scatter plot
     scatter(x_coor[2+np:1+nc+np], y_coor[2+np:1+nc+np],
                 title = "Coordinate Plot",
-                xlabel = "X-axis",
-                ylabel = "Y-axis",
                 legend = false, markersize = 6, markercolor = :pink, 
                 marker=:utriangle, markerstrokecolor = :transparent, 
                 markerstrokewidth=0, label = "Customers")
 
     # Create a parking scatter plot
     scatter!(x_coor[2:1+np], y_coor[2:1+np], 
-            title = "Coordinate Plot",
-            xlabel = "X-axis", ylabel = "Y-axis",
             legend = false)
 
     # Add the depot point in a different color
@@ -192,7 +188,7 @@ function randomGenerateParking(x_coor_customers,y_coor_customers)
 
     # Define the number of divisions (4x4 grid for <=50, 5x5 grid for >50 <=100)
     # if length(x_coor_customers) <=50
-        num_divisions = 4
+    num_divisions = 4
     # else
     #     if length(x_coor_customers) <=100
     #         num_divisions = 5      

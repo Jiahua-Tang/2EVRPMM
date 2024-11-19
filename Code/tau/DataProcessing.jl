@@ -40,7 +40,7 @@ end
 function displayData()
     
     displayMap()
-
+    
     node_labels = [string("N.", i) for i in 1:1+nc+np]
     demand_labels = [string("D= ",demands[i-1]) for i in 2:1+nc]
 #        tw_labels = [string(time_windows[i-1-np]) for i in C]       
@@ -54,9 +54,9 @@ function displayData()
     end 
 
     # Extract the file name (without extension) and create the desired fileName
-    baseName = splitext(basename(filePath))[1]  # This extracts the base name without extension, e.g., C101-10
-    global fileName = baseName * "-Q" * string(Q2) *"-" *case # e.g., C101-10-Q100
-
+    baseName = splitext(basename(filePath))[1]  # This extracts the base name without extension, e.g., C101
+    global fileName = baseName * "-Q" * string(Q2) *"-" *case*"-M"*string(maxDuration) # e.g., C101-Q100-r-M120
+    title!(fileName)
     # Create the save directory, avoiding duplication of the fileName inside the path
     save_dir = joinpath("../../Result", baseName,fileName)  # Only use baseName for the directory structure
     println(save_dir)
