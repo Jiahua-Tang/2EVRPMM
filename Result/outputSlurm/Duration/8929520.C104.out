@@ -1,0 +1,177 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               19800
+Tried aggregator 1 time.
+MIP Presolve eliminated 16701 rows and 16266 columns.
+MIP Presolve modified 16333 coefficients.
+Reduced MIP has 23125 rows, 11456 columns, and 77862 nonzeros.
+Reduced MIP has 5778 binaries, 5578 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.10 sec. (57.05 ticks)
+Probing fixed 841 vars, tightened 843 bounds.
+Probing time = 0.30 sec. (69.48 ticks)
+Cover probing fixed 0 vars, tightened 106 bounds.
+Tried aggregator 1 time.
+MIP Presolve eliminated 1892 rows and 1888 columns.
+MIP Presolve modified 3038 coefficients.
+Reduced MIP has 21233 rows, 9568 columns, and 68995 nonzeros.
+Reduced MIP has 4934 binaries, 4534 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.08 sec. (47.77 ticks)
+Probing fixed 396 vars, tightened 315 bounds.
+Probing time = 0.18 sec. (49.49 ticks)
+Cover probing fixed 0 vars, tightened 124 bounds.
+Tried aggregator 1 time.
+Detecting symmetries...
+MIP Presolve eliminated 717 rows and 711 columns.
+MIP Presolve modified 3130 coefficients.
+Reduced MIP has 20516 rows, 8857 columns, and 65394 nonzeros.
+Reduced MIP has 4535 binaries, 4222 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.06 sec. (35.60 ticks)
+Probing fixed 288 vars, tightened 242 bounds.
+Probing time = 0.17 sec. (43.52 ticks)
+Cover probing fixed 1 vars, tightened 221 bounds.
+Clique table members: 39644.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 32 threads.
+Root relaxation solution time = 4.04 sec. (528.68 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     1109.2784   523                   1109.2784       26         
+      0     0     1156.9448   599                   Cuts: 984     2486         
+      0     0     1184.1471   619                   Cuts: 721     5069         
+      0     0     1194.6929   642                   Cuts: 664     5897         
+      0     0     1200.5962   678                   Cuts: 504     6600         
+      0     0     1204.0534   704                   Cuts: 505     7116         
+Detecting symmetries...
+      0     0     1205.5356   684                   Cuts: 409     7471         
+      0     0     1206.6675   694                   Cuts: 269     7861         
+      0     0     1207.4373   684                   Cuts: 252     8502         
+      0     0     1208.2041   656                   Cuts: 244    11303         
+      0     0     1213.5872   663                   Cuts: 691    11883         
+      0     0     1217.6140   658                   Cuts: 547    12433         
+      0     0     1218.6476   690                   Cuts: 387    12715         
+      0     0     1219.3435   667                   Cuts: 228    12964         
+      0     0     1220.0117   668                   Cuts: 255    13312         
+      0     0     1220.7741   647                   Cuts: 303    13543         
+      0     0     1221.1460   663                   Cuts: 104    13690         
+      0     0     1221.4554   645                    Cuts: 98    13784         
+      0     0     1221.5513   644                    Cuts: 59    13951         
+      0     0     1221.7399   639                    Cuts: 83    14007         
+Detecting symmetries...
+      0     2     1221.8056   646                   1221.7399    14032         
+Elapsed time = 38.05 sec. (18114.18 ticks, tree = 0.02 MB, solutions = 0)
+      1     3     1223.6779   680                   1221.8203    14372         
+      2     4     1235.5078   637                   1221.8203    15393         
+      4     5     1245.8933   623                   1221.8203    15875         
+      5     6     1235.0059   643                   1221.8203    17681         
+      8     7     1257.2914   614                   1221.8379    19602         
+      9     9     1244.0794   633                   1221.8379    21761         
+     10     8     1238.6088   604                   1221.8379    21327         
+     12    10     1241.2333   629                   1225.6919    26893         
+     17    14     1266.5644   649                   1225.6919    37941         
+     38    20     1250.5069   616                   1239.6521    59339         
+Elapsed time = 54.94 sec. (22110.04 ticks, tree = 0.19 MB, solutions = 0)
+     70    15     1261.7832   656                   1240.2829    42996         
+    160    74     1286.4930   617                   1240.2829   165080         
+    258   119     1322.1413   569                   1240.2829   200039         
+    395   196     1349.9616   679                   1240.2829   261217         
+    566   278     1329.0798   642                   1240.2829   367559         
+    739   249     1379.7082   594                   1240.2829   328635         
+    941   429    infeasible                         1240.2829   476620         
+   1173   542     1375.7220   588                   1240.2829   585057         
+   1360   606     1439.5027   587                   1240.2829   639871         
+   1638   643     1395.8395   581                   1247.7787   702776         
+Elapsed time = 107.91 sec. (31745.73 ticks, tree = 12.18 MB, solutions = 0)
+   1913   836     1287.7768   596                   1247.7787   821365         
+   2203   814     1272.3508   636                   1247.9027   812105         
+   2420  1043    infeasible                         1247.9027   982510         
+   2581   877     1317.0844   640                   1247.9027   841855         
+   2769  1025     1290.3652   605                   1263.8524  1094448         
+   2981  1005     1299.4727   631                   1263.8524  1102680         
+   3248  1004    infeasible                         1263.8524  1130745         
+   3598   980     1284.3465   629                   1265.2661  1315060         
+   3990   987     1293.6628   658                   1265.2661  1313287         
+   4466  1084     1374.1547   628                   1265.2661  1419720         
+Elapsed time = 162.93 sec. (41329.68 ticks, tree = 9.22 MB, solutions = 0)
+   5120  1072     1339.4938   572                   1267.6122  1471671         
+   5729  1145     1378.4228   654                   1267.6122  1620181         
+   6156  1136     1386.4047   564                   1267.6122  1597503         
+   6717  1147     1347.7450   596                   1267.6122  1693892         
+   7354  1029     1335.8780   627                   1267.6122  1877267         
+   7940  1005     1374.9709   524                   1281.0700  1893998         
+   8288   817    infeasible                         1281.0700  2053809         
+   8513   832     1332.6416   641                   1281.0700  2079369         
+   8830   742     1365.3726   663                   1281.0700  2123652         
+   9285   161    infeasible                         1284.0054  2310408         
+Elapsed time = 218.27 sec. (50903.11 ticks, tree = 0.32 MB, solutions = 0)
+   9667    84    infeasible                         1284.0054  2358388         
+   9948    54     1505.9765   650                   1325.2267  2409804         
+  10096    31     1482.8506   644                   1350.0581  2465751         
+  10105    67     1379.5662   577                   1350.0581  2385537         
+
+Performing restart 1
+
+Repeating presolve.
+Tried aggregator 1 time.
+MIP Presolve eliminated 1113 rows and 1101 columns.
+MIP Presolve modified 3096 coefficients.
+Reduced MIP has 19403 rows, 7756 columns, and 59857 nonzeros.
+Reduced MIP has 3962 binaries, 3694 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.07 sec. (40.51 ticks)
+Tried aggregator 1 time.
+MIP Presolve eliminated 19 rows and 14 columns.
+MIP Presolve modified 2797 coefficients.
+Reduced MIP has 19384 rows, 7742 columns, and 59789 nonzeros.
+Reduced MIP has 3957 binaries, 3685 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.06 sec. (34.20 ticks)
+Represolve time = 0.46 sec. (168.07 ticks)
+  10106     0     1236.8079   793                   Cuts: 788  2523792         
+  10106     0     1247.3115   785                   Cuts: 239  2524572         
+  10106     0     1252.2030   840                   Cuts: 709  2525419         
+  10106     0     1255.7856   817                   Cuts: 415  2526084         
+  10106     0     1260.2261   803                   Cuts: 426  2527431         
+  10106     0     1263.1094   887                   Cuts: 756  2528162         
+  10106     0     1264.7486   865                   Cuts: 460  2528677         
+  10106     0     1273.8392   849                   Cuts: 279  2529335         
+  10106     0     1276.6196   880                   Cuts: 282  2529689         
+  10106     0    infeasible                         1365.4771  2529814         
+
+GUB cover cuts applied:  7
+Clique cuts applied:  8
+Cover cuts applied:  5
+Implied bound cuts applied:  160
+Flow cuts applied:  294
+Mixed integer rounding cuts applied:  210
+Zero-half cuts applied:  10
+Lift and project cuts applied:  7
+Gomory fractional cuts applied:  19
+
+Root node processing (before b&c):
+  Real time             =   34.08 sec. (18007.97 ticks)
+Parallel b&c, 32 threads:
+  Real time             =  273.00 sec. (73069.07 ticks)
+  Sync time (average)   =   68.93 sec.
+  Wait time (average)   =    0.12 sec.
+                          ------------
+Total (root+branch&cut) =  307.07 sec. (91077.04 ticks)
+Number of arguments: 2
+
+File path: ../../Data/Demo/100/C104.txt
+Execution time limit: 330
+../../Result/C104/C104-Q50-r
+SVG path: ../../Result/C104/C104-Q50-r/C104-Q50-r-data.svg
+PNG path: ../../Result/C104/C104-Q50-r/C104-Q50-r-data.png
+
+Total execution time: 309.678416662 seconds
+File name: C104-Q50-r
+Number of customers: 100
+Capacity of FEV: 1810
+Capacity of Microhub: 200
+Capacity of SEV: 50
+Number of parkings: 16
+Number of microhubs: 10.0
+Number of robots/MM: 10
+Parking generation rule: r
+No feasible solution found.
+rsync -avz tangj@129.175.109.2:/gpfs/users/tangj/2EVRPMM/Result  ~/Downloads/

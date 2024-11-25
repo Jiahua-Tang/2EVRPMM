@@ -138,7 +138,7 @@ function displayMap()
                 title = "Coordinate Plot",
                 legend = false, markersize = 6, markercolor = :pink, 
                 marker=:utriangle, markerstrokecolor = :transparent, 
-                markerstrokewidth=0, label = "Customers",right_margin=50mm)
+                markerstrokewidth=0, label = "Customers",right_margin=100mm)
 
     # Create a parking scatter plot
     scatter!(x_coor[2:1+np], y_coor[2:1+np], 
@@ -279,6 +279,6 @@ function printText(num_y,text::String)
                                 text,
                                 :left,
                                 color=:black,
-                                4))
+                                6))
     return num_y -1
 end

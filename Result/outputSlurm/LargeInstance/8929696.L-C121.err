@@ -1,0 +1,35 @@
+    Updating registry at `~/.julia/registries/General.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+ERROR: LoadError: UndefVarError: `num_divisions` not defined in local scope
+Suggestion: check for an assignment to a local variable that shadows a global of the same name.
+Stacktrace:
+ [1] fixedGenerateParking(x_coor_customers::Vector{Any}, y_coor_customers::Vector{Any})
+   @ Main ~/2EVRPMM/Code/v1/Utiles.jl:223
+ [2] dataProcessing(case::String, filePath::String)
+   @ Main ~/2EVRPMM/Code/v1/DataProcessing.jl:22
+ [3] top-level scope
+   @ ~/2EVRPMM/Code/v1/main.jl:27
+in expression starting at /gpfs/users/tangj/2EVRPMM/Code/v1/main.jl:27

@@ -1,0 +1,42 @@
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+ERROR: LoadError: MethodError: no method matching *(::String, ::Float64)
+The function `*` exists, but no method is defined for this combination of argument types.
+
+Closest candidates are:
+  *(::Any, ::Any, !Matched::Any, !Matched::Any...)
+   @ Base operators.jl:596
+  *(!Matched::Bool, ::T) where T<:AbstractFloat
+   @ Base bool.jl:179
+  *(!Matched::MutableArithmetics.Zero, ::Any)
+   @ MutableArithmetics ~/.julia/packages/MutableArithmetics/sjjl8/src/rewrite.jl:61
+  ...
+
+Stacktrace:
+ [1] resolve(model::Model, x::JuMP.Containers.DenseAxisArray{VariableRef, 2, Tuple{UnitRange{Int64}, UnitRange{Int64}}, Tuple{JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}, JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}}}, y::JuMP.Containers.DenseAxisArray{VariableRef, 2, Tuple{UnitRange{Int64}, UnitRange{Int64}}, Tuple{JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}, JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}}}, t::JuMP.Containers.DenseAxisArray{VariableRef, 1, Tuple{UnitRange{Int64}}, Tuple{JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}}}, w::JuMP.Containers.DenseAxisArray{VariableRef, 1, Tuple{UnitRange{Int64}}, Tuple{JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}}}, z::JuMP.Containers.DenseAxisArray{VariableRef, 2, Tuple{UnitRange{Int64}, UnitRange{Int64}}, Tuple{JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}, JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}}}, f::JuMP.Containers.DenseAxisArray{VariableRef, 2, Tuple{UnitRange{Int64}, UnitRange{Int64}}, Tuple{JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}, JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}}}, minutes::Int64, tau::JuMP.Containers.DenseAxisArray{VariableRef, 1, Tuple{UnitRange{Int64}}, Tuple{JuMP.Containers._AxisLookup{Tuple{Int64, Int64}}}})
+   @ Main ~/2EVRPMM/Code/tau/Optimization.jl:64
+ [2] top-level scope
+   @ ~/2EVRPMM/Code/tau/main.jl:34
+in expression starting at /gpfs/users/tangj/2EVRPMM/Code/tau/main.jl:34

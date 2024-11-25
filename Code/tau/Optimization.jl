@@ -61,7 +61,7 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
         else
             num_y = printText(num_y,"Feasible solution found within the time limit: $runningTime")
         end
-        num_y =printText(num_y,"Objective: "*objective_value(model))
+        num_y =printText(num_y,"Objective: "*string(objective_value(model)))
         num_y =printText(num_y,"Execution time: "*string(total_time))
         num_y =printText(num_y,"Number of customers: "*string(nc))
         num_y =printText(num_y,"Capacity of FEV: "*string(Q0))
@@ -72,7 +72,7 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
         num_y =printText(num_y,"Number of robots/MM: "*string(length(V2)))
         num_y =printText(num_y,"Parking generation rule: "*string(case))
         # num_y =printText(num_y,"Max duration of SEV: "*string(maxDuration))
-        
+        num_y = printText(num_y,"")
         title!(fileName)
         P = 2 : np+1 #Set of parking place
         C = np+2 : np+nc+1 #Set of customers

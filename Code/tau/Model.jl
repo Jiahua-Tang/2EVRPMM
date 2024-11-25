@@ -118,10 +118,10 @@ function buildModel()
 
     #27
     # #Max duration
-    # @constraint(model, [i in P, j in C], tau[j] + M * (1-z[i,j]) >= distances[i,j]  )
-    # @constraint(model, [i in C, j in C], tau[i] + distances[i,j] <= tau[j] + M * (1-z[i,j]) )
-    # @constraint(model, [i in C, j in P], tau[i] + distances[i,j] <= maxDuration + M * (1-z[i,j]) )
-    # @constraint(model, [i in C], tau[i] <= maxDuration)
+    @constraint(model, [i in P, j in C], tau[j] + M * (1-z[i,j]) >= distances[i,j]  )
+    @constraint(model, [i in C, j in C], tau[i] + distances[i,j] <= tau[j] + M * (1-z[i,j]) )
+    @constraint(model, [i in C, j in P], tau[i] + distances[i,j] <= maxDuration + M * (1-z[i,j]) )
+    @constraint(model, [i in C], tau[i] <= maxDuration)
 
     return model, x, y, t, w, z, f, tau
 
