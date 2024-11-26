@@ -7,7 +7,8 @@ include("Optimization.jl")
 # Read file
 println("Number of arguments: ", length(ARGS))
 filePath = "../../Data/Demo/Test.txt"
-case = "f"
+case = "r"
+
 runningTime = 10 # minute
 
 if length(ARGS) >= 1
