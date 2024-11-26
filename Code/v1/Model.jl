@@ -162,23 +162,9 @@ function buildModel()
     @constraint(model, [i in P], TT1[1,i] * x[1,i] <= t[i])
     @constraint(model, [p in P, j in C], t[p] + TT2[p,j] * z[p,j] <= t[j])
 
-    #27
-    #Max duration
-    # @constraint(model, [i in P, j in C], distances[i,j]+totalDuration(z[i,j], j) <=2000)
-
-    # Define the maximum allowed d uration
-    max_duration = 35  # Set this to your desired limit
-
-    # Enforce duration constraint per route starting at each satellite node
-    # for start_satellite in P
-    #     for i in C
-    #         if round(value(z[start_satellite, i])) == 1
-    #             # total_dist = totalDuration(z, i, start_satellite)
-    #             @constraint(model, totalDuration(z, i, start_satellite) <= max_duration)  # Replace `max_duration` with your specific limit
-    #         end
-    #     end
-    # end
-    # @constraint()
+    @constraint(model, [i in A1, j in A1], x[i,j]+x[j,i]<=1)
+    @constraint(model, [i in A1, j in A1], y[i,j]+y[j,i]<=1)
+    @constraint(model, [i in A2, j in A2], z[i,j]+z[j,i]<=1)
 
     return model, x, y, t, w, z, f
 

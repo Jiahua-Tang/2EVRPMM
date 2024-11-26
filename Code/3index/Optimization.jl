@@ -53,12 +53,65 @@ function resolve(model, x, y, t, w, z, f, minutes)
     if primal_status(model) == MOI.FEASIBLE_POINT
         light_green = RGBA(0.5, 1.0, 0.5, 1.0)
         displayMap()
+        num_y = maximum(y_coor)
+        num_y =printText(num_y,"File name: "*fileName)
+        if termination_status(model) == MOI.OPTIMAL
+            num_y = printText(num_y,"Optimal solution found!")
+        else
+            num_y = printText(num_y,"Feasible solution found within the time limit: $runningTime")
+        end
+        num_y =printText(num_y,"Objective: "*string(objective_value(model)))
+        num_y =printText(num_y,"Execution time: "*string(total_time))
+        num_y =printText(num_y,"Number of customers: "*string(nc))
+        num_y =printText(num_y,"Capacity of FEV: "*string(Q0))
+        num_y =printText(num_y,"Capacity of Microhub: "*string(Q1))
+        num_y =printText(num_y,"Capacity of SEV: "*string(Q2))
+        num_y =printText(num_y,"Number of parkings: "*string(np))
+        num_y =printText(num_y,"Number of microhubs: "*string(sum(PI)))
+        num_y =printText(num_y,"Number of robots/MM: "*string(length(V2)))
+        num_y =printText(num_y,"Parking generation rule: "*string(case))
+        # num_y =printText(num_y,"Max duration of SEV: "*string(maxDuration))
+        num_y = printText(num_y,"")
+        title!(fileName)
+        
         P = 2 : np+1 #Set of parking place
         C = np+2 : np+nc+1 #Set of customers
         A1 = 1 : 1+np #Set of FE arcs
         A2 = 2 : 1+np+nc #Set of SE arcs
         N = 1:np+nc+1 #Set of nodes
+        MM = 1:length(V2)*sum(PI)
         
+        # for i in A2
+        #     sum = 0
+        #     for j in A2
+        #         for k in 1:MM
+        #             k = Int(k)
+        #             if Int(round(value(z[i,j,k])))==1
+        #                 sum = sum + 1
+        #                 print("z[$i,$j,$k]=", Int(round(value(z[i,j,k]))),"  ")
+        #             end
+        #         end
+        #     end
+        #     println("")
+        # end
+
+        for k in MM
+            f = 0
+            k = Int(k)
+            for i in A2
+                 for j in A2
+                    if Int(round(value(z[i,j,k])))==1
+                        f =  1
+                        print("z[$i,$j,$k]=", Int(round(value(z[i,j,k]))),"  ")
+                    end
+                 end
+            end
+            if f == 1
+                println("")
+            end
+        end
+
+
         node_labels = [string("N.", i) for i in N]
         demand_labels = [string("D= ",demands[i-np-1]) for i in C]
         # Time window label
@@ -107,7 +160,7 @@ function resolve(model, x, y, t, w, z, f, minutes)
             end
         end  
         # Add SEV arcs between the locations if they are traversed
-        for k in V2
+        for k in 1:length(V2)*sum(PI)
             colorR = RGBA(rand(),rand(),rand(),1)
             for i in A2
                 for j in A2
@@ -117,6 +170,7 @@ function resolve(model, x, y, t, w, z, f, minutes)
                 end
             end 
         end  
+
     end
 
     

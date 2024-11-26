@@ -2,7 +2,7 @@ include("Globals.jl")
 
 using Plots
 using Random
-
+using Plots.PlotMeasures
 
 function totalDuration(z, x, itinerary=[])
     # Add the current point to the itinerary
@@ -129,7 +129,7 @@ end
 
 function displayMap()
 
-    default(size=(1000, 800))
+    default(size=(1200, 800))
     # gr()
     ENV["GKSwstype"] = "100" 
     
@@ -161,6 +161,7 @@ function displayMap()
 end
 
 function randomGenerateParking(x_coor_customers,y_coor_customers)   
+    Random.seed!(42)
     function generatePI(num :: Int)
         PI = vcat(ones(2),zeros(num-2))
         shuffle!(PI)
@@ -170,8 +171,11 @@ function randomGenerateParking(x_coor_customers,y_coor_customers)
             PI = vcat(PI,p)
         end    
         i=1
-        if num == 4     l = 2
-        else   l = 6     end
+        if num == 4 
+            l = 2
+        else    
+            l = 6
+        end
         while i<=l
             p = rand(1:num^2)
             if PI[p] == 0

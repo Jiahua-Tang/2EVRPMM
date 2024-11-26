@@ -10,7 +10,8 @@ function buildModel()
     A2 = 2 : 1+np+nc #Set of SE arcs
     N = 1:np+nc+1 #Set of nodes
     M = 100000
-    
+    MM = 1 : length(V2)*sum(PI)
+
     TT1 = distances
     TT2 = distances
 
@@ -25,8 +26,8 @@ function buildModel()
     end
     @variable(model, t[A2]>=0, Int) #Arrival time
     @variable(model, w[P]>=0, Int) #Amount of freight transported from the depot to parking node
-    @variable(model, z[A2,A2,V2], Bin)#Arc(x,y) traversed by SEV
-    for k in V2
+    @variable(model, z[A2,A2,MM], Bin)#Arc(x,y) traversed by SEV
+    for k in MM
         for i in A2
             @constraint(model, z[i,i,k] == 0)
             for j in A2
@@ -40,7 +41,7 @@ function buildModel()
     #======================================================================#
     @objective(model, Min,
         sum(distances[i, j] * x[i, j] for i in A1, j in A1 if i != j) +
-        sum(distances[i, j] * z[i, j, k] for k in V2, i in A2, j in A2 if i != j))
+        sum(sum(distances[i, j] * z[i, j, k] for i in A2, j in A2 if i != j) for k in MM) )
     #======================================================================#
     #1 #2
     #Flow conservation at parking for FEV
@@ -80,44 +81,50 @@ function buildModel()
     #Can't distribute from a site without MM
     @constraint(model, [p in P], w[p]<=Q1*(sum(y[i,p] for i in A1)+PI[p-1]))
 
-    #14
-    #Flow consercvation at parking and customer for SEV
-    @constraint(model, [i in A2, k in V2], sum(z[i,j,k] for j in A2) == sum(z[j,i,k] for j in A2))
-    #15
-    #Flow consercvation at parking node for SEV
-    @constraint(model, [p in P], sum(z[p,j,k] for j in A2 for k in V2) <= length(V2))
-    #16
-    #Each SEV departs from parking node at most once
-    @constraint(model, [p in P, k in V2], sum(z[p,j,k] for j in A2) <= 1)
 
-    #17
-    #Flow conservation at customer node for SEV
-    @constraint(model, [i in C, j in V2], sum(z[i,j,k] for j in A2, k in V2) == 1)
+    #14
+    # Flow conservation at parking and customer for SEV
+    # @constraint(model, [i in A2], sum(sum(z[i,j,k] for j in A2) for k in MM) == sum(sum(z[j,i,k] for j in A2) for k in MM))
+    @constraint(model, [k in MM, i in A2], sum(z[i,j,k] for j in A2) == sum(z[j,i,k] for j in A2) )
+    # #15
+    # # Flow consercvation for SEV at parking node
+    @constraint(model, [p in P], sum(sum(z[p,j,k] for j in A2) for k in MM) <= length(V2))
+    # 16
+    # # Flow conservation for SEV at customer node
+    @constraint(model, [i in C], sum(sum(z[i,j,k] for j in A2) for k in MM) == 1)
+    # 17
+    # Each SEV departs from parking node at most once
+    # @constraint(model, [k in MM], sum(z[i,j,k] for i in P, j in C) <= 1)   
     #18
-    #Customer demand met
+    # Customer demand met
     @constraint(model, [i in C], sum(f[j,i] for j in A2)-sum(f[i,j] for j in A2) == demands[i-1-np])
     #19
-    #Connection and capacity limit for SEV
-    @constraint(model, [i in A2, j in A2], f[i,j] <= Q2 * sum(z[i,j,k] for k in V2))
-    #  #20 #21
+    # Connection and capacity limit for SEV
+    @constraint(model, [i in A2, j in A2], f[i,j] <= Q2 * sum(z[i,j,k] for k in MM))
+
+
+    #20 #21
     #  #Total working time cannot exceed the length of planning horizon
     #  @constraint(model, sum(TT1[i,j]*x[i,j] for i in A1 for j in A1) + eta1*sum(PI[p-1]*x[i,p] for p in P for i in A1)<= zeta)
     #  @constraint(model, [i in C, j in P], t[i]+TT2[i,j]+eta2 <= zeta + M*(1 - z[i,j]))
-    #22
-    #Time constraint for FEV and MTZ
-    @constraint(model, [i in P, j in P], t[i] + eta1*(1-x[i,j]) + TT1[i,j]*x[i,j] <= t[j] + M*(1 - x[i,j]))
-    #23
-    #Time constraint for SEV and MTZ
-    @constraint(model, [i in C, j in C, k in V2], t[i]+eta2*(1-z[i,j,k])+TT2[i,j]*z[i,j,k] <= t[j]+M * (1 - z[i,j,k]))
+    # 22
+    # #Time constraint for FEV and MTZ
+    @constraint(model, [i in P, j in P], t[i] + eta1 * (1-x[i,j]) + TT1[i,j] * x[i,j] <= t[j] + M * (1 - x[i,j]))
+    # #23
+    # #Time constraint for SEV and MTZ
+    @constraint(model, [i in C, j in C, k in MM], t[i] + eta2 * (1-z[i,j,k]) + TT2[i,j] * z[i,j,k] <= t[j] + M * (1 - z[i,j,k]))
     #  #24
     #  @constraint(model, [i in C], t[i] >= time_windows[i-1-np][1])
     #  @constraint(model, [i in C], t[i] <= time_windows[i-1-np][2])
     #25 26
-    #Arrival time initialization
+    # #Arrival time initialization
     @constraint(model, [i in P], TT1[1,i] * x[1,i] <= t[i])
-    @constraint(model, [p in P, j in C, k in V2], t[p] + TT2[p,j] * z[p,j,k] <= t[j])
-    # Break symmetry
-    @constraint(model, [i in A2, j in A2, k in 1:length(V2)-1], z[i,j,k]>= z[i,j,k+1])
+    @constraint(model, [p in P, j in C, k in MM], t[p] + TT2[p,j] * z[p,j,k] <= t[j])
+    # # Break symmetry
+    # @constraint(model, [i in A2, j in A2, k in 1:length(MM)-1], z[i,j,k]>= z[i,j,k+1])
+    # # Max duration
+    # @constraint(model, [k in MM], sum(z[i,j,k] for i in A2, j in A2) <= maxDuration)
+
 
     return model, x, y, t, w, z, f
 

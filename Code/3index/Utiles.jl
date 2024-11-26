@@ -2,6 +2,7 @@ include("Globals.jl")
 
 using Plots
 using Random
+using Plots.PlotMeasures
 
 # Function to calculate distance matrix
 function calculate_distance_matrix(x,y,nc)
@@ -107,23 +108,19 @@ end
 
 function displayMap()
 
-    default(size=(1000, 800))
+    default(size=(1200, 800))
     # gr()
     ENV["GKSwstype"] = "100" 
     
     # Create a customers scatter plot
     scatter(x_coor[2+np:1+nc+np], y_coor[2+np:1+nc+np],
                 title = "Coordinate Plot",
-                xlabel = "X-axis",
-                ylabel = "Y-axis",
                 legend = false, markersize = 6, markercolor = :pink, 
                 marker=:utriangle, markerstrokecolor = :transparent, 
-                markerstrokewidth=0, label = "Customers")
+                markerstrokewidth=0, label = "Customers",right_margin=100mm)
 
     # Create a parking scatter plot
     scatter!(x_coor[2:1+np], y_coor[2:1+np], 
-            title = "Coordinate Plot",
-            xlabel = "X-axis", ylabel = "Y-axis",
             legend = false)
 
     # Add the depot point in a different color
@@ -143,6 +140,7 @@ function displayMap()
 end
 
 function randomGenerateParking(x_coor_customers,y_coor_customers)   
+    Random.seed!(42)
     function generatePI(num :: Int)
         PI = vcat(ones(2),zeros(num-2))
         shuffle!(PI)
@@ -235,4 +233,16 @@ function fixedGenerateParking(x_coor_customers,y_coor_customers)
     end
 
     return x_coor_parkings, y_coor_parkings, PI
+end
+
+
+function printText(num_y,text::String)
+    annotate!(maximum(x_coor[2+np:1+nc+np]) +5,
+                                num_y,
+                                Plots.text(
+                                text,
+                                :left,
+                                color=:black,
+                                6))
+    return num_y -1
 end
