@@ -24,6 +24,7 @@ function dataProcessing(case::String, filePath::String)
     global nc = length(x_coor_customers)
     global np = length(x_coor_parkings)
 
+    global V2 = 1 : ceil(Q0/Q2*1.5)
     global x_coor = vcat(x_coor_depot, x_coor_parkings, x_coor_customers)
     global y_coor = vcat(y_coor_depot, y_coor_parkings, y_coor_customers)
 

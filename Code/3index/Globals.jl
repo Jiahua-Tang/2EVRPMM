@@ -19,5 +19,6 @@ eta2 = 1
 V1 = 1:1
 V2 = 1:10
 
+K2 = 1:10 
 
 maxDuration = 35

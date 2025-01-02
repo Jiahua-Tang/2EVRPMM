@@ -227,38 +227,6 @@ function randomGenerateParking(x_coor_customers,y_coor_customers)
     return x_coor_parkings, y_coor_parkings, PI
 end
 
-function fixedGenerateParking(x_coor_customers,y_coor_customers)    
-    # Define the boundaries of the customer area
-    x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
-    y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
-
-    # Define the number of divisions (4x4 grid for <=50, 5x5 grid for >50 <=100)
-    if length(x_coor_customers) <=50
-        num_divisions = 5
-        PI = [0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1] #10 MM
-    else
-        if length(x_coor_customers)<=100
-            num_divisions = 6
-            PI = [1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1] #16 MM
-        end
-    end
-    x_step = (x_max - x_min) / num_divisions
-    y_step = (y_max - y_min) / num_divisions
-
-    # Initialize empty arrays to store the parking coordinates
-    x_coor_parkings = []
-    y_coor_parkings = []
-
-    for j in 1:num_divisions-1
-        for i in 1:num_divisions-1
-            push!(x_coor_parkings, x_min + i * x_step)
-            push!(y_coor_parkings, y_min + j * y_step)
-        end
-    end
-
-    return x_coor_parkings, y_coor_parkings, PI
-end
-
 function backTracking(z, colorR, x)
     for k in 2:1+np+nc
         if round(value(z[x,k])) == 1

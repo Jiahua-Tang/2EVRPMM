@@ -95,7 +95,7 @@ function resolve(model, x, y, t, w, z, f, minutes)
         #     println("")
         # end
 
-        for k in MM
+        for k in V2
             f = 0
             k = Int(k)
             for i in A2
@@ -160,7 +160,7 @@ function resolve(model, x, y, t, w, z, f, minutes)
             end
         end  
         # Add SEV arcs between the locations if they are traversed
-        for k in 1:length(V2)*sum(PI)
+        for k in V2
             colorR = RGBA(rand(),rand(),rand(),1)
             for i in A2
                 for j in A2
@@ -173,7 +173,7 @@ function resolve(model, x, y, t, w, z, f, minutes)
 
     end
 
-    
+    plot!()
 
     result_path_svg = savePath * resultStatus * string(minutes) * "min-result.svg"
     result_path_png = savePath * resultStatus * string(minutes) * "min-result.png"
