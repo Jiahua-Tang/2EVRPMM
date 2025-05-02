@@ -6,9 +6,9 @@ include("Optimization.jl")
 
 # Read file
 println("Number of arguments: ", length(ARGS))
-filePath = "../../Data/Demo/Test.txt"
+filePath = "/Users/lenovo1/Library/CloudStorage/OneDrive-EcoledeManagementdeNormandie/2EVRPMM/Data/Demo/C101-70.txt"
 case = "r"
-runningTime = 10 # minute
+runningTime = 20 # minute
 
 if length(ARGS) >= 1
     if length(ARGS[1])>1 filePath = "../../Data/" * ARGS[1]     end
@@ -24,7 +24,7 @@ println("\n", "File path: ", filePath)
 println("Execution time limit: ",runningTime)
 
 # Process data
-dataProcessing(case, filePath)
+dataProcessing(case, "")
 displayData()
 
 # Build model

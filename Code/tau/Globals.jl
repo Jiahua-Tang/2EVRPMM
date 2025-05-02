@@ -19,4 +19,5 @@ eta2 = 1
 V1 = 1:1
 V2 = 1:10
 
-maxDuration = 100
+maxDuration = 300
+maxDuration1e = 1000

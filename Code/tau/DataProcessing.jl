@@ -10,30 +10,50 @@ using FileIO
 
 
 function dataProcessing(case::String, filePath::String)
-    # Read coordinates of customers and depot, Read customers demand
-    global demands
-    x_coor_customers, y_coor_customers, x_coor_depot, y_coor_depot, demands = readFile(filePath)
-    global Q0 = sum(demands)
-    
-    global PI
-    if case == "r"
-        x_coor_parkings, y_coor_parkings, PI = randomGenerateParking(x_coor_customers, y_coor_customers)
+    if filepath == ""
+        
     else
-        x_coor_parkings, y_coor_parkings, PI = fixedGenerateParking(x_coor_customers, y_coor_customers)
+        # Read coordinates of customers and depot, Read customers demand
+        global demands
+        x_coor_customers, y_coor_customers, x_coor_depot, y_coor_depot, demands = readFile(filePath)
+        global Q0 = sum(demands)
+        
+        global PI
+        nb_s = 25
+        nb_m = 10
+
+        PI = vcat(ones(Int, nb_m),zeros(Int, nb_s-nb_m))
+        Random.seed!(42)
+        shuffle!(PI)
+        x_coor_parkings = []
+        y_coor_parkings = []
+        min_x,min_y = minimum(x_coor_customers),minimum(y_coor_customers)
+        max_x,max_y = maximum(x_coor_customers),maximum(y_coor_customers)
+        for i in 1:nb_s
+            push!(x_coor_parkings, rand(min_x: max_x))
+            push!(y_coor_parkings, rand(min_y: max_y))
+        end
+        x_coor_depot = 0
+        y_coor_depot = 0
+        # if case == "r"
+        #     x_coor_parkings, y_coor_parkings, PI = randomGenerateParking(x_coor_customers, y_coor_customers)
+        # else
+        #     x_coor_parkings, y_coor_parkings, PI = fixedGenerateParking(x_coor_customers, y_coor_customers)
+        # end
+        global nc = length(x_coor_customers)
+        global np = length(x_coor_parkings)
+
+        global x_coor = vcat(x_coor_depot, x_coor_parkings, x_coor_customers)
+        global y_coor = vcat(y_coor_depot, y_coor_parkings, y_coor_customers)
+
+
+        # Disatance matrix
+        global distances = calculate_distance_matrix(x_coor,y_coor,nc)
+
+        # for row in eachrow(distances)
+        #     println(row)
+        # end
     end
-    global nc = length(x_coor_customers)
-    global np = length(x_coor_parkings)
-
-    global x_coor = vcat(x_coor_depot, x_coor_parkings, x_coor_customers)
-    global y_coor = vcat(y_coor_depot, y_coor_parkings, y_coor_customers)
-
-
-    # Disatance matrix
-    global distances = calculate_distance_matrix(x_coor,y_coor,nc)
-
-    # for row in eachrow(distances)
-    #     println(row)
-    # end
 
 end
 

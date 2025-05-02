@@ -123,6 +123,7 @@ function buildModel()
     @constraint(model, [i in C, j in P], tau[i] + distances[i,j] <= maxDuration + M * (1-z[i,j]) )
     @constraint(model, [i in C], tau[i] <= maxDuration)
 
+    @constraint(model, sum(distances[i,j]*x[i,j] for i in A1 for j in A1)<=maxDuration1e)
     return model, x, y, t, w, z, f, tau
 
 end
