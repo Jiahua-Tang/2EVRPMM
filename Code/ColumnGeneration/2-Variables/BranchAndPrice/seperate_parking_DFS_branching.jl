@@ -8,213 +8,9 @@ include("Utiles.jl")
 include("column_generation.jl")
 include("branching_strategy.jl")
 
-
-function branchingStrategyParking(x, y, routes_1, routes_2, branchingInfo::BranchingInfo)
-
-    sorted_fractional_y = sort([r for r in 1:length(y) if 0 < y[r] < 1], by = r -> y[r] * (1 - y[r]), rev = true)
-    reverse_route = checkExistanceReversedRoute(sorted_fractional_y, routes_2)
-    continue_status = false
-
-    used_parkings = getUsedParkings(y, routes_2)
-    nb_mm_exceed = getNbUsedParkings(used_parkings) > nb_microhub
-
-    if nb_mm_exceed
-    ## Total number of microhub exceed the limit
-        # result = branchOn1eRoute(branchingInfo, x, routes_1)
-        result = branchOnParking(branchingInfo, x, y, routes_1, routes_2)
-        if !isnothing(result)
-            return result[1], result[2]
-        else
-            continue_status = true
-        end
-    end
-    
-    if !nb_mm_exceed || continue_status
-        if !isempty([r for r in 1:length(x) if 0 < x[r] < 1])
-            result = branchOnSpecialOrderSet(branchingInfo, x, routes_1)
-            if !isnothing(result)
-                return result[1], result[2]  
-            end
-        else
-            if !isnothing(reverse_route) && length(reverse_route) > 3    
-                ## if route A -> custs -> B and route B -> custs -> A exist at the same time
-                result = branchOnReverseRoute(branchingInfo, reverse_route)
-                if !isnothing(result)
-                    ## branch on arc in reverse route
-                    return result[1], result[2]
-                else
-                    ## no more arc in reverse route can be branched on
-                    ## branch on assignment of parking-customer on reverse route
-                    result = branchOnAssignmentParkingCustomer(branchingInfo, reverse_route)
-                    if !isnothing(result)
-                        return result[1], result[2]   
-                    else
-                        ## random branch   
-                        @info "No more possible parking-customer assignment decision: Random branch on combination customers" 
-                        result = branchOnRandomCombinationCustomers(branchingInfo, sorted_fractional_y, routes_2)          
-                    end
-                end
-            else
-            ## no reverse route exist
-                if isempty(sorted_fractional_y)
-                ## if solution is integral but not feasible, branch on usage of parking
-                    result = branchOnArcParkingCustomer(branchingInfo, [r for r in 1:length(y) if y[r] == 1], routes_2)
-                    if !isnothing(result)
-                        return result[1], result[2]     
-                    else
-                        ## random branch   
-                        @info "No more possible arc parking-customer combination decision: Random branch on combination customers"            
-                        result = branchOnRandomCombinationCustomers(branchingInfo, sorted_fractional_y, routes_2)          
-                    end
-                else
-                ## solution is fractional
-                ## find most fractional route and branch on most visited customer
-                    result = branchOnMostFractionalAndVisitedPair(branchingInfo, sorted_fractional_y, routes_2)
-                    if !isnothing(result)
-                        return result[1], result[2]     
-                    else
-                        ## random branch   
-                        @info "No more possible fractional route's parking-customer combination decision: Random branch on combination customers"               
-                        result = branchOnRandomCombinationCustomers(branchingInfo, sorted_fractional_y, routes_2)          
-                    end
-                end
-            end
-        end
-    end
-
-
-    return nothing, nothing
-
-    # if !isinteger(total_number_active_satellite)
-    # # ## if total number of active satellites (total number of 2e routes_2) is fractional
-    # #     @info "Start to branch on total number of active satellites"
-    # #     ub = Int(ceil(total_number_active_satellite))
-    # #     lb = Int(floor(total_number_active_satellite))
-    # #     println("Branching decision : total number of active satellites: lower bound: $lb, upper bound: $ub")
-    # #     left_branch = deepcopy(branchingInfo)
-    # #     right_branch = deepcopy(branchingInfo)
-
-    # #     push!(left_branch.upper_bound_number_2e_routes, ub)
-    # #     push!(right_branch.lower_bound_number_2e_routes, lb)
-
-    # #     left_branch.depth += 1
-    # #     right_branch.depth += 1
-
-    # #     return left_branch, right_branch
-    
-    # else
-    #     if !isempty(fractional_usage_parkings) && length(branchingInfo.must_include_parkings)<nb_microhub && length(branchingInfo.forbidden_parkings)<nb_microhub 
-    #     # ## branch on smallest fractional value of parking
-    #     #     @info "Start to branch on usage of parkings"
-    #     #     while !branchingDecisionFound
-    #     #         for key in keys(fractional_usage_parkings)
-    #     #             if length(branchingInfo.must_include_parkings)<nb_microhub && !(key in branchingInfo.must_include_parkings) && !(key in branchingInfo.forbidden_parkings)
-    #     #                 branchingDecision = key
-    #     #                 branchingDecisionFound = true
-    #     #                 break                        
-    #     #             end 
-    #     #         end
-    #     #     end
-
-    #     #     if branchingDecisionFound
-    #     #         println("Branching decision : usage of parking : $branchingDecision")
-    #     #         left_branch = deepcopy(branchingInfo)
-    #     #         right_branch = deepcopy(branchingInfo)
-
-    #     #         push!(left_branch.must_include_parkings, branchingDecision)
-    #     #         push!(right_branch.forbidden_parkings, branchingDecision)
-
-    #     #         left_branch.depth += 1
-    #     #         right_branch.depth += 1
-
-    #     #         return left_branch, right_branch
-    #     #     end
-    #     else
-    #         # @info "Start to branch on combination of nodes"
-    #         # fractional_y = [r for r in 1:length(y) if 0 < y[r] < 1]
-    #         # if !isempty(fractional_y)
-    #         #     sorted_fractional_y = sort(fractional_y, by = r -> y[r] * (1 - y[r]), rev = true)
-    #         # end
-    #         # ## if route A -> custs -> B and route B -> custs -> A exist at the same time
-    #         # ## branch on middle arc or branch on assignment of customer ???
-    #         # fractional_routes = Set{Vector{Int}}()
-    #         # for y_value in sorted_fractional_y 
-    #         #     push!(fractional_routes, routes_2[y_value].sequence)
-    #         # end
-    #         # reverse_route = nothing
-    #         # for (_, route) in enumerate(fractional_routes)
-    #         #     # println(route, "  ", length(route))
-    #         #     if reverse(route) in fractional_routes
-    #         #         reverse_route = route
-    #         #         break
-    #         #     end
-    #         # end
-    #         # if !isnothing(reverse_route) && length(reverse_route)>3
-    #         #     println("reverse_route = $reverse_route")
-    #         #     branch_node = Int(floor(length(reverse_route)/2))
-    #         #     branch_nodes = [reverse_route[branch_node], reverse_route[branch_node+1]]
-    #         #     branchingDecision = (minimum(branch_nodes), maximum(branch_nodes))
-    #         #     if !(branchingDecision in branchingInfo.must_served_together) && !(branchingDecision in branchingInfo.forbidden_served_together)
-    #         #         branchingDecisionFound = true                 
-    #         #     end
-                
-    #         #     if branchingDecisionFound
-    #         #     ## branch from middle
-    #         #         println("Branching decision : combination of customers: $branchingDecision")
-    #         #         left_branch = deepcopy(branchingInfo)
-    #         #         right_branch = deepcopy(branchingInfo)
-
-    #         #         push!(left_branch.must_served_together, branchingDecision)
-    #         #         push!(right_branch.forbidden_served_together, branchingDecision)
-
-    #         #         left_branch.depth += 1
-    #         #         right_branch.depth += 1
-
-    #         #         return left_branch, right_branch                
-    #         #     end
-    #         else
-    #         ## branch on assignment of customer-parking
-    #             # while !branchingDecisionFound
-    #             #     for y_value in sorted_fractional_y
-    #             #         sorted_customers_visited_times = customers_sorted_by_visits(routes_2[y_value].sequence, fractional_routes)
-    #             #         branchingDecision = (routes_2[y_value].sequence[1], sorted_customers_visited_times[1])
-    #             #         sorted_customers_visited_times = sorted_customers_visited_times[2:end]
-    #             #         if !(branchingDecision in branchingInfo.must_include_combinations) && !(branchingDecision in branchingInfo.forbidden_combinations)
-    #             #             branchingDecisionFound = true    
-    #             #             break                    
-    #             #         end                    
-    #             #     end
-    #             # end
-    #             # if branchingDecisionFound
-    #             #     println("Branching decision : assignment of parking-customer : $branchingDecision")
-    #             #     left_branch = deepcopy(branchingInfo)
-    #             #     right_branch = deepcopy(branchingInfo)
-    
-    #             #     push!(left_branch.must_include_combinations, branchingDecision)
-    #             #     push!(right_branch.forbidden_combinations, branchingDecision)
-    
-    #             #     left_branch.depth += 1
-    #             #     right_branch.depth += 1
-    
-    #             #     return left_branch, right_branch
-    #             # end
-    #         end
-    #     end
-    # end
-
-    # if branchingDecisionFound
-    #     println("Branch decision on parking: $branchingDecision")
-    #     return branchingDecision
-    # else
-    #     println("Parking Branch Leaf Node")
-    #     return nothing
-    # end
-    
-end
 # ==================================================================================== #
 
 # solveMasterProblem() 
-
 
 function plotOriginal()
     x_vals = [coord[1] for coord in coor]
@@ -235,7 +31,6 @@ function plotOriginal()
         annotate!(x_vals[i], y_vals[i]+0.3, text(node_labels[i],6))
     end
     display(plt)
-
 end
 
 function filter_2e_routes(routes, branch_info)
@@ -299,9 +94,17 @@ function filter_1e_routes(routes, branch_info)
     # result = routes
 
     # branch 1e route by special order set
-    for (idx, _) in enumerate(routes)
-        if !(idx in branch_info.special_order_set_1e)
-            push!(result, routes[idx])
+    for (idx, route) in enumerate(routes)
+        valide = true
+        for sos in branch_info.special_order_set_1e 
+            if sos.sequence == route.sequence
+                valide = false
+                break
+            end
+        end
+        
+        if valide
+            push!(result, route)
         end
     end
 
@@ -328,19 +131,94 @@ function display2eRoutes(routes_2e_pool)
     end
 end
 
+function branchingStrategyParking(x, y, routes_1, routes_2, branchingInfo::BranchingInfo)
+
+    sorted_fractional_y = sort([r for r in 1:length(y) if 0 < y[r] < 1], by = r -> y[r] * (1 - y[r]), rev = true)
+    reverse_route = checkExistanceReversedRoute(sorted_fractional_y, routes_2)
+    continue_status = false
+
+    used_parkings = getUsedParkings(y, routes_2)
+    nb_mm_exceed = getNbUsedParkings(used_parkings) > nb_microhub
+
+    if nb_mm_exceed
+    ## Total number of microhub exceed the limit
+        # result = branchOn1eRoute(branchingInfo, x, routes_1)
+        result = branchOnParking(branchingInfo, x, y, routes_1, routes_2)
+        if !isnothing(result)
+            return false, result[1], result[2]
+        else
+            continue_status = true
+        end
+    end
+    if !nb_mm_exceed || continue_status
+        if !isempty([r for r in 1:length(x) if 0 < x[r] < 1])
+            result = branchOnSpecialOrderSet(branchingInfo, x, routes_1)
+            if !isnothing(result)
+                return false, result[1], result[2]  
+            end
+        else
+            if !isnothing(reverse_route) && length(reverse_route) > 3    
+                ## if route A -> custs -> B and route B -> custs -> A exist at the same time
+                result = branchOnReverseRoute(branchingInfo, reverse_route)
+                if !isnothing(result)
+                    ## branch on arc in reverse route
+                    return true, result[1], result[2]
+                else
+                    ## no more arc in reverse route can be branched on
+                    ## branch on assignment of parking-customer on reverse route
+                    result = branchOnAssignmentParkingCustomer(branchingInfo, reverse_route)
+                    if !isnothing(result)
+                        return true, result[1], result[2]   
+                    else
+                        ## random branch   
+                        @info "No more possible parking-customer assignment decision: Random branch on combination customers" 
+                        result = branchOnRandomCombinationCustomers(branchingInfo, sorted_fractional_y, routes_2)          
+                    end
+                end
+            else
+            ## no reverse route exist
+                if isempty(sorted_fractional_y)
+                ## if solution is integral but not feasible, branch on usage of parking
+                    result = branchOnArcParkingCustomer(branchingInfo, [r for r in 1:length(y) if y[r] == 1], routes_2)
+                    if !isnothing(result)
+                        return true, result[1], result[2]     
+                    else
+                        ## random branch   
+                        @info "No more possible arc parking-customer combination decision: Random branch on combination customers"            
+                        result = branchOnRandomCombinationCustomers(branchingInfo, sorted_fractional_y, routes_2)          
+                    end
+                else
+                ## solution is fractional
+                ## find most fractional route and branch on most visited customer
+                    result = branchOnMostFractionalAndVisitedPair(branchingInfo, sorted_fractional_y, routes_2)
+                    if !isnothing(result)
+                        return true, result[1], result[2]     
+                    else
+                        ## random branch   
+                        @info "No more possible fractional route's parking-customer combination decision: Random branch on combination customers"               
+                        result = branchOnRandomCombinationCustomers(branchingInfo, sorted_fractional_y, routes_2)          
+                    end
+                end
+            end
+        end
+    end
+    return nothing, nothing
+end
+
 function branchAndPriceOnlyParking(routes_1e_pool, routes_2e_pool)
     
     result_optimal_solution = Vector{Float64}()
     result_branching_iter = Vector{Int}() # 0 stands for leaf, 1 stands for parking leaf
 
-    root_branch = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(),Set{Int}(), 0)
+    root_branch = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(),Set{Route}(), 0)
     node_stack = [root_branch]
     
     optimal_solution_value = Inf
     optimal_solution = nothing
 
     num_iter = 1
-    while !isempty(node_stack) && num_iter <= 15
+    cg_status = true
+    while !isempty(node_stack) && num_iter <= 10
         println("\n---------------------------------ITER B&P $num_iter---------------------------------")
         for v in node_stack
             displayBranchingRule(v,routes_1e_pool)
@@ -356,49 +234,33 @@ function branchAndPriceOnlyParking(routes_1e_pool, routes_2e_pool)
 
         println("\nNumber of all 2e routes: ", length(routes_2e_pool), ", number of filtered 2e routes: ", length(filtered_2e_routes_pool))
         
-        rlmpResult = column_generation(filtered_1e_routes_pool, filtered_2e_routes_pool, branchingInfo)
-        
-        if !isnothing(rlmpResult)
+        if !cg_status
+            rlmpResult = solveRestrictedMasterProblem(filtered_1e_routes_pool, filtered_2e_routes_pool, branchingInfo)
+            x, y = rlmpResult[5], rlmpResult[6]
+        else
+            rlmpResult = column_generation(filtered_1e_routes_pool, filtered_2e_routes_pool, branchingInfo)           
             new_columns_generated, filtered_2e_routes_pool = rlmpResult[1], rlmpResult[2]
             for route in new_columns_generated
                 push!(routes_2e_pool, route)
             end
             x, y = rlmpResult[3], rlmpResult[4]
-
+        end
+        
+        if !isnothing(rlmpResult)
             ## start branching
             ## check integrality
             if isempty([r for r in 1:length(y) if 0 < y[r] < 1])&& isempty([r for r in 1:length(x) if 0 < x[r] < 1])
                 @info "Integer 2e Solution Found!"
-                optimal_solution, optimal_solution_value = checkOptimalComplete(filtered_1e_routes_pool, filtered_2e_routes_pool, x, y, optimal_solution, optimal_solution_value)  
+                optimal_solution, optimal_solution_value = checkOptimal(filtered_1e_routes_pool, filtered_2e_routes_pool, x, y, optimal_solution, optimal_solution_value)  
+                cg_status = true
             else
-                left_branch, right_branch = branchingStrategyParking(x, y, filtered_1e_routes_pool, filtered_2e_routes_pool, branchingInfo)
+                cg_status, left_branch, right_branch = branchingStrategyParking(x, y, filtered_1e_routes_pool, filtered_2e_routes_pool, branchingInfo)
                 if !isnothing(left_branch)
                     push!(node_stack, left_branch)
                     push!(node_stack, right_branch) 
                 end
             end
 
-            # new_columns_generated, filtered_2e_routes_pool = rlmpResult[1], rlmpResult[2]
-            # for route in new_columns_generated
-            #     push!(routes_2e_pool, route)
-            # end
-            # x, y = rlmpResult[3], rlmpResult[4]
-
-            # ## start branching
-            # ## check integrality
-            # fractional_y = [r for r in 1:length(y) if 0 < y[r] < 1]
-            # used_parkings = getUsedParkings(y, filtered_2e_routes_pool)
-            # if getNbUsedParkings(used_parkings) <= nb_microhub && isempty(fractional_y)
-            #     @info "Integer 2e Solution Found!"
-            #     selected_y = [r for r in 1:length(y) if y[r]==1]
-            #     optimal_solution, optimal_solution_value = checkOptimal(filtered_1e_routes_pool, filtered_2e_routes_pool, selected_y, optimal_solution, optimal_solution_value)  
-            # else
-            #     left_branch, right_branch = branchingStrategyParking(getNbUsedParkings(used_parkings)>nb_microhub, x, y, filtered_1e_routes_pool, filtered_2e_routes_pool, branchingInfo)
-            #     if !isnothing(left_branch)
-            #         push!(node_stack, left_branch)
-            #         push!(node_stack, right_branch) 
-            #     end
-            # end
         else
             push!(result_branching_iter, 0)
             @info "Current Restricted Linear Master Problem Infeasible"

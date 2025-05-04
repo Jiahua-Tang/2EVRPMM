@@ -12,7 +12,7 @@ mutable struct BranchingInfo
     upper_bound_number_2e_routes::Set{Int} # upper bound of number of total 2e routes
     lower_bound_number_2e_routes::Set{Int} # lower bound of number of total 2e routes
     
-    special_order_set_1e::Set{Int}  # set of 1e route where all variables are 0
+    special_order_set_1e::Set{Route}  # set of 1e route where all variables are 0
 
     depth::Int
 end
@@ -93,7 +93,7 @@ function displayBranchingRule(branchingInfo::BranchingInfo, routes_1e)
     if !isempty(branchingInfo.special_order_set_1e)
         print("\n   & Special order set of 1e route (sum = 0):")
         for value in branchingInfo.special_order_set_1e
-            print("   route: $(routes_1e[value].sequence)    served parkings: $(collect(getServedParking1eRoute(routes_1e[value])))")
+            print("\n      route: $(value.sequence)    served parkings: $(collect(getServedParking1eRoute(value)))")
         end
         
     end
@@ -278,28 +278,29 @@ function branchOnSpecialOrderSet(branchingInfo, x, routes_1)
     for (i,v) in enumerate(fractional_x)
         push!(value_x, x[v])
     end
+
     subset_1, subset_2 = split_to_balance_0_5(value_x, fractional_x)
     display(subset_1)
     @info ("Branching decision : special order set1: $subset_1, special order set2: $subset_2 ")
+
+    left_branch = deepcopy(branchingInfo)
+    right_branch = deepcopy(branchingInfo)    
+    
     println("Set 1:")
     for ele in subset_1 
-        println("     ",(routes_1[ele].sequence))
+        println("   $(routes_1[ele].sequence)")
+        push!(left_branch.special_order_set_1e, routes_1[ele])
     end
     println("Set 2:")
     for ele in subset_2
-        println("     ",(routes_1[ele].sequence))
-    end
-    left_branch = deepcopy(branchingInfo)
-    right_branch = deepcopy(branchingInfo)
-
-    union!(left_branch.special_order_set_1e, subset_1)
-    union!(right_branch.special_order_set_1e, subset_2)
+        println("   $(routes_1[ele].sequence)")
+        push!(right_branch.special_order_set_1e, routes_1[ele])
+    end    
     
     left_branch.depth += 1
     right_branch.depth += 1
     
     return left_branch, right_branch
-
 end
 
 function branchOnParking(branchingInfo, x, y, routes1, routes)

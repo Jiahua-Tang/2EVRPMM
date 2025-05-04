@@ -486,36 +486,13 @@ function findOptimal1eRoute(routes_1, routes_2, y_value)
     return optimal_1e_route
 end
 
-function checkOptimalComplete(routes_1, routes_2, x, y, optimal_solution, optimal_solution_value)
-    optimal_1e_route = routes_1[[r for r in 1:length(y) if x[r] == 1]]
+function checkOptimal(routes_1, routes_2, x, y, optimal_solution, optimal_solution_value)
+    optimal_1e_route = routes_1[[r for r in 1:length(x) if x[r] == 1]]
+    optimal_1e_route = optimal_1e_route[1]
     current_solution_value = optimal_1e_route.cost
     current_solution = Vector{Route}()
     push!(current_solution, optimal_1e_route)
     y = [r for r in 1:length(y) if y[r] == 1]
-    for y_value in y
-        current_solution_value += routes_2[y_value].cost
-        push!(current_solution, routes_2[y_value])
-    end
-    println("Ongoing solution value = ", current_solution_value)
-    println("Ongoing solution 1e route = ", optimal_1e_route.sequence)
-
-    if current_solution_value <= optimal_solution_value
-        optimal_solution_value = current_solution_value
-        optimal_solution = current_solution
-    end   
-
-    return optimal_solution, optimal_solution_value
-end
-
-function checkOptimal(routes_1, routes_2, y, optimal_solution, optimal_solution_value)
-    optimal_1e_route = findOptimal1eRoute(routes_1, routes_2, y)
-    selected_parking = Set{Int}()
-    for y_value in y
-        push!(selected_parking, routes_2[y_value].sequence[1])
-    end
-    current_solution_value = optimal_1e_route.cost
-    current_solution = Vector{Route}()
-    push!(current_solution, optimal_1e_route)
     for y_value in y
         current_solution_value += routes_2[y_value].cost
         push!(current_solution, routes_2[y_value])
