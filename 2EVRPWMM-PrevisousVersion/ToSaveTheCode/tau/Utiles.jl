@@ -241,7 +241,6 @@ function backTracking(z, colorR, x)
             colorR = RGBA(rand(),rand(),rand(),1)
         end
     end
-
 end
 
 function printText(num_y,text::String)

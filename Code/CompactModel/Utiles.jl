@@ -49,7 +49,54 @@ function readArgument(value)
     end
 end
 
-function readFile(file_path)
+function readFileElison(file_path)
+    # Read the file lines
+    lines = open(file_path, "r") do file
+        readlines(file)
+    end
+
+    # Find the index where the customer data starts
+    coord_start_index = findfirst(contains.(lines, "NODE_COORD_SECTION")) + 1
+    demand_start_index = findfirst(contains.(lines, "DEMAND_SECTION")) 
+    end_index = findfirst(contains.(lines, "DEPOT_SECTION")) -1
+    capacity_index = findfirst(contains.(lines, "CAPACITY"))
+    line = lines[capacity_index]
+    parts = split(line, ":")
+    capacity = parse(Int, strip(parts[end]))
+
+
+    x_coor_customers = []
+    y_coor_customers = []
+    x_coor_depot = []
+    y_coor_depot = []
+    demands = []
+
+    for i in coord_start_index : end_index
+        line = strip(lines[i])
+        if !isempty(line)
+            fields = split(line) 
+            if i == coord_start_index
+            # Depot
+                push!(x_coor_depot, parse(Int, fields[2]))
+                push!(y_coor_depot, parse(Int, fields[3]))
+                # zeta = parse(Int, fields[6])
+            elseif i> coord_start_index && i < demand_start_index
+            # Customers
+                push!(x_coor_customers, parse(Int, fields[2]))
+                push!(y_coor_customers, parse(Int, fields[3]))
+            elseif i > demand_start_index + 1
+            # Demands           
+                push!(demands, parse(Int, fields[2]))
+            end
+        end
+    end
+    
+    return x_coor_customers, y_coor_customers, x_coor_depot, y_coor_depot, demands, capacity
+    
+end
+
+
+function readFileSolomon(file_path)
     # Read the file lines
     lines = open(file_path, "r") do file
         readlines(file)
@@ -113,92 +160,47 @@ function displayMap()
     ENV["GKSwstype"] = "100" 
     
     # Create a customers scatter plot
-    scatter(x_coor[2+np:1+nc+np], y_coor[2+np:1+nc+np],
+    plt = scatter(x_coor[2+np:1+nc+np], y_coor[2+np:1+nc+np],
                 title = "Coordinate Plot",
                 legend = false, markersize = 6, markercolor = :pink, 
                 marker=:utriangle, markerstrokecolor = :transparent, 
                 markerstrokewidth=0, label = "Customers",right_margin=100mm)
 
     # Create a parking scatter plot
-    scatter!(x_coor[2:1+np], y_coor[2:1+np], 
+    scatter!(plt, x_coor[2:1+np], y_coor[2:1+np], 
             legend = false)
 
     # Add the depot point in a different color
-    scatter!(x_coor[1], y_coor[1], 
-            markersize = 8, markercolor = :yellow)
+    scatter!(plt, x_coor[1:1], y_coor[1:1], 
+            markersize = 8, markershape=:square, markercolor = :yellow)
 
     # Add the initial parking place in a different color
     for p in 2 : np+1
-        if PI[p-1]==1
-            scatter!([x_coor[p]], [y_coor[p]], 
+        if PI[p]==1
+            scatter!(plt, [x_coor[p]], [y_coor[p]], 
                 markersize = 8, markercolor = :lightblue)
         else
-            scatter!([x_coor[p]], [y_coor[p]], 
+            scatter!(plt, [x_coor[p]], [y_coor[p]], 
             markersize = 6, markercolor = :white)
         end
     end
+    return plt
 end
 
 function randomGenerateParking(x_coor_customers,y_coor_customers)   
     Random.seed!(42)
-    function generatePI(num :: Int)
-        PI = vcat(ones(2),zeros(num-2))
-        shuffle!(PI)
-        for i in 1:num-1
-            p = vcat(ones(2),zeros(num-2))
-            shuffle!(p)
-            PI = vcat(PI,p)
-        end    
-        i=1
-        if num == 4     l = 2
-        else   l = 6     end
-        while i<=l
-            p = rand(1:num^2)
-            if PI[p] == 0
-                PI[p] = 1
-                i = i + 1
-            end
-        end
-        return PI
-    end
 
-    # Define the boundaries of the customer area
+    # Get bounding box
     x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
     y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
 
-    # Define the number of divisions (4x4 grid for <=50, 5x5 grid for >50 <=100)
-    # if length(x_coor_customers) <=50
-        num_divisions = 4
-    # else
-    #     if length(x_coor_customers) <=100
-    #         num_divisions = 5      
-    #     end
-    # end
-    PI = generatePI(num_divisions)
+    # Generate random nodes within bounding box
+    x_coor_parkings = rand(8) .* (x_max - x_min) .+ x_min
+    y_coor_parkings = rand(8) .* (y_max - y_min) .+ y_min
 
-    x_step = (x_max - x_min) / num_divisions
-    y_step = (y_max - y_min) / num_divisions
-
-    # Initialize empty arrays to store the parking coordinates
-    x_coor_parkings = []
-    y_coor_parkings = []
-
-    # Loop over the grid and generate a random point in each sub-area
-    for i in 0:num_divisions-1
-        for j in 0:num_divisions-1
-            # Define the boundaries of the current sub-area
-            x_lower = x_min + i * x_step
-            x_upper = x_min + (i + 1) * x_step
-            y_lower = y_min + j * y_step
-            y_upper = y_min + (j + 1) * y_step
-
-            # Generate a random point within the current sub-area
-            push!(x_coor_parkings, rand(x_lower:x_upper))
-            push!(y_coor_parkings, rand(y_lower:y_upper))
-        end
-    end
-    
-    # println("PI : ", PI)
+    PI = vcat(ones(4),zeros(4))
+    shuffle!(PI)
+    PI = vcat(0, PI)
 
     return x_coor_parkings, y_coor_parkings, PI
 end
@@ -236,8 +238,8 @@ function fixedGenerateParking(x_coor_customers,y_coor_customers)
 end
 
 
-function printText(num_y,text::String)
-    annotate!(maximum(x_coor[2+np:1+nc+np]) +5,
+function printText(plt, num_y,text::String)
+    annotate!(plt, maximum(x_coor[2+np:1+nc+np]) +5,
                                 num_y,
                                 Plots.text(
                                 text,
@@ -245,4 +247,43 @@ function printText(num_y,text::String)
                                 color=:black,
                                 6))
     return num_y -1
+end
+
+
+function totalDuration(z, x, itinerary=[])
+    # Add the current point to the itinerary
+    push!(itinerary, x)
+    
+    # Check if the vehicle arrives at a parking (assumed to be points in `2:1+np`)
+    if x in 2:1+np
+        return (0, itinerary)  # Return 0 distance and the itinerary
+    end
+    
+    for k in 2:1+np+nc
+        if round(value(z[x, k])) == 1
+            # Recur to the next point and add the distance
+            distance, sub_itinerary = totalDuration(z, k, itinerary)
+            return (distances[x, k] + distance, sub_itinerary)
+        end
+    end
+    
+    # If no next point is found, return 0 distance and the current itinerary
+    return (0, itinerary)
+end
+
+
+function backTracking(z, colorR, x)
+    for k in 2:1+np+nc
+        if round(value(z[x,k])) == 1
+            plot!([x_coor[x], x_coor[k]], [y_coor[x], y_coor[k]], line=:arrow, color = colorR)
+
+            cox = (x_coor[x] + x_coor[k]) / 2
+            coy = (y_coor[x] + y_coor[k]) / 2  # Use y_coor here
+            # annotate!(cox, coy, text(round(distances[x, k], digits=2), :center, 6)) 
+
+            if k in 2:1+np   return  end
+            backTracking(z, colorR, k)           
+            colorR = RGBA(rand(),rand(),rand(),1)
+        end
+    end
 end

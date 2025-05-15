@@ -206,7 +206,7 @@ function branchingStrategyParking(x, y, routes_1, routes_2, branchingInfo::Branc
 end
 
 function branchAndPriceOnlyParking(routes_1e_pool, routes_2e_pool)
-
+    
     result_optimal_solution = Vector{Float64}()
     result_branching_iter = Vector{Int}() # 0 stands for leaf, 1 stands for parking leaf
 
@@ -221,12 +221,12 @@ function branchAndPriceOnlyParking(routes_1e_pool, routes_2e_pool)
     while !isempty(node_stack) && num_iter <= 10
         println("\n---------------------------------ITER B&P $num_iter---------------------------------")
         for v in node_stack
-            displayBranchingRule(v,routes_1e_pool)
+            displayBranchingRule(v)
         end
 
         branchingInfo = pop!(node_stack) 
         print("\nCurrent stack")
-        displayBranchingRule(branchingInfo, routes_1e_pool)
+        displayBranchingRule(branchingInfo)
 
         ## start restricted linear column generation 
         filtered_1e_routes_pool = filter_1e_routes(routes_1e_pool, branchingInfo)

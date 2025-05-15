@@ -1,21 +1,95 @@
+function solveRMP(route_1)
+    feasible_1e_routes = Vector{Route}()
+    push!(feasible_1e_routes, route_1)
+    feasible_2e_routes = generateAllFeasible2eRoute()
 
-function solveMasterProblem()
-    feasible_1e_routes, feasible_2e_routes = generateAllRoutes()
-    println("Number of 1e routes: ",length(feasible_1e_routes))
-    println("Number of 2e routes: ",length(feasible_2e_routes))
+    @info ("Number of 1e routes: ", length(feasible_1e_routes))
+    @info ("Number of 2e routes: ", length(feasible_2e_routes))
+
     routes_originated_p = Vector{Vector{Int}}()
     for s in satellites 
         routes = Vector{Int}()
         for (r,route) in enumerate(feasible_2e_routes)
             if route.sequence[1] == s
-                push!(routes,r)
+                push!(routes, r)
             end
         end
         push!(routes_originated_p, routes)
     end
 
     model = Model(CPLEX.Optimizer)
-    # set_silent(model)
+    set_silent(model)
+    @variable(model, 1>=x[1:length(feasible_1e_routes)]>=0, Int)
+    @variable(model, 1>=y[1:length(feasible_2e_routes)]>=0, Int)
+
+    @constraint(model, sync[s in satellites], sum(route.b2out[s] * y[r] for (r, route) in enumerate(feasible_2e_routes))
+    -nb_vehicle_per_satellite*sum(route.b1[s] * x[r] for (r, route) in enumerate(feasible_1e_routes))<=0)
+    @constraint(model, custVisit[i in customers], 1 - sum(route.a[i-1-length(satellites)] * y[r] for (r, route) in enumerate(feasible_2e_routes)) <= 0 )
+    @constraint(model, number2evfixe[s in satellites], sum(route.b2in[s] * y[r] for (r, route) in enumerate(feasible_2e_routes)) == sum(route.b2out[s] * y[r] for (r, route) in enumerate(feasible_2e_routes)))
+    @constraint(model, maxVolumnMM[s in satellites], sum( feasible_2e_routes[r].a[i-1-length(satellites
+    )]*demands[i]*y[r] for r in routes_originated_p[s-1] for i in customers) - capacity_microhub <= 0)
+    @constraint(model, single1eV, sum(x[r] for (r,_) in enumerate(feasible_1e_routes))==1)
+
+    @objective(model, Min, sum(y[r] * route.cost for (r, route) in enumerate(feasible_2e_routes)) + sum(x[r] * route.cost for (r, route) in enumerate(feasible_1e_routes)))
+
+    optimize!(model)
+
+    println("Objective value of master problem is: ",value(objective_value(model)))
+
+    println("Status of 1e route: ")
+    for (i,r) in enumerate(feasible_1e_routes)
+        if value(x[i]) != 0
+            print("   x=",round(value(x[i]),digits=2),"   1e Route ", r.sequence, "   Load= ", r.load ,  "   Cost= ", round(r.cost,digits=2), "   Available parking:")
+            for s in satellites
+                if r.b1[s] == 1
+                    print(" ",s)
+                end
+            end
+            println("")
+        end 
+    end
+
+    println("Status of 2e route: ")
+    for (i,r) in enumerate(feasible_2e_routes)
+        if value(y[i]) != 0
+            println("   y=",round(value(y[i]),digits=2),"   2e Route ", r.sequence, "   Load= ", r.load , "   Cost= ", round(r.cost,digits=2))
+            # tc += routes_2[r].cost
+        end
+    end
+    println("Status of satellite")
+    for s in satellites
+        freight = 0
+        for (r,route) in enumerate(feasible_2e_routes)
+            if route.sequence[1] == s && value(y[r])!=0
+                freight += route.load
+            end
+        end
+        if freight != 0
+            println("   parking $s stores $freight freight")
+        end
+    end
+    return objective_value(model)
+end
+
+function solveMasterProblem()
+    feasible_1e_routes, feasible_2e_routes = generateAllRoutes()
+    
+    @info ("Number of 1e routes: ", length(feasible_1e_routes))
+    @info ("Number of 2e routes: ", length(feasible_2e_routes))
+
+    routes_originated_p = Vector{Vector{Int}}()
+    for s in satellites 
+        routes = Vector{Int}()
+        for (r,route) in enumerate(feasible_2e_routes)
+            if route.sequence[1] == s
+                push!(routes, r)
+            end
+        end
+        push!(routes_originated_p, routes)
+    end
+
+    model = Model(CPLEX.Optimizer)
+    set_silent(model)
     @variable(model, 1>=x[1:length(feasible_1e_routes)]>=0, Int)
     @variable(model, 1>=y[1:length(feasible_2e_routes)]>=0, Int)
 
@@ -161,7 +235,7 @@ function column_generation(filtered_1e_routes, filtered_2e_routes, branchingInfo
     # end
 end
 
-function solve_2e_MILP(pi1, pi2, pi3, pi4, startParking, branchingDecision)
+function solve_2e_MILP(pi1, pi2, pi3, pi4, startParking, branchingInfo)
     # println("During 2e pricing problem, branchingDecision\n    ",branchingDecision)
 
     model = Model(CPLEX.Optimizer)
@@ -169,37 +243,50 @@ function solve_2e_MILP(pi1, pi2, pi3, pi4, startParking, branchingDecision)
     @variable(model, y[A2, A2], Bin)
     @variable(model, 1 <= u[A2] <= length(customers), Int)
     # displayBranchingRule(branchingDecision)
-    if !isnothing(branchingDecision)
-        for combination in branchingDecision.must_include_combinations
-            if startParking != combination[1]
-                @constraint(model, sum(y[combination[2], i] for i in A2) == 0)
-            end
+
+    available_parkings = setdiff(Set(satellites), branchingInfo.forbidden_parkings)
+    # display(available_parkings)
+
+    if !isnothing(branchingInfo)
+        for combination in branchingInfo.must_include_combinations
+            # if startParking != combination[1]
+            #     @constraint(model, sum(y[combination[2], i] for i in A2) == 0)
+            # end
+            @constraint(model, sum(y[combination[1], i] for i in A2) + sum(y[i, combination[1]] for i in A2) + sum(y[combination[2],i] for i in A2) >= 2)
        end
 
-        for combination in branchingDecision.forbidden_combinations
-            if startParking == combination[1]
-                @constraint(model, sum( y[combination[2], i] for i in A2) == 0)
-            end
+        for combination in branchingInfo.forbidden_combinations
+            # if startParking == combination[1]
+            #     @constraint(model, sum(y[combination[2], i] for i in A2) == 0)
+            # end
+            @constraint(model, sum(y[combination[1], i] for i in A2) + sum(y[i, combination[1]] for i in A2) + sum(y[combination[2],i] for i in A2) <= 1)
+
         end
 
-        for combination in branchingDecision.must_served_together
+        for combination in branchingInfo.must_served_together
             combination = collect(combination)
             @constraint(model, sum(y[combination[1],i] for i in A2) 
                             == sum(y[combination[2],i] for i in A2))
         end
 
-        for combination in branchingDecision.forbidden_served_together 
+        for combination in branchingInfo.forbidden_served_together 
             combination = collect(combination)
-            @constraint(model, sum(y[combination[1],i] for i in A2) + 
-                               sum(y[combination[2],i] for i in A2) <= 1)
+            @constraint(model, sum(y[combination[1],i] for i in A2)  
+                             + sum(y[combination[2],i] for i in A2) <= 1)
         end
 
+        for parking in branchingInfo.forbidden_parkings 
+            @constraint(model, sum(y[i, parking] for i in A2)==0)
+            @constraint(model, sum(y[parking, i] for i in A2)==0)
+        end
     end
-
+    
+    @constraint(model, [i in satellites, j in satellites], y[i,j]==0)
     @constraint(model, flowCustomer[i in customers], sum(y[i,j] for j in A2) == sum(y[j,i] for j in A2))
     @constraint(model, beginParking, sum( y[startParking,i] for i in customers)==1)
     @constraint(model, endParking, sum( y[i,s] for s in satellites for i in customers)==1)
     @constraint(model, vehicleCapacity, sum(y[i,j]*demands[i] for i in A2 for j in A2)<=capacity_2e_vehicle)
+    @constraint(model, maxDuration, sum(y[i,j]*arc_cost[i,j] for i in A2 for j in A2)<=maximum_duration_2e_vehicle)
     @constraint(model, MTZ[i in customers, j in customers], u[i] + 1 <= u[j] + length(customers)*(1-y[i,j]))
 
     @objective(model, Min, sum(y[i,j] * arc_cost[i,j] for i in A2 for j in A2)
@@ -272,6 +359,7 @@ function solve_1e_MILP(pi1, pi5)
 end
 
 function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
+
     ## Relaxed Restricted Master Problem
     routes_originated_p = Vector{Vector{Int}}()
     for s in satellites 
@@ -284,38 +372,37 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
         push!(routes_originated_p, routes)
     end
 
-    println("Number of 2e routes: ", length(routes_2e))
-    println("Number of 1e routes: ", length(routes_1e))
+    # println("Number of 2e routes: ", length(routes_2e))
+    # println("Number of 1e routes: ", length(routes_1e))
     model = Model(CPLEX.Optimizer)
     set_silent(model)
     @variable(model, 1>=x[1:length(routes_1e)]>=0)
     @variable(model, 1>=y[1:length(routes_2e)]>=0)
 
-    obligatory_1e_routes = Vector{Int}()
-    for (idx,route) in enumerate(routes_1e) 
-        for parking in branchingInfo.must_include_parkings
-            if parking in getServedParking1eRoute(route)
-                push!(obligatory_1e_routes, idx)
-            end           
-        end
-    end
-    if !isempty(branchingInfo.must_include_parkings)
-        @constraint(model, must_parkings, sum(x[r] for r in (obligatory_1e_routes))>=1)
-    end
-    forbidden_1e_routes = Vector{Int}()
-    for (idx,route) in enumerate(routes_1e) 
+    forbidden_2e_routes = Vector{Int}()
+    for (idx,route) in enumerate(routes_2e) 
         for parking in branchingInfo.forbidden_parkings 
-            if parking in getServedParking1eRoute(route)
-                push!(forbidden_1e_routes, idx)
+            if parking in route.sequence
+                push!(forbidden_2e_routes, idx)
             end
         end
     end
+
+    # println("size of forbidden 2e routes is:  $(length(forbidden_2e_routes))")
     if !isempty(branchingInfo.forbidden_parkings)
-        @constraint(model, forbidden_parkings, sum(x[r] for r in (forbidden_1e_routes)) == 0)
+        @constraint(model, forbidden_parkings, sum(y[r] for r in (forbidden_2e_routes)) == 0)
     end
 
+    if !isempty(branchingInfo.lower_bound_number_2e_routes)
+        lower_bound = maximum(branchingInfo.lower_bound_number_2e_routes) 
+        @constraint(model, sum(y[r] for (r, route) in enumerate(routes_2e))>=lower_bound)
+    end
+        if !isempty(branchingInfo.upper_bound_number_2e_routes)
+        upper_bound = minimum(branchingInfo.upper_bound_number_2e_routes) 
+        @constraint(model, sum(y[r] for (r, route) in enumerate(routes_2e))<=upper_bound)
+    end
 
-    @constraint(model, microhubUB, sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e) for s in satellites)<=nb_microhub)
+    # @constraint(model, microhubUB, sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e) for s in satellites)<=nb_microhub)
     @constraint(model, sync[s in satellites], sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e))
         -nb_vehicle_per_satellite*sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e))<=0)
     @constraint(model, custVisit[i in customers], 1 - sum(route.a[i-1-length(satellites)] * y[r] for (r,route) in enumerate(routes_2e)) <= 0 )
@@ -332,27 +419,30 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
   
     status = termination_status(model)
     if status == MOI.OPTIMAL || status == MOI.FEASIBLE_POINT
-        println("Objective value of master problem is: ",value(objective_value(model)))
-        println("Status of 1e route: ")
-        for (r,route) in enumerate(routes_1e)
-            if value(x[r]) != 0
-                print("   x=", round(value(x[r]),digits=2), "   1e Route ", route.sequence, "   Load= ", route.load ,  "   Cost= ", round(route.cost,digits=2), "   Available parking: ")
-                for (idx, availability) in enumerate(route.b1)
-                    if availability == 1
-                        print(" ", idx)
-                    end
-                end
-                println("")
-            end 
-        end
-        println("Status of 2e route: ")
-        for (r,route) in enumerate(routes_2e)
-            if value(y[r]) != 0
-                println("   y=",round(value(y[r]),digits=2),"   2e Route ", route.sequence, "   Load= ", route.load , "   Cost= ", round(route.cost,digits=2))
-            end
-        end
-        println("\n   Total number of active satellites: ",sum( route.b1[s] * value(x[r]) for s in satellites for (r,route) in enumerate(routes_1e)))
-        println("   Total number of 2e routes: ", sum(value(y[r]) for r in 1:length(routes_2e)))
+        # println("Objective value of master problem is: ",value(objective_value(model)))
+        # println("Status of 1e route: ")
+        # for (r,route) in enumerate(routes_1e)
+        #     if value(x[r]) != 0
+        #         print("   x=", round(value(x[r]),digits=2), "   1e Route ", route.sequence, "   Load= ", route.load ,  "   Cost= ", round(route.cost,digits=2), "   Available parking: ")
+        #         for (idx, availability) in enumerate(route.b1)
+        #             if availability == 1
+        #                 print(" ", idx)
+        #             end
+        #         end
+        #         println("")
+        #     end 
+        # end
+
+        # println("Status of 2e route: ")
+        # for (r,route) in enumerate(routes_2e)
+        #     if value(y[r]) != 0
+        #         println("   y=",round(value(y[r]),digits=2),"   2e Route ", route.sequence, "   Load= ", route.load , "   Cost= ", round(route.cost,digits=2))
+        #     end
+        # end
+
+        # println("\n   Total number of active satellites: ",sum( route.b1[s] * value(x[r]) for s in satellites for (r,route) in enumerate(routes_1e)))
+        # println("   Total number of 2e routes: ", sum(value(y[r]) for r in 1:length(routes_2e)))
+        
         # println("Status of satellite")
         # for s in satellites
         #     freight = 0
@@ -367,18 +457,10 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
         # end
         # println("   Total 2nd route cost = $tc")
 
-
-
         π1 = collect(dual.(sync))
         π2 = collect(dual.(custVisit))
         π3 = collect(dual.(number2evfixe))
         π4 = collect(dual.(maxVolumnMM))
-
-        # if !isempty(branchingInfo.must_include_parkings)
-        #     display(dual.(must_parkings))
-        #     # dual_values = collect(dual.(must_parkings))
-        #     # println("forced parking constraint and dual values: ", branchingInfo.must_include_parkings, "   ", dual_values)
-        # end        
 
         π1 = abs.(vcat(0,π1))
         π2 = abs.(vcat(zeros(1+length(satellites)),π2))
@@ -395,7 +477,7 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
             push!(y_value, value(y[r]))
         end
         
-        return π1, π2, π3, π4, x_value, y_value
+        return π1, π2, π3, π4, x_value, y_value, objective_value(model)
     else
         return nothing
     end
