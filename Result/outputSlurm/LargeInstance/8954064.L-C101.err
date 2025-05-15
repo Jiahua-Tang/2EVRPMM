@@ -1,0 +1,28 @@
+┌ Warning: could not download https://pkg.julialang.org/registries
+│   exception = RequestError: Could not resolve host: pkg.julialang.org while requesting https://pkg.julialang.org/registries
+└ @ Pkg.Registry ~/.julia/juliaup/julia-1.11.1+0.x64.linux.gnu/share/julia/stdlib/v1.11/Pkg/src/Registry/Registry.jl:77
+    Updating registry at `~/.julia/registries/General.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.11/Project.toml`
+  No Changes to `~/.julia/environments/v1.11/Manifest.toml`
