@@ -22,6 +22,7 @@ if length(ARGS) >= 1
     global V2 = 1 : parse(Int, ARGS[2])
     global runningTime = parse(Int, ARGS[3])
     global nmm = parse(Int, ARGS[4])
+    global np = nmm * 2
 else
     println("No arguments provided")
 end
