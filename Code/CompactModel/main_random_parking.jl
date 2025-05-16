@@ -9,8 +9,8 @@ println("Number of arguments: ", length(ARGS))
 filePath = "../Data/E/E-n33-k4.txt"
 case = "random"
 global runningTime = 10*60 # minute
-# global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
-global root = "./../../Benchmark/"
+global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
+# global root = "./../../Benchmark/"
 
 # display(ARGS)
 
