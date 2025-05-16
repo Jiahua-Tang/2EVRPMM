@@ -280,6 +280,8 @@ function solve_2e_MILP(pi1, pi2, pi3, pi4, startParking, branchingInfo)
             @constraint(model, sum(y[parking, i] for i in A2)==0)
         end
     end
+
+    # @constraint(model, )
     
     @constraint(model, [i in satellites, j in satellites], y[i,j]==0)
     @constraint(model, flowCustomer[i in customers], sum(y[i,j] for j in A2) == sum(y[j,i] for j in A2))

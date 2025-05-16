@@ -17,13 +17,13 @@ function dataProcessing(case::String, filePath::String)
     x_coor_depot, y_coor_depot = result[3], result[4]
 
     global PI 
-    if case == "r"
+    if case == "random"
         x_coor_parkings, y_coor_parkings, PI = randomGenerateParking(x_coor_customers, y_coor_customers)
     else
         x_coor_parkings, y_coor_parkings, PI = fixedGenerateParking(x_coor_customers, y_coor_customers)
     end
     global nc = length(x_coor_customers)
-    global np = length(x_coor_parkings)
+    # global np = length(x_coor_parkings)
 
     global demands = vcat(zeros(Int, 1+np), result[5])   
     global Q0 = sum(demands)
@@ -32,6 +32,10 @@ function dataProcessing(case::String, filePath::String)
     # global V2 = 1 : 5
     global x_coor = vcat(x_coor_depot, x_coor_parkings, x_coor_customers)
     global y_coor = vcat(y_coor_depot, y_coor_parkings, y_coor_customers)
+
+    for (idx, value) in enumerate(PI) 
+        println("PI[$idx] = $value")
+    end
 
     for (idx, _) in enumerate(x_coor)
         if idx in 1:np+1

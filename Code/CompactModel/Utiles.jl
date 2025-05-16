@@ -188,17 +188,17 @@ function displayMap()
 end
 
 function randomGenerateParking(x_coor_customers,y_coor_customers)   
-    Random.seed!(42)
+    # Random.seed!(42)
 
     # Get bounding box
     x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
     y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
 
     # Generate random nodes within bounding box
-    x_coor_parkings = rand(8) .* (x_max - x_min) .+ x_min
-    y_coor_parkings = rand(8) .* (y_max - y_min) .+ y_min
+    x_coor_parkings = rand(nmm*2) .* (x_max - x_min) .+ x_min
+    y_coor_parkings = rand(nmm*2) .* (y_max - y_min) .+ y_min
 
-    PI = vcat(ones(4),zeros(4))
+    PI = vcat(ones(nmm),zeros(nmm))
     shuffle!(PI)
     PI = vcat(0, PI)
 
@@ -206,32 +206,11 @@ function randomGenerateParking(x_coor_customers,y_coor_customers)
 end
 
 function fixedGenerateParking(x_coor_customers,y_coor_customers)    
-    # Define the boundaries of the customer area
-    x_min, x_max = minimum(x_coor_customers), maximum(x_coor_customers)
-    y_min, y_max = minimum(y_coor_customers), maximum(y_coor_customers)
-
-    # Define the number of divisions (4x4 grid for <=50, 5x5 grid for >50 <=100)
-    if length(x_coor_customers) <=50
-        num_divisions = 5
-        PI = [0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1] #10 MM
-    else
-        if length(x_coor_customers)<=100
-            num_divisions = 6
-            PI = [1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1] #16 MM
-        end
-    end
-    x_step = (x_max - x_min) / num_divisions
-    y_step = (y_max - y_min) / num_divisions
-
-    # Initialize empty arrays to store the parking coordinates
-    x_coor_parkings = []
-    y_coor_parkings = []
-
-    for j in 1:num_divisions-1
-        for i in 1:num_divisions-1
-            push!(x_coor_parkings, x_min + i * x_step)
-            push!(y_coor_parkings, y_min + j * y_step)
-        end
+    PI = zeros(Int, 1+length(specifiedParkings)*2)
+    # x_coor_parking = 
+    # y_coor_parking = TODO
+    for parking in specifiedParkings 
+        PI[parking] = 1
     end
 
     return x_coor_parkings, y_coor_parkings, PI
@@ -246,7 +225,7 @@ function printText(plt, num_y,text::String)
                                 :left,
                                 color=:black,
                                 6))
-    return num_y -1
+    return num_y - 1.5
 end
 
 

@@ -8,7 +8,7 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", runningTime)
     total_time = @elapsed optimize!(model)
     resultStatus = ""
-    currentTime = Dates.format(now(), "dd-mm-yyyy HH:MM")
+    currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
     
     println()
     println("Total execution time: $total_time seconds")
@@ -31,7 +31,7 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
         resultStatus = "-O"
     elseif primal_status(model) == MOI.FEASIBLE_POINT
         println("Feasible solution found within the time limit!")
-        resultStatus = "-F"
+        resultStatus = "-F-" * currentTime * "-"
     else
         println("No feasible solution found.")
         # # New data to append
@@ -60,16 +60,16 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
         else
             num_y = printText(plt, num_y,"Feasible solution found within the time limit: $runningTime")
         end
-        num_y =printText(plt, num_y,"Objective: "*string(objective_value(model)))
-        num_y =printText(plt, num_y,"Execution time: "*string(total_time))
-        num_y =printText(plt, num_y,"Number of customers: "*string(nc))
-        num_y =printText(plt, num_y,"Capacity of FEV: "*string(Q0))
-        num_y =printText(plt, num_y,"Capacity of Microhub: "*string(Q1))
-        num_y =printText(plt, num_y,"Capacity of SEV: "*string(Q2))
-        num_y =printText(plt, num_y,"Number of parkings: "*string(np))
-        num_y =printText(plt, num_y,"Number of microhubs: "*string(sum(PI)))
-        num_y =printText(plt, num_y,"Number of robots/MM: "*string(length(V2)))
-        num_y =printText(plt, num_y,"Parking generation rule: "*string(case))
+        num_y = printText(plt, num_y,"Objective: "*string(objective_value(model)))
+        num_y = printText(plt, num_y,"Execution time: "*string(total_time))
+        num_y = printText(plt, num_y,"Number of customers: "*string(nc))
+        num_y = printText(plt, num_y,"Capacity of FEV: "*string(Q0))
+        num_y = printText(plt, num_y,"Capacity of Microhub: "*string(Q1))
+        num_y = printText(plt, num_y,"Capacity of SEV: "*string(Q2))
+        num_y = printText(plt, num_y,"Number of parkings: "*string(np))
+        num_y = printText(plt, num_y,"Number of microhubs: "*string(sum(PI)))
+        num_y = printText(plt, num_y,"Number of robots/MM: "*string(length(V2)))
+        num_y = printText(plt, num_y,"Parking generation rule: "*string(case))
         # num_y =printText(num_y,"Max duration of SEV: "*string(maxDuration))
         num_y = printText(plt, num_y,"")
         title!(fileName)
@@ -146,6 +146,7 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
 
     result_path_svg = root * "Result/Fig/" * fileName * resultStatus * "result.svg"
     result_path_png = root * "Result/Fig/" * fileName * resultStatus * "result.png"
+    println(result_path_svg)
     
     savefig(result_path_svg)
     savefig(result_path_png)

@@ -8,14 +8,20 @@ include("Optimization.jl")
 println("Number of arguments: ", length(ARGS))
 filePath = "../Data/E/E-n33-k4.txt"
 case = "specified"
-global runningTime = 10 # minute
+global runningTime = 10*60 # minute
+# global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
+global root = "./../../Benchmark/"
 
 ## Input parameter
-## FileName / #SEV / Specified parking / Running time
+## FileName / #SEV / Running time / Specified parking
 if length(ARGS) >= 1
-    if length(ARGS[1])>1 filePath = "../../Data/Demo/" * ARGS[1]     end
-    if length(ARGS) >= 2
-        if readArgument(ARGS[2]) != 0 global runningTime = readArgument(ARGS[2])  end
+    global fileName = ARGS[1]
+    filePath = root * "Data/" * fileName
+    global V2 = 1 : parse(Int, ARGS[2])
+    global runningTime = parse(Int, ARGS[3])
+    global specifiedParkings = Vector{Int}()
+    for i in 4:length(ARGS) 
+        push!(specifiedParkings, parse(Int, ARGS[i]))
     end
 else
     println("No arguments provided")
@@ -25,17 +31,19 @@ end
 println("\n", "File path: ", filePath)
 println("Execution time limit: ",runningTime)
 
+display(specifiedParkings)
+
 # Process data
-dataProcessing(case, filePath)
+# dataProcessing(case, filePath)
 
-plt = displayMap()
-# display(plt)
-# displayData()
+# plt = displayMap()
+# # display(plt)
+# # displayData()
 
-# Build model
-model, x, y, t, w, z, f, tau = buildModel()
+# # Build model
+# model, x, y, t, w, z, f, tau = buildModel()
 
-# Run model, note result
-resolve(model, x, y, t, w, z, f, 15, tau)
+# # Run model, note result
+# resolve(model, x, y, t, w, z, f, 15, tau)
 
 nothing

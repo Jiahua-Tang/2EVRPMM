@@ -374,14 +374,56 @@ function branchOnReverseRoute(branchingInfo, reverse_route)
 
     @info "Start to branch on reversed route  $reverse_route"
     branch_order = build_branch_order(reverse_route)
-
+    # display(branch_order)
     while !branchingDecisionFound && !isempty(branch_order)
         branchingDecision = branch_order[1]
-        branch_order = branch_order[2:end]
+        deleteat!(branch_order, 1)
+        display(branchingDecision)
         if !(branchingDecision in branchingInfo.must_served_together) && !(branchingDecision in branchingInfo.forbidden_served_together)
             branchingDecisionFound = true    
             break             
         end  
+    end
+
+    if !branchingDecisionFound
+        branch_order = Vector{Tuple{Int, Int}}()
+        for (idx1, cust1) in enumerate(reverse_route[2:end-1]) 
+            for (idx2, cust2) in enumerate(reverse_route[2:end-1])
+                if idx2 > idx1 + 1
+                    if cust1<cust2
+                        push!(branch_order, (cust1, cust2))
+                    else
+                        push!(branch_order, (cust2, cust1))
+                    end
+                    
+                end
+            end
+        end
+    else
+        @info ("Branching decision : combination of customers: $branchingDecision")
+        left_branch = deepcopy(branchingInfo)
+        right_branch = deepcopy(branchingInfo)
+
+        push!(left_branch.must_served_together, branchingDecision)
+        push!(right_branch.forbidden_served_together, branchingDecision)
+
+        left_branch.depth += 1
+        right_branch.depth += 1
+
+        return left_branch, right_branch  
+    end
+
+    while !isnothing(branch_order)
+        branchingDecision = branch_order[1]
+        if length(branch_order) == 1
+            branch_order = nothing
+        else
+            branch_order = branch_order[2:end]
+        end
+        if !(branchingDecision in branchingInfo.must_served_together) && !(branchingDecision in branchingInfo.forbidden_served_together)
+            branchingDecisionFound = true    
+            break             
+        end 
     end
 
     if branchingDecisionFound
@@ -522,7 +564,8 @@ function branchOnArcParkingCustomer(branchingInfo, selected_y, routes)
 
 end
 
-function branchOnCombinationParkingCustomer(branchingInfo, y, routes)
+function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
+    routes = deepcopy(routes_pool)
     @info "Start to branch on most fractional route's most visited customer"
     left_branch = deepcopy(branchingInfo)
     right_branch = deepcopy(branchingInfo)
@@ -545,34 +588,80 @@ function branchOnCombinationParkingCustomer(branchingInfo, y, routes)
         end
     end
 
-    for route in selected_routes 
-        println(route)
+    branch_order = Vector{Tuple{Int,Int}}()
+    for route_iter in selected_routes 
+        # println(route)
+        route = deepcopy(route_iter)
         customers_selected_times_copy = deepcopy(customers_selected_times)
-        while !branchingDecisionFound && length(route)>2
+        while length(route) > 2
             most_visited_customer = argmax(customers_selected_times_copy)
-            customers_selected_times_copy[most_visited_customer] = 0
-
-            branchingDecision = (route[1], most_visited_customer)
-            
-            if most_visited_customer in route && !(branchingDecision in branchingInfo.must_include_combinations) && !(branchingDecision in branchingInfo.forbidden_combinations)
-                branchingDecisionFound = true
-                break
+            if most_visited_customer in route
+                push!(branch_order, (route[1], most_visited_customer))
+                if route[1] != route[end]
+                    push!(branch_order, (route[end], most_visited_customer))
+                end
+                idx = findfirst(==(most_visited_customer), route)
+                deleteat!(route, idx)
             end
-        end            
-        if branchingDecisionFound
-            break    
+            customers_selected_times_copy[most_visited_customer] = 0
         end
     end
 
-    @info "Branching decision: combination parking-customer: $branchingDecision"    
+    # display(branch_order)
 
-    push!(left_branch.forbidden_combinations, branchingDecision)
-    push!(right_branch.must_include_combinations, branchingDecision)
+    while !branchingDecisionFound && !isempty(branch_order)
+        branchingDecision = branch_order[1]
+        # println("TEST $branchingDecision")
+        deleteat!(branch_order, 1)
+        if !(branchingDecision in branchingInfo.must_include_combinations) && !(branchingDecision in branchingInfo.forbidden_combinations)            
+            branchingDecisionFound = true
+            break
+        end
+    end
 
-    left_branch.depth += 1
-    right_branch.depth += 1
+    if branchingDecisionFound
 
-    return left_branch, right_branch
+        @info "Branching decision: combination parking-customer: $branchingDecision"    
+
+        push!(left_branch.forbidden_combinations, branchingDecision)
+        push!(right_branch.must_include_combinations, branchingDecision)
+
+        left_branch.depth += 1
+        right_branch.depth += 1
+
+        return left_branch, right_branch        
+
+    else
+        for route in selected_routes
+            while !branchingDecisionFound
+                valid_indices = 2:(length(route)-1)
+                selected_indices = randperm(length(valid_indices))[1:2]
+                elements = route[valid_indices[selected_indices]]
+                if elements[1] < elements[2]
+                    branchingDecision = (elements[1], elements[2])
+                else
+                    branchingDecision = (elements[2], elements[1])
+                end
+
+                println(route, "  ", elements)
+                if !(branchingDecision in branchingInfo.must_served_together)&&!(branchingDecision in branchingInfo.forbidden_served_together)
+                    branchingDecisionFound = true
+                end
+            end
+            if branchingDecisionFound
+                @info "Branching decision: combination customer-customer: $branchingDecision"    
+
+                push!(left_branch.forbidden_served_together, branchingDecision)
+                push!(right_branch.must_served_together, branchingDecision)
+
+                left_branch.depth += 1
+                right_branch.depth += 1
+
+                return left_branch, right_branch  
+            end
+        end
+    end
+
 
 end
 
@@ -614,29 +703,30 @@ function branchOnMostFractionalAndVisitedPair(branchingInfo, sorted_fractional_y
         end
     end
 
-    while !branchingDecisionFound && !isempty(branch_order)
-        branchingDecision = first(branch_order)
-        delete!(branch_order, first(branch_order))
-        if !(branchingDecision in branchingInfo.must_include_combinations) && !(branchingDecision in branchingInfo.forbidden_combinations)
-            branchingDecisionFound = true    
-            break             
-        end            
-    end
+    display(branch_order)
+    # while !branchingDecisionFound && !isempty(branch_order)
+    #     branchingDecision = first(branch_order)
+    #     delete!(branch_order, first(branch_order))
+    #     if !(branchingDecision in branchingInfo.must_include_combinations) && !(branchingDecision in branchingInfo.forbidden_combinations)
+    #         branchingDecisionFound = true    
+    #         break             
+    #     end            
+    # end
     
-    if branchingDecisionFound
-        @info ("Branching decision : assignment of parking-custmer : $branchingDecision")
-        left_branch = deepcopy(branchingInfo)
-        right_branch = deepcopy(branchingInfo)
+    # if branchingDecisionFound
+    #     @info ("Branching decision : assignment of parking-custmer : $branchingDecision")
+    #     left_branch = deepcopy(branchingInfo)
+    #     right_branch = deepcopy(branchingInfo)
 
-        push!(left_branch.must_include_combinations, branchingDecision)
-        push!(right_branch.forbidden_combinations, branchingDecision)
+    #     push!(left_branch.must_include_combinations, branchingDecision)
+    #     push!(right_branch.forbidden_combinations, branchingDecision)
 
-        left_branch.depth += 1
-        right_branch.depth += 1
+    #     left_branch.depth += 1
+    #     right_branch.depth += 1
 
-        return left_branch, right_branch    
-    else
-        return nothing
-    end
+    #     return left_branch, right_branch    
+    # else
+    #     return nothing
+    # end
 
 end

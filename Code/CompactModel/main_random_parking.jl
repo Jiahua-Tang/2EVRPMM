@@ -9,15 +9,19 @@ println("Number of arguments: ", length(ARGS))
 filePath = "../Data/E/E-n33-k4.txt"
 case = "random"
 global runningTime = 10*60 # minute
-global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
+# global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
+global root = "./../../Benchmark/"
+
+# display(ARGS)
 
 ## Input parameter
 ## FileName / #SEV / Running time
 if length(ARGS) >= 1
     global fileName = ARGS[1]
-    filePath = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/E/" * fileName
-    global V2 = 1 : Int(ARGS[2])
-    global runningTime = Int(ARGS[3])
+    filePath = root * "Data/" * fileName
+    global V2 = 1 : parse(Int, ARGS[2])
+    global runningTime = parse(Int, ARGS[3])
+    global nmm = parse(Int, ARGS[4])
 else
     println("No arguments provided")
 end

@@ -374,6 +374,7 @@ function columnGenerationPer1eRoute(route_1e::Vector{Route}, routes_2e::Vector{R
                         end
                     end
                     if routeAlreadyGenerated
+                        @info "Generted existing route"
                         stopStatus = true
                         ## if there is a dummy route is included in solution, rlmp is considered infeasible
                         for (idx,value) in enumerate(rlmpResult[6])
@@ -442,8 +443,13 @@ function branchingStrategy(y, routes_2e,  branchingInfo::BranchingInfo)
     end
 
     ## Case C: combination of parking-customer
-    return branchOnCombinationParkingCustomer(branchingInfo, y, routes_2e)
-    # result = branchOnMostFractionalAndVisitedPair(branchingInfo, y, routes_2e)
+    result = branchOnCombinationParkingCustomer(branchingInfo, y, routes_2e)
+    if !isnothing(result)
+        return result
+    end
+
+    ## Case D: combination of customers
+    # result = 
     
 end
 
@@ -515,7 +521,7 @@ while num_iter <2 # !isempty(lb_lrp_per_route)
     branchAndPricePer1eSubproblem(route_1e, routes_2e)
 
     delete!(lb_lrp_per_route, min_idx)
-    println("current upper bound is $(round(upperBound,digits=2)) ")
+    @info "current upper bound is $(round(upperBound,digits=2)) "
     global num_iters
     num_iter += 1
 end
