@@ -1,0 +1,165 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               80
+Tried aggregator 1 time.
+MIP Presolve eliminated 221 rows and 122 columns.
+MIP Presolve modified 1406 coefficients.
+Reduced MIP has 3637 rows, 2592 columns, and 14232 nonzeros.
+Reduced MIP has 1272 binaries, 1288 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.02 sec. (9.17 ticks)
+Probing time = 0.02 sec. (4.23 ticks)
+Cover probing fixed 0 vars, tightened 64 bounds.
+Tried aggregator 1 time.
+Detecting symmetries...
+MIP Presolve eliminated 1 rows and 0 columns.
+MIP Presolve modified 254 coefficients.
+Reduced MIP has 3636 rows, 2592 columns, and 14230 nonzeros.
+Reduced MIP has 1272 binaries, 1288 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.01 sec. (8.14 ticks)
+Probing fixed 0 vars, tightened 59 bounds.
+Probing time = 0.02 sec. (6.99 ticks)
+Cover probing fixed 0 vars, tightened 738 bounds.
+Clique table members: 733.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 32 threads.
+Root relaxation solution time = 0.12 sec. (54.60 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0      483.4741   138                    483.4741     1081         
+      0     0      520.9555   149                   Cuts: 287     1347         
+      0     0      525.8315   180                   Cuts: 127     1508         
+      0     0      529.4414   191                    Cuts: 80     1621         
+      0     0      529.9913   212                    Cuts: 49     1675         
+      0     0      530.4356   202                    Cuts: 52     1786         
+Detecting symmetries...
+      0     0      530.8900   209                    Cuts: 57     1898         
+      0     0      530.9796   235                    Cuts: 44     1986         
+      0     0      531.0371   240                    Cuts: 51     2029         
+      0     0      531.0566   243                    Cuts: 13     2071         
+      0     0      531.0575   242                    Cuts: 11     2083         
+*     0+    0                          880.8145      531.0575            39.71%
+*     0+    0                          670.2102      531.8330            20.65%
+      0     0  -1.00000e+75     0      670.2102      531.8330     2083   20.65%
+Detecting symmetries...
+      0     2      531.0575   242      670.2102      531.8330     2083   20.65%
+Elapsed time = 31.29 sec. (1639.00 ticks, tree = 0.02 MB, solutions = 2)
+*    72+   17                          664.7968      564.0626            15.15%
+*    80+   17                          664.6891      564.0626            15.14%
+     80    54      615.4246   200      664.6891      564.0626    14639   15.14%
+*   106+   30                          659.9923      564.0626            14.53%
+    356   284      655.0452   119      659.9923      564.0626    48213   14.53%
+    901   591        cutoff            659.9923      564.0626    82915   14.53%
+   1840  1271      624.7896   113      659.9923      570.4384   154589   13.57%
+   2929  2025      643.2254   139      659.9923      576.2983   210477   12.68%
+   4139  2670      635.9929   152      659.9923      579.0837   263518   12.26%
+   5600  3788      621.3460   165      659.9923      580.5141   331585   12.04%
+   7044  5123      640.4263    98      659.9923      583.2299   398128   11.63%
+   8186  6060      631.0377   115      659.9923      583.2299   444373   11.63%
+
+Performing restart 1
+
+Repeating presolve.
+Tried aggregator 1 time.
+MIP Presolve eliminated 6 rows and 0 columns.
+MIP Presolve modified 941 coefficients.
+Reduced MIP has 3630 rows, 2592 columns, and 14218 nonzeros.
+Reduced MIP has 1272 binaries, 1288 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.01 sec. (6.09 ticks)
+Tried aggregator 1 time.
+MIP Presolve eliminated 6 rows and 0 columns.
+MIP Presolve modified 599 coefficients.
+Reduced MIP has 3624 rows, 2592 columns, and 14206 nonzeros.
+Reduced MIP has 1272 binaries, 1288 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.02 sec. (8.35 ticks)
+Represolve time = 0.13 sec. (42.11 ticks)
+*  8217+    0                          654.4256      583.2299            10.88%
+   8217     0      542.4894   249      654.4256     Cuts: 143   486424   10.88%
+   8217     0      545.9133   252      654.4256      Cuts: 62   486791   10.88%
+   8217     0      546.5836   247      654.4256     Cuts: 105   487010   10.88%
+   8217     0      547.2123   254      654.4256      Cuts: 50   487189   10.88%
+
+Clique cuts applied:  8
+Cover cuts applied:  3
+Implied bound cuts applied:  142
+Flow cuts applied:  87
+Mixed integer rounding cuts applied:  52
+Zero-half cuts applied:  3
+Lift and project cuts applied:  11
+Gomory fractional cuts applied:  1
+
+Root node processing (before b&c):
+  Real time             =   26.83 sec. (1626.54 ticks)
+Parallel b&c, 32 threads:
+  Real time             =   60.05 sec. (4218.51 ticks)
+  Sync time (average)   =   23.30 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =   86.88 sec. (5845.06 ticks)
+Number of arguments: 4
+
+File path: /gpfs/workdir/tangj/2EVRPMM/Benchmark/Data/E-n33-k4.txt
+Execution time limit: 80
+PI[1] = 0.0
+PI[2] = 1.0
+PI[3] = 1.0
+PI[4] = 0.0
+PI[5] = 0.0
+1  [292.0  495.0]   empty
+2  [300.59  461.63]   occupied
+3  [287.45  396.36]   occupied
+4  [281.63  459.51]   empty
+5  [302.77  445.42]   empty
+6  [298.0  427.0]   700
+7  [309.0  445.0]   400
+8  [307.0  464.0]   400
+9  [336.0  475.0]   1200
+10  [320.0  439.0]   40
+11  [321.0  437.0]   80
+12  [322.0  437.0]   2000
+13  [323.0  433.0]   900
+14  [324.0  433.0]   600
+15  [323.0  429.0]   750
+16  [314.0  435.0]   1500
+17  [311.0  442.0]   150
+18  [304.0  427.0]   250
+19  [293.0  421.0]   1600
+20  [296.0  418.0]   450
+21  [261.0  384.0]   700
+22  [297.0  410.0]   550
+23  [315.0  407.0]   650
+24  [314.0  406.0]   200
+25  [321.0  391.0]   400
+26  [321.0  398.0]   300
+27  [314.0  394.0]   1300
+28  [313.0  378.0]   700
+29  [304.0  382.0]   750
+30  [295.0  402.0]   1400
+31  [283.0  406.0]   4000
+32  [279.0  399.0]   600
+33  [271.0  401.0]   1000
+34  [264.0  414.0]   500
+35  [277.0  439.0]   2500
+36  [290.0  434.0]   1700
+37  [319.0  433.0]   1100
+
+Total execution time: 89.171625096 seconds
+Total distance traveled: 654.4256147800436
+File name: E-n33-k4.txt
+Capacity of FEV: 29370
+Capacity of Microhub: 32000
+Capacity of SEV: 8000
+Number of customers: 32
+Number of parkings: 4
+Number of microhubs: 2
+Number of robots/MM: 4
+Parking generation rule: random
+Feasible solution found within the time limit!
+
+3 -> 29 -> 28 -> 27 -> 25 -> 26 -> 23 -> 24 -> 22 -> 20 -> 19 -> 6 -> 18 -> 5 is : 136.68
+3 -> 31 -> 30 -> 3 is : 32.69
+5 -> 9 -> 8 -> 7 -> 5 is : 100.85
+5 -> 17 -> 10 -> 11 -> 12 -> 13 -> 14 -> 15 -> 37 -> 16 -> 5 is : 57.24
+5 -> 36 -> 35 -> 34 -> 33 -> 21 -> 32 -> 3 is : 126.01
+/gpfs/workdir/tangj/2EVRPMM/Benchmark/Result/Fig/E-n33-k4.txt-F-16-05-2025-23-22-result.svg
