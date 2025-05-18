@@ -18,4 +18,4 @@ set -e
 julia /gpfs/workdir/tangj/2EVRPMM/Code/CompactModel/configure_env.jl
 
 # Run the main Julia code
-julia /gpfs/workdir/tangj/2EVRPMM/Code/CompactModel/main_random_parking.jl E-n33-k4.txt 5 330 7 13
+julia /gpfs/workdir/tangj/2EVRPMM/Code/CompactModel/main_random_parking.jl E-n33-k4.txt 5 20000 7 13
