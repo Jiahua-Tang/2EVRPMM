@@ -6,8 +6,7 @@ include("Optimization.jl")
 
 # Read file
 println("Number of arguments: ", length(ARGS))
-filePath = "../Data/E/E-n33-k4.txt"
-case = "random"
+global case = "random"
 global runningTime = 10*60 # minute
 global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
 # global root = "./../../Benchmark/"

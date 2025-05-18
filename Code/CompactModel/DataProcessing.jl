@@ -22,6 +22,7 @@ function dataProcessing(case::String, filePath::String)
     else
         x_coor_parkings, y_coor_parkings, PI = fixedGenerateParking(x_coor_customers, y_coor_customers)
     end
+
     global nc = length(x_coor_customers)
     # global np = length(x_coor_parkings)
 
@@ -33,9 +34,9 @@ function dataProcessing(case::String, filePath::String)
     global x_coor = vcat(x_coor_depot, x_coor_parkings, x_coor_customers)
     global y_coor = vcat(y_coor_depot, y_coor_parkings, y_coor_customers)
 
-    for (idx, value) in enumerate(PI) 
-        println("PI[$idx] = $value")
-    end
+    # for (idx, value) in enumerate(PI) 
+    #     println("PI[$idx] = $value")
+    # end
 
     for (idx, _) in enumerate(x_coor)
         if idx in 1:np+1

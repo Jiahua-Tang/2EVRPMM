@@ -6,11 +6,10 @@ include("Optimization.jl")
 
 # Read file
 println("Number of arguments: ", length(ARGS))
-filePath = "../Data/E/E-n33-k4.txt"
-case = "specified"
+global case = "specified"
 global runningTime = 10*60 # minute
-# global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
-global root = "./../../Benchmark/"
+global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
+# global root = "./../../Benchmark/"
 
 ## Input parameter
 ## FileName / #SEV / Running time / Specified parking
@@ -23,6 +22,7 @@ if length(ARGS) >= 1
     for i in 4:length(ARGS) 
         push!(specifiedParkings, parse(Int, ARGS[i]))
     end
+    global np = length(specifiedParkings) * 2
 else
     println("No arguments provided")
 end
@@ -31,19 +31,19 @@ end
 println("\n", "File path: ", filePath)
 println("Execution time limit: ",runningTime)
 
-display(specifiedParkings)
+# display(specifiedParkings)
 
 # Process data
-# dataProcessing(case, filePath)
+dataProcessing(case, filePath)
 
 # plt = displayMap()
 # # display(plt)
 # # displayData()
 
-# # Build model
-# model, x, y, t, w, z, f, tau = buildModel()
+# Build model
+model, x, y, t, w, z, f, tau = buildModel()
 
-# # Run model, note result
-# resolve(model, x, y, t, w, z, f, 15, tau)
+# Run model, note result
+resolve(model, x, y, t, w, z, f, 15, tau)
 
 nothing

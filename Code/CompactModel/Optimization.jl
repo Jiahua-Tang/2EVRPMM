@@ -24,6 +24,13 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
     println("Number of microhubs: ", Int(sum(PI)))
     println("Number of robots/MM: ", length(V2))
     println("Parking generation rule: ", case)
+    if case == "specified"
+        print("Specified parking location:  ")
+        for parking in specifiedParkings 
+            print("$parking  ")
+        end
+        println("")
+    end
 
     # Check solver status and print results
     if termination_status(model) == MOI.OPTIMAL
@@ -144,8 +151,8 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
 
     display(plt)
 
-    result_path_svg = root * "Result/Fig/" * fileName * resultStatus * "result.svg"
-    result_path_png = root * "Result/Fig/" * fileName * resultStatus * "result.png"
+    result_path_svg = root * "Result/Fig/" * fileName * "-" * case * resultStatus * "result.svg"
+    result_path_png = root * "Result/Fig/" * fileName * "-" * case * resultStatus * "result.png"
     println(result_path_svg)
     
     savefig(result_path_svg)

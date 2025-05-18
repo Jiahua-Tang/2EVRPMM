@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=E-n33-k4
-#SBATCH --output=/gpfs/workdir/tangj/2EVRPMM/Benchmark/Result/outputSlurm/E-n33-k4/%j.%x.out
-#SBATCH --error=/gpfs/workdir/tangj/2EVRPMM/Benchmark/Result/outputSlurm/InstancesC50/%j.%x.err  # Capture standard error in a separate file
+#SBATCH --output=/gpfs/workdir/tangj/2EVRPMM/Benchmark/Result/OutputSlurm/output/E-n51-k5/%j.specified.%x.out
+#SBATCH --error=/gpfs/workdir/tangj/2EVRPMM/Benchmark/Result/OutputSlurm/err/E-n51-k5/%j.specified.%x.err  # Capture standard error in a separate file
 #SBATCH --time=06:00:00 
 #SBATCH --ntasks=1   # Since Julia typically uses multithreading, setting ntasks to 1
 #SBATCH --cpus-per-task=10                      # Ensure you're using all 10 CPUs
@@ -18,4 +18,4 @@ set -e
 julia /gpfs/workdir/tangj/2EVRPMM/Code/CompactModel/configure_env.jl
 
 # Run the main Julia code
-julia /gpfs/workdir/tangj/2EVRPMM/Code/CompactModel/main_random_parking.jl E-n33-k4.txt 4 80
+julia /gpfs/workdir/tangj/2EVRPMM/Code/CompactModel/main_random_parking.jl E-n33-k4.txt 5 330 4 80 12 20 28 48

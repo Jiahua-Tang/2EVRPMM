@@ -158,21 +158,14 @@ function displayMap()
     default(size=(1200, 800))
     # gr()
     ENV["GKSwstype"] = "100" 
-    
-    # Create a customers scatter plot
-    plt = scatter(x_coor[2+np:1+nc+np], y_coor[2+np:1+nc+np],
-                title = "Coordinate Plot",
-                legend = false, markersize = 6, markercolor = :pink, 
-                marker=:utriangle, markerstrokecolor = :transparent, 
-                markerstrokewidth=0, label = "Customers",right_margin=100mm)
+ 
+    # Add the depot point in a different color
+    plt = scatter!(x_coor[1:1], y_coor[1:1], 
+            markersize = 8, markershape=:square, markercolor = :yellow) 
 
     # Create a parking scatter plot
     scatter!(plt, x_coor[2:1+np], y_coor[2:1+np], 
-            legend = false)
-
-    # Add the depot point in a different color
-    scatter!(plt, x_coor[1:1], y_coor[1:1], 
-            markersize = 8, markershape=:square, markercolor = :yellow)
+            legend = false)      
 
     # Add the initial parking place in a different color
     for p in 2 : np+1
@@ -184,6 +177,14 @@ function displayMap()
             markersize = 6, markercolor = :white)
         end
     end
+
+    # Create a customers scatter plot
+    scatter!(plt, x_coor[2+np:1+nc+np], y_coor[2+np:1+nc+np],
+                title = "Coordinate Plot",
+                legend = false, markersize = 6, markercolor = :pink, 
+                marker=:utriangle, markerstrokecolor = :transparent, 
+                markerstrokewidth=0, label = "Customers",right_margin=100mm)
+    
     return plt
 end
 
@@ -206,13 +207,20 @@ function randomGenerateParking(x_coor_customers,y_coor_customers)
 end
 
 function fixedGenerateParking(x_coor_customers,y_coor_customers)    
-    PI = zeros(Int, 1+length(specifiedParkings)*2)
-    # x_coor_parking = 
-    # y_coor_parking = TODO
-    for parking in specifiedParkings 
-        PI[parking] = 1
-    end
+    PI = vcat(0, ones(Int, length(specifiedParkings)), zeros(Int, length(specifiedParkings)))
 
+    customers = setdiff!(Set(1:length(x_coor_customers)),Set(specifiedParkings))
+    parking_customers = rand(collect(customers), length(specifiedParkings))
+    parkings = vcat(specifiedParkings, parking_customers)
+
+    x_coor_parkings = []
+    y_coor_parkings = []
+    # display(parkings)
+    for parking in parkings 
+        push!(x_coor_parkings, x_coor_customers[parking])
+        push!(y_coor_parkings, y_coor_customers[parking])
+    end
+    # display(x_coor_parkings)
     return x_coor_parkings, y_coor_parkings, PI
 end
 
