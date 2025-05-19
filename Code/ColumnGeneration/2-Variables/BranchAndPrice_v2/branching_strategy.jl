@@ -369,6 +369,70 @@ function branchOnTotalNumber2eRoutes(branchingInfo, totalNumber)
 end
 
 function branchOnReverseRoute(branchingInfo, reverse_route)
+    left_branch = deepcopy(branchingInfo)
+    right_branch = deepcopy(branchingInfo)
+    left_branch.depth += 1
+    right_branch.depth += 1
+    @info "Start to branch on reversed route  $reverse_route"
+
+    customers_served = reverse_route[2:end-1]
+    n = length(customers_served)
+    priority_pairs = Set{Tuple{Int, Int}}()
+    mid = div(n+1, 2)
+
+    for i in 1:n 
+        for j in 1:n 
+            if 1 != j && (i == mid || j == mid) && i!=j
+                pair = Tuple(sort([customers_served[i], customers_served[j]]))
+                push!(priority_pairs, pair)
+            end
+        end
+    end
+
+    for pair in priority_pairs
+        if !(pair in branchingInfo.must_served_together) && !(pair in branchingInfo.forbidden_served_together)
+            @info ("Branching decision : combination of customers: $pair")
+            push!(left_branch.must_served_together, pair)
+            push!(right_branch.forbidden_served_together, pair)
+            return left_branch, right_branch
+        end
+    end
+
+    for i in 1:n-1
+        for j in i+1:n
+            pair = Tuple(sort([customers_served[i], customers_served[j]]))
+            if !(pair in branchingInfo.must_served_together) && !(pair in branchingInfo.forbidden_served_together)
+                @info ("Branching decision : combination of customers: $pair")                  
+                push!(left_branch.must_served_together, pair)
+                push!(right_branch.forbidden_served_together, pair)
+                return left_branch, right_branch
+            end
+        end
+    end
+
+    pairs = Set{Tuple{Int, Int}}()
+    push!(pairs, (reverse_route[1], reverse_route[2]))
+    push!(pairs, (reverse_route[end], reverse_route[end-1]))
+    for cust in customers 
+        push!(pairs, (reverse_route[1], cust))
+        push!(pairs, (reverse_route[end], cust))
+    end
+
+    for pair in pairs
+        if !(pair in branchingInfo.must_served_together) && !(pair in branchingInfo.forbidden_served_together)
+            @info ("Branching decision : combination of parking-customer: $pair")
+            push!(left_branch.must_served_together, pair)
+            push!(right_branch.forbidden_served_together, pair)
+            return left_branch, right_branch
+        end
+    end
+
+    return nothing
+
+end
+
+
+function branchOnReverseRoute_copy(branchingInfo, reverse_route)
     branchingDecision = nothing
     branchingDecisionFound = false
 

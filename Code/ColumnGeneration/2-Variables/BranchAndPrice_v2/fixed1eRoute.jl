@@ -8,29 +8,6 @@ include("Utiles.jl")
 include("column_generation.jl")
 include("branching_strategy.jl")
 
-const data = initializeData(5,3,12)
-
-const coor = data[1]
-const nb_parking = data[2]
-const nb_microhub = data[3]
-const parking_availability = data[4]
-const demands = data[5]
-const arc_cost = data[6]
-
-## Define parameters
-const nb_vehicle_per_satellite = 10
-const capacity_2e_vehicle = 30
-const capacity_microhub = 35
-const maximum_duration_2e_vehicle = 50
-const minimum_parkings_required = Int(ceil(sum(demands)/capacity_microhub))
-
-## Define set
-const points = 1:length(demands)
-const customers = 2 + nb_parking : length(coor)
-const satellites = 2:1 + nb_parking
-const A2 = 2:length(coor)
-const A1 = 1:1+length(satellites)
-
 
 function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
     result = Vector{Route}()
@@ -252,11 +229,32 @@ function calculate_aggregated_lower_bound(routes_1e_complete, routes_2e)
 end
 
 
-routes_1e_complete = generateNonDominate1eRoutes(minimum_parkings_required)
-# routes_1e_complete = Vector{Route}()
-# push!(routes_1e_complete, generate1eRoute([1, 3, 2, 5, 1]))
-# push!(routes_1e_complete, generate1eRoute([1, 2, 3, 5, 1]))
 
+const data = initializeData(5,3,12)
+
+const coor = data[1]
+const nb_parking = data[2]
+const nb_microhub = data[3]
+const parking_availability = data[4]
+const demands = data[5]
+const arc_cost = data[6]
+
+## Define parameters
+const nb_vehicle_per_satellite = 10
+const capacity_2e_vehicle = 30
+const capacity_microhub = 35
+const maximum_duration_2e_vehicle = 50
+const minimum_parkings_required = Int(ceil(sum(demands)/capacity_microhub))
+
+## Define set
+const points = 1:length(demands)
+const customers = 2 + nb_parking : length(coor)
+const satellites = 2:1 + nb_parking
+const A2 = 2:length(coor)
+const A1 = 1:1+length(satellites)
+
+
+routes_1e_complete = generateNonDominate1eRoutes(minimum_parkings_required)
 
 println("==========================")
 
@@ -277,7 +275,7 @@ println("==========================")
 
 # plotOriginal()
 
-# solveMasterProblem()
+solveMasterProblem()
 
 # solveRMP(generate1eRoute([1,2,6,4,1]))
 
@@ -297,7 +295,7 @@ function branchAndPricePer1eSubproblem(route_1e::Vector{Route}, routes_2e::Vecto
     optimal_solution = nothing
 
     num_iter_sp = 1
-    while !isempty(node_stack) && num_iter_sp < 31
+    while !isempty(node_stack) && num_iter_sp < 111
         println("\n================Iteration $num_iter_sp of B&P for SP$num_iter $(route_1e[1].sequence)================")
         
         branchingInfo = pop!(node_stack)
@@ -325,11 +323,11 @@ function branchAndPricePer1eSubproblem(route_1e::Vector{Route}, routes_2e::Vecto
             println("   Total number of 2e routes:  ", sum(y_value) )
             for (idx, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
                 println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
-            end
+            endt 
 
             if isempty([r for r in 1:length(y_value) if 0 < y_value[r] < 1])
             ## Integer Solution Found, Update upper bound
-                @info "Integer Solution Found"
+                @info "Integer Solution Found  $(result[3])  $upper_bound"
                 if result[3] < upperBound
                     global  upperBound
                     upperBound = result[3]
@@ -417,6 +415,7 @@ function columnGenerationPer1eRoute(route_1e::Vector{Route}, routes_2e::Vector{R
     end
 end
 
+
 function branchingStrategy(y, routes_2e,  branchingInfo::BranchingInfo)
     
     left_branch = deepcopy(branchingInfo)
@@ -496,37 +495,34 @@ function testLMP()
 end
 
 
-lb_lrp_per_route, lower_bounds = calculate_lrp_lower_bound(routes_1e_complete)
-lb_lrp_per_route_copy = deepcopy(lb_lrp_per_route)
-while !isempty(lb_lrp_per_route_copy)
-    min_value, min_idx = findmin(lb_lrp_per_route_copy)
-    println(routes_1e_complete[min_idx].sequence,"  ",getServedParking1eRoute(routes_1e_complete[min_idx]),"   lower bound= $(round(min_value, digits=2))")
-    delete!(lb_lrp_per_route_copy, min_idx)
+# lb_lrp_per_route, lower_bounds = calculate_lrp_lower_bound(routes_1e_complete)
+# lb_lrp_per_route_copy = deepcopy(lb_lrp_per_route)
+# while !isempty(lb_lrp_per_route_copy)
+#     min_value, min_idx = findmin(lb_lrp_per_route_copy)
+#     println(routes_1e_complete[min_idx].sequence,"  ",getServedParking1eRoute(routes_1e_complete[min_idx]),"   lower bound= $(round(min_value, digits=2))")
+#     delete!(lb_lrp_per_route_copy, min_idx)
+# end
+
+
+# global num_iter = 1
+# global upperBound = Inf
+
+# ## Initial Feasible Routes
+# routes_2e = generate2eInitialRoutes()
+# while num_iter <2 # !isempty(lb_lrp_per_route)
+
+#     min_value, min_idx = findmin(lb_lrp_per_route)
+#     if min_value > upperBound   break   end
+
+#     route_1e = Vector{Route}()
+#     push!(route_1e, routes_1e_complete[min_idx])
+
+#     branchAndPricePer1eSubproblem(route_1e, routes_2e)
+
+#     delete!(lb_lrp_per_route, min_idx)
+#     @info "current upper bound is $(round(upperBound,digits=2)) "
+#     global num_iters
+#     num_iter += 1
+# end
+
 end
-
-
-global num_iter = 1
-global upperBound = Inf
-
-## Initial Feasible Routes
-routes_2e = generate2eInitialRoutes()
-while num_iter <2 # !isempty(lb_lrp_per_route)
-
-    min_value, min_idx = findmin(lb_lrp_per_route)
-    if min_value > upperBound   break   end
-
-    route_1e = Vector{Route}()
-    push!(route_1e, routes_1e_complete[min_idx])
-
-    branchAndPricePer1eSubproblem(route_1e, routes_2e)
-
-    delete!(lb_lrp_per_route, min_idx)
-    @info "current upper bound is $(round(upperBound,digits=2)) "
-    global num_iters
-    num_iter += 1
-end
-
-
-# testLMP()
-
-nothing

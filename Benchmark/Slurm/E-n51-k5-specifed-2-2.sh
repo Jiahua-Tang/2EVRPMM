@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=E-n33-k4
+#SBATCH --job-name=E-n51-k5
 #SBATCH --output=/gpfs/workdir/tangj/2EVRPMM/Benchmark/Result/OutputSlurm/output/E-n51-k5/%j.specified.%x.out
 #SBATCH --error=/gpfs/workdir/tangj/2EVRPMM/Benchmark/Result/OutputSlurm/err/E-n51-k5/%j.specified.%x.err  # Capture standard error in a separate file
 #SBATCH --time=06:00:00 
@@ -18,4 +18,4 @@ set -e
 julia /gpfs/workdir/tangj/2EVRPMM/Code/CompactModel/configure_env.jl
 
 # Run the main Julia code
-julia /gpfs/workdir/tangj/2EVRPMM/Code/CompactModel/main_random_parking.jl E-n33-k4.txt 5 20000 5 47
+julia /gpfs/workdir/tangj/2EVRPMM/Code/CompactModel/main_random_parking.jl E-n51-k5.txt 5 20000 5 47

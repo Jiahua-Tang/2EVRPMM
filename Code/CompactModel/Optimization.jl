@@ -35,7 +35,7 @@ function resolve(model, x, y, t, w, z, f, minutes,tau)
     # Check solver status and print results
     if termination_status(model) == MOI.OPTIMAL
         println("Optimal solution found!")
-        resultStatus = "-O"
+        resultStatus = "-O-" * currentTime * "-"
     elseif primal_status(model) == MOI.FEASIBLE_POINT
         println("Feasible solution found within the time limit!")
         resultStatus = "-F-" * currentTime * "-"

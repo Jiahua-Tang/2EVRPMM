@@ -390,11 +390,6 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
         end
     end
 
-    # println("size of forbidden 2e routes is:  $(length(forbidden_2e_routes))")
-    if !isempty(branchingInfo.forbidden_parkings)
-        @constraint(model, forbidden_parkings, sum(y[r] for r in (forbidden_2e_routes)) == 0)
-    end
-
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
         lower_bound = maximum(branchingInfo.lower_bound_number_2e_routes) 
         @constraint(model, sum(y[r] for (r, route) in enumerate(routes_2e))>=lower_bound)
@@ -406,13 +401,13 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
 
     # @constraint(model, microhubUB, sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e) for s in satellites)<=nb_microhub)
     @constraint(model, sync[s in satellites], sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e))
-        -nb_vehicle_per_satellite*sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e))<=0)
+        -nb_vehicle_per_satellite * sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e))<=0)
     @constraint(model, custVisit[i in customers], 1 - sum(route.a[i-1-length(satellites)] * y[r] for (r,route) in enumerate(routes_2e)) <= 0 )
     @constraint(model, number2evfixe[s in satellites], sum(route.b2in[s] * y[r] for (r, route) in enumerate(routes_2e)) == sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e)))
     @constraint(model, maxVolumnMM[s in satellites], sum( routes_2e[r].a[i-1-length(satellites
     )]*demands[i]*y[r] for r in routes_originated_p[s-1] for i in customers) - capacity_microhub <= 0)
     @constraint(model, single1eV, sum(x[r] for (r,_) in enumerate(routes_1e))>=1)
-    @constraint(model, maxMMnumber, sum(x[r]*sum(route.b1) for (r,route) in enumerate(routes_1e)) <= nb_microhub)
+    # @constraint(model, maxMMnumber, sum(x[r]*sum(route.b1) for (r,route) in enumerate(routes_1e)) <= nb_microhub)
 
     @objective(model, Min, sum(y[r] * route.cost for (r,route) in enumerate(routes_2e)) + 
                         sum(x[r] * route.cost for (r,route) in enumerate(routes_1e)))
