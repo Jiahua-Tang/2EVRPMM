@@ -8,7 +8,6 @@ include("Utiles.jl")
 include("column_generation.jl")
 include("branching_strategy.jl")
 
-
 function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
     result = Vector{Route}()
     # displayBranchingRule(branchingInfo)
@@ -20,10 +19,30 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
             valide = false
         end
 
+        # for must_include in branchingInfo.must_include_combinations 
+        # ## a route include a must-combination on the branch can be added into 
+        # ## target parking and target customer must be in same route 
+        #     if must_include[2] in route.sequence && !(must_include[1] in route.sequence)
+        #         # println("TEST1  ")
+        #         valide = false
+        #         break            
+        #     end
+        # end    
+
+        # for forbidden in branchingInfo.forbidden_combinations 
+        # # a route include a forbidden-combination on the branch cannot be added into result
+        # ## target parking and target customer cannnot be in same route
+        #     if Int(forbidden[1] in route.sequence) + Int(forbidden[2] in route.sequence) == 2
+        #         # println("TEST2  ")
+        #         valide = false
+        #         break
+        #     end
+        # end
+
         for must_include in branchingInfo.must_include_combinations 
         ## a route include a must-combination on the branch can be added into 
         ## target parking and target customer must be in same route 
-            if must_include[2] in route.sequence && !(must_include[1] in route.sequence)
+            if must_include[2] in route.sequence && !(must_include[1] == route.sequence[1])
                 # println("TEST1  ")
                 valide = false
                 break            
@@ -33,7 +52,7 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
         for forbidden in branchingInfo.forbidden_combinations 
         # a route include a forbidden-combination on the branch cannot be added into result
         ## target parking and target customer cannnot be in same route
-            if Int(forbidden[1] in route.sequence) + Int(forbidden[2] in route.sequence) == 2
+            if Int(forbidden[1] == route.sequence[1]) + Int(forbidden[2] in route.sequence) == 2
                 # println("TEST2  ")
                 valide = false
                 break
@@ -232,131 +251,135 @@ function calculate_aggregated_lower_bound(routes_1e_complete, routes_2e)
 end
 
 
+function packBranchingNode(route_1e, routes_2e_pool, branchingInfo)
+## given a branchingInfo, transform it into a branchingNode structure (add cg result)
+    # println("Number of 2e routes:  ",length(routes_2e))
+    routes_2e_pool = filter_2e_routes(branchingInfo, routes_2e)
+    # println("Number of 2e routes after filtered:  ", length(routes_2e_pool))
+    result = column_generation(route_1e, routes_2e_pool, branchingInfo)
 
-# const data = initializeData(5,3,12)
-
-# const coor = data[1]
-# const nb_parking = data[2]
-# const nb_microhub = data[3]
-# const parking_availability = data[4]
-# const demands = data[5]
-# const arc_cost = data[6]
-
-# ## Define parameters
-# const nb_vehicle_per_satellite = 10
-# const capacity_2e_vehicle = 30
-# const capacity_microhub = 35
-# const maximum_duration_2e_vehicle = 50
-# const minimum_parkings_required = Int(ceil(sum(demands)/capacity_microhub))
-
-# ## Define set
-# const points = 1:length(demands)
-# const customers = 2 + nb_parking : length(coor)
-# const satellites = 2:1 + nb_parking
-# const A2 = 2:length(coor)
-# const A1 = 1:1+length(satellites)
-
-
-# routes_1e_complete = generateNonDominate1eRoutes(minimum_parkings_required)
-
-# println("==========================")
-
-
-
-
-# lb_ag_per_route = calculate_aggregated_lower_bound(routes_1e_complete, generate2eInitialRoutes())
-# while !isempty(lb_ag_per_route)
-#     min_value, min_idx = findmin(lb_ag_per_route)
-#     println(routes_1e_complete[min_idx].sequence,"   lower bound= $(round(min_value, digits=2))")
-#     delete!(lb_ag_per_route, min_idx)
-# end
-
-
-
-# display(sort(lower_bounds))
-
-
-# plotOriginal()
-
-# solveMasterProblem()
-
-# solveRMP(generate1eRoute([1,2,6,4,1]))
-
-
-# ========================================================================#
-# Efficient Column Generation and Branching strategies
-
-function branchAndPricePer1eSubproblem(route_1e::Vector{Route}, routes_2e::Vector{Route})
-    
-    root_branch = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(),Set{Route}(),Set{Route}(), 0)
-    root_branch.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e[1]))
-    node_stack = [root_branch]
-    # routes_2e = filter_2e_routes(routes_2e, root_branch)
-    
-    result_optimal_solution = Vector{Float64}()
-    optimal_solution_value = Inf
-    optimal_solution = nothing
-
-    num_iter_sp = 1
-    while !isempty(node_stack) && num_iter_sp < 251
-        println("\n================Iteration $num_iter_sp of B&P for SP$num_iter $(route_1e[1].sequence)================")
-        
-        branchingInfo = pop!(node_stack)
-        displayBranchingRule(branchingInfo)
-        println("Number of 2e routes:  ",length(routes_2e))
-        routes_2e_pool = filter_2e_routes(branchingInfo, routes_2e)
-        println("Number of 2e routes after filter:  ",length(routes_2e_pool))
-        # for parking in satellites
-        #     for route in routes_2e
-        #         if route.sequence[1] == parking
-        #             println("    ",route.sequence)                    
-        #         end
-        #     end            
+    if !isnothing(result)
+        y_value = result[4]
+        # for (_, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
+        #     println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
         # end
+        routes_2e_pool = result[2]
+        global routes_2e
+        for route in result[1]
+            push!(routes_2e, route)
+        end
+        if checkExistanceDummyRoute(y_value, routes_2e_pool)
+        ## Dummy route used at the end of column generation, branch can be pruned
+            @info "Dummy routes used, exceed upper bound, prune"
+            return nothing
 
-        result = column_generation(route_1e, routes_2e_pool, branchingInfo)    
-        
-        if !isnothing(result)
-            x_value = result[3]
-            y_value = result[4]
-            routes_2e_pool = result[2]
-            for route in result[1]
-                push!(routes_2e, route)
-            end
-            
-            println("   Total number of 2e routes = ", sum(y_value) , ", lb of cg = $(round(result[5],digits=2))")
-            for (idx, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
+        elseif isempty([r for r in 1:length(y_value) if 0 < y_value[r] < 1])
+        ## Integer solution found, note as a leaf node
+            ## display CG result
+            println("   Total number of 2e routes: ", sum(y_value) , ", lb of cg = $(round(result[5],digits=2))")
+            for (_, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
                 println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
             end
-
-            if isempty([r for r in 1:length(y_value) if 0 < y_value[r] < 1])
-            ## Integer Solution Found, Update upper bound
-                @info "Integer Solution Found  $(result[5])"
-                if result[5] < upperBound
-                    global  upperBound
-                    upperBound = result[5]
-                end
-            elseif result[5] > upperBound
-                @info "Exceed Upper Bound, prune"
-            else            
-            ## Fractional Solution, start branching
-                if checkExistanceDummyRoute(y_value, routes_2e_pool)
-                    @info "Dummy routes used, exceed upper bound, prune"
-                else
-                    println("")
-                    ## BranchandPrice
-                    left_branch, right_branch = branchingStrategy(y_value, routes_2e_pool, branchingInfo)
-                    push!(node_stack, left_branch)
-                    push!(node_stack, right_branch)
-                end
+            @info "Integer Solution Found  $(result[5])"
+            isLeaf = true
+            if result[5] < upperBound
+                global  upperBound
+                upperBound = result[5]
+                global optimalSolution
+                optimalSolution = Vector{Route}()
+                for (_, y) in enumerate([r for r in 1:length(y_value) if y_value[r]==1]) 
+                    push!(optimalSolution, routes_2e_pool[y])
+                end                   
             end
+        else
+        ## Create a child node
+            isLeaf = false
         end
-
-        num_iter_sp += 1
-        println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
+        branchingNode = BranchingNode(branchingInfo, result[5], y_value, isLeaf)
+        return branchingNode
+    else
+        @info "RLMP infeasible, prune "
+        return nothing
     end
 
-    return optimal_solution
+end
+
+function branchAndPriceWithScore(route_1e::Vector{Route}, routes_2e::Vector{Route})
+    root_branch = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(),Set{Route}(),Set{Route}(), 0)
+    root_branch.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e[1]))
+
+    # CG for root node
+    println("\n================Iteration 0 of B&P for SP$num_iter $(route_1e[1].sequence)================")
+    branchingNode = packBranchingNode(route_1e, filter_2e_routes(root_branch, routes_2e), root_branch)
+    node_stack = [branchingNode]
+    println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
+
+    num_iter_sp = 1
+    while !isempty(node_stack) # && num_iter_sp < 11
+        println("\n================Iteration $num_iter_sp of B&P for SP$num_iter $(route_1e[1].sequence)================")
+        
+        node = pop!(node_stack)
+        # deepest_nodes = Vector{BranchingNode}()
+        # max_depth = 0
+        # for (idx, value) in enumerate(node_stack) 
+        #     if value.branchingInfo.depth == max_depth
+        #         push!(deepest_nodes, value)
+        #     elseif value.branchingInfo.depth > max_depth
+        #         max_depth = value.branchingInfo.depth
+        #         deepest_nodes = Vector{BranchingNode}()
+        #         push!(deepest_nodes, value)
+        #     end
+        # end
+        # node = deepest_nodes[1]
+        # min_idx = 1
+        # if length(deepest_nodes) > 1
+        #     for (idx, deepest_node) in enumerate(deepest_nodes)
+        #         if deepest_node.cgLowerBound < node.cgLowerBound
+        #             node = deepest_node
+        #             min_idx = idx
+        #         end
+        #     end
+        # end
+        # deleteat!(node_stack, min_idx)
+
+        displayBranchingRule(node.branchingInfo)
+
+        if node.cgLowerBound > upperBound
+            @info "$(round(node.cgLowerBound, digits=2)), Exceed Upper Bound, prune"
+        elseif node.isLeaf
+            @info "Leaf Node already"
+        else            
+        ## start branching
+            println("Number of 2e routes:  ",length(routes_2e))
+            routes_2e_pool = filter_2e_routes(node.branchingInfo, routes_2e)
+            println("Number of 2e routes after filtered:  ", length(routes_2e_pool))
+
+            println("   Total number of 2e routes: ", sum(node.y_value) , ", lb of cg = $(round(node.cgLowerBound,digits=2))")
+            for (_, y) in enumerate([r for r in 1:length(node.y_value) if 0 < node.y_value[r]]) 
+                println("   $(routes_2e_pool[y].sequence)  $(round(node.y_value[y],digits=2))")
+            end
+
+            ## BranchAndPrice
+            result = branchingStrategy(node.y_value, routes_2e_pool, node.branchingInfo)
+            if !isnothing(result)
+                leftBranchingNode = packBranchingNode(route_1e, routes_2e_pool, result[1])
+                rightBranchingNode = packBranchingNode(route_1e, routes_2e_pool, result[2])
+                if !isnothing(leftBranchingNode)
+                    push!(node_stack, leftBranchingNode)
+                end
+                if !isnothing(rightBranchingNode)
+                    push!(node_stack, rightBranchingNode)
+                end
+            else
+                println("No branching decision made")
+            end
+        end
+        println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
+        # for node in node_stack 
+        #     displayBranchingNode(node)
+        # end
+        num_iter_sp += 1    
+    end
 end
 
 function columnGenerationPer1eRoute(route_1e::Vector{Route}, routes_2e::Vector{Route}, branchingInfo::BranchingInfo)
@@ -426,7 +449,6 @@ function columnGenerationPer1eRoute(route_1e::Vector{Route}, routes_2e::Vector{R
     end
 end
 
-
 function branchingStrategy(y, routes_2e,  branchingInfo::BranchingInfo)
     
     left_branch = deepcopy(branchingInfo)
@@ -434,7 +456,7 @@ function branchingStrategy(y, routes_2e,  branchingInfo::BranchingInfo)
 
     ## Case A: total number of 2e route is fractional
     if !(abs(sum(y)-round(sum(y)))<1e-8)
-        @info "   Branch on total number of 2e routes: ",  floor(sum(y)), ceil(sum(y))
+        @info "Branch on total number of 2e routes:  $(floor(sum(y))), $(ceil(sum(y)))"
 
         push!(left_branch.lower_bound_number_2e_routes, ceil(sum(y)))
         push!(right_branch.upper_bound_number_2e_routes, floor(sum(y)))
@@ -448,8 +470,6 @@ function branchingStrategy(y, routes_2e,  branchingInfo::BranchingInfo)
     reversed_route = checkExistanceReversedRoute(sort([r for r in 1:length(y) if 0 < y[r] < 1], by = r -> y[r] * (1 - y[r]), rev = true), routes_2e)
     if !isnothing(reversed_route)
         return branchOnReverseRoute(branchingInfo, reversed_route)
-    # else
-    #     println("No reversed route exist")
     end
 
     ## Case C: combination of parking-customer
@@ -457,10 +477,6 @@ function branchingStrategy(y, routes_2e,  branchingInfo::BranchingInfo)
     if !isnothing(result)
         return result
     end
-
-    ## Case D: combination of customers
-    # result = 
-    
 end
 
 function testLMP()
@@ -504,34 +520,3 @@ function testLMP()
         end
     end
 end
-
-
-# lb_lrp_per_route, lower_bounds = calculate_lrp_lower_bound(routes_1e_complete)
-# lb_lrp_per_route_copy = deepcopy(lb_lrp_per_route)
-# while !isempty(lb_lrp_per_route_copy)
-#     min_value, min_idx = findmin(lb_lrp_per_route_copy)
-#     println(routes_1e_complete[min_idx].sequence,"  ",getServedParking1eRoute(routes_1e_complete[min_idx]),"   lower bound= $(round(min_value, digits=2))")
-#     delete!(lb_lrp_per_route_copy, min_idx)
-# end
-
-
-# global num_iter = 1
-# global upperBound = Inf
-
-# ## Initial Feasible Routes
-# routes_2e = generate2eInitialRoutes()
-# while num_iter <2 # !isempty(lb_lrp_per_route)
-
-#     min_value, min_idx = findmin(lb_lrp_per_route)
-#     if min_value > upperBound   break   end
-
-#     route_1e = Vector{Route}()
-#     push!(route_1e, routes_1e_complete[min_idx])
-
-#     branchAndPricePer1eSubproblem(route_1e, routes_2e)
-
-#     delete!(lb_lrp_per_route, min_idx)
-#     @info "current upper bound is $(round(upperBound,digits=2)) "
-#     global num_iters
-#     num_iter += 1
-# end

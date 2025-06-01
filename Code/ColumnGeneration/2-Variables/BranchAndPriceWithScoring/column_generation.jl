@@ -212,12 +212,12 @@ function column_generation(filtered_1e_routes, filtered_2e_routes, branchingInfo
             # If no new 2e route generated or reduced cost converged, run 1e subproblem
             if status_2e_subproblem_ternimate
                 stopStatus = true
-                println("Number of new columns generated=  ", length(new_columns_generated))
+                println("Number of new columns generated:  ", length(new_columns_generated))
                 return new_columns_generated, filtered_2e_routes, value.(x), value.(y), rlmpResult[7]
                 @info "Column Generation terminated"        
             end
         else
-            @info "RLMP infeasible"
+            # @info "RLMP infeasible"
             stopStatus = true
             return nothing
         end 
@@ -249,18 +249,17 @@ function solve_2e_MILP(pi1, pi2, pi3, pi4, startParking, branchingInfo)
 
     if !isnothing(branchingInfo)
         for combination in branchingInfo.must_include_combinations
-            # if startParking != combination[1]
-            #     @constraint(model, sum(y[combination[2], i] for i in A2) == 0)
-            # end
-            @constraint(model, sum(y[combination[1], i] for i in A2) + sum(y[i, combination[1]] for i in A2) + sum(y[combination[2],i] for i in A2) >= 2)
+            if startParking != combination[1]
+                @constraint(model, sum(y[combination[2], i] for i in A2) == 0)
+            end
+            # @constraint(model, sum(y[combination[1], i] for i in A2) + sum(y[i, combination[1]] for i in A2) + sum(y[combination[2],i] for i in A2) >= 2)
        end
 
         for combination in branchingInfo.forbidden_combinations
-            # if startParking == combination[1]
-            #     @constraint(model, sum(y[combination[2], i] for i in A2) == 0)
-            # end
-            @constraint(model, sum(y[combination[1], i] for i in A2) + sum(y[i, combination[1]] for i in A2) + sum(y[combination[2],i] for i in A2) <= 1)
-
+            if startParking == combination[1]
+                @constraint(model, sum(y[combination[2], i] for i in A2) == 0)
+            end
+            # @constraint(model, sum(y[combination[1], i] for i in A2) + sum(y[i, combination[1]] for i in A2) + sum(y[combination[2],i] for i in A2) <= 1)
         end
 
         for combination in branchingInfo.must_served_together
@@ -402,14 +401,6 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
     special_order_set_must = Set{Int}()
     special_order_set_forbidden = Set{Int}()
 
-    # for (idx, route) in enumerate(routes_2e)
-    #     for r in branchingInfo.special_order_set_1e 
-    #         if route.sequence == r.sequence
-    #             push!(special_order_set, idx)
-    #         end
-    #     end 
-    # end
-
     for (idx, route) in enumerate(routes_2e) 
         for r in branchingInfo.special_order_set_must_include 
             if route.sequence == r.sequence
@@ -422,11 +413,11 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
             end
         end
     end
-
     # display(special_order_set_must)
     # display(special_order_set_forbidden)
+
     if !isempty(special_order_set_must)
-        @constraint(model, sum(y[r] for r in special_order_set_must) == 1)
+        @constraint(model, [r in special_order_set_must], y[r] == 1)
     end
     if !isempty(special_order_set_forbidden)
         @constraint(model, sum(y[r] for r in special_order_set_forbidden) == 0)

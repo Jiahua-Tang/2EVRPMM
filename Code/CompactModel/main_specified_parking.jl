@@ -8,8 +8,8 @@ include("Optimization.jl")
 println("Number of arguments: ", length(ARGS))
 global case = "specified"
 global runningTime = 10*60 # minute
-global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
-# global root = "./../../Benchmark/"
+# global root = "/gpfs/workdir/tangj/2EVRPMM/Benchmark/"
+global root = "./../../Benchmark/"
 
 ## Input parameter
 ## FileName / #SEV / Running time / Specified parking
