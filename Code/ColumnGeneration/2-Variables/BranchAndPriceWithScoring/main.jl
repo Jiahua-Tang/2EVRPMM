@@ -12,7 +12,7 @@ include("fixed1eRoute.jl")
 
 
 # solveMasterProblem()
-const data = initializeData(8,5,18)
+const data = initializeData(8,4,15)
 
 const coor = data[1]
 const nb_parking = data[2]
@@ -63,7 +63,7 @@ global deepest_level = 0
 routes_2e = generate2eInitialRoutes()
 
 execution_time = @elapsed begin
-    while !isempty(lb_lrp_per_route) && num_iter < 4
+    while !isempty(lb_lrp_per_route) && num_iter < 2
         min_value, min_idx = findmin(lb_lrp_per_route)
         if min_value > upperBound   break   end
 

@@ -361,13 +361,13 @@ function solve_1e_MILP(pi1, pi5)
     end
 end
 
-function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
+function solveRestrictedMasterProblem(routes_1e, routes_2e_pool, branchingInfo)
 
     ## Relaxed Restricted Master Problem
     routes_originated_p = Vector{Vector{Int}}()
     for s in satellites 
         routes = Vector{Int}()
-        for (r,route) in enumerate(routes_2e)
+        for (r,route) in enumerate(routes_2e_pool)
             if route.sequence[1] == s
                 push!(routes,r)
             end
@@ -380,10 +380,10 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
     model = Model(CPLEX.Optimizer)
     set_silent(model)
     @variable(model, 1>=x[1:length(routes_1e)]>=0)
-    @variable(model, 1>=y[1:length(routes_2e)]>=0)
+    @variable(model, 1>=y[1:length(routes_2e_pool)]>=0)
 
     forbidden_2e_routes = Vector{Int}()
-    for (idx,route) in enumerate(routes_2e) 
+    for (idx,route) in enumerate(routes_2e_pool) 
         for parking in branchingInfo.forbidden_parkings 
             if parking in route.sequence
                 push!(forbidden_2e_routes, idx)
@@ -393,17 +393,17 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
 
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
         lower_bound = maximum(branchingInfo.lower_bound_number_2e_routes) 
-        @constraint(model, sum(y[r] for (r, route) in enumerate(routes_2e))>=lower_bound)
+        @constraint(model, sum(y[r] for (r, route) in enumerate(routes_2e_pool))>=lower_bound)
     end
         if !isempty(branchingInfo.upper_bound_number_2e_routes)
         upper_bound = minimum(branchingInfo.upper_bound_number_2e_routes) 
-        @constraint(model, sum(y[r] for (r, route) in enumerate(routes_2e))<=upper_bound)
+        @constraint(model, sum(y[r] for (r, route) in enumerate(routes_2e_pool))<=upper_bound)
     end
     
     special_order_set_must = Set{Int}()
     special_order_set_forbidden = Set{Int}()
 
-    for (idx, route) in enumerate(routes_2e) 
+    for (idx, route) in enumerate(routes_2e_pool) 
         for r in branchingInfo.special_order_set_must_include 
             if route.sequence == r.sequence
                 push!(special_order_set_must, idx)
@@ -426,16 +426,16 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
     end
 
     # @constraint(model, microhubUB, sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e) for s in satellites)<=nb_microhub)
-    @constraint(model, sync[s in satellites], sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e))
+    @constraint(model, sync[s in satellites], sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e_pool))
         -nb_vehicle_per_satellite * sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e))<=0)
-    @constraint(model, custVisit[i in customers], 1 - sum(route.a[i-1-length(satellites)] * y[r] for (r,route) in enumerate(routes_2e)) <= 0 )
-    @constraint(model, number2evfixe[s in satellites], sum(route.b2in[s] * y[r] for (r, route) in enumerate(routes_2e)) == sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e)))
-    @constraint(model, maxVolumnMM[s in satellites], sum( routes_2e[r].a[i-1-length(satellites
+    @constraint(model, custVisit[i in customers], 1 - sum(route.a[i-1-length(satellites)] * y[r] for (r,route) in enumerate(routes_2e_pool)) <= 0 )
+    @constraint(model, number2evfixe[s in satellites], sum(route.b2in[s] * y[r] for (r, route) in enumerate(routes_2e_pool)) == sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e_pool)))
+    @constraint(model, maxVolumnMM[s in satellites], sum( routes_2e_pool[r].a[i-1-length(satellites
     )]*demands[i]*y[r] for r in routes_originated_p[s-1] for i in customers) - capacity_microhub <= 0)
     @constraint(model, single1eV, sum(x[r] for (r,_) in enumerate(routes_1e))>=1)
     # @constraint(model, maxMMnumber, sum(x[r]*sum(route.b1) for (r,route) in enumerate(routes_1e)) <= nb_microhub)
 
-    @objective(model, Min, sum(y[r] * route.cost for (r,route) in enumerate(routes_2e)) + 
+    @objective(model, Min, sum(y[r] * route.cost for (r,route) in enumerate(routes_2e_pool)) + 
                         sum(x[r] * route.cost for (r,route) in enumerate(routes_1e)))
     
     optimize!(model)
@@ -496,7 +496,7 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e, branchingInfo)
         for (r, _) in enumerate(routes_1e) 
             push!(x_value, value(x[r]))
         end
-        for (r,_) in enumerate(routes_2e)
+        for (r,_) in enumerate(routes_2e_pool)
             push!(y_value, value(y[r]))
         end
         
