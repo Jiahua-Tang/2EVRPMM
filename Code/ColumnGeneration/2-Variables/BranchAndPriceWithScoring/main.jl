@@ -9,8 +9,10 @@ include("column_generation.jl")
 include("branching_strategy.jl")
 include("fixed1eRoute.jl")
 
+
+
 # solveMasterProblem()
-const data = initializeData(8,4,15)
+const data = initializeData(8,5,18)
 
 const coor = data[1]
 const nb_parking = data[2]
@@ -52,12 +54,16 @@ global num_iter = 1
 global upperBound = Inf
 global optimalSolution = nothing
 global routes_2e
+global optimal_found_iteration = 0
+global execution_time_subproblem = 0
+# global execution_time_filter
+global deepest_level = 0
 
-# ## Initial Feasible Routes
+## Initial Feasible Routes
 routes_2e = generate2eInitialRoutes()
 
 execution_time = @elapsed begin
-    while !isempty(lb_lrp_per_route) && num_iter < 2
+    while !isempty(lb_lrp_per_route) && num_iter < 4
         min_value, min_idx = findmin(lb_lrp_per_route)
         if min_value > upperBound   break   end
 
@@ -77,13 +83,14 @@ execution_time = @elapsed begin
 end
 
 if !isnothing(optimalSolution)
+    @info "Current optimal solution found in interation $optimal_found_iteration:"
     for route in optimalSolution 
         println(route.sequence)
     end   
 end
 
 
-println("Execution time = $execution_time")
+println("Execution time = $(round(execution_time, digits=2)), time spent in solving subproblem = $(round(execution_time_subproblem, digits=2)), takes percentage of $(round(execution_time_subproblem/execution_time,digits=2)*100)%, deepest node dived to level $deepest_level")
 
 
 # solveMasterProblem()

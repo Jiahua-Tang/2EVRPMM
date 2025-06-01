@@ -192,7 +192,10 @@ function column_generation(filtered_1e_routes, filtered_2e_routes, branchingInfo
             # println("")
             for s in satellites
                 if !(s in branchingInfo.forbidden_parkings)
-                    subproblem_2e_result, reduced_cost = solve_2e_MILP(π1, π2, π3, π4, s, branchingInfo)
+                    execution_time = @elapsed begin
+                        subproblem_2e_result, reduced_cost = solve_2e_MILP(π1, π2, π3, π4, s, branchingInfo)
+                    end
+                    global execution_time_subproblem += execution_time
                     ## if 2e subproblem from parking s has feasible solution, (generate new 2e route)
                     if !isnothing(subproblem_2e_result)
                         # If any 2e route generated, new result stored
@@ -280,7 +283,6 @@ function solve_2e_MILP(pi1, pi2, pi3, pi4, startParking, branchingInfo)
         end
     end
 
-    # @constraint(model, )
     
     @constraint(model, [i in satellites, j in satellites], y[i,j]==0)
     @constraint(model, flowCustomer[i in customers], sum(y[i,j] for j in A2) == sum(y[j,i] for j in A2))

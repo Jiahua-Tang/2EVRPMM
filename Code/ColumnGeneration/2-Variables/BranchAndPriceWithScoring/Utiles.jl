@@ -9,6 +9,35 @@ mutable struct Route
     b2out::Vector{Int}
 end
 
+mutable struct BranchingInfo
+    must_include_combinations::Set{Tuple{Int, Int}}  # combination of parking-customer that must be in a path
+    forbidden_combinations::Set{Tuple{Int, Int}}   # combination of parking-customer that cannot be in a path
+    
+    must_served_together::Set{Tuple{Int, Int}}   # combination of customers that must be in a path
+    forbidden_served_together::Set{Tuple{Int, Int}}   # combination of customers that cannot be in a path
+    
+    must_include_parkings::Set{Int}   # parking that must be used in solution
+    forbidden_parkings::Set{Int}   # parking that cannot be used in solution
+    
+    upper_bound_number_2e_routes::Set{Int} # upper bound of number of total 2e routes
+    lower_bound_number_2e_routes::Set{Int} # lower bound of number of total 2e routes
+    
+    special_order_set_must_include::Set{Route}  # set of 2e route where all variables are 0
+    special_order_set_forbidden_include::Set{Route}  # set of 2e route with sum = 0 
+
+    depth::Int
+end
+
+mutable struct BranchingNode
+    branchingInfo::BranchingInfo
+    cgLowerBound::Float64
+    y_value::Vector{Float64}
+    isLeaf::Bool
+    fractionalScore::Float64
+    routes_pool::Vector{Route}
+end
+
+
 function calculate_arc_cost(points, nb_parking, PI)
     num_points = length(points)
     arc_cost = Array{Float64}(undef, num_points, num_points)

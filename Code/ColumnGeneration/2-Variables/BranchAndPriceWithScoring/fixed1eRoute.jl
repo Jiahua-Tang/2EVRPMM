@@ -251,7 +251,7 @@ function calculate_aggregated_lower_bound(routes_1e_complete, routes_2e)
 end
 
 
-function packBranchingNode(route_1e, routes_2e_pool, branchingInfo)
+function packBranchingNode(route_1e, routes_2e_pool, branchingInfo, num_iter_sp)
 ## given a branchingInfo, transform it into a branchingNode structure (add cg result)
     # println("Number of 2e routes:  ",length(routes_2e))
     routes_2e_pool = filter_2e_routes(branchingInfo, routes_2e)
@@ -260,6 +260,7 @@ function packBranchingNode(route_1e, routes_2e_pool, branchingInfo)
 
     if !isnothing(result)
         y_value = result[4]
+        fractionalScore = 0
         # for (_, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
         #     println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
         # end
@@ -287,15 +288,24 @@ function packBranchingNode(route_1e, routes_2e_pool, branchingInfo)
                 upperBound = result[5]
                 global optimalSolution
                 optimalSolution = Vector{Route}()
+                global optimal_found_iteration = num_iter_sp
                 for (_, y) in enumerate([r for r in 1:length(y_value) if y_value[r]==1]) 
                     push!(optimalSolution, routes_2e_pool[y])
                 end                   
             end
         else
         ## Create a child node
+            for value in y_value
+                if value <= 0.5
+                    fractionalScore += value
+                else
+                    fractionalScore += 1 - value
+                end
+            end
+
             isLeaf = false
         end
-        branchingNode = BranchingNode(branchingInfo, result[5], y_value, isLeaf)
+        branchingNode = BranchingNode(branchingInfo, result[5], y_value, isLeaf, fractionalScore)
         return branchingNode
     else
         @info "RLMP infeasible, prune "
@@ -310,7 +320,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route}, routes_2e::Vector{Rout
 
     # CG for root node
     println("\n================Iteration 0 of B&P for SP$num_iter $(route_1e[1].sequence)================")
-    branchingNode = packBranchingNode(route_1e, filter_2e_routes(root_branch, routes_2e), root_branch)
+    branchingNode = packBranchingNode(route_1e, filter_2e_routes(root_branch, routes_2e), root_branch, 0)
     node_stack = [branchingNode]
     println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
 
@@ -318,30 +328,56 @@ function branchAndPriceWithScore(route_1e::Vector{Route}, routes_2e::Vector{Rout
     while !isempty(node_stack) # && num_iter_sp < 11
         println("\n================Iteration $num_iter_sp of B&P for SP$num_iter $(route_1e[1].sequence)================")
         
-        node = pop!(node_stack)
-        # deepest_nodes = Vector{BranchingNode}()
-        # max_depth = 0
-        # for (idx, value) in enumerate(node_stack) 
-        #     if value.branchingInfo.depth == max_depth
-        #         push!(deepest_nodes, value)
-        #     elseif value.branchingInfo.depth > max_depth
-        #         max_depth = value.branchingInfo.depth
-        #         deepest_nodes = Vector{BranchingNode}()
-        #         push!(deepest_nodes, value)
-        #     end
+        # node = pop!(node_stack)
+        deepest_nodes = Vector{BranchingNode}()
+        max_depth = 0
+        for (idx, value) in enumerate(node_stack) 
+            if value.branchingInfo.depth == max_depth
+                push!(deepest_nodes, value)
+            elseif value.branchingInfo.depth > max_depth
+                max_depth = value.branchingInfo.depth
+                deepest_nodes = Vector{BranchingNode}()
+                push!(deepest_nodes, value)
+            end
+        end
+        # println("")
+        # @info "Node stack contains $(length(node_stack)) elements:"
+        # for deepestNode in node_stack
+        #     displayBranchingNode(deepestNode)
         # end
-        # node = deepest_nodes[1]
-        # min_idx = 1
-        # if length(deepest_nodes) > 1
-        #     for (idx, deepest_node) in enumerate(deepest_nodes)
-        #         if deepest_node.cgLowerBound < node.cgLowerBound
-        #             node = deepest_node
-        #             min_idx = idx
-        #         end
-        #     end
+        # println("")
+        # @info "List of deepest nodes with $(length(deepest_nodes)) elements: "
+        # for deepestNode in deepest_nodes
+        #     displayBranchingNode(deepestNode)
         # end
-        # deleteat!(node_stack, min_idx)
-
+        node = deepest_nodes[1]
+        if length(deepest_nodes) > 1
+            for (_, deepest_node) in enumerate(deepest_nodes)
+                # if deepest_node.cgLowerBound < node.cgLowerBound
+                #     node = deepest_node
+                # end
+                if deepest_node.cgLowerBound <= node.cgLowerBound * 0.98
+                    node = deepest_node
+                else
+                    if deepest_node.fractionalScore < node.fractionalScore
+                        node = deepest_node
+                    end
+                end
+            end
+        end
+        # println("")
+        # @info "Display selected node:"
+        # displayBranchingNode(node)
+        i = findfirst(==(node), node_stack)
+        deleteat!(node_stack, i)
+        # println("")
+        # @info "Node stack contains $(length(node_stack)) elements:"
+        # for deepestNode in node_stack
+        #     displayBranchingNode(deepestNode)
+        # end
+        println("")
+    
+        @info "Display branching rule:"
         displayBranchingRule(node.branchingInfo)
 
         if node.cgLowerBound > upperBound
@@ -362,12 +398,18 @@ function branchAndPriceWithScore(route_1e::Vector{Route}, routes_2e::Vector{Rout
             ## BranchAndPrice
             result = branchingStrategy(node.y_value, routes_2e_pool, node.branchingInfo)
             if !isnothing(result)
-                leftBranchingNode = packBranchingNode(route_1e, routes_2e_pool, result[1])
-                rightBranchingNode = packBranchingNode(route_1e, routes_2e_pool, result[2])
+                leftBranchingNode = packBranchingNode(route_1e, routes_2e_pool, result[1], num_iter_sp)
+                rightBranchingNode = packBranchingNode(route_1e, routes_2e_pool, result[2], num_iter_sp)
                 if !isnothing(leftBranchingNode)
+                    if leftBranchingNode.branchingInfo.depth > deepest_level
+                        global deepest_level = leftBranchingNode.branchingInfo.depth
+                    end
                     push!(node_stack, leftBranchingNode)
                 end
                 if !isnothing(rightBranchingNode)
+                    if rightBranchingNode.branchingInfo.depth > deepest_level
+                        global deepest_level = rightBranchingNode.branchingInfo.depth
+                    end
                     push!(node_stack, rightBranchingNode)
                 end
             else
