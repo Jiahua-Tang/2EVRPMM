@@ -12,7 +12,7 @@ include("fixed1eRoute.jl")
 
 
 # solveMasterProblem()
-const data = initializeData(8,5,18)
+const data = initializeData(8,4,15)
 
 const coor = data[1]
 const nb_parking = data[2]
@@ -53,17 +53,19 @@ end
 global num_iter = 1
 global upperBound = Inf
 global optimalSolution = nothing
-global routes_2e
+global routes_2e = generate2eInitialRoutes()
+
+# for route in routes_2e 
+#     println(route.sequence)
+# end
+
 global optimal_found_iteration = 0
 global execution_time_subproblem = 0
 # global execution_time_filter
 global deepest_level = 0
 
-## Initial Feasible Routes
-routes_2e = generate2eInitialRoutes()
-
 execution_time = @elapsed begin
-    while !isempty(lb_lrp_per_route) && num_iter < 4
+    while !isempty(lb_lrp_per_route) && num_iter < 2
         min_value, min_idx = findmin(lb_lrp_per_route)
         if min_value > upperBound   break   end
 
@@ -72,7 +74,7 @@ execution_time = @elapsed begin
         # push!(route_1e, generate1eRoute([1,2,6,4,1]))
 
         # branchAndPricePer1eSubproblem(route_1e, routes_2e)
-        branchAndPriceWithScore(route_1e, routes_2e)
+        branchAndPriceWithScore(route_1e)
 
         delete!(lb_lrp_per_route, min_idx)
         # @info "current upper bound is $(round(upperBound,digits=2)) "

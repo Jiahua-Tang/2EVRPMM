@@ -34,7 +34,7 @@ mutable struct BranchingNode
     y_value::Vector{Float64}
     isLeaf::Bool
     fractionalScore::Float64
-    routes_pool::Vector{Route}
+    routes_pool::Vector{Route} ## Routes pool before filter (of father node)
 end
 
 
@@ -553,9 +553,11 @@ function generate2eInitialRoutes()
     end
 
     for cust in customers
-        for parking in satellites
-            if arc_cost[parking, cust] <= maximum_duration_2e_vehicle/2
-                push!(result, generate2eRoute([parking, cust, parking]))
+        for parkingStart in satellites
+            for parkingEnd in satellites
+                if arc_cost[parkingStart, cust] + arc_cost[cust, parkingEnd] <= maximum_duration_2e_vehicle
+                    push!(result, generate2eRoute([parkingStart, cust, parkingEnd]))
+                end              
             end
         end
     end

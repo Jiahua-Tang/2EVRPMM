@@ -3,13 +3,14 @@
 
 function displayBranchingNode(branchingNode::BranchingNode)
     println("- Branching node in depth: $(branchingNode.branchingInfo.depth)")
-    # displayBranchingRule(branchingNode.branchingInfo)
+    displayBranchingRule(branchingNode.branchingInfo)
     # println("  Branching node with CG result: ")
     # for (_, y) in enumerate([r for r in 1:length(branchingNode.y_value) if 0 < branchingNode.y_value[r]]) 
     #     println("   $(round(branchingNode.y_value[y],digits=2))")
     # end
     println("  Branching node with fractional score: $(branchingNode.fractionalScore)")
     println("  Branching node with cg lower bound: $(round(branchingNode.cgLowerBound, digits=2))")    
+    println("  Branching node contains $(length(branchingNode.routes_pool)) routes")
 end
 
 function getUsedParkings(y, routes)
@@ -76,21 +77,21 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
         println("")
     end
 
-    if !isempty(branchingInfo.must_include_parkings)
-        print("\n   * Parkings MUST be included:   ")
-        for value in branchingInfo.must_include_parkings
-            print(value, "  ")
-        end
-        println("")
-    end
+    # if !isempty(branchingInfo.must_include_parkings)
+    #     print("\n   * Parkings MUST be included:   ")
+    #     for value in branchingInfo.must_include_parkings
+    #         print(value, "  ")
+    #     end
+    #     println("")
+    # end
 
-    if !isempty(branchingInfo.forbidden_parkings)
-        print("   * Parkings CANNOT be included:   ")
-        for value in branchingInfo.forbidden_parkings 
-            print(value, "  ")
-        end
-        println("")
-    end
+    # if !isempty(branchingInfo.forbidden_parkings)
+    #     print("   * Parkings CANNOT be included:   ")
+    #     for value in branchingInfo.forbidden_parkings 
+    #         print(value, "  ")
+    #     end
+    #     println("")
+    # end
 
     if !isempty(branchingInfo.upper_bound_number_2e_routes)
         print("   # Total number of 2e routes cannot EXCEED:   ")
@@ -111,7 +112,7 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
     if branchingInfo.depth != 0
         println("   Depth:  ", branchingInfo.depth)
     end
-    println("")
+    # println("")
 end
 
 function most_costive_points(optimal_1e_route, served_mm::Vector{Int})
