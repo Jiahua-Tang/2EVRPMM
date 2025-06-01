@@ -1,3 +1,10 @@
+mutable struct BranchingNode
+    branchingInfo::BranchingInfo
+    cgLowerBound::Float64
+    y_value::Vector{Float64}
+    isLeaf::Bool
+end
+
 
 mutable struct BranchingInfo
     must_include_combinations::Set{Tuple{Int, Int}}  # combination of parking-customer that must be in a path
@@ -21,6 +28,12 @@ mutable struct BranchingInfo
     depth::Int
 end
 
+function displayBranchingNode(branchingNode::BranchingNode)
+    println("\n- Branching node in depth: $(branchingNode.branchingInfo.depth)")
+    # displayBranchingRule(branchingNode.branchingInfo)
+    println("  Branching node with cg lower bound: $(round(branchingNode.cgLowerBound, digits=2))")    
+end
+
 function getUsedParkings(y, routes)
     selected_y = [r for r in 1:length(y) if y[r] > 0]
     used_parkings = Set{Int}()
@@ -40,14 +53,14 @@ end
 function displayBranchingRule(branchingInfo::BranchingInfo)
 
     if !isempty(branchingInfo.special_order_set_must_include)
-        print("\n   ^ Special order set 2e reversed route must include:\n")
+        print("   ^ Special order set 2e reversed route must include:\n")
         for route in branchingInfo.special_order_set_must_include
             println("       ", route.sequence)
         end
     end
 
     if !isempty(branchingInfo.special_order_set_forbidden_include)
-        print("\n   ^ Special order set 2e reversed route forbidden include:\n")
+        print("   ^ Special order set 2e reversed route forbidden include:\n")
         for route in branchingInfo.special_order_set_forbidden_include
             println("       ", route.sequence)
         end
@@ -58,27 +71,31 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
         for value in branchingInfo.must_include_combinations 
             print(value, "  ")
         end        
+        println("")     
     end
 
     if !isempty(branchingInfo.forbidden_combinations)
-        print("\n   - FORBIDDEN combination:   ")
+        print("   - FORBIDDEN combination:   ")
         for value in branchingInfo.forbidden_combinations 
             print(value, "  ")
-        end        
+        end
+        println("")        
     end
 
     if !isempty(branchingInfo.must_served_together)
-        print("\n   + Customers MUST     served together:   ")
+        print("   + Customers MUST     served together:   ")
         for value in branchingInfo.must_served_together
             print(value, "  ")
-        end    
+        end
+        println("")    
     end
     
     if !isempty(branchingInfo.forbidden_served_together)
-        print("\n   + Customers FORBIDDEN served together:   ")
+        print("   + Customers FORBIDDEN served together:   ")
         for value in branchingInfo.forbidden_served_together 
             print(value, "  ")
         end
+        println("")
     end
 
     if !isempty(branchingInfo.must_include_parkings)
@@ -86,32 +103,35 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
         for value in branchingInfo.must_include_parkings
             print(value, "  ")
         end
-      println("")
+        println("")
     end
 
     if !isempty(branchingInfo.forbidden_parkings)
-        print("\n   * Parkings CANNOT be included:   ")
+        print("   * Parkings CANNOT be included:   ")
         for value in branchingInfo.forbidden_parkings 
             print(value, "  ")
         end
+        println("")
     end
 
     if !isempty(branchingInfo.upper_bound_number_2e_routes)
-        print("\n   # Total number of 2e routes cannot EXCEED:   ")
+        print("   # Total number of 2e routes cannot EXCEED:   ")
         for value in branchingInfo.upper_bound_number_2e_routes
             print(value, "  ")
         end
+        println("")
     end
 
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
-        print("\n   # Total number of 2e routes cannot UNDER:   ")
+        print("   # Total number of 2e routes cannot UNDER:   ")
         for value in branchingInfo.lower_bound_number_2e_routes 
             print(value, "  ")
         end
+        println("")
     end
 
     if branchingInfo.depth != 0
-        println("\n   Depth:  ", branchingInfo.depth)
+        println("   Depth:  ", branchingInfo.depth)
     end
     println("")
 end
@@ -392,11 +412,70 @@ function branchOnReverseRoute(branchingInfo, reverse_route)
     right_branch = deepcopy(branchingInfo)
     left_branch.depth += 1
     right_branch.depth += 1
-    @info "Start to branch on reversed route  $reverse_route"
-    @info "Branching decision : special order set: $reverse_route"
+    @info "Start to branch on reverse route $reverse_route"
+    
+    n = Int(floor(length(reverse_route)/2))
+    routeExistanceMust = Tuple(sort([reverse_route[1], reverse_route[n]])) in branchingInfo.must_include_combinations
+    routeExistanceForbidden = Tuple(sort([reverse_route[1], reverse_route[n]])) in branchingInfo.forbidden_combinations
+    if !routeExistanceMust && !routeExistanceForbidden
+        @info "Branching decision : combination of parking-customer: $(Tuple(sort([reverse_route[1], reverse_route[n]])))"
+        push!(left_branch.must_include_combinations, Tuple(sort([reverse_route[1], reverse_route[n]])))
+        push!(right_branch.forbidden_combinations, Tuple(sort([reverse_route[1], reverse_route[n]])))
+        return left_branch, right_branch
+    end
 
-    push!(left_branch.special_order_set_must_include, generate2eRoute(reverse_route))
-    push!(right_branch.special_order_set_forbidden_include, generate2eRoute(reverse_route))
+    routeExistanceMust = Tuple(sort([reverse_route[n], reverse_route[end]])) in branchingInfo.must_include_combinations
+    routeExistanceForbidden = Tuple(sort([reverse_route[n], reverse_route[end]])) in branchingInfo.forbidden_combinations
+    if !routeExistanceMust && !routeExistanceForbidden
+        @info "Branching decision : combination of parking-customer: $(Tuple(sort([reverse_route[n], reverse_route[end]])))"
+        push!(left_branch.must_include_combinations, Tuple(sort([reverse_route[n], reverse_route[end]])))
+        push!(right_branch.forbidden_combinations, Tuple(sort([reverse_route[n], reverse_route[end]])))
+        return left_branch, right_branch
+    end
+    
+    # routeExistanceMust = Tuple(sort([reverse_route[1], reverse_route[2]])) in branchingInfo.must_include_combinations
+    # routeExistanceForbidden = Tuple(sort([reverse_route[1], reverse_route[2]])) in branchingInfo.forbidden_combinations
+    # if !routeExistanceMust && !routeExistanceForbidden
+    #     @info "Branching decision : combination of parking-customer: $(Tuple(sort([reverse_route[1], reverse_route[2]])) )"
+    #     push!(left_branch.must_include_combinations, Tuple(sort([reverse_route[1], reverse_route[2]])))
+    #     push!(right_branch.forbidden_combinations, Tuple(sort([reverse_route[1], reverse_route[2]])))
+    #     return left_branch, right_branch
+    # end
+    
+    # routeExistanceMust = Tuple(sort([reverse_route[end], reverse_route[end-1]])) in branchingInfo.must_include_combinations
+    # routeExistanceForbidden = Tuple(sort([reverse_route[end], reverse_route[end-1]])) in branchingInfo.forbidden_combinations
+    # if !routeExistanceMust && !routeExistanceForbidden
+    #     @info "Branching decision : combination of parking-customer: $(Tuple(sort([reverse_route[end], reverse_route[end-1]])))"
+    #     push!(left_branch.must_include_combinations, Tuple(sort([reverse_route[end], reverse_route[end-1]])))
+    #     push!(right_branch.forbidden_combinations, Tuple(sort([reverse_route[end], reverse_route[end-1]])))
+    #     return left_branch, right_branch
+    # end
+
+    routeExistanceMust = false
+    routeExistanceForbidden = false
+    for route in branchingInfo.special_order_set_must_include 
+        if route.sequence == reverse_route
+            routeExistanceMust == true
+            break
+        end
+    end
+    for route in branchingInfo.special_order_set_forbidden_include
+        if route.sequence == reverse_route
+            routeExistanceForbidden == true
+            break
+        end
+    end
+
+    if routeExistanceMust || routeExistanceForbidden
+        @info "Branching decision : special order set: $(reverse(reverse_route))"
+        push!(left_branch.special_order_set_must_include, generate2eRoute(reverse(reverse_route)))
+        push!(right_branch.special_order_set_forbidden_include, generate2eRoute(reverse(reverse_route)))
+    else
+        @info "Branching decision : special order set: $reverse_route"
+        push!(left_branch.special_order_set_must_include, generate2eRoute(reverse_route))
+        push!(right_branch.special_order_set_forbidden_include, generate2eRoute(reverse_route))
+    end
+
 
     return left_branch, right_branch
     # customers_served = reverse_route[2:end-1]
@@ -471,100 +550,6 @@ function branchOnReverseRoute(branchingInfo, reverse_route)
 
     # return nothing
 
-end
-
-
-function branchOnReverseRoute_copy(branchingInfo, reverse_route)
-    branchingDecision = nothing
-    branchingDecisionFound = false
-
-    @info "Start to branch on reversed route  $reverse_route"
-    branch_order = build_branch_order(reverse_route)
-    # display(branch_order)
-    while !branchingDecisionFound && !isempty(branch_order)
-        branchingDecision = branch_order[1]
-        deleteat!(branch_order, 1)
-        display(branchingDecision)
-        if !(branchingDecision in branchingInfo.must_served_together) && !(branchingDecision in branchingInfo.forbidden_served_together)
-            branchingDecisionFound = true    
-            break             
-        end  
-    end
-
-    if !branchingDecisionFound
-        branch_order = Vector{Tuple{Int, Int}}()
-        for (idx1, cust1) in enumerate(reverse_route[2:end-1]) 
-            for (idx2, cust2) in enumerate(reverse_route[2:end-1])
-                if idx2 > idx1 + 1
-                    if cust1<cust2
-                        push!(branch_order, (cust1, cust2))
-                    else
-                        push!(branch_order, (cust2, cust1))
-                    end
-                    
-                end
-            end
-        end
-    else
-        @info ("Branching decision : combination of customers: $branchingDecision")
-        left_branch = deepcopy(branchingInfo)
-        right_branch = deepcopy(branchingInfo)
-
-        push!(left_branch.must_served_together, branchingDecision)
-        push!(right_branch.forbidden_served_together, branchingDecision)
-
-        left_branch.depth += 1
-        right_branch.depth += 1
-
-        return left_branch, right_branch  
-    end
-
-    while !isnothing(branch_order)
-        branchingDecision = branch_order[1]
-        if length(branch_order) == 1
-            branch_order = nothing
-        else
-            branch_order = branch_order[2:end]
-        end
-        if !(branchingDecision in branchingInfo.must_served_together) && !(branchingDecision in branchingInfo.forbidden_served_together)
-            branchingDecisionFound = true    
-            break             
-        end 
-    end
-
-    if branchingDecisionFound
-        ## branch from middle
-        @info ("Branching decision : combination of customers: $branchingDecision")
-        left_branch = deepcopy(branchingInfo)
-        right_branch = deepcopy(branchingInfo)
-
-        push!(left_branch.must_served_together, branchingDecision)
-        push!(right_branch.forbidden_served_together, branchingDecision)
-
-        left_branch.depth += 1
-        right_branch.depth += 1
-
-        return left_branch, right_branch   
-    else
-        return nothing
-    end
-end
-
-function branchOnRandomCombinationCustomers(branchingInfo, fractional_y, routes)
-
-    @info "Start to branch on random combination of customers"
-
-    branchingDecision = nothing
-    branchingDecisionFound = false
-    
-    visited_customers = Set{Int}()
-    for y_value in fractional_y 
-        for cust in routes[y_value].sequence[2:end-1]
-            push!(visited_customers, cust)
-        end
-    end
-    print("TESTTEST   ")
-    display(visited_customers)
 end
 
 #=============================================================================#
@@ -672,9 +657,11 @@ end
 
 function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
     routes = deepcopy(routes_pool)
-    @info "Start to branch on most fractional route's most visited customer"
+    # @info "Start to branch on most fractional route's most visited customer"
     left_branch = deepcopy(branchingInfo)
     right_branch = deepcopy(branchingInfo)
+    left_branch.depth += 1
+    right_branch.depth += 1
 
     sorted_fractional_y = sort([r for r in 1:length(y) if 0 < y[r] < 1], by = r -> y[r] * (1 - y[r]), rev = true)
 
@@ -732,8 +719,8 @@ function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
         push!(left_branch.forbidden_combinations, branchingDecision)
         push!(right_branch.must_include_combinations, branchingDecision)
 
-        left_branch.depth += 1
-        right_branch.depth += 1
+        # left_branch.depth += 1
+        # right_branch.depth += 1
 
         return left_branch, right_branch        
 
@@ -760,8 +747,8 @@ function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
                 push!(left_branch.forbidden_served_together, branchingDecision)
                 push!(right_branch.must_served_together, branchingDecision)
 
-                left_branch.depth += 1
-                right_branch.depth += 1
+                # left_branch.depth += 1
+                # right_branch.depth += 1
 
                 return left_branch, right_branch  
             end
