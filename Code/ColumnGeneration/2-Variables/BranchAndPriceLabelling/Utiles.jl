@@ -9,6 +9,35 @@ mutable struct Route
     b2out::Vector{Int}
 end
 
+mutable struct BranchingInfo
+    must_include_combinations::Set{Tuple{Int, Int}}  # combination of parking-customer that must be in a path
+    forbidden_combinations::Set{Tuple{Int, Int}}   # combination of parking-customer that cannot be in a path
+    
+    must_served_together::Set{Tuple{Int, Int}}   # combination of customers that must be in a path
+    forbidden_served_together::Set{Tuple{Int, Int}}   # combination of customers that cannot be in a path
+    
+    must_include_parkings::Set{Int}   # parking that must be used in solution
+    forbidden_parkings::Set{Int}   # parking that cannot be used in solution
+    
+    upper_bound_number_2e_routes::Set{Int} # upper bound of number of total 2e routes
+    lower_bound_number_2e_routes::Set{Int} # lower bound of number of total 2e routes
+    
+    special_order_set_must_include::Set{Route}  # set of 2e route where all variables are 0
+    special_order_set_forbidden_include::Set{Route}  # set of 2e route with sum = 0 
+
+    depth::Int
+end
+
+mutable struct BranchingNode
+    branchingInfo::BranchingInfo
+    cgLowerBound::Float64
+    y_value::Vector{Float64}
+    isLeaf::Bool
+    fractionalScore::Float64
+    routes_pool::Vector{Route} ## Routes pool before filter (of father node)
+end
+
+
 function calculate_arc_cost(points, nb_parking, PI)
     num_points = length(points)
     arc_cost = Array{Float64}(undef, num_points, num_points)
@@ -245,7 +274,6 @@ end
 function plotOriginal()
     x_vals = [coord[1] for coord in coor]
     y_vals = [coord[2] for coord in coor]
-    gr()
     plt = scatter(x_vals[2+nb_parking:end], y_vals[2+nb_parking:end], markershape=:circle, label = "Customers")
     scatter!(plt, x_vals[2:1+nb_parking][parking_availability[2:1+nb_parking] .== 1], 
                 y_vals[2:1+nb_parking][parking_availability[2:1+nb_parking] .== 1], 
@@ -260,7 +288,7 @@ function plotOriginal()
     for i in 1:length(coor)
         annotate!(x_vals[i], y_vals[i]+0.3, text(node_labels[i],6))
     end
-    display(plt)
+    return plt
 end
 
 function initializeData(nb_parking, nb_microhub, nb_customers)
@@ -524,9 +552,11 @@ function generate2eInitialRoutes()
     end
 
     for cust in customers
-        for parking in satellites
-            if arc_cost[parking, cust] <= maximum_duration_2e_vehicle/2
-                push!(result, generate2eRoute([parking, cust, parking]))
+        for parkingStart in satellites
+            for parkingEnd in satellites
+                if arc_cost[parkingStart, cust] + arc_cost[cust, parkingEnd] <= maximum_duration_2e_vehicle
+                    push!(result, generate2eRoute([parkingStart, cust, parkingEnd]))
+                end              
             end
         end
     end

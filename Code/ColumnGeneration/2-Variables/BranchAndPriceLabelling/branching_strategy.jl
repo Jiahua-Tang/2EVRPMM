@@ -1,37 +1,16 @@
-mutable struct BranchingNode
-    branchingInfo::BranchingInfo
-    cgLowerBound::Float64
-    y_value::Vector{Float64}
-    isLeaf::Bool
-end
+# include("main.jl")
 
-
-mutable struct BranchingInfo
-    must_include_combinations::Set{Tuple{Int, Int}}  # combination of parking-customer that must be in a path
-    forbidden_combinations::Set{Tuple{Int, Int}}   # combination of parking-customer that cannot be in a path
-    
-    must_served_together::Set{Tuple{Int, Int}}   # combination of customers that must be in a path
-    forbidden_served_together::Set{Tuple{Int, Int}}   # combination of customers that cannot be in a path
-    
-    must_include_parkings::Set{Int}   # parking that must be used in solution
-    forbidden_parkings::Set{Int}   # parking that cannot be used in solution
-    
-    upper_bound_number_2e_routes::Set{Int} # upper bound of number of total 2e routes
-    lower_bound_number_2e_routes::Set{Int} # lower bound of number of total 2e routes
-    
-    special_order_set_must_include::Set{Route}  # set of 2e route where all variables are 0
-    special_order_set_forbidden_include::Set{Route}  # set of 2e route with sum = 0 
-
-    # must_include_routes :: Set{Route}
-    # forbidden_routes :: Set{Route}
-
-    depth::Int
-end
 
 function displayBranchingNode(branchingNode::BranchingNode)
-    println("\n- Branching node in depth: $(branchingNode.branchingInfo.depth)")
-    # displayBranchingRule(branchingNode.branchingInfo)
+    println("- Branching node in depth: $(branchingNode.branchingInfo.depth)")
+    displayBranchingRule(branchingNode.branchingInfo)
+    # println("  Branching node with CG result: ")
+    # for (_, y) in enumerate([r for r in 1:length(branchingNode.y_value) if 0 < branchingNode.y_value[r]]) 
+    #     println("   $(round(branchingNode.y_value[y],digits=2))")
+    # end
+    println("  Branching node with fractional score: $(branchingNode.fractionalScore)")
     println("  Branching node with cg lower bound: $(round(branchingNode.cgLowerBound, digits=2))")    
+    println("  Branching node contains $(length(branchingNode.routes_pool)) routes")
 end
 
 function getUsedParkings(y, routes)
@@ -98,21 +77,21 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
         println("")
     end
 
-    if !isempty(branchingInfo.must_include_parkings)
-        print("\n   * Parkings MUST be included:   ")
-        for value in branchingInfo.must_include_parkings
-            print(value, "  ")
-        end
-        println("")
-    end
+    # if !isempty(branchingInfo.must_include_parkings)
+    #     print("\n   * Parkings MUST be included:   ")
+    #     for value in branchingInfo.must_include_parkings
+    #         print(value, "  ")
+    #     end
+    #     println("")
+    # end
 
-    if !isempty(branchingInfo.forbidden_parkings)
-        print("   * Parkings CANNOT be included:   ")
-        for value in branchingInfo.forbidden_parkings 
-            print(value, "  ")
-        end
-        println("")
-    end
+    # if !isempty(branchingInfo.forbidden_parkings)
+    #     print("   * Parkings CANNOT be included:   ")
+    #     for value in branchingInfo.forbidden_parkings 
+    #         print(value, "  ")
+    #     end
+    #     println("")
+    # end
 
     if !isempty(branchingInfo.upper_bound_number_2e_routes)
         print("   # Total number of 2e routes cannot EXCEED:   ")
@@ -133,7 +112,7 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
     if branchingInfo.depth != 0
         println("   Depth:  ", branchingInfo.depth)
     end
-    println("")
+    # println("")
 end
 
 function most_costive_points(optimal_1e_route, served_mm::Vector{Int})
