@@ -35,6 +35,8 @@ mutable struct BranchingNode
     isLeaf::Bool
     fractionalScore::Float64
     routes_pool::Vector{Route} ## Routes pool before filter (of father node)
+    gradientLB::Float64
+    gradientFS::Float64
 end
 
 

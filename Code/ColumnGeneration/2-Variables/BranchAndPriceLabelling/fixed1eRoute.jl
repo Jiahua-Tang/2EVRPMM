@@ -250,20 +250,50 @@ function calculate_aggregated_lower_bound(routes_1e_complete, routes_2e)
     return lb_per_route
 end
 
+function sortByFractionalScore(node1::BranchingNode, node2::BranchingNode)
+    if node1.fractionalScore >= node2.fractionalScore
+        return node1, node2
+    else
+        return node2, node1
+    end
+end
 
-function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, num_iter_sp)
+function sortByLowerBound(node1::BranchingNode, node2::BranchingNode)
+    if node1.cgLowerBound >= node2.cgLowerBound
+        return node1, node2
+    else
+        return node2, node1
+    end
+end
+
+function nodeSelection(node1::BranchingNode, node2::BranchingNode)
+    n1, n2 = sortByLowerBound(node1, node2)
+
+    if (n1.cgLowerBound - n2.cgLowerBound) / n2.cgLowerBound < 0.025
+        n1, n2 = sortByFractionalScore(n1, n2)
+        if (n1.fractionalScore - n2.fractionalScore) / n1.fractionalScore < 0.1
+            return sortByLowerBound(n1, n2)[2]
+        else
+            return n2
+        end
+    else
+        return n2
+    end
+end
+
+function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBound, fs, num_iter_sp)
 ## given a branchingInfo, transform it into a branchingNode structure (add cg result)
-    println("\nNumber of 2e routes in this node:  ",length(routes_2e_pool))
+    # println("\nNumber of 2e routes in this node:  ",length(routes_2e_pool))
     routes_2e_pool = filter_2e_routes(branchingInfo, routes_2e_pool)
-    println("Number of 2e routes after filtered:  ", length(routes_2e_pool))
-    # routes_2e_pool = filter_2e_routes(branchingInfo, routes_2e)
     # println("Number of 2e routes after filtered:  ", length(routes_2e_pool))
     # TODO
     ## Before start column generation, check branching rules conflic
     result = column_generation(route_1e, routes_2e_pool, branchingInfo)
+
     # for route in routes_2e_pool 
     #     println(route.sequence)
-    # end
+    # end        
+
     if !isnothing(result)
         y_value = result[4]
         fractionalScore = 0
@@ -271,10 +301,10 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, num_iter_s
         #     println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
         # end
         routes_2e_pool = result[2]
-        global routes_2e
-        for route in result[1]
-            push!(routes_2e, route)
-        end
+        # global routes_2e
+        # for route in result[1]
+        #     push!(routes_2e, route)
+        # end
         if checkExistanceDummyRoute(y_value, routes_2e_pool)
         ## Dummy route used at the end of column generation, branch can be pruned
             @info "Dummy routes used, exceed upper bound, prune"
@@ -294,13 +324,19 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, num_iter_s
                 upperBound = result[5]
                 global optimalSolution
                 optimalSolution = Vector{Route}()
+                global optimal_found_in
+                optimal_found_in = branchingInfo.depth
                 global optimal_found_iteration = num_iter_sp
+                push!(optimalSolution, route_1e[1])
                 for (_, y) in enumerate([r for r in 1:length(y_value) if y_value[r]==1]) 
                     push!(optimalSolution, routes_2e_pool[y])
-                end                   
+                end             
             end
+            gradientLB = 0
+            gradientFS = 0   
         else
         ## Create a child node
+            println("Column generation lower bound is $(round(result[5],digits=2))")
             for value in y_value
                 if value <= 0.5
                     fractionalScore += value
@@ -308,15 +344,17 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, num_iter_s
                     fractionalScore += 1 - value
                 end
             end
+            gradientLB = result[5] - cgLowerBound
+            gradientFS = fractionalScore - fs
+            println("Fractional score: $(round(fractionalScore, digits = 3))\n")
             isLeaf = false
         end
-        branchingNode = BranchingNode(branchingInfo, result[5], y_value, isLeaf, fractionalScore, routes_2e_pool)
+        branchingNode = BranchingNode(branchingInfo, result[5], y_value, isLeaf, fractionalScore, routes_2e_pool, gradientLB, gradientFS)
         return branchingNode
     else
         @info "RLMP infeasible, prune "
         return nothing
     end
-
 end
 
 function branchAndPriceWithScore(route_1e::Vector{Route})
@@ -325,12 +363,16 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
 
     # CG for root node
     println("\n================Iteration 0 of B&P for SP$num_iter $(route_1e[1].sequence)================")
-    branchingNode = createBranchingNode(route_1e, routes_2e, root_branch, 0)
+    branchingNode = createBranchingNode(route_1e, routes_2e, root_branch, 0,0,0 )
     node_stack = [branchingNode]
+    if isnothing(branchingNode)
+        return
+    end
+
     println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
 
     num_iter_sp = 1
-    while !isempty(node_stack) # && num_iter_sp < 126
+    while !isempty(node_stack)
         println("\n================Iteration $num_iter_sp of B&P for SP$num_iter $(route_1e[1].sequence)================")
         
         # node = pop!(node_stack)
@@ -350,24 +392,30 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
         # for deepestNode in node_stack
         #     displayBranchingNode(deepestNode)
         # end
+
         # println("")
         # @info "List of deepest nodes with $(length(deepest_nodes)) elements: "
         # for deepestNode in deepest_nodes
         #     displayBranchingNode(deepestNode)
         # end
-        node = deepest_nodes[1]
-        if length(deepest_nodes) > 1
-            for (_, deepest_node) in enumerate(deepest_nodes[2:end])
-                # println(node.cgLowerBound ,"  ", deepest_node.cgLowerBound)
-                if node.cgLowerBound > deepest_node.cgLowerBound 
-                    node = deepest_node
-                # else
-                #     if deepest_node.fractionalScore < node.fractionalScore
-                #         node = deepest_node
-                #     end
-                end
+
+        # node = deepest_nodes[1]
+        # if length(deepest_nodes) > 1
+        #     for (_, deepest_node) in enumerate(deepest_nodes[2:end])
+        #         # println(node.cgLowerBound ,"  ", deepest_node.cgLowerBound)
+        #         node = nodeSelection(node, deepest_node)
+        #     end
+        # end
+        node = node_stack[1]
+        score = (node.gradientLB + node.gradientFS)/node.branchingInfo.depth
+        for node_iter in node_stack 
+            score_iter = (node_iter.gradientLB + node_iter.gradientFS)/node_iter.branchingInfo.depth
+            if score_iter < score
+                node = node_iter
+                score = score_iter
             end
         end
+
         println("")
         @info "Display selected node:"
         displayBranchingNode(node)
@@ -389,10 +437,6 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
             @info "Leaf Node already"
         else            
         ## start branching
-            # println("Number of 2e routes:  ",length(routes_2e))
-            # routes_2e_pool = filter_2e_routes(node.branchingInfo, routes_2e)
-            # println("Number of 2e routes after filtered:  ", length(routes_2e_pool))
-
             println("   Total number of 2e routes: ", sum(node.y_value) , ", lb of cg = $(round(node.cgLowerBound,digits=2))")
             for (_, y) in enumerate([r for r in 1:length(node.y_value) if 0 < node.y_value[r]]) 
                 println("   $(node.routes_pool[y].sequence)  $(round(node.y_value[y],digits=2))")
@@ -401,8 +445,8 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
             ## BranchAndPrice
             result = branchingStrategy(node.y_value, node.routes_pool, node.branchingInfo)
             if !isnothing(result)
-                leftBranchingNode = createBranchingNode(route_1e, node.routes_pool, result[1], num_iter_sp)
-                rightBranchingNode = createBranchingNode(route_1e, node.routes_pool, result[2], num_iter_sp)
+                leftBranchingNode = createBranchingNode(route_1e, node.routes_pool, result[1], node.cgLowerBound, node.fractionalScore, num_iter_sp)
+                rightBranchingNode = createBranchingNode(route_1e, node.routes_pool, result[2], node.cgLowerBound, node.fractionalScore, num_iter_sp)
                 if !isnothing(leftBranchingNode)
                     if leftBranchingNode.branchingInfo.depth > deepest_level
                         global deepest_level = leftBranchingNode.branchingInfo.depth
@@ -419,6 +463,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
                 println("No branching decision made")
             end
         end
+ 
         println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
         # for node in node_stack 
         #     displayBranchingNode(node)
@@ -494,8 +539,8 @@ function columnGenerationPer1eRoute(route_1e::Vector{Route}, routes_2e::Vector{R
     end
 end
 
-function branchingStrategy(y, routes_2e,  branchingInfo::BranchingInfo)
-    
+function branchingStrategy(y, routes_pool, branchingInfo::BranchingInfo)
+
     left_branch = deepcopy(branchingInfo)
     right_branch = deepcopy(branchingInfo)
 
@@ -512,16 +557,21 @@ function branchingStrategy(y, routes_2e,  branchingInfo::BranchingInfo)
     end
 
     ## Case B: reversed routes exist
-    reversed_route = checkExistanceReversedRoute(sort([r for r in 1:length(y) if 0 < y[r] < 1], by = r -> y[r] * (1 - y[r]), rev = true), routes_2e)
+    reversed_route = checkExistanceReversedRoute(sort([r for r in 1:length(y) if 0 < y[r] < 1], by = r -> y[r] * (1 - y[r]), rev = true), routes_pool)
     if !isnothing(reversed_route)
         return branchOnReverseRoute(branchingInfo, reversed_route)
     end
 
-    ## Case C: combination of parking-customer
-    result = branchOnCombinationParkingCustomer(branchingInfo, y, routes_2e)
+    # Case C: combination of customers
+    result = branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
     if !isnothing(result)
         return result
     end
+
+    # ## Case D: combination of customers
+    # result = branchOnArc(branchingInfo, y, routes_pool)
+    # return result
+
 end
 
 function testLMP()
