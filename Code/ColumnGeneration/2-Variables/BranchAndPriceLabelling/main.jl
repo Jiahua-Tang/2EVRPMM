@@ -59,7 +59,7 @@ while !isempty(lb_lrp_per_route_copy)
 end
 
 
-global num_iter = 1
+global num_iter_global = 1
 global upperBound = 273.25
 global optimalSolution = nothing
 global routes_2e = generate2eInitialRoutes()
@@ -75,7 +75,7 @@ global deepest_level = 0
 global optimal_found_in = 0
 
 execution_time = @elapsed begin
-    while !isempty(lb_lrp_per_route) 
+    while !isempty(lb_lrp_per_route) # && num_iter_global
         min_value, min_idx = findmin(lb_lrp_per_route)
         if min_value > upperBound   break   end
 
@@ -84,11 +84,10 @@ execution_time = @elapsed begin
         branchAndPriceWithScore(route_1e)
         delete!(lb_lrp_per_route, min_idx)
         @info "current upper bound is $(round(upperBound,digits=2))"
-        global num_iter
-        num_iter += 1
+        global num_iter_global
+        num_iter_global += 1
     end
 end
-
 
 if !isnothing(optimalSolution)
     @info "Current optimal solution found in interation $optimal_found_iteration:"

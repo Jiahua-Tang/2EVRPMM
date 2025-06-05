@@ -362,7 +362,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
     root_branch.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e[1]))
 
     # CG for root node
-    println("\n================Iteration 0 of B&P for SP$num_iter $(route_1e[1].sequence)================")
+    println("\n================Iteration 0 of B&P for SP$num_iter_global $(route_1e[1].sequence)================")
     branchingNode = createBranchingNode(route_1e, routes_2e, root_branch, 0,0,0 )
     node_stack = [branchingNode]
     if isnothing(branchingNode)
@@ -373,7 +373,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
 
     num_iter_sp = 1
     while !isempty(node_stack)
-        println("\n================Iteration $num_iter_sp of B&P for SP$num_iter $(route_1e[1].sequence)================")
+        println("\n================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e[1].sequence)================")
         
         # node = pop!(node_stack)
         deepest_nodes = Vector{BranchingNode}()
