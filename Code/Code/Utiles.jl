@@ -126,6 +126,16 @@ function generateData()
         A1
     )
 
+    transformDatasetToGlobals(data)
+
+    global parkingGenerationRule = "random"
+    global fileName = "randomSeed"
+    global execution_time_limit = 120 # seconds
+
+    # return data
+end
+
+function transformDatasetToGlobals(data::Dataset)
     global arc_cost = data.arc_cost
     global coor = data.coor
     global nb_parking = data.nb_parking
@@ -148,13 +158,7 @@ function generateData()
     global satellites = data.satellites
     global A2 = data.A2
     global A1 = data.A1
-
-    global parkingGenerationRule = "random"
-    global fileName = "randomSeed"
-
-    global root = "$(pwd())/TEST/"
-
-    return data
+    
 end
 
 function generateParkingCoor(coor_customers, nb_microhub, nb_parking)
@@ -176,8 +180,119 @@ function generateParkingCoor(coor_customers, nb_microhub, nb_parking)
     return parking_availability, coor_parkings
 end
 
-function readData(fileName)
+function readData(fileName, ARGS)
+    readBasicParameter(fileName, ARGS)
+    readDataSetElion()
+end
+
+function readBasicParameter(filename, ARGS)
+
+    if length(ARGS) >= 1
+        global fileName = ARGS[1]
+        global execution_time_limit = ARGS[2]
+        global parkingGenerationRule = ARGS[3]
+        if parkingGenerationRule == "specified"
+            global specifiedParkings = Vector{Int}()
+            for i in ARGS[4:end] 
+                push!(specifiedParkings, parse(Int, i))
+            end
+            global nb_parking = length(specifiedParkings) * 2
+        end
+    else
+        global fileName = filename
+        global execution_time_limit = 120 # seconds
+        global parkingGenerationRule = "random"
+    end
+end
+
+function readDataSetElion()
+    nb_parking = 6
+    nb_microhub = 3    
+    nb_vehicle_per_satellite = 10
+    capacity_microhub = 100000
+    maximum_duration_2e_vehicle = 100000
     
+    # Read the file lines
+    lines = open(root * "Data/" * fileName, "r") do file
+        readlines(file)
+    end
+
+    # Find the index where the customer data starts
+    coord_start_index = findfirst(contains.(lines, "NODE_COORD_SECTION")) + 1
+    demand_start_index = findfirst(contains.(lines, "DEMAND_SECTION")) 
+    end_index = findfirst(contains.(lines, "DEPOT_SECTION")) -1
+    capacity_index = findfirst(contains.(lines, "CAPACITY"))
+    line = lines[capacity_index]
+    parts = split(line, ":")
+    capacity_2e_vehicle = parse(Int, strip(parts[end]))
+
+    x_coor_customers = []
+    y_coor_customers = []
+    x_coor_depot = []
+    y_coor_depot = []
+    demands = zeros(Float64, 1+nb_parking)
+    for i in coord_start_index : end_index
+        line = strip(lines[i])
+        if !isempty(line)
+            fields = split(line) 
+            if i == coord_start_index
+            # Depot
+                push!(x_coor_depot, parse(Int, fields[2]))
+                push!(y_coor_depot, parse(Int, fields[3]))
+            elseif i> coord_start_index && i < demand_start_index
+            # Customers
+                push!(x_coor_customers, parse(Int, fields[2]))
+                push!(y_coor_customers, parse(Int, fields[3]))
+            elseif i > demand_start_index + 1
+            # Demands           
+                push!(demands, parse(Int, fields[2]))
+            end
+        end
+    end
+    # display(demands)
+    coor_depot = [x_coor_depot[1], y_coor_depot[1]]
+    coor_customers = [[x,y] for (x,y) in zip(x_coor_customers , y_coor_customers)]
+    capacity_1e_vehicle = sum(demands)
+
+    nb_customer = length(demands)
+    if parkingGenerationRule == "random"
+        parking_availability, coor_parkings = generateParkingCoor(coor_customers, nb_microhub, nb_parking)
+    end
+    coor = vcat([coor_depot], coor_parkings, coor_customers)
+    arc_cost = calculate_arc_cost(coor)
+    
+    points = 1:length(demands)
+    customers = 2 + nb_parking : length(coor)
+    satellites = 2:1 + nb_parking
+    nb_customer = length(customers)
+    A2 = 2:length(coor)
+    A1 = 1:1+length(satellites)
+
+    data = Dataset(
+        arc_cost,
+        coor,
+        nb_parking,
+        nb_microhub,
+        nb_customer,
+        parking_availability,
+        demands,
+
+        nb_vehicle_per_satellite,
+        capacity_1e_vehicle,
+        capacity_2e_vehicle,
+        capacity_microhub,
+        maximum_duration_2e_vehicle,
+
+        Int(ceil(sum(demands) / capacity_microhub)),
+        Int(ceil(sum(demands) / capacity_2e_vehicle)),
+
+        points,
+        customers,
+        satellites,
+        A2,
+        A1
+    )
+    transformDatasetToGlobals(data)
 end
 
 function runCompactModel(data::Dataset)
