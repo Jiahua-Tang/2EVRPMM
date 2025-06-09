@@ -97,8 +97,6 @@ function getB2In(route)
     return b
 end
 
-
-
 function getServedParking1eRoute(route::Route)
     served_parkings = Set{Int}()
     for (idx, v) in enumerate(route.b1) 
@@ -179,50 +177,6 @@ function generateNonDominate1eRoutes(least_required_mm::Int)
     end    
     # @info "End generation of 1e route"
     return result
-end
-
-function calculateLRPLowerBound(routes_1e_complete)
-    lb_per_route = Dict{Int, Float64}()
-
-    for (r, route) in enumerate(routes_1e_complete)
-        available_parkings = getServedParking1eRoute(route)
-        empty_parkings = setdiff!(collect(satellites), available_parkings)
-        available_points = sort(collect(union(available_parkings, customers)))
-    
-        model = Model(CPLEX.Optimizer)
-        set_silent(model)
-
-        @variable(model, x[A2, A2], Bin)
-        @variable(model, u[customers]>=0,Int)
-    
-        @constraint(model, [i in customers], sum(x[i,j] for j in A2)==1)
-        @constraint(model, [p in empty_parkings], sum(x[p,i] for i in A2) == 0)
-        @constraint(model, [p in available_parkings], sum(x[p,j] for j in A2)>=1)
-        @constraint(model, [i in available_parkings, j in available_parkings], x[i,j]==0)
-        @constraint(model, [i in available_points], sum(x[i,j] for j in A2) == sum(x[j,i] for j in A2))
-        @constraint(model, [i in customers, j in customers], u[i] + 1 <= u[j] + length(customers)*(1-x[i,j]))
-        
-        @objective(model, Min, route.cost + sum(arc_cost[i,j]*x[i,j] for i in A2 for j in A2))
-    
-        optimize!(model)
-    
-        status = termination_status(model)
-        if status == MOI.OPTIMAL || status == MOI.FEASIBLE_POINT 
-            lb_per_route[r] = objective_value(model)
-        end
-    end
-
-    return lb_per_route
-end
-
-function displayLRPLowerBound(lb_lrp_per_route, routes_1e_complete)
-    count = 1
-    while !isempty(lb_lrp_per_route)
-        min_value, min_idx = findmin(lb_lrp_per_route)
-        println(count, ". ",routes_1e_complete[min_idx].sequence,"  ",getServedParking1eRoute(routes_1e_complete[min_idx]),"   lower bound= $(round(min_value, digits=2))")
-        delete!(lb_lrp_per_route, min_idx)
-        count += 1
-    end
 end
 
 function generate2eInitialRoutes()

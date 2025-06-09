@@ -73,6 +73,13 @@ mutable struct Label
     visitedNodes::Vector{Int}
 end
 
+mutable struct LabelLRP
+    origin_node::Int
+    current_node::Int
+    reduced_cost::Float64
+    visitedNodes::Vector{Int}
+end
+
 function generateData()
     Random.seed!(42)
  
@@ -402,7 +409,6 @@ function solveMasterProblem()
     return objective_value(model)
 end
 
-
 function generateAllRoutes()
     feasible_1e_routes = generateNonDominate1eRoutes(minimum_parkings_required)
     # feasible_1e_routes = generateBestFeasible1eRoutes(minimum_parkings_required)
@@ -443,4 +449,55 @@ function generateAllFeasible2eRoute()
 
     # @info "End generation of feasible 2e routes"
     return feasible_2e_routes
+end
+
+function transformRoute(x)
+    new_route = Vector{Int}()
+    current_node = 0
+    if length(x) > (1+length(satellites))^2 
+        ## Transform a 2e route
+        # Find the starting satellite
+        for s in satellites
+            for j in A2
+                if round(value(x[s, j])) == 1
+                    current_node = s
+                    push!(new_route, s)
+                    break
+                end
+            end
+            if current_node != 0
+                break
+            end
+        end
+        while true
+            for j in A2
+                if round(value(x[current_node,j])) == 1
+                    current_node = j
+                    push!(new_route,current_node)
+                    break
+                end
+            end
+            if current_node in satellites
+                break
+            end
+        end
+    else
+        ## Transform a 1e route
+        current_node = 1 
+        push!(new_route, current_node)
+        while true
+            for j in A1
+                if round(value(x[current_node,j])) == 1
+                    current_node = j
+                    push!(new_route,current_node)
+                    break
+                end
+            end
+            if current_node == 1
+                break
+            end
+        end
+    end
+    
+    return new_route
 end
