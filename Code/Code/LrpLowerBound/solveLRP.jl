@@ -35,7 +35,7 @@ function calculateLRPLowerBound(routes_1e_complete)
 end
 
 function calculateTSP1e(selected_parkings)
-    println("Calculate TSP 1e\n")
+    # println("Calculate TSP 1e\n")
     model = Model(CPLEX.Optimizer)
     set_silent(model)
     @variable(model, x[A1, A1], Bin)
@@ -89,7 +89,7 @@ end
 
 
 function solveLRP_RLMP(selected_parkings, routes_pool)
-    println("Solve LRP 2e RLMP  ", selected_parkings)
+    # println("Solve LRP 2e RLMP  ", selected_parkings)
     model = Model(CPLEX.Optimizer)
     set_silent(model)
 
@@ -174,17 +174,18 @@ function calculateLRP2eCG(selected_parkings)
 end
 
 function calculateLRP2eMILP(selected_parkings)
-    println("Calculate LRP 2e")
+    # println("Calculate LRP 2e")
+    ## Solve a multi depot VRP
     empty_parkings = setdiff!(collect(satellites), selected_parkings)
     available_points = sort(collect(union(selected_parkings, customers)))
 
     model = Model(CPLEX.Optimizer)
-    # set_silent(model)
+    set_silent(model)
 
-    set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60)
+    # set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60)
 
-    @variable(model, z[A2, A2], Bin)
-    @variable(model, u[customers]>=0,Int)
+    @variable(model, 1 >= z[A2, A2] >= 0)
+    @variable(model, u[customers]>=0)
 
     @constraint(model, [i in customers], sum(z[i,j] for j in A2)==1)
     @constraint(model, [p in empty_parkings], sum(z[p,i] for i in A2) == 0)
@@ -192,20 +193,21 @@ function calculateLRP2eMILP(selected_parkings)
     @constraint(model, [i in selected_parkings, j in selected_parkings], z[i,j]==0)
     @constraint(model, [i in available_points], sum(z[i,j] for j in A2) == sum(z[j,i] for j in A2))
     @constraint(model, [i in customers, j in customers], u[i] + 1 <= u[j] + length(customers)*(1-z[i,j]))
-    
+    # @constraint(model, )
+
     @objective(model, Min, sum(arc_cost[i,j] * z[i,j] for i in A2 for j in A2))
 
     optimize!(model)
-    println("Objective value = ", objective_value(model))
+    # println("Objective value = ", objective_value(model))
 
     status = termination_status(model)
-    println("Termination status = ", status)
+    # println("Termination status = ", status)
     if status == MOI.OPTIMAL || primal_status(model) == MOI.FEASIBLE_POINT
-        for i in A2
-            for j in A2 
-                value(z[i,j]) != 0 && println("z[$i,$j]=$(value(z[i,j]))")
-            end
-        end
+        # for i in A2
+        #     for j in A2 
+        #         value(z[i,j]) != 0 && println("z[$i,$j]=$(value(z[i,j]))")
+        #     end
+        # end
         return objective_value(model)
     end
 end
@@ -221,23 +223,24 @@ function calculateLRPLowerBoundByParking()
     parkingCombination = Dict{Route, Float64}()
     for num_parking in minimum_parkings_required:nb_microhub
         for parking_subset in combinations(satellites, num_parking)
-            # parking_subset = [2,5]
-            println("\n================================Parking subset = ", parking_subset,"================================")
+            # println("\n================================Parking subset = ", parking_subset,"================================")
             route_1e = calculateTSP1e(parking_subset)
             lowerbound_2e = calculateLRP2eMILP(parking_subset)
-            lowerbound_1e_routes[route_1e] = route_1e.cost  + lowerbound_2e
-            @info "Lower bound found: $(route_1e.cost  + lowerbound_2e)"
-        end     
+            lowerbound_1e_routes[route_1e] = route_1e.cost + lowerbound_2e
+            # @info "$(route_1e.sequence)  Lower bound found: $(round(route_1e.cost, digits=2))  $(round(lowerbound_2e, digits=2))  Total: $(round(route_1e.cost + lowerbound_2e, digits=2))"
+        end
     end 
+    return lowerbound_1e_routes
     # display(lowerbound_1e_routes)
 end
 
-function displayLRPLowerBound(lb_lrp_per_route, routes_1e_complete)
+function displayLRPLowerBound(lb_lrp_per_route)
     count = 1
     while !isempty(lb_lrp_per_route)
-        min_value, min_idx = findmin(lb_lrp_per_route)
-        println(count, ". ",routes_1e_complete[min_idx].sequence,"  ",getServedParking1eRoute(routes_1e_complete[min_idx]),"   lower bound= $(round(min_value, digits=2))")
-        delete!(lb_lrp_per_route, min_idx)
+        min_value, min_route = findmin(lb_lrp_per_route)
+        println("Lower bound= ", round(min_value, digits=2), "   ", min_route.sequence )
+        # println(count, ". ",routes_1e_complete[min_idx].sequence,"  ",getServedParking1eRoute(routes_1e_complete[min_idx]),"   lower bound= $(round(min_value, digits=2))")
+        delete!(lb_lrp_per_route, min_route)
         count += 1
     end
 end

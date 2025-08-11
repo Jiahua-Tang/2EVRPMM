@@ -91,7 +91,7 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
     ## Before start column generation, check branching rules conflic
 
     result = column_generation(route_1e, routes_2e_pool, branchingInfo)
-
+    # println(test)
     # for route in routes_2e_pool 
     #     println(route.sequence)
     # end        
@@ -175,7 +175,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
     println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
 
     num_iter_sp = 1
-    while !isempty(node_stack) && num_iter_sp < 351
+    while !isempty(node_stack) && num_iter_sp < 2
         println("\n================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e[1].sequence)================")
         
         ## Display current node stack
@@ -241,7 +241,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
             @info "$(round(node.cgLowerBound, digits=2)), Exceed Upper Bound, prune"
         elseif node.isLeaf
             @info "Leaf Node already"
-        else            
+        else
         ## start branching
             println("   Total number of 2e routes: ", sum(node.y_value) , ", lb of cg = $(round(node.cgLowerBound,digits=2))")
             for (_, y) in enumerate([r for r in 1:length(node.y_value) if 0 < node.y_value[r]]) 

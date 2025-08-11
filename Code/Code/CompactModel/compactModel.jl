@@ -141,7 +141,7 @@ function buildModel()
     return model, x, y, t, w, z, f, tau
 end
 
-function displayResult(model, x, y, t, w, z, f, minutes,tau)
+function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
     # set_silent(model)
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", execution_time_limit)
     total_time = @elapsed optimize!(model)
@@ -204,7 +204,7 @@ function displayResult(model, x, y, t, w, z, f, minutes,tau)
         if termination_status(model) == MOI.OPTIMAL
             num_y = printText(plt, num_y, "Optimal solution found!")
         else
-            num_y = printText(plt, num_y, "Feasible solution found within the time limit: $runningTime")
+            num_y = printText(plt, num_y, "Feasible solution found within the time limit: $execution_time_limit")
         end
         num_y = printText(plt, num_y,"Objective: "*string(objective_value(model)))
         num_y = printText(plt, num_y,"Execution time: "*string(total_time))

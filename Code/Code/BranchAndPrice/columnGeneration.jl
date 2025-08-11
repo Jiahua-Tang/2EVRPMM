@@ -7,6 +7,8 @@ import Plots
 import SparseArrays
 import Test  #src
 include("Utiles.jl")
+include("labelling.jl")
+include("ngPathLabelling.jl")
 
 
 function displayDualValue(π1, π2, π3, π4)
@@ -44,7 +46,7 @@ function column_generation(filtered_1e_routes, filtered_2e_routes, branchingInfo
     x = nothing
     y = nothing
 
-    while !(stopStatus) # && num_iter < 71
+    while !(stopStatus)  && num_iter < 2
         # println("\n======================Iter CG $num_iter======================")
 
         rlmpResult = solveRestrictedMasterProblem(filtered_1e_routes, filtered_2e_routes, branchingInfo)
@@ -110,287 +112,6 @@ function column_generation(filtered_1e_routes, filtered_2e_routes, branchingInfo
     # end
 end
 
-function displayLabel(label::Label)
-    println("- Origin parking: $(label.origin_node)")
-    println("  Current node: $(label.current_node)")
-    println("  Reduced cost: $(round(label.reduced_cost, digits=2))")
-    println("  Accumulated capacity: $(label.accumulated_capacity)")
-    println("  Accumulated duration: $(round(label.accumulated_duration, digits=2))")
-    println("  Visit sequence: $(label.visitedNodes)\n")
-end
-
-function printLabel(label::Label)
-    @printf("  Label(%d,  %2d,  RC: %7.2f,  C: %2d,  D:%7.2f,  %s)\n",
-    label.origin_node,
-    label.current_node,
-    label.reduced_cost,
-    label.accumulated_capacity,
-    label.accumulated_duration,
-    label.visitedNodes
-    )
-end
-
-function extendLabel(pi1, pi2, pi3, pi4, label::Label, next_node::Int, branchingInfo::BranchingInfo)
-    # displayLabel(label)
-    # Update reduced cost
-    reduced_cost = label.reduced_cost + arc_cost[label.current_node, next_node]
-    if label.current_node in satellites
-        reduced_cost += pi1[label.current_node] - pi3[label.current_node]
-    end
-    if next_node in customers
-        reduced_cost = reduced_cost - pi2[next_node] + pi4[label.origin_node] * demands[next_node]
-    end
-    if next_node in satellites
-        reduced_cost += pi3[next_node]       
-    end
-    # Update accumulated capacity
-    accumulated_capacity = label.accumulated_capacity + demands[next_node]
-    if accumulated_capacity > capacity_2e_vehicle
-        return nothing
-    end
-    # Update accumulated duration
-    accumulated_duration = label.accumulated_duration + arc_cost[label.current_node, next_node]
-    if accumulated_duration > maximum_duration_2e_vehicle
-        return nothing
-    end
-    visitedNodes = push!(deepcopy(label.visitedNodes), next_node)
-    new_label = Label(label.origin_node, next_node, reduced_cost, accumulated_capacity, accumulated_duration, visitedNodes)
-    # displayLabel(new_label)
-    return new_label
-end
-
-function dominanceRule(label1, label2)
-    rcBool = label1.reduced_cost <= label2.reduced_cost
-    capBool = label1.accumulated_capacity <= label2.accumulated_capacity
-    durationBool = label1.accumulated_duration <= label2.accumulated_duration
-    ineBool = label1.reduced_cost == label2.reduced_cost && label1.accumulated_capacity == label2.accumulated_capacity && label1.accumulated_duration == label2.accumulated_duration
-    if rcBool && capBool && durationBool && !ineBool
-        # @info "Dominance relation found: "
-        # printLabel(label1)
-        # println("dominates")
-        # printLabel(label2)
-        return label2
-    else
-        return nothing
-    end
-end
-
-function dominanceCheckSingle(l1, l2)
-    result = dominanceRule(l1, l2)
-    if !isnothing(result)
-        return 2
-    else
-        result = dominanceRule(l2, l1)
-        if !isnothing(result)
-            return 1
-        else
-            return nothing
-        end
-    end
-end
-
-function dominanceCheck(unprocessedLabelsList, processedLabelsList)
-    unprocessedLabels = deepcopy(unprocessedLabelsList)
-    processedLabels = deepcopy(processedLabelsList)
-    idx_dominated = []
-    for (idx1, label1) in enumerate(unprocessedLabels) 
-        for (idx2, label2) in enumerate(unprocessedLabels)
-            if idx2 > idx1
-                result = dominanceCheckSingle(label1, label2)
-                if !isnothing(result)
-                    result == 1 && push!(idx_dominated, idx1)
-                    result == 2 && push!(idx_dominated, idx2)
-                end
-            end
-        end
-
-        for (idx3, label3) in enumerate(processedLabels) 
-            result = dominanceCheckSingle(label1, label3)
-            if !isnothing(result)
-                result == 1 && push!(idx_dominated, idx1)
-                result == 2 && deleteat!(processedLabels, idx3)
-            end
-        end
-    end
-    deleteat!(unprocessedLabels, unique(sort(idx_dominated)))
-    return unprocessedLabels, processedLabels
-end
-
-function solve_2e_labelling(pi1, pi2, pi3, pi4, startParking, branchingInfo)
-    # println("Start labelling algo")
-    ## prep
-    active_nodes = []
-    for parking in satellites 
-        if !(parking in branchingInfo.forbidden_parkings)
-            push!(active_nodes, parking)
-        end
-    end
-    active_nodes = vcat(active_nodes, customers)
-
-    ## Line 1
-    unprocessedLabels = Dict{Int, Vector{Label}}()
-    processedLabels = Dict{Int, Vector{Label}}()
-    depotLabels = Dict{Int, Vector{Label}}()
-
-    for node in active_nodes 
-        unprocessedLabels[node] = Vector{Label}()
-        processedLabels[node] = Vector{Label}()
-        # if node in satellites
-            depotLabels[node] = Vector{Label}()
-        # end
-    end
-
-    initial_label = Label(startParking, startParking, 0, 0, 0, [startParking])
-
-    ## To deal with the branching rule in this node:
-    ## must parking-customer combination: if start parking is not the parking, delete the customer
-    ## forbidden parking-customer combination: if start parking is the parking, delete the customer
-
-    active_customers = collect(deepcopy(customers))
-    if !isempty(branchingInfo.must_include_combinations)
-        for ele in branchingInfo.must_include_combinations 
-            if ele[1] != startParking
-                if ele[2] in active_customers
-                    deleteat!(active_customers, findfirst(==(ele[2]), active_customers))
-                end
-            end
-        end
-    end
-
-    if !isempty(branchingInfo.forbidden_combinations)
-        for ele in branchingInfo.forbidden_combinations
-            if ele[1] == startParking
-                if ele[2] in active_customers
-                    deleteat!(active_customers, findfirst(==(ele[2]), active_customers))
-                end
-            end
-        end
-    end
-    
-    # @info "Display active customers for sp parking $startParking : $(active_customers)"
-    # First propagation from origin node    
-    for cust in active_customers
-        result = extendLabel(pi1, pi2, pi3, pi4, initial_label, cust, branchingInfo)
-        !isnothing(result) && push!(unprocessedLabels[cust], result)
-    end
-
-    ## Line 2
-    num_iter_labelling = 1
-    # num_iter_labelling < 2 &&
-    while !isempty(collect(Iterators.flatten(values(unprocessedLabels)))) 
-        # println("\n===================Iter $num_iter_labelling===================")
-        # println("Display Unprocessed Labels")
-        # for node in active_nodes
-        #     if !isempty(unprocessedLabels[node])
-        #         print("-")
-        #     end
-        #     for (idx, ele) in enumerate(unprocessedLabels[node])
-        #         if idx > 1
-        #             print(" ")
-        #         else
-        #             print("")
-        #         end
-        #         printLabel(ele)
-        #     end
-        # end        
-        # println("Display Depot Labels")
-        # for node in active_nodes
-        #     if !isempty(depotLabels[node])
-        #         print("-")
-        #     end
-        #     for (idx, ele) in enumerate(depotLabels[node])
-        #         if idx > 1
-        #             print(" ")
-        #         else
-        #             print("")
-        #         end
-        #         printLabel(ele)
-        #     end
-        # end
-        # println("Display Processed Labels")
-        # for node in active_nodes
-        #     if !isempty(processedLabels[node])
-        #         print("-")
-        #     end
-        #     for (idx, ele) in enumerate(processedLabels[node])
-        #         if idx > 1
-        #             print(" ")
-        #         else
-        #             print("")
-        #         end
-        #         printLabel(ele)
-        #     end
-        # end
-        ## Line 3
-        all_labels = collect(Iterators.flatten(values(unprocessedLabels)))
-        min_label = all_labels[findmin(l -> l.reduced_cost, all_labels)[2]]
-        # @info "Selected label:"
-        # displayLabel(min_label)
-        min_idx = findfirst(==(min_label), unprocessedLabels[min_label.visitedNodes[end]])
-        deleteat!(unprocessedLabels[min_label.visitedNodes[end]], min_idx)
-        ## Line 9
-        push!(processedLabels[min_label.visitedNodes[end]], min_label)
-        ## Line 4
-        ## Propagate to new node
-        ## Line 5
-        node_pool = setdiff(active_nodes, min_label.current_node)
-        # for forbidden_combination in branchingInfo.forbidden_served_together
-        #     if forbidden_combination[1] in min_label.visitedNodes
-        #         node_pool = setdiff(node_pool, forbidden_combination[2])
-        #     end
-        #     if forbidden_combination[2] in min_label.visitedNodes
-        #         node_pool = setdiff(node_pool, forbidden_combination[1])
-        #     end
-        # end
-        for node in node_pool
-            new_label = extendLabel(pi1, pi2, pi3, pi4, min_label, node, branchingInfo)
-            ## Line 6
-            if !isnothing(new_label)
-                ## Line 7
-                node in satellites && push!(depotLabels[node], new_label)
-                node in active_customers && push!(unprocessedLabels[node], new_label)
-
-                ## Line 8
-                if node in active_customers
-                    unprocessedLabels[node], processedLabels[node] = dominanceCheck(unprocessedLabels[node], processedLabels[node])
-                end
-            end
-        end
-        num_iter_labelling += 1
-    end
-
-    result = []
-    for node in intersect(satellites, active_nodes)
-        for label in depotLabels[node]
-            # if node == 5
-            #     printLabel(label)
-            #     println(label.visitedNodes, "   ", unique(label.))
-            # end
-            if label.reduced_cost < -1e-8 && length(label.visitedNodes[2:end-1]) == length(unique(label.visitedNodes[2:end-1]))
-                valide = true
-                for combination in branchingInfo.must_served_together
-                    if Int(combination[1] in label.visitedNodes) + Int(combination[2] in label.visitedNodes) == 1
-                        valide = false
-                        break
-                    end
-                end
-
-                for combination in branchingInfo.forbidden_served_together 
-                    if Int(combination[1] in label.visitedNodes) + Int(combination[2] in label.visitedNodes) == 2
-                        valide = false
-                        break
-                    end
-                end
-                
-                valide && push!(result, label)
-            end
-        end
-    end
-
-    return result
-
-end
-
 function solveRestrictedMasterProblem(routes_1e, routes_2e_pool, branchingInfo)
 
     ## Relaxed Restricted Master Problem
@@ -405,27 +126,22 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e_pool, branchingInfo)
         push!(routes_originated_p, routes)
     end
 
+    # for route in routes_2e_pool 
+    #     println("Route ", route.sequence, "   Cost=", round(route.cost, digits=2))
+    # end
+
     # println("Number of 2e routes: ", length(routes_2e_pool))
     # println("Number of 1e routes: ", length(routes_1e))
     model = Model(CPLEX.Optimizer)
-    set_silent(model)
-    @variable(model, 1>=x[1:length(routes_1e)]>=0)
-    @variable(model, 1>=y[1:length(routes_2e_pool)]>=0)
-
-    forbidden_2e_routes = Vector{Int}()
-    for (idx,route) in enumerate(routes_2e_pool) 
-        for parking in branchingInfo.forbidden_parkings 
-            if parking in route.sequence
-                push!(forbidden_2e_routes, idx)
-            end
-        end
-    end
+    @variable(model, x[1:length(routes_1e)]>=0)
+    @variable(model, y[1:length(routes_2e_pool)]>=0)
+    relax_integrality(model)
 
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
         lower_bound = maximum(branchingInfo.lower_bound_number_2e_routes) 
         @constraint(model, sum(y[r] for (r, route) in enumerate(routes_2e_pool))>=lower_bound)
     end
-        if !isempty(branchingInfo.upper_bound_number_2e_routes)
+    if !isempty(branchingInfo.upper_bound_number_2e_routes)
         upper_bound = minimum(branchingInfo.upper_bound_number_2e_routes) 
         @constraint(model, sum(y[r] for (r, route) in enumerate(routes_2e_pool))<=upper_bound)
     end
@@ -456,7 +172,6 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e_pool, branchingInfo)
         @constraint(model, sum(y[r] for r in special_order_set_forbidden) == 0)
     end
 
-    # @constraint(model, microhubUB, sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e) for s in satellites)<=nb_microhub)
     @constraint(model, sync[s in satellites], sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e_pool))
         -nb_vehicle_per_satellite * sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e))<=0)
     @constraint(model, custVisit[i in customers], 1 - sum(route.a[i-1-length(satellites)] * y[r] for (r,route) in enumerate(routes_2e_pool)) <= 0 )
@@ -464,7 +179,6 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e_pool, branchingInfo)
     @constraint(model, maxVolumnMM[s in satellites], sum( routes_2e_pool[r].a[i-1-length(satellites
     )]*demands[i]*y[r] for r in routes_originated_p[s-1] for i in customers) - capacity_microhub <= 0)
     @constraint(model, single1eV, sum(x[r] for (r,_) in enumerate(routes_1e))>=1)
-    # @constraint(model, maxMMnumber, sum(x[r]*sum(route.b1) for (r,route) in enumerate(routes_1e)) <= nb_microhub)
     @constraint(model, min2eRoute, sum(y[r] for (r,_) in enumerate(routes_2e_pool))>=ceil(sum(demands)/capacity_2e_vehicle))
 
     @objective(model, Min, sum(y[r] * route.cost for (r,route) in enumerate(routes_2e_pool)) + 
@@ -472,8 +186,12 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e_pool, branchingInfo)
     
     optimize!(model)
   
+    println("Objective value of master problem is: ",value(objective_value(model)))
+
+    
     status = termination_status(model)
     if status == MOI.OPTIMAL || status == MOI.FEASIBLE_POINT
+
         # println("Objective value of master problem is: ",value(objective_value(model)))
         # println("Status of 1e route: ")
         # for (r,route) in enumerate(routes_1e)
@@ -520,6 +238,8 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e_pool, branchingInfo)
         π2 = abs.(vcat(zeros(1+length(satellites)),π2))
         π3 = abs.(vcat(0,π3))
         π4 = abs.(vcat(0,π4))
+
+        # println("tetstest")
 
         x_value = []
         y_value = []

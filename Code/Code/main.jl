@@ -11,12 +11,62 @@ include("LrpLowerBound/solveLRP.jl")
 global root = "$(pwd())/TEST/"
 # global root = "/gpfs/workdir/tangj/2EVRPMM/Code/Code/"
 
-# generateData()
-readData("E-n33-k4.txt", ARGS)
+generateData()
+# readData("E-n33-k4.txt", ARGS)
+
+# routes_1e = Vector{Route}()
+# push!(routes_1e, generate1eRoute([1,3,1]))
+# global routes_2e = generate2eInitialRoutes()
+# routes_2e_pool = filter2eRoute([3])
+# routes_originated_p = Vector{Vector{Int}}()
+# for s in satellites
+#     routes = Vector{Int}()
+#     for (r,route) in enumerate(routes_2e_pool)
+#         if route.sequence[1] == s
+#             push!(routes,r)
+#         end
+#     end
+#     push!(routes_originated_p, routes)
+# end
+
+# model = Model(CPLEX.Optimizer)
+
+# @variable(model, 1 >= x[1:length(routes_1e)] >= 0)
+# @variable(model, 1 >= y[1:length(routes_2e_pool)] >= 0)
+
+# @constraint(model, sync[s in satellites], sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e_pool))
+#     -nb_vehicle_per_satellite * sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e))<=0)
+# @constraint(model, custVisit[i in customers], 1 - sum(route.a[i-1-length(satellites)] * y[r] for (r,route) in enumerate(routes_2e_pool)) <= 0 )
+# @constraint(model, number2evfixe[s in satellites], sum(route.b2in[s] * y[r] for (r, route) in enumerate(routes_2e_pool)) == sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e_pool)))
+# @constraint(model, maxVolumnMM[s in satellites], sum( routes_2e_pool[r].a[i-1-length(satellites
+# )]*demands[i]*y[r] for r in routes_originated_p[s-1] for i in customers) - capacity_microhub <= 0)
+# @constraint(model, single1eV, sum(x[r] for (r,_) in enumerate(routes_1e))>=1)
+# @constraint(model, min2eRoute, sum(y[r] for (r,_) in enumerate(routes_2e_pool))>=ceil(sum(demands)/capacity_2e_vehicle))
+
+# @objective(model, Min, sum(y[r] * route.cost for (r,route) in enumerate(routes_2e_pool)) + 
+#                     sum(x[r] * route.cost for (r,route) in enumerate(routes_1e)))
+
+# optimize!(model)
+
+# println("Objective value = ", round(objective_value(model), digits=2))
+
+# for (idx, route) in enumerate(routes_1e)
+#     if round(value(x[idx]), digits=2) != 0
+#         println("1e route: ", route.sequence, " cost = ", round(route.cost, digits=2), " x[$idx] = ", round(value(x[idx]), digits=2))
+#     end 
+# end
+# for (idx, route) in enumerate(routes_2e_pool)
+#     if round(value(y[idx]), digits=2) != 0
+#         println("2e route: ", route.sequence, " cost = ", round(route.cost, digits=2), " y[$idx] = ", round(value(y[idx]), digits=2))
+#     end 
+# end
+
+# getdual(model)
+
 
 #=========================================================#
 
-# solveCompactModelDisplayResult()
+solveCompactModelDisplayResult()
 
 #=========================================================#
 
@@ -24,79 +74,35 @@ readData("E-n33-k4.txt", ARGS)
 
 #=========================================================#
 
-# . [1, 2, 1]  Set([2])   lower bound= 484.1
-# 2. [1, 2, 5, 1]  Set([5, 2])   lower bound= 539.22
-# 3. [1, 5, 1]  Set([5])   lower bound= 540.03
-# 4. [1, 2, 7, 1]  Set([7])   lower bound= 560.08
-# 5. [1, 2, 5, 7, 1]  Set([7, 2])   lower bound= 583.0
-# 6. [1, 2, 5, 6, 1]  Set([6, 2])   lower bound= 598.65
-# 7. [1, 3, 1]  Set([3])   lower bound= 598.68
-# 8. [1, 5, 6, 1]  Set([6])   lower bound= 599.47
-# 9. [1, 2, 5, 3, 6, 1]  Set([5, 6, 2])   lower bound= 612.06
-# 10. [1, 2, 5, 3, 1]  Set([5, 2, 3])   lower bound= 612.68
-# 11. [1, 5, 3, 1]  Set([5, 3])   lower bound= 613.5
-# 12. [1, 5, 3, 6, 1]  Set([5, 6])   lower bound= 614.53
-# 13. [1, 2, 3, 1]  Set([2, 3])   lower bound= 615.84
-# 14. [1, 2, 5, 6, 3, 1]  Set([6, 2, 3])   lower bound= 621.96
-# 15. [1, 5, 6, 3, 1]  Set([6, 3])   lower bound= 622.99
-# 16. [1, 5, 2, 7, 1]  Set([5, 7])   lower bound= 628.7
-# 17. [1, 2, 5, 4, 3, 6, 1]  Set([4, 6, 2])   lower bound= 632.42
-# 18. [1, 2, 5, 4, 1]  Set([4, 2])   lower bound= 632.54
-# 19. [1, 5, 4, 3, 6, 1]  Set([4, 6])   lower bound= 633.45
-# 20. [1, 5, 4, 1]  Set([4])   lower bound= 633.57
-# 21. [1, 2, 5, 6, 3, 7, 1]  Set([6, 7, 2])   lower bound= 645.53
-# 22. [1, 3, 4, 5, 2, 1]  Set([5, 4, 2])   lower bound= 646.85
-# 23. [1, 5, 6, 3, 7, 1]  Set([6, 7])   lower bound= 649.71
-# 24. [1, 2, 5, 4, 3, 1]  Set([4, 2, 3])   lower bound= 649.81
-# 25. [1, 2, 5, 3, 7, 1]  Set([5, 7, 2])   lower bound= 650.57
-# 26. [1, 5, 4, 3, 1]  Set([4, 3])   lower bound= 650.63
-# 27. [1, 3, 4, 5, 1]  Set([5, 4])   lower bound= 651.03
-# 28. [1, 2, 6, 3, 5, 1]  Set([5, 6, 3])   lower bound= 651.9
-# 29. [1, 3, 5, 7, 1]  Set([7, 3])   lower bound= 660.64
-# 30. [1, 2, 6, 3, 4, 5, 1]  Set([5, 4, 6])   lower bound= 674.05
-# 31. [1, 2, 3, 5, 7, 1]  Set([7, 2, 3])   lower bound= 674.44
-# 32. [1, 2, 5, 4, 3, 7, 1]  Set([4, 7, 2])   lower bound= 677.23
-# 33. [1, 5, 4, 3, 7, 1]  Set([4, 7])   lower bound= 681.41
-# 34. [1, 2, 4, 3, 5, 1]  Set([5, 4, 3])   lower bound= 691.12
-# 35. [1, 2, 6, 3, 5, 7, 1]  Set([6, 7, 3])   lower bound= 692.02
-# 36. [1, 3, 6, 5, 2, 7, 1]  Set([5, 6, 7])   lower bound= 704.53
-# 37. [1, 3, 5, 2, 7, 1]  Set([5, 7, 3])   lower bound= 704.98
-# 38. [1, 2, 6, 3, 4, 5, 7, 1]  Set([4, 6, 7])   lower bound= 718.77
-# 39. [1, 2, 4, 3, 5, 7, 1]  Set([4, 7, 3])   lower bound= 735.84
-# 40. [1, 3, 4, 5, 2, 7, 1]  Set([5, 4, 7])   lower bound= 736.4
-# 41. [1, 2, 4, 5, 6, 3, 1]  Set([4, 6, 3])   lower bound= 737.23
-
-# routes_1e_complete = generateNonDominate1eRoutes(minimum_parkings_required)
-# lb_lrp_per_route = calculateLRPLowerBound(routes_1e_complete)
-
 lb_lrp_per_route = calculateLRPLowerBoundByParking()
+displayLRPLowerBound(deepcopy(lb_lrp_per_route))
 
+global routes_2e = generate2eInitialRoutes()
+global num_iter_global = 1
+global upperBound = Inf
+global optimalSolution = nothing
 
-# displayLRPLowerBound(deepcopy(lb_lrp_per_route), routes_1e_complete)
+global optimal_found_iteration = 0
+global execution_time_subproblem = 0
+global deepest_level = 0
+global optimal_found_in = 0
 
-# global num_iter_global = 1
-# global upperBound = Inf
-# global optimalSolution = nothing
+execution_time = @elapsed begin
+    while !isempty(lb_lrp_per_route)  && num_iter_global < 2
+        min_value, min_route = findmin(lb_lrp_per_route)
+        if min_value > upperBound   break   end
 
-# global optimal_found_iteration = 0
-# global execution_time_subproblem = 0
-# global deepest_level = 0
-# global optimal_found_in = 0
-
-# execution_time = @elapsed begin
-#     while !isempty(lb_lrp_per_route) # && num_iter_global < 11
-#         min_value, min_idx = findmin(lb_lrp_per_route)
-#         if min_value > upperBound   break   end
-
-#         route_1e = Vector{Route}()
-#         push!(route_1e, routes_1e_complete[min_idx])
-#         branchAndPriceWithScore(route_1e)
-#         delete!(lb_lrp_per_route, min_idx)
+        route_1e = Vector{Route}()
+        push!(route_1e, min_route)
+        branchAndPriceWithScore(route_1e)
+#         delete!(lb_lrp_per_route, min_route)
 #         @info "current upper bound is $(round(upperBound,digits=2))"
-#         global num_iter_global
-#         num_iter_global += 1
-#     end
-# end
+        global num_iter_global
+        num_iter_global += 1
+    end
+end
+
+
 
 # if !isnothing(optimalSolution)
 #     @info "Current optimal solution found in interation $optimal_found_iteration:"

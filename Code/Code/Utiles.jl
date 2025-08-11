@@ -73,6 +73,15 @@ mutable struct Label
     visitedNodes::Vector{Int}
 end
 
+mutable struct ngLabel
+    origin_node::Int
+    current_node::Int
+    reduced_cost::Float64
+    accumulated_capacity::Int
+    accumulated_duration::Float64
+    TngCust::Vector{Int}
+    visitedNodes::Vector{Int}
+end
 mutable struct LabelLRP
     origin_node::Int
     current_node::Int
@@ -85,7 +94,7 @@ function generateData()
  
     nb_parking = 6
     nb_microhub = 3
-    nb_customer = 15
+    nb_customer = 10
     
     coor_cust = [[rand(1:50), rand(1:50)] for _ in 1:nb_customer]
     result = generateParkingCoor(coor_cust, nb_microhub, nb_parking)
@@ -102,11 +111,11 @@ function generateData()
     A2 = 2:length(coor)
     A1 = 1:1+length(satellites)
 
-    nb_vehicle_per_satellite = 10
+    nb_vehicle_per_satellite = 5
     capacity_1e_vehicle = sum(demands)
-    capacity_2e_vehicle = 60
-    capacity_microhub = 150
-    maximum_duration_2e_vehicle = 50
+    capacity_2e_vehicle = 100
+    capacity_microhub = 15000
+    maximum_duration_2e_vehicle = 50000
 
     data = Dataset(
         arc_cost,
@@ -215,7 +224,7 @@ end
 function readDataSetElion()
     nb_parking = 6
     nb_microhub = 3    
-    nb_vehicle_per_satellite = 10
+    nb_vehicle_per_satellite = 4
     capacity_microhub = 100000
     maximum_duration_2e_vehicle = 100000
     
@@ -287,7 +296,7 @@ function readDataSetElion()
         nb_vehicle_per_satellite,
         capacity_1e_vehicle,
         capacity_2e_vehicle,
-        capacity_microhub,
+        nb_vehicle_per_satellite*capacity_2e_vehicle,
         maximum_duration_2e_vehicle,
 
         Int(ceil(sum(demands) / capacity_microhub)),
