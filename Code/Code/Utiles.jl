@@ -62,6 +62,8 @@ mutable struct BranchingNode
     routes_pool::Vector{Route} ## Routes pool before filter (of father node)
     gradientLB::Float64
     gradientFS::Float64
+    id::Int
+    parent_id::Int
 end
 
 mutable struct Label
@@ -92,9 +94,9 @@ end
 function generateData()
     Random.seed!(42)
  
-    nb_parking = 6
-    nb_microhub = 3
-    nb_customer = 10
+    nb_parking = 4
+    nb_microhub = 2
+    nb_customer = 40
     
     coor_cust = [[rand(1:50), rand(1:50)] for _ in 1:nb_customer]
     result = generateParkingCoor(coor_cust, nb_microhub, nb_parking)
@@ -114,7 +116,7 @@ function generateData()
     nb_vehicle_per_satellite = 5
     capacity_1e_vehicle = sum(demands)
     capacity_2e_vehicle = 100
-    capacity_microhub = 15000
+    capacity_microhub = 500
     maximum_duration_2e_vehicle = 50000
 
     data = Dataset(
@@ -146,7 +148,7 @@ function generateData()
 
     global parkingGenerationRule = "random"
     global fileName = "randomSeed"
-    global execution_time_limit = 120 # seconds
+    global execution_time_limit = 3600 # seconds
 
     # return data
 end
@@ -509,4 +511,8 @@ function transformRoute(x)
     end
     
     return new_route
+end
+
+function calculate_reduced_cost_of_a_route(route_sequence::Vector{Int}, reduced_cost)
+    
 end

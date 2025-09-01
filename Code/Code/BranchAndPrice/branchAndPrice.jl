@@ -84,19 +84,24 @@ end
 
 
 
-function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBound, fs, num_iter_sp)
+function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBound, fs, num_iter_sp, id, parent_id)
 ## given a branchingInfo, transform it into a branchingNode structure (add cg result)
-    routes_2e_pool = filter_2e_routes(branchingInfo, routes_2e_pool)
+    execution_time = @elapsed begin
+        routes_2e_pool = filter_2e_routes(branchingInfo, routes_2e_pool)
+    end
+    global filtering_time += execution_time
+    
     # TODO
     ## Before start column generation, check branching rules conflic
-
+    @info "Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)"
     result = column_generation(route_1e, routes_2e_pool, branchingInfo)
-    # println(test)
+    # println(result)
     # for route in routes_2e_pool 
     #     println(route.sequence)
     # end        
 
     if !isnothing(result)
+        # println("teset")
         y_value = result[4]
         fractionalScore = 0
         # for (_, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
@@ -115,10 +120,10 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
         elseif isempty([r for r in 1:length(y_value) if 0 < y_value[r] < 1])
         ## Integer solution found, note as a leaf node
             ## display CG result
-            println("   Total number of 2e routes: ", sum(y_value) , ", lb of cg = $(round(result[5],digits=2))")
-            for (_, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
-                println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
-            end
+            # println("   Total number of 2e routes: ", sum(y_value) , ", lb of cg = $(round(result[5],digits=2))")
+            # for (_, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
+            #     println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
+            # end
             @info "Integer Solution Found  $(result[5])"
             isLeaf = true
             if result[5] < upperBound
@@ -138,7 +143,7 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
             gradientFS = 0   
         else
         ## Create a child node
-            println("Column generation lower bound is $(round(result[5],digits=2))")
+            # println("Column generation lower bound is $(round(result[5],digits=2))")
             for value in y_value
                 if value <= 0.5
                     fractionalScore += value
@@ -148,10 +153,10 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
             end
             gradientLB = result[5] - cgLowerBound
             gradientFS = fractionalScore - fs
-            println("Fractional score: $(round(fractionalScore, digits = 3))\n")
+            # println("Fractional score: $(round(fractionalScore, digits = 3))\n")
             isLeaf = false
         end
-        branchingNode = BranchingNode(branchingInfo, result[5], y_value, isLeaf, fractionalScore, routes_2e_pool, gradientLB, gradientFS)
+        branchingNode = BranchingNode(branchingInfo, result[5], y_value, isLeaf, fractionalScore, routes_2e_pool, gradientLB, gradientFS, id, parent_id)
         return branchingNode
     else
         @info "RLMP infeasible, prune "
@@ -163,10 +168,10 @@ end
 function branchAndPriceWithScore(route_1e::Vector{Route})
     root_branch = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(),Set{Route}(),Set{Route}(), 0)
     root_branch.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e[1]))
-
+    current_id = 0
     # CG for root node
     println("\n================Iteration 0 of B&P for SP$num_iter_global $(route_1e[1].sequence)================")
-    branchingNode = createBranchingNode(route_1e, routes_2e, root_branch, 0,0,0 )
+    branchingNode = createBranchingNode(route_1e, routes_2e, root_branch, 0,0,0,0,0 )
     node_stack = [branchingNode]
     if isnothing(branchingNode)
         return
@@ -175,9 +180,10 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
     println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
 
     num_iter_sp = 1
-    while !isempty(node_stack) && num_iter_sp < 2
+    while !isempty(node_stack) && num_iter_sp < 21
         println("\n================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e[1].sequence)================")
-        
+
+        #region : Different node selection strategies
         ## Display current node stack
         # @info "Node stack contains $(length(node_stack)) elements:"
         # for deepestNode in node_stack
@@ -211,6 +217,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
         #         node = nodeSelection(node, deepest_node)
         #     end
         # end
+        #endregion
 
         ## Strategy 3. Select node with lowest score
         node = node_stack[1]
@@ -243,16 +250,17 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
             @info "Leaf Node already"
         else
         ## start branching
-            println("   Total number of 2e routes: ", sum(node.y_value) , ", lb of cg = $(round(node.cgLowerBound,digits=2))")
-            for (_, y) in enumerate([r for r in 1:length(node.y_value) if 0 < node.y_value[r]]) 
-                println("   $(node.routes_pool[y].sequence)  $(round(node.y_value[y],digits=2))")
-            end
+            # println("   Total number of 2e routes: ", sum(node.y_value) , ", lb of cg = $(round(node.cgLowerBound,digits=2))")
+            # for (_, y) in enumerate([r for r in 1:length(node.y_value) if 0 < node.y_value[r]]) 
+            #     println("   $(node.routes_pool[y].sequence)  $(round(node.y_value[y],digits=2))")
+            # end
 
             ## BranchAndPrice
             result = branchingStrategy(node.y_value, node.routes_pool, node.branchingInfo)
             if !isnothing(result)
-                leftBranchingNode = createBranchingNode(route_1e, node.routes_pool, result[1], node.cgLowerBound, node.fractionalScore, num_iter_sp)
-                rightBranchingNode = createBranchingNode(route_1e, node.routes_pool, result[2], node.cgLowerBound, node.fractionalScore, num_iter_sp)
+                leftBranchingNode = createBranchingNode(route_1e, node.routes_pool, result[1], node.cgLowerBound, node.fractionalScore, num_iter_sp, current_id + 1, node.id)
+                rightBranchingNode = createBranchingNode(route_1e, node.routes_pool, result[2], node.cgLowerBound, node.fractionalScore, num_iter_sp, current_id + 2, node.id)
+                current_id += 2
                 if !isnothing(leftBranchingNode)
                     if leftBranchingNode.branchingInfo.depth > deepest_level
                         global deepest_level = leftBranchingNode.branchingInfo.depth
@@ -265,9 +273,12 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
                     end
                     push!(node_stack, rightBranchingNode)
                 end
+                
             else
                 println("No branching decision made")
             end
+
+            # println(test)
         end        
  
         println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")

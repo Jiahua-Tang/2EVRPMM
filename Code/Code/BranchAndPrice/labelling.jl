@@ -60,6 +60,7 @@ function dominanceRule(label1, label2)
         # printLabel(label1)
         # println("dominates")
         # printLabel(label2)
+        # println(label1.visitedNodes, " dominate ", label2.visitedNodes)
         return label2
     else
         return nothing
@@ -123,12 +124,10 @@ function solve_2e_labelling(pi1, pi2, pi3, pi4, startParking, branchingInfo)
     processedLabels = Dict{Int, Vector{Label}}()
     depotLabels = Dict{Int, Vector{Label}}()
 
-    for node in active_nodes 
+    for node in active_nodes
         unprocessedLabels[node] = Vector{Label}()
         processedLabels[node] = Vector{Label}()
-        # if node in satellites
-            depotLabels[node] = Vector{Label}()
-        # end
+        depotLabels[node] = Vector{Label}()
     end
 
     initial_label = Label(startParking, startParking, 0, 0, 0, [startParking])
@@ -166,62 +165,78 @@ function solve_2e_labelling(pi1, pi2, pi3, pi4, startParking, branchingInfo)
     end
 
     ## Line 2
-    num_iter_labelling = 1
-    # 
-    while num_iter_labelling < 11 && !isempty(collect(Iterators.flatten(values(unprocessedLabels)))) 
-        println("\n===================Iter $num_iter_labelling===================")
-        println("Display $(length(unprocessedLabels)) Unprocessed Labels")
-        for node in active_nodes
-            if !isempty(unprocessedLabels[node])
-                print("-")
-            end
-            for (idx, ele) in enumerate(unprocessedLabels[node])
-                if idx > 1
-                    print(" ")
-                else
-                    print("")
-                end
-                printLabel(ele)
-            end
-        end        
-        println("Display Depot Labels")
-        for node in active_nodes
-            if !isempty(depotLabels[node])
-                print("-")
-            end
-            for (idx, ele) in enumerate(depotLabels[node])
-                if idx > 1
-                    print(" ")
-                else
-                    print("")
-                end
-                printLabel(ele)
-            end
-        end
-        println("Display Processed Labels")
-        for node in active_nodes
-            if !isempty(processedLabels[node])
-                print("-")
-            end
-            for (idx, ele) in enumerate(processedLabels[node])
-                if idx > 1
-                    print(" ")
-                else
-                    print("")
-                end
-                printLabel(ele)
-            end
-        end
+    num_iter_labelling = 1 # num_iter_labelling < 5 #
+    # println("TESTTEST")
+
+    while !isempty(collect(Iterators.flatten(values(unprocessedLabels))))
+        # println("\n===================Iter $num_iter_labelling===================")
+        # println("Display $(length(collect(Iterators.flatten(values(unprocessedLabels))))) Unprocessed Labels")
+        # for node in active_nodes
+        #     if !isempty(unprocessedLabels[node])
+        #         print("-")
+        #     end
+        #     for (idx, ele) in enumerate(unprocessedLabels[node])
+        #         if idx > 1
+        #             print(" ")
+        #         else
+        #             print("")
+        #         end
+        #         printLabel(ele)
+        #     end
+        # end        
+        # println("Display $(length(collect(Iterators.flatten(values(depotLabels))))) Depot Labels")
+        # for node in satellites
+        #     if haskey(depotLabels, node)
+        #         if !isempty(depotLabels[node])
+        #             print("-")
+        #         end
+        #         for (idx, ele) in enumerate(depotLabels[node])
+        #             if idx > 1
+        #                 print(" ")
+        #             else
+        #                 print("")
+        #             end
+        #             printLabel(ele)
+        #         end                
+        #     end
+        # end
+        # println("Display $(length(collect(Iterators.flatten(values(processedLabels))))) Processed Labels")
+        # for node in A2
+        #     if haskey(processedLabels, node)
+        #         if !isempty(processedLabels[node])
+        #             print("-")
+        #         end
+        #         for (idx, ele) in enumerate(processedLabels[node])
+        #             if idx > 1
+        #                 print(" ")
+        #             else
+        #                 print("")
+        #             end
+        #             printLabel(ele)
+        #         end
+        #     end
+        # end
 
         ## Line 3
         all_labels = collect(Iterators.flatten(values(unprocessedLabels)))
         min_label = all_labels[findmin(l -> l.reduced_cost, all_labels)[2]]
-        @info "Selected label:"
-        displayLabel(min_label)
+        # @info "Selected label:"
+        # displayLabel(min_label)
         min_idx = findfirst(==(min_label), unprocessedLabels[min_label.visitedNodes[end]])
         deleteat!(unprocessedLabels[min_label.visitedNodes[end]], min_idx)
+
+        # Set node in visiting sequence as unreachable
+        # @info "TESTTEST"
+        visited_sequence = min_label.visitedNodes[2:end]
+        for node in active_nodes
+            if node in visited_sequence
+                filter!(x -> x != node, active_nodes)
+            end
+        end
+
         ## Line 9
         push!(processedLabels[min_label.visitedNodes[end]], min_label)
+        # println(length(collect(Iterators.flatten(values(processedLabels)))))
         ## Line 4
         ## Propagate to new node
         ## Line 5
@@ -276,7 +291,7 @@ function solve_2e_labelling(pi1, pi2, pi3, pi4, startParking, branchingInfo)
                         break
                     end
                 end
-                
+                # valide && println(label.visitedNodes)
                 valide && push!(result, label)
             end
         end

@@ -19,7 +19,7 @@ function displayNgLabel(label::ngLabel)
     println("  Visit sequence: $(label.visitedNodes)\n")
 end
 
-function printLabel(label::Label)
+function printNgLabel(label::Label)
     @printf("  Label(%d,  %2d,  RC: %7.2f,  C: %2d,  D:%7.2f,  %s)\n",
     label.origin_node,
     label.current_node,

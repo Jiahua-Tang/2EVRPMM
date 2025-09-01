@@ -49,7 +49,7 @@ positions = 1:nb_positions;
 
 # In this tutorial, we will use the following packages:
 
-using JuMP, HiGHS, GLPK, BlockDecomposition, Coluna, CPLEX;
+using JuMP, HiGHS, GLPK, BlockDecomposition, Coluna;
 
 # We want to set an upper bound `nb_routes_per_facility` on the number of routes starting from a facility. 
 # This limit is computed as follows:
@@ -60,10 +60,10 @@ nb_routes = Int(ceil(nb_customers / nb_positions))
 nb_routes_per_facility = min(Int(ceil(nb_routes / nb_facilities)) * 2, nb_routes)
 routes_per_facility = 1:nb_routes_per_facility;
 
-# ## Direct model
+# # ## Direct model
 
-# First, we solve the problem by a direct approach, using the HiGHS solver. 
-# We start by creating a JuMP model:
+# # First, we solve the problem by a direct approach, using the HiGHS solver. 
+# # We start by creating a JuMP model:
 
 # model = JuMP.Model(HiGHS.Optimizer);
 
@@ -142,7 +142,6 @@ function create_model(optimizer, pricing_algorithms)
 
     ## `x[i,j]` is a subproblem variable equal to 1 if customer i is delivered from facility j; 0 otherwise.
     @variable(model, x[i in customers, j in facilities_axis], Bin)
-    
     ## `z[u,v]` is assimilated to a subproblem variable equal to 1 if a vehicle travels from u to v; 0 otherwise.
     ## we don't use the `facilities_axis` axis here because the `z` variables are defined as
     ## representatives of the subproblem variables later in the model.
@@ -196,7 +195,7 @@ coluna = optimizer_with_attributes(
             conqueralg=Coluna.ColCutGenConquer() ## default column and cut generation of Coluna
         ) ## default branch-cut-and-price
     ),
-    "default_optimizer" => CPLEX.Optimizer # GLPK for the master & the subproblems
+    "default_optimizer" => GLPK.Optimizer # GLPK for the master & the subproblems
 );
 
 # ### Pricing callback
@@ -242,10 +241,10 @@ function best_visit_sequence(arc_costs, cust_subset, facility_id)
     all_paths = collect(multiset_permutations(cust_subset, set_size))
     all_routes = Vector{Route}()
     for path in all_paths
-        ## add the first index i.e. the facility id 
-        enpath = vcat([facility_id], path)
-        ## length of the route = 1 + number of visited customers
-        route = Route(set_size + 1, enpath)
+        ## Create closed route: facility -> customers -> facility
+        enpath = vcat([facility_id], path, [facility_id])
+        ## length of the route = 2 + number of visited customers (start + customers + end)
+        route = Route(set_size + 2, enpath)
         push!(all_routes, route)
     end
     ## compute each route original cost
@@ -285,6 +284,8 @@ end;
 routes_per_facility = Dict(
     j => best_route_forall_cust_subsets(arc_costs, customers, j, nb_positions) for j in facilities
 )
+display(routes_per_facility)
+
 
 # Our pricing callback must compute the reduced cost of each route, 
 # given the reduced cost of the subproblem variables `x` and `z`.
@@ -297,7 +298,8 @@ routes_per_facility = Dict(
 
 function x_contribution(route::Route, j::Int, x_red_costs)
     x = 0.0
-    visited_customers = route.path[2:route.length]
+    # For closed routes: path[1] = facility, path[2:end-1] = customers, path[end] = facility
+    visited_customers = route.path[2:(route.length-1)]
     for i in visited_customers
         x += x_red_costs["x_$(i)_$(j)"]
     end
@@ -326,8 +328,7 @@ function pricing_callback(cbdata)
     x_red_costs = Dict(
         "x_$(i)_$(j)" => BlockDecomposition.callback_reduced_cost(cbdata, x[i, j]) for i in customers
     )
-    @info "display reduced cost"
-    display(z_red_costs)
+
     ## Keep route with minimum reduced cost.
     red_costs_j = map(r -> (
             r,
@@ -342,7 +343,7 @@ function pricing_callback(cbdata)
     for i in 1:(best_route.length-1)
         push!(best_route_arcs, (best_route.path[i], best_route.path[i+1]))
     end
-    best_route_customers = best_route.path[2:best_route.length]
+    best_route_customers = best_route.path[2:(best_route.length-1)]
 
     ## Create the solution (send only variables with non-zero values).
     z_vars = [z[u, v] for (u, v) in best_route_arcs]
@@ -368,6 +369,14 @@ model, x, y, z, _ = create_model(coluna, pricing_callback);
 JuMP.optimize!(model)
 
 
+for i in locations 
+    for j in locations 
+        if value(z[i,j])!=0
+            println("z[$i $j]=",value(z[i,j]))
+        end
+    end
+end
+
 # ### Strengthening the master with linear valid inequalities on the original variables (so-called "robust" cuts)
 
 # To improve the quality of the linear relaxation, a family of classic facility location valid inequalities can be used:
@@ -377,7 +386,7 @@ JuMP.optimize!(model)
 # ```
 # where $I$ is the set of customers and $J$ the set of facilities.
 
-# We declare a structure representing an inequality in this family:
+# # We declare a structure representing an inequality in this family:
 # struct OpenFacilityInequality
 #     facility_id::Int
 #     customer_id::Int
@@ -555,8 +564,11 @@ JuMP.optimize!(model)
 #         end
 #         if lhs > 1
 #             ## Create the constraint and add it to the model.
-#             constr = JuMP.@build_constraint(JuMP.AffExpr(0.0) <= 1.0)
-#             MOI.submit(model, MOI.UserCut(cbdata), constr)
+#             MOI.submit(model,
+#                 MOI.UserCut(cbdata),
+#                 JuMP.ScalarConstraint(JuMP.AffExpr(0.0), MOI.LessThan(1.0)),
+#                 R1cCutData(cov_constr_subset)
+#             )
 #         end
 #     end
 # end;

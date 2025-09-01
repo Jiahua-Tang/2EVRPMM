@@ -66,11 +66,12 @@ generateData()
 
 #=========================================================#
 
-solveCompactModelDisplayResult()
+# solveCompactModelDisplayResult() 
+# # 40 customers takes 470.89 sec to find optimal
 
 #=========================================================#
 
-# solvemasterProblem()
+# solveMasterProblem()
 
 #=========================================================#
 
@@ -84,6 +85,9 @@ global optimalSolution = nothing
 
 global optimal_found_iteration = 0
 global execution_time_subproblem = 0
+global execution_time_rmp = 0
+global solving_rmp_time = 0
+global filtering_time = 0
 global deepest_level = 0
 global optimal_found_in = 0
 
@@ -95,8 +99,8 @@ execution_time = @elapsed begin
         route_1e = Vector{Route}()
         push!(route_1e, min_route)
         branchAndPriceWithScore(route_1e)
-#         delete!(lb_lrp_per_route, min_route)
-#         @info "current upper bound is $(round(upperBound,digits=2))"
+        delete!(lb_lrp_per_route, min_route)
+        @info "current upper bound is $(round(upperBound,digits=2))"
         global num_iter_global
         num_iter_global += 1
     end
@@ -122,12 +126,18 @@ end
 #         global num_iter
 #         num_iter += 1
 #     end
-# if !isnothing(optimalSolution)
-#     println("\nExecution time = $(round(execution_time, digits=2)), time spent in solving subproblem = $(round(execution_time_subproblem, digits=2)), takes percentage of $(round(execution_time_subproblem/execution_time,digits=2)*100)%, deepest node dived to level $deepest_level")
-#     println("Current optimal solution found in interation $optimal_found_iteration in level $optimal_found_in:")
-#     for route in optimalSolution 
-#         println(route.sequence)
-#     end   
-# end
+if !isnothing(optimalSolution)
+    println("\nExecution time = $(round(execution_time, digits=2))") 
+    println("time spent in solving subproblem = $(round(execution_time_subproblem, digits=2)), takes percentage of $(round(execution_time_subproblem/execution_time,digits=2)*100)%")
+    println("time spent in filtering = $(round(filtering_time, digits=2)), takes percentage of $(round(filtering_time/execution_time, digits =2)*100)%")
+    println("time spent in total RMP = $(round(execution_time_rmp, digits = 2)), takes percentage of $(round(execution_time_rmp/execution_time, digits =2)*100)%")
+    println("time spent in soving RMP = $(round(solving_rmp_time, digits = 2)), takes percentage of $(round(solving_rmp_time/execution_time, digits =2)*100)%")
+
+    println("deepest node dived to level $deepest_level\n")
+    # println("Current optimal solution found in interation $optimal_found_iteration in level $optimal_found_in:")
+    for route in optimalSolution 
+        println(route.sequence)
+    end   
+end
 
 # solveRMP(generate1eRoute([1,3,6,2,5,1]))

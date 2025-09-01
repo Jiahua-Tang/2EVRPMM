@@ -1,4 +1,4 @@
-include("labelling.jl")
+# include("labelling.jl")
 
 function calculateLRPLowerBound(routes_1e_complete)
     lb_per_route = Dict{Int, Float64}()

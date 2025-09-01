@@ -8,7 +8,7 @@ import SparseArrays
 import Test  #src
 include("Utiles.jl")
 include("labelling.jl")
-include("ngPathLabelling.jl")
+# include("ngPathLabelling.jl")
 
 
 function displayDualValue(π1, π2, π3, π4)
@@ -46,11 +46,13 @@ function column_generation(filtered_1e_routes, filtered_2e_routes, branchingInfo
     x = nothing
     y = nothing
 
-    while !(stopStatus)  && num_iter < 2
-        # println("\n======================Iter CG $num_iter======================")
-
-        rlmpResult = solveRestrictedMasterProblem(filtered_1e_routes, filtered_2e_routes, branchingInfo)
-        if !isnothing(rlmpResult)
+    while !(stopStatus) # && num_iter < 6
+        println("\n======================Iter CG $num_iter======================")
+        execution_time = @elapsed begin
+            rlmpResult = solveRestrictedMasterProblem(filtered_1e_routes, filtered_2e_routes, branchingInfo)
+        end
+        global execution_time_rmp += execution_time
+            if !isnothing(rlmpResult)
             ##  if RLMP has feasible solution
             π1, π2 = rlmpResult[1], rlmpResult[2]
             π3, π4 = rlmpResult[3], rlmpResult[4]
@@ -91,10 +93,12 @@ function column_generation(filtered_1e_routes, filtered_2e_routes, branchingInfo
             ## All subproblems yiled no more negative reduced cost
             if status_2e_subproblem_ternimate
                 stopStatus = true
+                println("\nStop CG: no more negative RC")
                 return nothing , filtered_2e_routes, value.(x), value.(y), rlmpResult[7]
             end
         else
-            # @info "RLMP infeasible"
+            # @info "RLMP infeasible shown in CG"
+            println("\nStop CG: RLMP infeasible")
             stopStatus = true
             return nothing
         end 
@@ -136,6 +140,8 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e_pool, branchingInfo)
     @variable(model, x[1:length(routes_1e)]>=0)
     @variable(model, y[1:length(routes_2e_pool)]>=0)
     relax_integrality(model)
+
+    set_silent(model)
 
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
         lower_bound = maximum(branchingInfo.lower_bound_number_2e_routes) 
@@ -184,14 +190,17 @@ function solveRestrictedMasterProblem(routes_1e, routes_2e_pool, branchingInfo)
     @objective(model, Min, sum(y[r] * route.cost for (r,route) in enumerate(routes_2e_pool)) + 
                         sum(x[r] * route.cost for (r,route) in enumerate(routes_1e)))
     
-    optimize!(model)
+    execution_time = @elapsed begin
+        optimize!(model)
+    end
+    global solving_rmp_time += execution_time
   
     println("Objective value of master problem is: ",value(objective_value(model)))
 
     
     status = termination_status(model)
     if status == MOI.OPTIMAL || status == MOI.FEASIBLE_POINT
-
+        # println(status)
         # println("Objective value of master problem is: ",value(objective_value(model)))
         # println("Status of 1e route: ")
         # for (r,route) in enumerate(routes_1e)
