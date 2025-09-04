@@ -22,32 +22,7 @@ function printLabel(label::Label)
 end
 
 function extendLabel(pi1, pi2, pi3, pi4, label::Label, next_node::Int, branchingInfo::BranchingInfo)
-    # displayLabel(label)
-    # Update reduced cost
-    reduced_cost = label.reduced_cost + arc_cost[label.current_node, next_node]
-    if label.current_node in satellites
-        reduced_cost += pi1[label.current_node] - pi3[label.current_node]
-    end
-    if next_node in customers
-        reduced_cost = reduced_cost - pi2[next_node] + pi4[label.origin_node] * demands[next_node]
-    end
-    if next_node in satellites
-        reduced_cost += pi3[next_node]       
-    end
-    # Update accumulated capacity
-    accumulated_capacity = label.accumulated_capacity + demands[next_node]
-    if accumulated_capacity > capacity_2e_vehicle
-        return nothing
-    end
-    # Update accumulated duration
-    accumulated_duration = label.accumulated_duration + arc_cost[label.current_node, next_node]
-    if accumulated_duration > maximum_duration_2e_vehicle
-        return nothing
-    end
-    visitedNodes = push!(deepcopy(label.visitedNodes), next_node)
-    new_label = Label(label.origin_node, next_node, reduced_cost, accumulated_capacity, accumulated_duration, visitedNodes)
-    # displayLabel(new_label)
-    return new_label
+  
 end
 
 function dominanceRule(label1, label2)

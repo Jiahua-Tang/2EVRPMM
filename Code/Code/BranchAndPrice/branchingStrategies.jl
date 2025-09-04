@@ -129,24 +129,6 @@ function branchOnReverseRoute(branchingInfo, reverse_route)
         return left_branch, right_branch
     end
     
-    # routeExistanceMust = Tuple(sort([reverse_route[1], reverse_route[2]])) in branchingInfo.must_include_combinations
-    # routeExistanceForbidden = Tuple(sort([reverse_route[1], reverse_route[2]])) in branchingInfo.forbidden_combinations
-    # if !routeExistanceMust && !routeExistanceForbidden
-    #     @info "Branching decision : combination of parking-customer: $(Tuple(sort([reverse_route[1], reverse_route[2]])) )"
-    #     push!(left_branch.must_include_combinations, Tuple(sort([reverse_route[1], reverse_route[2]])))
-    #     push!(right_branch.forbidden_combinations, Tuple(sort([reverse_route[1], reverse_route[2]])))
-    #     return left_branch, right_branch
-    # end
-    
-    # routeExistanceMust = Tuple(sort([reverse_route[end], reverse_route[end-1]])) in branchingInfo.must_include_combinations
-    # routeExistanceForbidden = Tuple(sort([reverse_route[end], reverse_route[end-1]])) in branchingInfo.forbidden_combinations
-    # if !routeExistanceMust && !routeExistanceForbidden
-    #     @info "Branching decision : combination of parking-customer: $(Tuple(sort([reverse_route[end], reverse_route[end-1]])))"
-    #     push!(left_branch.must_include_combinations, Tuple(sort([reverse_route[end], reverse_route[end-1]])))
-    #     push!(right_branch.forbidden_combinations, Tuple(sort([reverse_route[end], reverse_route[end-1]])))
-    #     return left_branch, right_branch
-    # end
-
     routeExistanceMust = false
     routeExistanceForbidden = false
     for route in branchingInfo.special_order_set_must_include 

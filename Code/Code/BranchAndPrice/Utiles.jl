@@ -1,5 +1,5 @@
 using Combinatorics, CPLEX, JuMP
-
+include("../Utiles.jl")
 
 function generate1eRoute(route)
     cost = 0
@@ -39,9 +39,9 @@ end
 
 # Parameter if customer i is served by a route r
 function getA(route)
-    a = zeros(Int, length(customers))
+    a = zeros(Int, length(A2)+1)
     for (idx, cust) in enumerate(customers)
-        a[idx] = cust in route ? 1 : 0          
+        a[cust] = cust in route ? 1 : 0          
     end
     return a
 end

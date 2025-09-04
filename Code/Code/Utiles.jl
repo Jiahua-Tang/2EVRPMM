@@ -96,7 +96,7 @@ function generateData()
  
     nb_parking = 4
     nb_microhub = 2
-    nb_customer = 40
+    nb_customer = 20
     
     coor_cust = [[rand(1:50), rand(1:50)] for _ in 1:nb_customer]
     result = generateParkingCoor(coor_cust, nb_microhub, nb_parking)
@@ -511,8 +511,4 @@ function transformRoute(x)
     end
     
     return new_route
-end
-
-function calculate_reduced_cost_of_a_route(route_sequence::Vector{Int}, reduced_cost)
-    
 end

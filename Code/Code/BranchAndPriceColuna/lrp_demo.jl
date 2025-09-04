@@ -241,10 +241,10 @@ function best_visit_sequence(arc_costs, cust_subset, facility_id)
     all_paths = collect(multiset_permutations(cust_subset, set_size))
     all_routes = Vector{Route}()
     for path in all_paths
-        ## Create closed route: facility -> customers -> facility
-        enpath = vcat([facility_id], path, [facility_id])
-        ## length of the route = 2 + number of visited customers (start + customers + end)
-        route = Route(set_size + 2, enpath)
+        ## add the first index i.e. the facility id 
+        enpath = vcat([facility_id], path)
+        ## length of the route = 1 + number of visited customers
+        route = Route(set_size + 1, enpath)
         push!(all_routes, route)
     end
     ## compute each route original cost
@@ -298,8 +298,7 @@ display(routes_per_facility)
 
 function x_contribution(route::Route, j::Int, x_red_costs)
     x = 0.0
-    # For closed routes: path[1] = facility, path[2:end-1] = customers, path[end] = facility
-    visited_customers = route.path[2:(route.length-1)]
+    visited_customers = route.path[2:route.length]
     for i in visited_customers
         x += x_red_costs["x_$(i)_$(j)"]
     end
@@ -343,7 +342,7 @@ function pricing_callback(cbdata)
     for i in 1:(best_route.length-1)
         push!(best_route_arcs, (best_route.path[i], best_route.path[i+1]))
     end
-    best_route_customers = best_route.path[2:(best_route.length-1)]
+    best_route_customers = best_route.path[2:best_route.length]
 
     ## Create the solution (send only variables with non-zero values).
     z_vars = [z[u, v] for (u, v) in best_route_arcs]
@@ -368,14 +367,6 @@ model, x, y, z, _ = create_model(coluna, pricing_callback);
 # Solve:
 JuMP.optimize!(model)
 
-
-for i in locations 
-    for j in locations 
-        if value(z[i,j])!=0
-            println("z[$i $j]=",value(z[i,j]))
-        end
-    end
-end
 
 # ### Strengthening the master with linear valid inequalities on the original variables (so-called "robust" cuts)
 

@@ -1,6 +1,7 @@
 include("branchingStrategies.jl")
 include("Utiles.jl")
 include("columnGeneration.jl")
+include("columnGeneration_v2.jl")
 
 
 function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
@@ -94,7 +95,10 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
     # TODO
     ## Before start column generation, check branching rules conflic
     @info "Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)"
-    result = column_generation(route_1e, routes_2e_pool, branchingInfo)
+    displayBranchingRule(branchingInfo)
+    # result = column_generation(route_1e, routes_2e_pool, branchingInfo)
+    result = solveColumnGeneration(route_1e, routes_2e_pool, branchingInfo)
+    
     # println(result)
     # for route in routes_2e_pool 
     #     println(route.sequence)
@@ -108,10 +112,6 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
         #     println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
         # end
         routes_2e_pool = result[2]
-        # global routes_2e
-        # for route in result[1]
-        #     push!(routes_2e, route)
-        # end
         if checkExistanceDummyRoute(y_value, routes_2e_pool)
         ## Dummy route used at the end of column generation, branch can be pruned
             @info "Dummy routes used, exceed upper bound, prune"
@@ -180,7 +180,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
     println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
 
     num_iter_sp = 1
-    while !isempty(node_stack) && num_iter_sp < 21
+    while !isempty(node_stack) && num_iter_sp < 3
         println("\n================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e[1].sequence)================")
 
         #region : Different node selection strategies

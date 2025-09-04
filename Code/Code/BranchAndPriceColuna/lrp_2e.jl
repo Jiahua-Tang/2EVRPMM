@@ -1,49 +1,30 @@
-using Random
 
 
-function calculate_arc_cost(points)
-    num_points = length(points)
-    arc_cost = zeros(Float64, num_points)
-    for idx in 2:length(points)
-        arc_cost = hcat(arc_cost, zeros(Float64, num_points))
-    end
-    for i in 1:num_points
-        for j in 1:num_points
-            if i == j
-                arc_cost[i, j] = Inf  # Large value for self-loops
-            else
-                arc_cost[i, j] = sqrt(sum((points[i][k] - points[j][k])^2 for k in 1:2))
-            end
-        end
-    end
-    # for i in 1:num_points
-    #     for j in 1:num_points
-    #         print("  d[$i $j]=", round(arc_cost[i,j], digits=2))
-    #     end
-    #     println("")
-    # end
-    return arc_cost
-end
-
-facilities = [1, 2, 3, 4]
-customers = collect(5:20)
+facilities = [1, 2, 3]
+customers = [4, 5, 6, 7, 8, 9]
+demands = [0, 0, 0, 10, 4, 13, 5, 19, 15]
+nb_positions = 6
+arc_costs =
+    [
+        Inf 25.3 25.4 25.4 35.4 37.4 31.9 24.6 34.2;
+        25.3 Inf 21.2 16.2 27.1 26.8 17.8 16.7 23.2;
+        25.4 21.2 Inf 14.2 23.4 23.8 18.3 17.0 21.6;
+        25.4 16.2 14.2 Inf 28.6 28.8 22.6 15.6 29.5;
+        35.4 27.1 23.4 28.6 Inf 42.1 30.4 24.9 39.1;
+        37.4 26.8 23.8 28.8 42.1 Inf 32.4 29.5 38.2;
+        31.9 17.8 18.3 22.6 30.4 32.4 Inf 22.5 30.7;
+        24.6 16.7 17.0 15.6 24.9 29.5 22.5 Inf 21.4;
+        34.2 23.2 21.6 29.5 39.1 38.2 30.7 21.4 Inf;
+    ]
 
 nb_customers = length(customers)
 nb_facilities = length(facilities)
-capacity = 50
-capacity_mm = 500
-
-demands = vcat(zeros(Int, nb_facilities), [rand(1:15) for _ in 1:nb_customers])
-coors = [[rand(1:50), rand(1:50)] for _ in 1:nb_customers+nb_facilities]
-
-
-arc_costs = calculate_arc_cost(coors)
-
+capacity = 20
 
 using BlockDecomposition, Coluna, CPLEX, JuMP
 
 nb_routes = Int(ceil(sum(demands)/capacity))
-nb_routes_per_facilities = 10
+nb_routes_per_facilities = 2
 
 function create_model(selected_facilities::Vector{Int}, optimizer, pricing_algorithms)
     global locations = vcat(selected_facilities, customers)
@@ -56,16 +37,13 @@ function create_model(selected_facilities::Vector{Int}, optimizer, pricing_algor
 
     @variable(model, z[u in locations, v in locations], Bin)
 
-    # @varaible(model, f[i in locations, j in locations]>0)
-
     @constraint(model, cov[i in customers], sum(x[i, j] for j in selected_facilities) >= 1)
 
     @constraint(model, inout[j in facilities_axis], sum(z[j, i] for i in locations) == sum(z[i, j] for i in locations))
 
-    @constraint(model, ub_veh[j in selected_facilities],
-                sum(z[j,i] for i in customers) <= nb_routes_per_facilities)
+    # @constraint(model, ub_veh[j in selected_facilities],
+    #             sum(z[j,i] for i in customers) <= nb_routes_per_facilities)
 
-    @constraint(model, cap_mm[i in facilities_axis], sum(demands[j] * x[j, i] for j in customers) <= capacity_mm)
 
     @objective(model, Min, sum(arc_costs[u,v] * z[u,v] for u in locations, v in locations if u != v))
 
@@ -78,6 +56,7 @@ function create_model(selected_facilities::Vector{Int}, optimizer, pricing_algor
     subproblemrepresentative.(z, Ref(subproblems))
 
     return model, x, z
+
 end
 
 
@@ -158,10 +137,7 @@ function best_route_forall_cust_subsets(arc_costs, customers, facility_id, max_s
     end
     for s in all_subsets
         route_s = best_visit_sequence(arc_costs, s, facility_id)
-        for f in facilities 
-            route_s.path = vcat(route_s.path, f)
-            push!(best_routes, route_s)
-        end
+        push!(best_routes, route_s)
     end
     return best_routes
 end;
@@ -170,32 +146,9 @@ end;
 # For each facility id, we match a vector of routes that are the best visiting sequences
 # for each possible subset of customers.
 
-function get_initial_routes()
-    result = Dict{Int, Vector{Route}}()
-    for f in facilities 
-        result[f] = Vector{Route}()
-        for cust in customers 
-            push!(result[f], Route(3, [f, cust, f]))
-        end
-    end
-    return result
-end
-
-# routes_per_facility = Dict(
-#     j => best_route_forall_cust_subsets(arc_costs, customers, j, nb_positions) for j in facilities
-# )
-
-routes_per_facility = get_initial_routes()
-
-# for (k,v) in routes_per_facility 
-#     # println("key = $k, value = $v")
-#     for r in v
-#         println(r.path)
-#     end
-# end
-
-
-# display(routes_per_facility)
+routes_per_facility = Dict(
+    j => best_route_forall_cust_subsets(arc_costs, customers, j, nb_positions) for j in facilities
+)
 
 # Our pricing callback must compute the reduced cost of each route, 
 # given the reduced cost of the subproblem variables `x` and `z`.
@@ -208,8 +161,7 @@ routes_per_facility = get_initial_routes()
 
 function x_contribution(route::Route, j::Int, x_red_costs)
     x = 0.0
-    # For closed routes: path[1] = facility, path[2:end-1] = customers, path[end] = facility
-    visited_customers = route.path[2:(route.length-1)]
+    visited_customers = route.path[2:route.length]
     for i in visited_customers
         x += x_red_costs["x_$(i)_$(j)"]
     end
@@ -337,7 +289,10 @@ function dominanceRule(label1, label2)
     ineBool = label1.reduced_cost == label2.reduced_cost && label1.accumulate_capacity == label2.accumulate_capacity # && label1.accumulated_duration == label2.accumulated_duration
     if rcBool && capBool&& !ineBool # && durationBool 
         # @info "Dominance relation found: "
-        # println(label1.visited_node, " dominates ", label2.visited_node)
+        # printLabel(label1)
+        # println("dominates")
+        # printLabel(label2)
+        # println(label1.visitedNodes, " dominate ", label2.visitedNodes)
         return label2
     else
         return nothing
@@ -347,15 +302,12 @@ end
 function dominanceCheckSingle(l1, l2)
     result = dominanceRule(l1, l2)
     if !isnothing(result)
-        ## l1 dominate l2
         return 2
     else
         result = dominanceRule(l2, l1)
         if !isnothing(result)
-            ## l2 dominate l1
             return 1
         else
-            ## no dominance relation exsit
             return nothing
         end
     end
@@ -364,10 +316,8 @@ end
 function dominanceCheck(unprocessedLabelsList, processedLabelsList)
     unprocessedLabels = deepcopy(unprocessedLabelsList)
     processedLabels = deepcopy(processedLabelsList)
-
     idx_dominated = []
     for (idx1, label1) in enumerate(unprocessedLabels) 
-        
         for (idx2, label2) in enumerate(unprocessedLabels)
             if idx2 > idx1
                 result = dominanceCheckSingle(label1, label2)
@@ -395,20 +345,14 @@ function extendLabel(current_facility, x_red_costs, z_red_costs, label, next_pos
     current_position = label.visited_node[end]
     # println("$(current_facility), $current_position, $next_position")
 
-    if arc_costs[next_position, current_position] == Inf
+    if next_position in facilities # new_arc_costs[next_position, current_facility] == Inf
         return nothing
     end
 
-    reduced_cost = label.reduced_cost + z_red_costs["z_$(current_position)_$(next_position)"]
-
-    if next_position in customers
-        reduced_cost += x_red_costs["x_$(next_position)_$(current_facility)"]
-    end
+    reduced_cost = label.reduced_cost + x_red_costs["x_$(next_position)_$(current_facility)"]
+                                      + z_red_costs["z_$(current_position)_$(next_position)"]
     
     accumulate_capacity = label.accumulate_capacity + demands[next_position]
-    if accumulate_capacity > capacity
-        return nothing
-    end
     visited_node = push!(deepcopy(label.visited_node), next_position)
     new_label = Label(reduced_cost, accumulate_capacity, visited_node)
 
@@ -421,7 +365,7 @@ function labelling(selected_parking::Vector{Int}, current_facility ,x_red_costs,
     processedLabels = Dict{Int, Vector{Label}}()
     depotLabels = Vector{Label}()
 
-    # start_point = nb_facilities + nb_customers + 1
+    start_point = nb_facilities + nb_customers + 1
 
     active_nodes = vcat(current_facility, customers) # , start_point) #, end_point)
     for node in active_nodes
@@ -433,30 +377,10 @@ function labelling(selected_parking::Vector{Int}, current_facility ,x_red_costs,
     push!(unprocessedLabels[current_facility], initial_label)
 
     num_iter_labelling = 1
-    while num_iter_labelling < 51 && !isempty(collect(Iterators.flatten(values(unprocessedLabels))))
+    while num_iter_labelling < 3 # !isempty(collect(Iterators.flatten(values(unprocessedLabels))))
 
         println("\n===================Iter $num_iter_labelling===================")
-        println("Display $(length(collect(Iterators.flatten(values(unprocessedLabels))))) Unprocessed Labels")
-        # for node in active_nodes
-        #     if !isempty(unprocessedLabels[node])
-        #         print("-")
-        #     end
-        #     for (idx, ele) in enumerate(unprocessedLabels[node])
-        #         if idx > 1
-        #             print(" ")
-        #         else
-        #             print("")
-        #         end
-        #        displayLabel(ele)
-        #     end
-        # end
 
-        println("Display $(length(depotLabels)) Depot Labels")
-        for label in depotLabels
-           displayLabel(label) 
-        end
-
-        println("")
         ## Line 3
         all_labels = collect(Iterators.flatten(values(unprocessedLabels)))
         min_label = all_labels[findmin(l -> l.reduced_cost, all_labels)[2]]
@@ -466,86 +390,48 @@ function labelling(selected_parking::Vector{Int}, current_facility ,x_red_costs,
         min_idx = findfirst(==(min_label), unprocessedLabels[min_label.visited_node[end]])
         deleteat!(unprocessedLabels[min_label.visited_node[end]], min_idx)
 
+        # Set node in visiting sequence as unreachable
+        # TODO
+
         ## Line 9
         push!(processedLabels[min_label.visited_node[end]], min_label)
 
         ## Line 4 : Propagation to new node
 
         ## Line 5
-        # @info "Propagate labels:"
+        @info "Propagate labels:"
         current_node = min_label.visited_node[end]
 
         for node in active_nodes
-            # Set node in visiting sequence as unreachable
-            if node == current_facility || (!(node in min_label.visited_node) && node != current_facility)
-                new_label = extendLabel(current_facility, x_red_costs, z_red_costs, min_label, node)
-                ## Line 6
-                if !isnothing(new_label)
-                    # displayLabel(new_label)
-                    ## Line 7
-                    if node == current_facility 
-                        push!(depotLabels, new_label)
-                    else
-                        new_label_is_dominated = false
-                        for label in processedLabels[node]
-                            ## Check if new label is dominated, if yes, do not add it in
-                            if dominanceCheckSingle(new_label, label) == 1
-                                ## new label is dominated by a processed label
-                                new_label_is_dominated = true
-                                break
-                            end
-                        end
-                        if !new_label_is_dominated
-                            for label in unprocessedLabels[node] 
-                                if dominanceCheckSingle(new_label, label) == 1
-                                    ## new label is dominated by a unprocessed label
-                                    new_label_is_dominated = true
-                                    break
-                                elseif dominanceCheckSingle(new_label,label) == 2
-                                    println("a unprocessed label is dominated")
-                                    min_idx = findfirst(==(label), unprocessedLabels[node])
-                                    deleteat!(unprocessedLabels[node], min_idx)
+            new_label = extendLabel(current_facility, x_red_costs, z_red_costs, min_label, node)
+            ## Line 6
+            if !isnothing(new_label)
+                displayLabel(new_label)
+                ## Line 7
+                node in facilities && push!(depotLabels[node], new_label)
+                # node in customers && 
+                push!(unprocessedLabels[node], new_label)
 
-                                    ## new label dominates a unprocessed label
-                                    ## TODO
-                                    ## delete the dominated label
-                                end
-                            end
-                        end
-                        # println(new_label_is_dominated)
-                        if !new_label_is_dominated 
-                            push!(unprocessedLabels[node], new_label)
-                        end
-                    end
-
-                    ## Line 8
-                    ## TODO
-                    ## if there is already a dominance relation exist, stop parcourir
-                    # if node in customers
-                    #     unprocessedLabels[node], processedLabels[node] = dominanceCheck(unprocessedLabels[node], processedLabels[node])
-                    # end
-                end    
+                ## Line 8
+                if node in customers
+                    unprocessedLabels[node], processedLabels[node] = dominanceCheck(unprocessedLabels[node], processedLabels[node])
+                end
             end
         end
         num_iter_labelling += 1
     end
 
     ## Collect result : the labels end in a facility with reduced cost <= 0
-    result = Vector{Route}()
+    result = []
 
-    # for label in depotLabels 
-    #     # println(round(label.reduced_cost, digits=2), "   ", label.visited_node)
-    #     if label.reduced_cost < -1e-8
-    #         # push!(result, Route(length(label.visited_node), visited_node))
+    # for node in selected_parking
+    #     if label.reduced_cost < -1e-8 && length(label.visited_node) > 3
+    #         push!(result, label)
     #     end
     # end
 
-    min_label = depotLabels[findmin(r -> r.reduced_cost, depotLabels)[2]] 
-    min_route = min_label.visited_node
-    min_rc = min_label.reduced_cost
-    # println(min_route)
+    return result
 
-    return Route(length(min_route), min_route), min_rc
 end
 
 function pricing_callback(cbdata)
@@ -556,28 +442,26 @@ function pricing_callback(cbdata)
     z_red_costs = Dict(
         "z_$(u)_$(v)" => BlockDecomposition.callback_reduced_cost(cbdata, z[u, v]) for u in locations, v in locations)
     x_red_costs = Dict(
-        "x_$(i)_$(j)" => BlockDecomposition.callback_reduced_cost(cbdata, x[i, j]) for i in customers)
-    # display(x_red_costs)c
-    best_route, min_rc = labelling([1,3], j,  x_red_costs, z_red_costs)
-
-    # ## Keep route with minimum reduced cost.
-
-    # println(test)
-
-    # red_costs_j = map(r -> (
-    #         r,
-    #         x_contribution(r, j, x_red_costs) + z_contribution(r, z_red_costs) # the reduced cost of a route is the sum of the contribution of the variables
-    #     ), routes_per_facility[j]
+        "x_$(i)_$(j)" => BlockDecomposition.callback_reduced_cost(cbdata, x[i, j]) for i in customers
     # )
-    # min_index = argmin([x for (_, x) in red_costs_j])
-    # (best_route, min_reduced_cost) = red_costs_j[min_index]
+    # display(x_red_costs)
+    # display(z_red_costs)
+    # labelling([1,3], j,  x_red_costs, z_red_costs)
+    ## Keep route with minimum reduced cost.
+    red_costs_j = map(r -> (
+            r,
+            x_contribution(r, j, x_red_costs) + z_contribution(r, z_red_costs) # the reduced cost of a route is the sum of the contribution of the variables
+        ), routes_per_facility[j]
+    )
+    min_index = argmin([x for (_, x) in red_costs_j])
+    (best_route, min_reduced_cost) = red_costs_j[min_index]
 
     ## Retrieve the route's arcs.
     best_route_arcs = Vector{Tuple{Int,Int}}()
     for i in 1:(best_route.length-1)
         push!(best_route_arcs, (best_route.path[i], best_route.path[i+1]))
     end
-    best_route_customers = best_route.path[2:(best_route.length-1)]
+    best_route_customers = best_route.path[2:best_route.length]
 
     ## Create the solution (send only variables with non-zero values).
     z_vars = [z[u, v] for (u, v) in best_route_arcs]
@@ -586,7 +470,7 @@ function pricing_callback(cbdata)
     x_vars = [x[i, j] for i in best_route_customers]
     sol_vars = vcat(z_vars, x_vars)
     sol_vals = ones(Float64, length(z_vars) + length(x_vars))
-    sol_cost = min_rc
+    sol_cost = min_reduced_cost
 
     ## Submit the solution to the subproblem to Coluna.
     MOI.submit(model, BlockDecomposition.PricingSolution(cbdata), sol_cost, sol_vars, sol_vals)
@@ -623,17 +507,4 @@ for j in [1,3]
     for i in customers
         value(x[i, j])!=0 && println("x[$i $j]=",value(x[i, j]))
     end
-end
-
-# Verify the inout constraint is now satisfied
-println("\n=== Verifying inout constraint with closed routes ===")
-for j in [1,3]  # selected facilities
-    outgoing = sum(value(z[j, i]) for i in locations)
-    incoming = sum(value(z[i, j]) for i in locations)
-    println("Facility $j:")
-    println("  Outgoing flow: $outgoing")
-    println("  Incoming flow: $incoming")
-    println("  Difference: $(outgoing - incoming)")
-    println("  Constraint satisfied: $(abs(outgoing - incoming) < 1e-6)")
-    println()
 end
