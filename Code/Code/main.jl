@@ -92,9 +92,12 @@ global deepest_level = 0
 global optimal_found_in = 0
 
 execution_time = @elapsed begin
-    while !isempty(lb_lrp_per_route)  && num_iter_global < 2
+    while !isempty(lb_lrp_per_route) # && num_iter_global < 2
         min_value, min_route = findmin(lb_lrp_per_route)
-        if min_value > upperBound   break   end
+        if min_value > upperBound  
+            println("min value exceed UB")
+            break   
+        end
 
         route_1e = Vector{Route}()
         push!(route_1e, min_route)
@@ -130,13 +133,13 @@ if !isnothing(optimalSolution)
     println("\nExecution time = $(round(execution_time, digits=2))") 
     println("time spent in solving subproblem = $(round(execution_time_subproblem, digits=2)), takes percentage of $(round(execution_time_subproblem/execution_time,digits=2)*100)%")
     println("time spent in filtering = $(round(filtering_time, digits=2)), takes percentage of $(round(filtering_time/execution_time, digits =2)*100)%")
-    println("time spent in total RMP = $(round(execution_time_rmp, digits = 2)), takes percentage of $(round(execution_time_rmp/execution_time, digits =2)*100)%")
+    # println("time spent in total RMP = $(round(execution_time_rmp, digits = 2)), takes percentage of $(round(execution_time_rmp/execution_time, digits =2)*100)%")
     println("time spent in soving RMP = $(round(solving_rmp_time, digits = 2)), takes percentage of $(round(solving_rmp_time/execution_time, digits =2)*100)%")
 
     println("deepest node dived to level $deepest_level\n")
     # println("Current optimal solution found in interation $optimal_found_iteration in level $optimal_found_in:")
     for route in optimalSolution 
-        println(route.sequence)
+        println(route.sequence, "  ", round(route.cost, digits=2))
     end   
 end
 

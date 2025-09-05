@@ -8,80 +8,58 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
     end
 
     if !isempty(branchingInfo.special_order_set_forbidden_include)
-        print("   ^ Special order set 2e reversed route forbidden include:\n")
+        print("\n   ^ Special order set 2e reversed route forbidden include:\n")
         for route in branchingInfo.special_order_set_forbidden_include
             println("       ", route.sequence)
         end
     end
 
     if !isempty(branchingInfo.must_include_combinations)
-        print("   - MUST combination:  ")
+        print("\n   - MUST combination:  ")
         for value in branchingInfo.must_include_combinations 
             print(value, "  ")
         end        
-        println("")     
     end
 
     if !isempty(branchingInfo.forbidden_combinations)
-        print("   - FORBIDDEN combination:   ")
+        print("\n   - FORBIDDEN combination:   ")
         for value in branchingInfo.forbidden_combinations 
             print(value, "  ")
-        end
-        println("")        
+        end     
     end
 
     if !isempty(branchingInfo.must_served_together)
-        print("   + Customers MUST     served together:   ")
+        print("\n   + Customers MUST     served together:   ")
         for value in branchingInfo.must_served_together
             print(value, "  ")
         end
-        println("")    
     end
     
     if !isempty(branchingInfo.forbidden_served_together)
-        print("   + Customers FORBIDDEN served together:   ")
+        print("\n   + Customers FORBIDDEN served together:   ")
         for value in branchingInfo.forbidden_served_together 
             print(value, "  ")
         end
-        println("")
     end
 
-    # if !isempty(branchingInfo.must_include_parkings)
-    #     print("\n   * Parkings MUST be included:   ")
-    #     for value in branchingInfo.must_include_parkings
-    #         print(value, "  ")
-    #     end
-    #     println("")
-    # end
-
-    # if !isempty(branchingInfo.forbidden_parkings)
-    #     print("   * Parkings CANNOT be included:   ")
-    #     for value in branchingInfo.forbidden_parkings 
-    #         print(value, "  ")
-    #     end
-    #     println("")
-    # end
-
     if !isempty(branchingInfo.upper_bound_number_2e_routes)
-        print("   # Total number of 2e routes cannot EXCEED:   ")
+        print("\n   # Total number of 2e routes cannot EXCEED:   ")
         for value in branchingInfo.upper_bound_number_2e_routes
             print(value, "  ")
         end
-        println("")
     end
 
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
-        print("   # Total number of 2e routes cannot UNDER:   ")
+        print("\n   # Total number of 2e routes cannot UNDER:   ")
         for value in branchingInfo.lower_bound_number_2e_routes 
             print(value, "  ")
         end
-        println("")
     end
 
-    if branchingInfo.depth != 0
-        println("   Depth:  ", branchingInfo.depth)
-    end
-    # println("")
+    # if branchingInfo.depth != 0
+    #     println("   Depth:  ", branchingInfo.depth)
+    # end
+    println("")
 end
 
 function checkExistanceReversedRoute(y, routes)

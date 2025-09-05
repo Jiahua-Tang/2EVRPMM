@@ -233,7 +233,7 @@ function displayBranchingNode(branchingNode::BranchingNode)
     println("  Branching node with FS reduction: $(round(branchingNode.gradientFS/branchingNode.branchingInfo.depth, digits=2))")
     # println("  Branching node contains $(length(branchingNode.routes_pool)) routes")
     println("  Total reduction: $(round((branchingNode.gradientLB+branchingNode.gradientFS)/(1+log(branchingNode.branchingInfo.depth)),digits=2))")
-    println("")
+    # println("")
 end
 
 

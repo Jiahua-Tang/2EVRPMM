@@ -52,8 +52,8 @@ function column_generation(filtered_1e_routes, filtered_2e_routes, branchingInfo
             rlmpResult = solveRestrictedMasterProblem(filtered_1e_routes, filtered_2e_routes, branchingInfo)
         end
         global execution_time_rmp += execution_time
-            if !isnothing(rlmpResult)
-            ##  if RLMP has feasible solution
+        if !isnothing(rlmpResult)
+            ## if RLMP has feasible solution
             π1, π2 = rlmpResult[1], rlmpResult[2]
             π3, π4 = rlmpResult[3], rlmpResult[4]
             x = rlmpResult[5]

@@ -35,6 +35,7 @@ function displayDualValue(π1, π2, π3, π4)
 end
 
 function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branchingInfo)
+    # println
 
     selected_parkings = getServedParking1eRoute(filtered_1e_routes[1])
 
@@ -95,23 +96,25 @@ function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branching
     for it in 1:20
         println("\n==$it==")
 
-        #region : display routes pool info
+        #region : display routes pool info  
         # println("length of routes pool = ",length(filtered_2e_routes))
         # for route in filtered_2e_routes 
         #     println(route.sequence)
         # end
         #endregion
-
-        optimize!(model)
-        println("LP Objective Value = $(round(objective_value(model), digits=2))")
+        # println("Test")
+        execution_time = @elapsed begin
+            optimize!(model)
+        end
+        global solving_rmp_time += execution_time
+        println("LP Objective Value = $(round(objective_value(model), digits=2)),   sum y = $(round(sum(value.(values(y_vars))), digits=2))")
         lpObjValue = objective_value(model)
-
-        # for (rid, y) in y_vars
-        #     if value(y)!=0
-        #         # println("Route $(initial_2e_routes[rid].sequence): y = ", value(y))
-        #         println("y$(filtered_2e_routes[rid].sequence) = ", value(y))
-        #     end
-        # end
+        for (rid, y) in y_vars
+            if value(y)!=0
+                # println("Route $(initial_2e_routes[rid].sequence): y = ", value(y))
+                println("y$(filtered_2e_routes[rid].sequence) = ", round(value(y),digits=2), "  ", round(filtered_2e_routes[rid].cost, digits=2))
+            end
+        end
 
         #region : retrieve and display dual multiplier
         # Keep JuMP's original dual signs
@@ -146,6 +149,8 @@ function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branching
         end
         it += 1
     end
+
+
 
     return nothing, filtered_2e_routes, nothing, value.(values(y_vars)), lpObjValue 
 
@@ -261,20 +266,33 @@ end
     #     end
     # end
     #endregion
-
-    subproblem_2e_result = labelling(π1, π2, π3, π4, selected_parkings, branchingInfo)
-
+    execution_time = @elapsed begin
+        subproblem_2e_result = labelling(π1, π2, π3, π4, selected_parkings, branchingInfo)
+    end
+    global execution_time_subproblem += execution_time
     # println("TEST return result from labelling")
     new_routes_from = length(routes_2e) + 1
     new_routes_generated = false
     for label in subproblem_2e_result
-        new_route = generate2eRoute(label.visitedNodes)
- 
-        if !(new_route in routes_2e)
-            # println(label.visitedNodes, "  ", round(label.reduced_cost, digits=2))
-            push!(routes_2e, new_route)
-            new_routes_generated = true
+        
+        route_existed = false
+        for route in routes_2e 
+            if route.sequence == label.visitedNodes
+                route_existed = true
+                break
+            end
         end
+
+        if !route_existed
+            new_route = generate2eRoute(label.visitedNodes)
+            if !(new_route in routes_2e)
+                # println(label.visitedNodes, "  ", round(label.reduced_cost, digits=2))
+                push!(routes_2e, new_route)
+                new_routes_generated = true
+            end
+        end
+
+
     end
     println(new_routes_generated, "  ", length(routes_2e[new_routes_from:end]))
     if new_routes_generated
@@ -483,19 +501,20 @@ function labelling(π1, π2, π3, π4, selected_parkings, branchingInfo)
             if node in selected_parkings || (!(node in min_label.visitedNodes) && !(node in selected_parkings))
                 # println("Propagate from $(min_label.visitedNodes[end]) to $node")
                 new_label = extendLabel_v2(π2, π3, π4, min_label, node)
-                if !isnothing(new_label)    
+                # println(new_label)
+                if !isnothing(new_label)
                     ## Combination customer - customer
                     ## must include : two customers both exist or not exist
                     for combination in branchingInfo.must_served_together
                         if Int(combination[1] in new_label.visitedNodes) + 
                            Int(combination[2] in new_label.visitedNodes) == 1
                             new_label = nothing
+                            break
                         end
                     end         
                 end       
                 ## Line 6
                 if !isnothing(new_label)
-
                     ## Line 7
                     if node in selected_parkings
                         push!(depotLabels, new_label)

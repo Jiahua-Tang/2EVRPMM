@@ -134,8 +134,10 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
                 global optimal_found_in
                 optimal_found_in = branchingInfo.depth
                 global optimal_found_iteration = num_iter_sp
+                @info "Update upper bound"
                 push!(optimalSolution, route_1e[1])
                 for (_, y) in enumerate([r for r in 1:length(y_value) if y_value[r]==1]) 
+                    println(routes_2e_pool[y].sequence, "   ", round(routes_2e_pool[y].cost, digits=2))
                     push!(optimalSolution, routes_2e_pool[y])
                 end             
             end
@@ -180,7 +182,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
     println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
 
     num_iter_sp = 1
-    while !isempty(node_stack) && num_iter_sp < 3
+    while !isempty(node_stack) #&& num_iter_sp < 21
         println("\n================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e[1].sequence)================")
 
         #region : Different node selection strategies
@@ -231,7 +233,7 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
         end
 
         println("")
-        @info "Display selected node:"
+        @info "Display selected node: from $(length(node_stack)) nodes"
         displayBranchingNode(node)
         deleteat!(node_stack, findfirst(==(node), node_stack))
         println("")
