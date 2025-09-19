@@ -1,7 +1,6 @@
 include("branchingStrategies.jl")
 include("Utiles.jl")
 include("columnGeneration.jl")
-include("columnGeneration_v2.jl")
 
 
 function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
@@ -83,8 +82,6 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
     return result
 end
 
-
-
 function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBound, fs, num_iter_sp, id, parent_id)
 ## given a branchingInfo, transform it into a branchingNode structure (add cg result)
     execution_time = @elapsed begin
@@ -106,12 +103,14 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
 
     if !isnothing(result)
         # println("teset")
-        y_value = result[4]
-        fractionalScore = 0
         # for (_, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
         #     println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
         # end
-        routes_2e_pool = result[2]
+        routes_2e_pool = result[1]
+        y_value = result[2]
+        lpObjValue = result[3]
+
+        fractionalScore = 0
         if checkExistanceDummyRoute(y_value, routes_2e_pool)
         ## Dummy route used at the end of column generation, branch can be pruned
             @info "Dummy routes used, exceed upper bound, prune"
@@ -124,18 +123,21 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
             # for (_, y) in enumerate([r for r in 1:length(y_value) if 0 < y_value[r]]) 
             #     println("   $(routes_2e_pool[y].sequence)  $(round(y_value[y],digits=2))")
             # end
-            @info "Integer Solution Found  $(result[5])"
+            
+            @info "Integer Solution Found  $lpObjValue"
             isLeaf = true
-            if result[5] < upperBound
+            if lpObjValue < upperBound
                 global  upperBound
-                upperBound = result[5]
+                upperBound = lpObjValue
                 global optimalSolution
                 optimalSolution = Vector{Route}()
                 global optimal_found_in
                 optimal_found_in = branchingInfo.depth
                 global optimal_found_iteration = num_iter_sp
                 @info "Update upper bound"
-                push!(optimalSolution, route_1e[1])
+                # println("TEST length of 2e rotues in branching node = $(length(routes_2e_pool))")
+                # println("TEST $(enumerate([r for r in 1:length(y_value) if y_value[r]==1]))")
+                push!(optimalSolution, route_1e)
                 for (_, y) in enumerate([r for r in 1:length(y_value) if y_value[r]==1]) 
                     println(routes_2e_pool[y].sequence, "   ", round(routes_2e_pool[y].cost, digits=2))
                     push!(optimalSolution, routes_2e_pool[y])
@@ -153,12 +155,12 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
                     fractionalScore += 1 - value
                 end
             end
-            gradientLB = result[5] - cgLowerBound
+            gradientLB = lpObjValue - cgLowerBound
             gradientFS = fractionalScore - fs
             # println("Fractional score: $(round(fractionalScore, digits = 3))\n")
             isLeaf = false
         end
-        branchingNode = BranchingNode(branchingInfo, result[5], y_value, isLeaf, fractionalScore, routes_2e_pool, gradientLB, gradientFS, id, parent_id)
+        branchingNode = BranchingNode(branchingInfo, lpObjValue, y_value, isLeaf, fractionalScore, routes_2e_pool, gradientLB, gradientFS, id, parent_id)
         return branchingNode
     else
         @info "RLMP infeasible, prune "
@@ -167,12 +169,12 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
 end
 
 
-function branchAndPriceWithScore(route_1e::Vector{Route})
+function branchAndPriceWithScore(route_1e::Route)
     root_branch = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(),Set{Route}(),Set{Route}(), 0)
-    root_branch.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e[1]))
+    root_branch.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
     current_id = 0
     # CG for root node
-    println("\n================Iteration 0 of B&P for SP$num_iter_global $(route_1e[1].sequence)================")
+    println("\n================Iteration 0 of B&P for SP$num_iter_global $(route_1e.sequence)================")
     branchingNode = createBranchingNode(route_1e, routes_2e, root_branch, 0,0,0,0,0 )
     node_stack = [branchingNode]
     if isnothing(branchingNode)
@@ -182,8 +184,8 @@ function branchAndPriceWithScore(route_1e::Vector{Route})
     println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")
 
     num_iter_sp = 1
-    while !isempty(node_stack) #&& num_iter_sp < 21
-        println("\n================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e[1].sequence)================")
+    while !isempty(node_stack) && num_iter_sp < 11
+        println("\n================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e.sequence)================")
 
         #region : Different node selection strategies
         ## Display current node stack

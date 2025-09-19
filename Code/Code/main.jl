@@ -92,16 +92,16 @@ global deepest_level = 0
 global optimal_found_in = 0
 
 execution_time = @elapsed begin
-    while !isempty(lb_lrp_per_route) # && num_iter_global < 2
+    while !isempty(lb_lrp_per_route) && num_iter_global < 2
         min_value, min_route = findmin(lb_lrp_per_route)
         if min_value > upperBound  
             println("min value exceed UB")
             break   
         end
 
-        route_1e = Vector{Route}()
-        push!(route_1e, min_route)
-        branchAndPriceWithScore(route_1e)
+        # route_1e = Vector{Route}() 
+        # push!(route_1e, min_route)
+        branchAndPriceWithScore(min_route)
         delete!(lb_lrp_per_route, min_route)
         @info "current upper bound is $(round(upperBound,digits=2))"
         global num_iter_global
