@@ -1,6 +1,6 @@
 using Plots, Random, DataStructures, Combinatorics, Printf, 
-    HiGHS, SparseArrays, Test, DataFrames, CPLEX, JuMP
-
+    HiGHS, SparseArrays, Test, DataFrames, CPLEX, JuMP, Dates
+using Logging, LoggingExtras
 include("Utiles.jl")
 include("BranchAndPrice/Utiles.jl")
 include("BranchAndPrice/branchAndPrice.jl")
@@ -11,136 +11,103 @@ include("LrpLowerBound/solveLRP.jl")
 global root = "$(pwd())/TEST/"
 # global root = "/gpfs/workdir/tangj/2EVRPMM/Code/Code/"
 
-generateData()
-# readData("E-n33-k4.txt", ARGS)
+instance_size = 20
+random_seed = 42
+time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
+file_name = "Output/output_c"*string(instance_size)*"_s"*string(random_seed)*time_stamp*".txt"
 
-# routes_1e = Vector{Route}()
-# push!(routes_1e, generate1eRoute([1,3,1]))
-# global routes_2e = generate2eInitialRoutes()
-# routes_2e_pool = filter2eRoute([3])
-# routes_originated_p = Vector{Vector{Int}}()
-# for s in satellites
-#     routes = Vector{Int}()
-#     for (r,route) in enumerate(routes_2e_pool)
-#         if route.sequence[1] == s
-#             push!(routes,r)
-#         end
-#     end
-#     push!(routes_originated_p, routes)
-# end
+open(file_name, "w") do io
+    redirect_stdout(io) do
+        # Base.with_logger(Base.SimpleLogger(io)) do 
+            # redirect_display(io) do
 
-# model = Model(CPLEX.Optimizer)
+        generateData(instance_size, random_seed)
+        # readData("E-n33-k4.txt", ARGS)
 
-# @variable(model, 1 >= x[1:length(routes_1e)] >= 0)
-# @variable(model, 1 >= y[1:length(routes_2e_pool)] >= 0)
+        #=========================================================#
 
-# @constraint(model, sync[s in satellites], sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e_pool))
-#     -nb_vehicle_per_satellite * sum(route.b1[s] * x[r] for (r, route) in enumerate(routes_1e))<=0)
-# @constraint(model, custVisit[i in customers], 1 - sum(route.a[i-1-length(satellites)] * y[r] for (r,route) in enumerate(routes_2e_pool)) <= 0 )
-# @constraint(model, number2evfixe[s in satellites], sum(route.b2in[s] * y[r] for (r, route) in enumerate(routes_2e_pool)) == sum(route.b2out[s] * y[r] for (r, route) in enumerate(routes_2e_pool)))
-# @constraint(model, maxVolumnMM[s in satellites], sum( routes_2e_pool[r].a[i-1-length(satellites
-# )]*demands[i]*y[r] for r in routes_originated_p[s-1] for i in customers) - capacity_microhub <= 0)
-# @constraint(model, single1eV, sum(x[r] for (r,_) in enumerate(routes_1e))>=1)
-# @constraint(model, min2eRoute, sum(y[r] for (r,_) in enumerate(routes_2e_pool))>=ceil(sum(demands)/capacity_2e_vehicle))
+        # solveCompactModelDisplayResult() 
 
-# @objective(model, Min, sum(y[r] * route.cost for (r,route) in enumerate(routes_2e_pool)) + 
-#                     sum(x[r] * route.cost for (r,route) in enumerate(routes_1e)))
+        #=========================================================#
 
-# optimize!(model)
+        # solveMasterProblem()
 
-# println("Objective value = ", round(objective_value(model), digits=2))
+        #=========================================================#
 
-# for (idx, route) in enumerate(routes_1e)
-#     if round(value(x[idx]), digits=2) != 0
-#         println("1e route: ", route.sequence, " cost = ", round(route.cost, digits=2), " x[$idx] = ", round(value(x[idx]), digits=2))
-#     end 
-# end
-# for (idx, route) in enumerate(routes_2e_pool)
-#     if round(value(y[idx]), digits=2) != 0
-#         println("2e route: ", route.sequence, " cost = ", round(route.cost, digits=2), " y[$idx] = ", round(value(y[idx]), digits=2))
-#     end 
-# end
+        #region B&P: Prep
+        lb_lrp_per_route = calculateLRPLowerBoundByParking()
+        displayLRPLowerBound(deepcopy(lb_lrp_per_route))
+        #endregion
 
-# getdual(model)
+        #region B&P: Start
+        global routes_2e = generate2eInitialRoutes()
+        global num_iter_global = 1
+        global upperBound = Inf
+        global optimalSolution = nothing
+
+        global optimal_found_iteration = 0
+        global execution_time_total = 0
+        global execution_time_branchandprice = 0
+        global execution_time_root_node = 0
+        global execution_time_child_node = 0
+        global execution_time_branching = 0
+        global execution_time_column_generation = 0
+        global execution_time_test = 0
+        global execution_time_pricing = 0
+        global execution_time_output = 0
+        global execution_time_subproblem = 0
+        global execution_time_build_model = 0
+        global execution_time_add_columns = 0
+        global execution_time_rmp = 0
+        global filtering_time = 0
+        global deepest_level = 0
+        global optimal_found_in = 0
+
+        execution_time_total = @elapsed begin
+            while !isempty(lb_lrp_per_route) # && num_iter_global < 2
+                min_value, min_route = findmin(lb_lrp_per_route)
+                if min_value > upperBound  
+                    println("min value exceed UB")
+                    break   
+                end
+                branchAndPriceWithScore(min_route)
+                delete!(lb_lrp_per_route, min_route)
 
 
-#=========================================================#
-
-# solveCompactModelDisplayResult() 
-# # 40 customers takes 470.89 sec to find optimal
-
-#=========================================================#
-
-# solveMasterProblem()
-
-#=========================================================#
-
-lb_lrp_per_route = calculateLRPLowerBoundByParking()
-displayLRPLowerBound(deepcopy(lb_lrp_per_route))
-
-global routes_2e = generate2eInitialRoutes()
-global num_iter_global = 1
-global upperBound = Inf
-global optimalSolution = nothing
-
-global optimal_found_iteration = 0
-global execution_time_subproblem = 0
-global execution_time_rmp = 0
-global solving_rmp_time = 0
-global filtering_time = 0
-global deepest_level = 0
-global optimal_found_in = 0
-
-execution_time = @elapsed begin
-    while !isempty(lb_lrp_per_route) && num_iter_global < 2
-        min_value, min_route = findmin(lb_lrp_per_route)
-        if min_value > upperBound  
-            println("min value exceed UB")
-            break   
+                @info "current upper bound is $(round(upperBound,digits=2))"
+                global num_iter_global
+                num_iter_global += 1
+            end
         end
 
-        # route_1e = Vector{Route}() 
-        # push!(route_1e, min_route)
-        branchAndPriceWithScore(min_route)
-        delete!(lb_lrp_per_route, min_route)
-        @info "current upper bound is $(round(upperBound,digits=2))"
-        global num_iter_global
-        num_iter_global += 1
+        # branchAndPriceWithScore(generate1eRoute([1,2,4,3,1]))
+
+        #===============================================================================================#
+
+        if !isnothing(optimalSolution)
+            println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+            println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")
+            println("time spent in branching decision = $(round(execution_time_branching, digits = 2)), takes percentage of $(round(execution_time_branching/execution_time_total, digits =2)*100)%")
+            println("time spent in solving child node = $(round(execution_time_child_node, digits = 2)), takes percentage of $(round(execution_time_child_node/execution_time_total, digits =2)*100)%")
+
+            println("\ntime spent in filtering = $(round(filtering_time, digits=2)), takes percentage of $(round(filtering_time/execution_time_total, digits =2)*100)%")
+            println("time spent in solving column generation = $(round(execution_time_column_generation, digits=2)), takes percentage of $(round(execution_time_column_generation/execution_time_total,digits=2)*100)%")
+            println("   - time spent in solving pricing = $(round(execution_time_pricing, digits=2)), takes percentage of $(round(execution_time_pricing/execution_time_column_generation,digits=2)*100)%")
+            println("   - time spent in building model = $(round(execution_time_build_model, digits=2)), takes percentage of $(round(execution_time_build_model/execution_time_column_generation,digits=2)*100)%")
+            println("   - time spent in adding columns = $(round(execution_time_add_columns, digits=2)), takes percentage of $(round(execution_time_add_columns/execution_time_column_generation,digits=2)*100)%")
+            println("   - time spent in solving RMP = $(round(execution_time_rmp, digits = 2)), takes percentage of $(round(execution_time_rmp/execution_time_column_generation, digits =2)*100)%")
+            println("   - time spent in output = $(round(execution_time_output, digits = 2)), takes percentage of $(round(execution_time_output/execution_time_column_generation, digits =2)*100)%")
+
+            println("\ndeepest node dived to level $deepest_level\n")
+            println("Current optimal solution $(round(upperBound, digits=2)) found in interation $optimal_found_iteration in level $optimal_found_in:")
+            for route in optimalSolution 
+                println(route.sequence, "  ", round(route.cost, digits=2))
+            end   
+        end
+        # #endregion
+
     end
 end
 
 
-
-# if !isnothing(optimalSolution)
-#     @info "Current optimal solution found in interation $optimal_found_iteration:"
-#     for route in optimalSolution 
-#         println(route.sequence)
-#     end   
-# end
-# println("Execution time = $(round(execution_time, digits=2)), time spent in solving subproblem = $(round(execution_time_subproblem, digits=2)), takes percentage of $(round(execution_time_subproblem/execution_time,digits=2)*100)%, deepest node dived to level $deepest_level")
-
-#===============================================================================================#
-
-# execution_time = @elapsed begin
-#         route_1e = Vector{Route}()
-#         push!(route_1e, generate1eRoute([1,3,4,5,2,1]))
-#         branchAndPriceWithScore(route_1e)
-#         @info "current upper bound is $(round(upperBound,digits=2)) "
-#         global num_iter
-#         num_iter += 1
-#     end
-if !isnothing(optimalSolution)
-    println("\nExecution time = $(round(execution_time, digits=2))") 
-    println("time spent in solving subproblem = $(round(execution_time_subproblem, digits=2)), takes percentage of $(round(execution_time_subproblem/execution_time,digits=2)*100)%")
-    println("time spent in filtering = $(round(filtering_time, digits=2)), takes percentage of $(round(filtering_time/execution_time, digits =2)*100)%")
-    # println("time spent in total RMP = $(round(execution_time_rmp, digits = 2)), takes percentage of $(round(execution_time_rmp/execution_time, digits =2)*100)%")
-    println("time spent in soving RMP = $(round(solving_rmp_time, digits = 2)), takes percentage of $(round(solving_rmp_time/execution_time, digits =2)*100)%")
-
-    println("deepest node dived to level $deepest_level\n")
-    # println("Current optimal solution found in interation $optimal_found_iteration in level $optimal_found_in:")
-    for route in optimalSolution 
-        println(route.sequence, "  ", round(route.cost, digits=2))
-    end   
-end
-
-# solveRMP(generate1eRoute([1,3,6,2,5,1]))
+run(`open -a "Visual Studio Code" $file_name`)

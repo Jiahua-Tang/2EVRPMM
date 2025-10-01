@@ -91,12 +91,12 @@ mutable struct LabelLRP
     visitedNodes::Vector{Int}
 end
 
-function generateData()
-    Random.seed!(42)
+function generateData(nb_customer::Int, random_seed::Int)
+    Random.seed!(random_seed)
  
     nb_parking = 4
     nb_microhub = 2
-    nb_customer = 20
+    # nb_customer = 10
     
     coor_cust = [[rand(1:50), rand(1:50)] for _ in 1:nb_customer]
     result = generateParkingCoor(coor_cust, nb_microhub, nb_parking)
@@ -115,7 +115,7 @@ function generateData()
 
     nb_vehicle_per_satellite = 5
     capacity_1e_vehicle = sum(demands)
-    capacity_2e_vehicle = 100
+    capacity_2e_vehicle = 50
     capacity_microhub = 500
     maximum_duration_2e_vehicle = 50000
 
@@ -134,7 +134,7 @@ function generateData()
         capacity_microhub,
         maximum_duration_2e_vehicle,
 
-        Int(ceil(sum(demands) / capacity_microhub)),
+        max(Int(ceil(sum(demands) / capacity_microhub)), Int(ceil(Int(ceil(sum(demands) / capacity_2e_vehicle))/nb_vehicle_per_satellite))),
         Int(ceil(sum(demands) / capacity_2e_vehicle)),
 
         points,

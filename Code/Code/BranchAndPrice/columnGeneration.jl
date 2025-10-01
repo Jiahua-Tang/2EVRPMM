@@ -5,148 +5,132 @@ import Plots
 import SparseArrays
 import Test  #src
 include("Utiles.jl")
-# include("labelling.jl")
 include("../Utiles.jl")
-# include("ngPathLabelling.jl")
-
-generateData()
-function displayDualValue(π1, π2, π3, π4)
-    print("Dual price π1= [  ")
-    for x in π1
-        print(round(x, digits=2),"  ")
-    end
-    print("]\nDual price π2= [  ")
-    for x in π2[customers]
-        print(round(x, digits=2),"  ")
-    end
-    print("]\nDual price π3= [  ")
-    for x in π3
-        print(round(x, digits=2),"  ")
-    end
-    print("]\nDual price π4= [  ")
-    for x in π4
-        print(round(x, digits=2),"  ")
-    end
-    # print("]\nDual price π5= [  ")
-    # for x in π5
-    #     print(round(x, digits=2),"  ")
-    # end
-    println("]")
-end
 
 function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branchingInfo)
-
     selected_parkings = getServedParking1eRoute(filtered_1e_routes)
 
-    #region : create model
-    model = Model(CPLEX.Optimizer)
-    set_silent(model)
-    set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
-    set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
+    execution_time = @elapsed begin
+        #region : create model
+        model = Model(CPLEX.Optimizer)
+        set_silent(model)
+        set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
+        set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
 
-    y_vars = Dict{Int, VariableRef}()
+        y_vars = Dict{Int, VariableRef}()
 
-    @objective(model, Min, 0.0)
+        @objective(model, Min, 0.0)
 
-    sync = Vector{ConstraintRef}(undef, length(satellites))
-    for (k,s) in enumerate(satellites)
-        # println("$k $s")
-        sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
-    end
+        sync = Vector{ConstraintRef}(undef, length(satellites))
+        for (k,s) in enumerate(satellites)
+            # println("$k $s")
+            sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
+        end
 
-    custVisit = Vector{ConstraintRef}(undef, length(customers))
-    for (k,s) in enumerate(customers) 
-        custVisit[k] = @constraint(model, 1.0 <= 0.0)
-    end
+        custVisit = Vector{ConstraintRef}(undef, length(customers))
+        for (k,s) in enumerate(customers) 
+            custVisit[k] = @constraint(model, 1.0 <= 0.0)
+        end
 
-    number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
-    for (k,s) in enumerate(satellites)
-        number2evfixe[k] = @constraint(model, 0.0 == 0.0)
-    end
+        number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
+        for (k,s) in enumerate(satellites)
+            number2evfixe[k] = @constraint(model, 0.0 == 0.0)
+        end
 
-    maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
-    for (k,s) in enumerate(satellites) 
-        maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
-    end
+        maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
+        for (k,s) in enumerate(satellites) 
+            maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
+        end
 
-    lower_bound = minimum_2e_vehicle_required
-    if !isempty(branchingInfo.lower_bound_number_2e_routes)
-        lower_bound = maximum(branchingInfo.lower_bound_number_2e_routes) 
-    end
-    upper_bound = nb_parking * nb_vehicle_per_satellite
-    if !isempty(branchingInfo.upper_bound_number_2e_routes)
-        upper_bound = minimum(branchingInfo.upper_bound_number_2e_routes) 
-    end
-    globalLowerBound = @constraint(model, lower_bound <= 0)
-    globalUpperBound = @constraint(model, -upper_bound <= 0)
+        lower_bound = minimum_2e_vehicle_required
+        if !isempty(branchingInfo.lower_bound_number_2e_routes)
+            lower_bound = maximum(branchingInfo.lower_bound_number_2e_routes) 
+        end
+        upper_bound = nb_parking * nb_vehicle_per_satellite
+        if !isempty(branchingInfo.upper_bound_number_2e_routes)
+            upper_bound = minimum(branchingInfo.upper_bound_number_2e_routes) 
+        end
+        globalLowerBound = @constraint(model, lower_bound <= 0)
+        globalUpperBound = @constraint(model, -upper_bound <= 0)
 
-    #endregion
-
-    # ## Initial columns
-    for (idx, route) in enumerate(filtered_2e_routes)
-        add_2eroute!(model, idx, route, 
-            sync, custVisit, number2evfixe, maxVolumnMM, globalLowerBound, globalUpperBound,
-            demands, y_vars)
-    end
-    
-    lpObjValue = 0.0
-    # y = nothing
-
-    for it in 1:200
-        println("\n==$it==")
-
-        #region : display routes pool info  
-        println("length of routes pool = ",length(filtered_2e_routes))
-        # for route in filtered_2e_routes 
-        #     println(route.sequence)
-        # end
         #endregion
-        # println("Test")
+
+        # ## Initial columns
+        execution_time_initial_columns = @elapsed begin
+            for (idx, route) in enumerate(filtered_2e_routes)
+                add_2eroute!(model, idx, route, 
+                    sync, custVisit, number2evfixe, maxVolumnMM, globalLowerBound, globalUpperBound,
+                    demands, y_vars)
+            end
+        end
+        global execution_time_add_columns += execution_time_initial_columns
+    end
+    global execution_time_build_model += execution_time
+    
+    lpObjValue = filtered_1e_routes.cost
+    # y = nothing
+    it = 1
+    while true
+        println("\n==$it==")
+        println("length of routes pool = ",length(filtered_2e_routes))
         execution_time = @elapsed begin
             optimize!(model)
         end
-        global solving_rmp_time += execution_time
-        println("LP Objective Value = $(round(objective_value(model), digits=2)),   sum y = $(round(sum(value.(values(y_vars))), digits=2))")
-        lpObjValue = objective_value(model)
-        for (rid, y) in y_vars
-            if value(y)!=0
-                # println("Route $(initial_2e_routes[rid].sequence): y = ", value(y))
-                println("y$(filtered_2e_routes[rid].sequence) = ", round(value(y),digits=2), "  ", round(filtered_2e_routes[rid].cost, digits=2))
+        global execution_time_rmp += execution_time
+
+        if has_values(model)
+
+            execution_time_op = @elapsed begin
+                lpObjValue = objective_value(model) + filtered_1e_routes.cost
+                println("LP Objective Value = $(round(lpObjValue, digits=2)),   sum y = $(round(sum(value.(values(y_vars))), digits=2))")
+                for (rid, y) in y_vars
+                    if value(y)!=0
+                        # println("Route $(initial_2e_routes[rid].sequence): y = ", value(y))
+                        println("y$(filtered_2e_routes[rid].sequence) = ", round(value(y),digits=2), "  ", round(filtered_2e_routes[rid].cost, digits=2))
+                    end
+                end
             end
+            global execution_time_output += execution_time_op
+
+            #region : retrieve and display dual multiplier
+            # Keep JuMP's original dual signs
+            π1 = vcat(0, abs.(shadow_price.(sync)))
+            π2 = vcat(zeros(1+length(satellites)), abs.(shadow_price.(custVisit)))
+            π3 = vcat(0, abs.(shadow_price.(number2evfixe)))
+            π4 = vcat(0, abs.(shadow_price.(maxVolumnMM)))
+
+            # println("π1= $(round.(π1,digits=2))")
+            # println("π2= $(round.(π2[customers],digits=2))")
+            # println("π3= $(round.(π3,digits=2))")
+            # println("π4= $(round.(π4,digits=2))")
+
+            #endregion
+            execution_time = @elapsed begin
+                filtered_2e_routes, new_routes_from = pricing(selected_parkings, filtered_2e_routes, π1, π2, π3, π4, branchingInfo)
+            end
+            global execution_time_pricing += execution_time
+
+            if new_routes_from == false
+                break
+            end
+
+            # println(length(new_routes_2e))
+            r_id = new_routes_from
+            execution_time = @elapsed begin
+                for route in filtered_2e_routes[new_routes_from:end]
+                    add_2eroute!(model, r_id, route,
+                                    sync, custVisit, number2evfixe, 
+                                    maxVolumnMM, globalLowerBound, globalUpperBound,demands,y_vars)
+                    r_id += 1
+                end
+            end
+            global execution_time_build_model += execution_time
+            global execution_time_add_columns += execution_time
+
+            it += 1
+        else
+            return nothing
         end
-
-        #region : retrieve and display dual multiplier
-        # Keep JuMP's original dual signs
-        π1 = vcat(0, abs.(shadow_price.(sync)))
-        π2 = vcat(zeros(1+length(satellites)), abs.(shadow_price.(custVisit)))
-        π3 = vcat(0, abs.(shadow_price.(number2evfixe)))
-        π4 = vcat(0, abs.(shadow_price.(maxVolumnMM)))
-
-        # display(π1)
-        # println("")
-        # display(π2)
-        # println("")
-        # display(π3)
-        # println("")
-        # display(π4)
-        # println("")
-        #endregion
-
-        filtered_2e_routes, new_routes_from = pricing(selected_parkings, filtered_2e_routes, π1, π2, π3, π4, branchingInfo)
-
-        if new_routes_from == false
-            break
-        end
-
-        # println(length(new_routes_2e))
-        r_id = new_routes_from
-        for route in filtered_2e_routes[new_routes_from:end]
-            add_2eroute!(model, r_id, route,
-                            sync, custVisit, number2evfixe, 
-                            maxVolumnMM, globalLowerBound, globalUpperBound,demands,y_vars)
-            r_id += 1
-        end
-        it += 1
     end
     
     y_values = [value(y_vars[k]) for k in sort(collect(keys(y_vars)))]
@@ -165,7 +149,6 @@ function add_2eroute!(model::Model,
                       globalUpperBound::ConstraintRef,
                       demands::AbstractVector,
                       y_vars::Dict{Int, VariableRef})
-    # println("add column $(route.sequence)")
     ## create column variable
     y = @variable(model, lower_bound = 0.0)
     y_vars[r_id] = y
@@ -219,9 +202,9 @@ function add_2eroute!(model::Model,
     return y
 end
 
- function pricing(selected_parkings, routes_2e, π1, π2, π3, π4, branchingInfo::BranchingInfo) 
+function pricing(selected_parkings, routes_2e_pool, π1, π2, π3, π4, branchingInfo::BranchingInfo) 
     #region : dual multiplier verification
-    # for route in routes_2e
+    # for route in routes_2e_pool
     #     r = route.sequence
     #     rc = 0
         
@@ -261,21 +244,23 @@ end
     #         for cust in r[2:end-1]
     #             val_2 += π2[cust]
     #         end            
-    #         println("rc $r : $(round(rc,digits=2))")# \n     cost: $(round(route.cost, digits=2))   val_2: $(round(val_2,digits=2))")
+    #         println("rc $r : cost=$(round(route.cost, digits=2))    rc=$(round(rc,digits=2)) load=$l")
     #     # end
     # end
     #endregion
+
+
     execution_time = @elapsed begin
         subproblem_2e_result = labelling(π1, π2, π3, π4, selected_parkings, branchingInfo)
     end
     global execution_time_subproblem += execution_time
     # println("TEST return result from labelling")
-    new_routes_from = length(routes_2e) + 1
+    new_routes_from = length(routes_2e_pool) + 1
     new_routes_generated = false
     for label in subproblem_2e_result
         
         route_existed = false
-        for route in routes_2e 
+        for route in routes_2e_pool
             if route.sequence == label.visitedNodes
                 route_existed = true
                 break
@@ -284,20 +269,22 @@ end
 
         if !route_existed
             new_route = generate2eRoute(label.visitedNodes)
-            if !(new_route in routes_2e)
+            if !(new_route in routes_2e_pool)
                 # println(label.visitedNodes, "  ", round(label.reduced_cost, digits=2))
+                global routes_2e
                 push!(routes_2e, new_route)
+                push!(routes_2e_pool, new_route)
                 new_routes_generated = true
             end
         end
 
 
     end
-    println(new_routes_generated, "  ", length(routes_2e[new_routes_from:end]))
+    println(new_routes_generated, "  ", length(routes_2e_pool[new_routes_from:end]))
     if new_routes_generated
-        return routes_2e, new_routes_from
+        return routes_2e_pool, new_routes_from
     else
-        return routes_2e, false
+        return routes_2e_pool, false
     end
 end
 

@@ -192,7 +192,7 @@ function generate2eInitialRoutes()
                 end
                 push!(sequence, endParking)
                 route = generate2eRoute(sequence)
-                route.cost = 1e5
+                route.cost = 1e3
                 push!(routes, route)   
                 # println("dummy route = ", route.sequence, " cost = ", route.cost)         
             end

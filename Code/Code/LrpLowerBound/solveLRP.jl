@@ -238,7 +238,7 @@ function displayLRPLowerBound(lb_lrp_per_route)
     count = 1
     while !isempty(lb_lrp_per_route)
         min_value, min_route = findmin(lb_lrp_per_route)
-        println("Lower bound= ", round(min_value, digits=2), "   ", min_route.sequence )
+        println("Lower bound= ", round(min_value, digits=2), "   ", min_route.sequence, "    parkings: $(getServedParking1eRoute(min_route))" )
         # println(count, ". ",routes_1e_complete[min_idx].sequence,"  ",getServedParking1eRoute(routes_1e_complete[min_idx]),"   lower bound= $(round(min_value, digits=2))")
         delete!(lb_lrp_per_route, min_route)
         count += 1
