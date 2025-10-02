@@ -7,7 +7,7 @@ import Test  #src
 include("Utiles.jl")
 include("../Utiles.jl")
 
-function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branchingInfo)
+function solveColumnGeneration(filtered_1e_routes::Route, filtered_2e_routes::Vector{Int}, branchingInfo)
     selected_parkings = getServedParking1eRoute(filtered_1e_routes)
 
     execution_time = @elapsed begin
@@ -86,7 +86,7 @@ function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branching
                 for (rid, y) in y_vars
                     if value(y)!=0
                         # println("Route $(initial_2e_routes[rid].sequence): y = ", value(y))
-                        println("y$(filtered_2e_routes[rid].sequence) = ", round(value(y),digits=2), "  ", round(filtered_2e_routes[rid].cost, digits=2))
+                        println("y$(routes_2e[filtered_2e_routes[rid]].sequence) = ", round(value(y),digits=2), "  ", round(routes_2e[filtered_2e_routes[rid]].cost, digits=2))
                     end
                 end
             end
@@ -140,7 +140,7 @@ function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branching
 end
 
 function add_2eroute!(model::Model,
-                      r_id::Int, route::Route,
+                      r_id::Int, route::Int,
                       sync::Vector{ConstraintRef},
                       custVisit::Vector{ConstraintRef},
                       number2evfixe::Vector{ConstraintRef},
@@ -149,6 +149,7 @@ function add_2eroute!(model::Model,
                       globalUpperBound::ConstraintRef,
                       demands::AbstractVector,
                       y_vars::Dict{Int, VariableRef})
+    route = routes_2e[route]
     ## create column variable
     y = @variable(model, lower_bound = 0.0)
     y_vars[r_id] = y
@@ -202,7 +203,7 @@ function add_2eroute!(model::Model,
     return y
 end
 
-function pricing(selected_parkings, routes_2e_pool, π1, π2, π3, π4, branchingInfo::BranchingInfo) 
+function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, π4, branchingInfo::BranchingInfo) 
     #region : dual multiplier verification
     # for route in routes_2e_pool
     #     r = route.sequence
@@ -249,7 +250,6 @@ function pricing(selected_parkings, routes_2e_pool, π1, π2, π3, π4, branchin
     # end
     #endregion
 
-
     execution_time = @elapsed begin
         subproblem_2e_result = labelling(π1, π2, π3, π4, selected_parkings, branchingInfo)
     end
@@ -260,7 +260,7 @@ function pricing(selected_parkings, routes_2e_pool, π1, π2, π3, π4, branchin
     for label in subproblem_2e_result
         
         route_existed = false
-        for route in routes_2e_pool
+        for route in routes_2e[routes_2e_pool]
             if route.sequence == label.visitedNodes
                 route_existed = true
                 break
@@ -269,11 +269,11 @@ function pricing(selected_parkings, routes_2e_pool, π1, π2, π3, π4, branchin
 
         if !route_existed
             new_route = generate2eRoute(label.visitedNodes)
-            if !(new_route in routes_2e_pool)
+            if !(new_route in routes_2e[routes_2e_pool])
                 # println(label.visitedNodes, "  ", round(label.reduced_cost, digits=2))
                 global routes_2e
                 push!(routes_2e, new_route)
-                push!(routes_2e_pool, new_route)
+                push!(routes_2e_pool, length(routes_2e))
                 new_routes_generated = true
             end
         end

@@ -16,8 +16,8 @@ random_seed = 42
 time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 file_name = "Output/output_c"*string(instance_size)*"_s"*string(random_seed)*time_stamp*".txt"
 
-open(file_name, "w") do io
-    redirect_stdout(io) do
+# open(file_name, "w") do io
+#     redirect_stdout(io) do
         # Base.with_logger(Base.SimpleLogger(io)) do 
             # redirect_display(io) do
 
@@ -37,9 +37,7 @@ open(file_name, "w") do io
         #region B&P: Prep
         lb_lrp_per_route = calculateLRPLowerBoundByParking()
         displayLRPLowerBound(deepcopy(lb_lrp_per_route))
-        #endregion
 
-        #region B&P: Start
         global routes_2e = generate2eInitialRoutes()
         global num_iter_global = 1
         global upperBound = Inf
@@ -62,9 +60,12 @@ open(file_name, "w") do io
         global filtering_time = 0
         global deepest_level = 0
         global optimal_found_in = 0
+        #endregion
+
+        #region B&P: Start
 
         execution_time_total = @elapsed begin
-            while !isempty(lb_lrp_per_route) # && num_iter_global < 2
+            while !isempty(lb_lrp_per_route) && num_iter_global < 2
                 min_value, min_route = findmin(lb_lrp_per_route)
                 if min_value > upperBound  
                     println("min value exceed UB")
@@ -106,8 +107,8 @@ open(file_name, "w") do io
         end
         # #endregion
 
-    end
-end
+#     end
+# end
 
 
-run(`open -a "Visual Studio Code" $file_name`)
+# run(`open -a "Visual Studio Code" $file_name`)

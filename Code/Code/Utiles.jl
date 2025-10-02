@@ -59,7 +59,7 @@ mutable struct BranchingNode
     y_value::Vector{Float64}
     isLeaf::Bool
     fractionalScore::Float64
-    routes_pool::Vector{Route} ## Routes pool before filter (of father node)
+    routes_pool::Vector{Int} ## Routes pool before filter (of father node)
     gradientLB::Float64
     gradientFS::Float64
     id::Int
@@ -72,22 +72,6 @@ mutable struct Label
     reduced_cost::Float64
     accumulated_capacity::Int
     accumulated_duration::Float64
-    visitedNodes::Vector{Int}
-end
-
-mutable struct ngLabel
-    origin_node::Int
-    current_node::Int
-    reduced_cost::Float64
-    accumulated_capacity::Int
-    accumulated_duration::Float64
-    TngCust::Vector{Int}
-    visitedNodes::Vector{Int}
-end
-mutable struct LabelLRP
-    origin_node::Int
-    current_node::Int
-    reduced_cost::Float64
     visitedNodes::Vector{Int}
 end
 

@@ -237,9 +237,8 @@ function displayBranchingNode(branchingNode::BranchingNode)
 end
 
 
-function checkExistanceDummyRoute(y, routes_2e)
-
-    for (idx, y_value) in enumerate([r for r in 1:length(y) if 0 < y[r]]) 
+function checkExistanceDummyRoute(y)
+    for y_value in [r for r in 1:length(y) if 0 < y[r]]
         route = routes_2e[y_value]
         for dummyRoute in dummyRoutes
             if dummyRoute.sequence == route.sequence

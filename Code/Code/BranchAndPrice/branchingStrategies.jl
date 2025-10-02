@@ -67,7 +67,7 @@ function checkExistanceReversedRoute(y, routes)
 
     fractional_routes = Set{Vector{Int}}()
     for y_value in y
-        push!(fractional_routes, routes[y_value].sequence)
+        push!(fractional_routes, routes_2e[routes[y_value]].sequence)
     end
     
     for (_, route) in enumerate(fractional_routes)
@@ -151,7 +151,7 @@ function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
 
     selected_routes = Set{Vector{Int}}()
     for y_value in sorted_fractional_y 
-        push!(selected_routes, routes_pool[y_value].sequence)
+        push!(selected_routes, routes_2e[routes_pool[y_value]].sequence)
     end
 
     customers_selected_times = Dict{Int, Int}()

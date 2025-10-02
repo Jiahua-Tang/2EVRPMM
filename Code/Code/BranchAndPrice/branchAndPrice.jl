@@ -3,17 +3,18 @@ include("Utiles.jl")
 include("columnGeneration.jl")
 
 
-function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
-    result = Vector{Route}()
+function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
+    result = Vector{Int}()
+    routes_to_delete = Vector{Int}()
     # displayBranchingRule(branchingInfo)
     
-    for route in routes
+    for (idx, route_id) in enumerate(routes)
         valide = true
-
+        route = routes_2e[route_id]
         if route.sequence[1] in branchingInfo.forbidden_parkings || route.sequence[end] in branchingInfo.forbidden_parkings
             valide = false
         end
-
+        #region
         # for must_include in branchingInfo.must_include_combinations 
         # ## a route include a must-combination on the branch can be added into 
         # ## target parking and target customer must be in same route 
@@ -33,6 +34,7 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
         #         break
         #     end
         # end
+        #endregion
 
         for must_include in branchingInfo.must_include_combinations 
         ## a route include a must-combination on the branch can be added into 
@@ -74,23 +76,30 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Route})
         end
 
         if valide
-            push!(result, route)
+            push!(result, route_id)
+        else
+            push!(routes_to_delete, route_id)
         end
         # print("$(route.sequence)   $valide")
     end
 
-    return result
+    return result, routes_to_delete
 end
+
 
 function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBound, fs, num_iter_sp, id, parent_id)
 ## given a branchingInfo, transform it into a branchingNode structure (add cg result)
+    # * Filtering method will be ran when creating a branching node
+    println("length of routes pool before filtering : $(length(routes_2e_pool))")
     execution_time = @elapsed begin
-        routes_2e_pool = filter_2e_routes(branchingInfo, routes_2e_pool)
+        routes_2e_pool, routes_to_delete = filter_2e_routes(branchingInfo, routes_2e_pool)
     end
+    println("length of routes pool after filtering : $(length(routes_2e_pool))")
+    println("length of routes to be deleted : $(length(routes_to_delete))")
+
     global filtering_time += execution_time
     
-    # TODO
-    ## Before start column generation, check branching rules conflic
+    # TODO : Before start column generation, check branching rules conflic
     @info "Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)"
     println("Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)")
     displayBranchingRule(branchingInfo)
@@ -106,7 +115,7 @@ function createBranchingNode(route_1e, routes_2e_pool, branchingInfo, cgLowerBou
         lpObjValue = result[3]
 
         fractionalScore = 0
-        if checkExistanceDummyRoute(y_value, routes_2e_pool)
+        if checkExistanceDummyRoute(y_value)
         ## Dummy route used at the end of column generation, branch can be pruned
             @info "Dummy routes used, exceed upper bound, prune"
             return nothing
@@ -170,7 +179,7 @@ function branchAndPriceWithScore(route_1e::Route)
         current_id = 0
         # CG for root node
         println("\n================Iteration 0 of B&P for SP$num_iter_global $(route_1e.sequence)================")
-        branchingNode = createBranchingNode(route_1e, routes_2e, root_branch, 0,0,0,0,0 )
+        branchingNode = createBranchingNode(route_1e, collect(1:length(routes_2e)), root_branch, 0,0,0,0,0 )
         node_stack = [branchingNode]
         if isnothing(branchingNode)
             return
@@ -181,7 +190,7 @@ function branchAndPriceWithScore(route_1e::Route)
     global execution_time_root_node += execution_time
 
     num_iter_sp = 1
-    while !isempty(node_stack) # && num_iter_sp < 11
+    while !isempty(node_stack)  && num_iter_sp < 2
         println("\n================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e.sequence)================")
 
         #region : Different node selection strategies
@@ -250,7 +259,7 @@ function branchAndPriceWithScore(route_1e::Route)
             execution_time = @elapsed begin
                 # TODO : if only one active parking: skip strategy parking-customer
                 branching_decision = branchingStrategy(node.y_value, node.routes_pool, node.branchingInfo)
-            end  
+            end
             global execution_time_branching += execution_time
                 
             execution_time = @elapsed begin
