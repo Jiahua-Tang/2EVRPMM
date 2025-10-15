@@ -1,0 +1,322 @@
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+Start column generation for root node of [1, 2, 1]
+
+==1==
+length of routes pool = 16
+LP Objective Value = 921.77,   sum y = 5.0
+true  2378
+
+==2==
+length of routes pool = 2394
+LP Objective Value = 300.1,   sum y = 3.0
+true  595
+
+==3==
+length of routes pool = 2989
+LP Objective Value = 269.32,   sum y = 3.0
+true  356
+
+==4==
+length of routes pool = 3345
+LP Objective Value = 248.97,   sum y = 3.0
+true  55
+
+==5==
+length of routes pool = 3400
+LP Objective Value = 245.47,   sum y = 3.0
+false  0
+MILP Result:
+252.02
+[1, 2, 1]    80.0
+[2, 11, 19, 7, 2]   37.56
+[2, 9, 6, 8, 13, 10, 15, 2]   69.18
+[2, 18, 12, 14, 16, 17, 20, 2]   65.27
+Start column generation for root node of [1, 2, 3, 1]
+
+==1==
+length of routes pool = 16
+LP Objective Value = 923.64,   sum y = 5.0
+true  1352
+
+==2==
+length of routes pool = 1368
+LP Objective Value = 298.37,   sum y = 5.0
+true  790
+
+==3==
+length of routes pool = 2158
+LP Objective Value = 241.6,   sum y = 3.0
+true  176
+
+==4==
+length of routes pool = 2334
+LP Objective Value = 241.6,   sum y = 3.0
+true  259
+
+==5==
+length of routes pool = 2593
+LP Objective Value = 241.59,   sum y = 3.0
+true  39
+
+==6==
+length of routes pool = 2632
+LP Objective Value = 238.58,   sum y = 3.0
+true  47
+
+==7==
+length of routes pool = 2679
+LP Objective Value = 238.39,   sum y = 3.0
+true  27
+
+==8==
+length of routes pool = 2706
+LP Objective Value = 233.05,   sum y = 3.0
+false  0
+MILP Result:
+241.59
+[1, 2, 3, 1]    80.16
+[3, 19, 7, 9, 11, 6, 8, 13, 10, 3]   96.08
+[3, 15, 20, 17, 16, 3]   44.69
+[3, 14, 12, 18, 3]   20.66
+Start column generation for root node of [1, 4, 1]
+
+==1==
+length of routes pool = 16
+LP Objective Value = 986.07,   sum y = 5.0
+true  2991
+
+==2==
+length of routes pool = 3007
+LP Objective Value = 346.87,   sum y = 4.0
+true  826
+
+==3==
+length of routes pool = 3833
+LP Objective Value = 298.42,   sum y = 3.0
+true  101
+
+==4==
+length of routes pool = 3934
+LP Objective Value = 285.62,   sum y = 3.0
+true  37
+
+==5==
+length of routes pool = 3971
+LP Objective Value = 283.04,   sum y = 3.0
+false  0
+MILP Result:
+285.62
+[1, 4, 1]    98.41
+[4, 9, 4]   10.2
+[4, 19, 17, 16, 14, 18, 4]   84.91
+[4, 7, 20, 15, 10, 12, 13, 8, 6, 11, 4]   92.11
+Start column generation for root node of [1, 2, 5, 1]
+
+==1==
+length of routes pool = 16
+LP Objective Value = 993.24,   sum y = 5.0
+true  1425
+
+==2==
+length of routes pool = 1441
+LP Objective Value = 374.86,   sum y = 5.0
+true  657
+
+==3==
+length of routes pool = 2098
+LP Objective Value = 305.72,   sum y = 3.0
+true  544
+
+==4==
+length of routes pool = 2642
+LP Objective Value = 297.0,   sum y = 3.0
+true  77
+
+==5==
+length of routes pool = 2719
+LP Objective Value = 279.81,   sum y = 3.0
+true  17
+
+==6==
+length of routes pool = 2736
+LP Objective Value = 279.74,   sum y = 3.0
+false  0
+MILP Result:
+285.51
+[1, 2, 5, 1]    80.59
+[5, 14, 5]   18.44
+[5, 13, 8, 15, 18, 12, 10, 5]   86.48
+[5, 16, 17, 20, 7, 19, 9, 11, 6, 5]   100.01
+Start column generation for root node of [1, 2, 4, 3, 1]
+
+==1==
+length of routes pool = 6138
+LP Objective Value = 246.66,   sum y = 3.0
+true  117
+
+==2==
+length of routes pool = 6255
+LP Objective Value = 245.7,   sum y = 3.0
+true  65
+
+==3==
+length of routes pool = 6320
+LP Objective Value = 244.99,   sum y = 3.0
+true  29
+
+==4==
+length of routes pool = 6349
+LP Objective Value = 244.99,   sum y = 3.0
+true  9
+
+==5==
+length of routes pool = 6358
+LP Objective Value = 244.99,   sum y = 3.0
+false  0
+MILP Result:
+246.66
+[1, 2, 4, 3, 1]    98.52
+[2, 6, 11, 9, 19, 7, 2]   48.87
+[3, 16, 17, 20, 15, 18, 3]   48.38
+[3, 14, 13, 8, 10, 12, 3]   50.89
+Start column generation for root node of [1, 2, 4, 1]
+
+==1==
+length of routes pool = 7422
+LP Objective Value = 260.61,   sum y = 3.0
+true  11
+
+==2==
+length of routes pool = 7433
+LP Objective Value = 259.35,   sum y = 3.0
+true  1
+
+==3==
+length of routes pool = 7434
+LP Objective Value = 259.35,   sum y = 3.0
+false  0
+MILP Result:
+262.46
+[1, 2, 4, 1]    98.42
+[2, 7, 19, 2]   22.46
+[2, 15, 13, 8, 6, 11, 9, 2]   70.87
+[2, 20, 17, 16, 14, 12, 10, 18, 2]   70.71
+Start column generation for root node of [1, 2, 4, 5, 1]
+
+==1==
+length of routes pool = 6191
+LP Objective Value = 263.05,   sum y = 3.0
+true  42
+
+==2==
+length of routes pool = 6233
+LP Objective Value = 263.05,   sum y = 3.0
+true  18
+
+==3==
+length of routes pool = 6251
+LP Objective Value = 263.05,   sum y = 3.0
+false  0
+Integer Solution Found  263.0522948733695
+Start column generation for root node of [1, 4, 2, 3, 1]
+
+==1==
+length of routes pool = 6711
+LP Objective Value = 247.12,   sum y = 3.0
+true  83
+
+==2==
+length of routes pool = 6794
+LP Objective Value = 246.48,   sum y = 3.0
+true  39
+
+==3==
+length of routes pool = 6833
+LP Objective Value = 245.25,   sum y = 3.0
+true  35
+
+==4==
+length of routes pool = 6868
+LP Objective Value = 243.63,   sum y = 3.0
+true  13
+
+==5==
+length of routes pool = 6881
+LP Objective Value = 243.63,   sum y = 3.0
+false  0
+MILP Result:
+247.27
+[1, 4, 2, 3, 1]    98.59
+[3, 16, 17, 20, 15, 18, 3]   48.38
+[3, 14, 13, 8, 10, 12, 3]   50.89
+[4, 19, 7, 6, 11, 9, 4]   49.41
+Start column generation for root node of [1, 4, 3, 2, 5, 1]
+
+==1==
+length of routes pool = 5511
+LP Objective Value = 286.37,   sum y = 3.0
+false  0
+MILP Result:
+294.49
+[1, 4, 3, 2, 5, 1]    133.91
+[3, 14, 3]   14.14
+[3, 19, 7, 9, 11, 6, 8, 13, 10, 3]   96.08
+[3, 16, 17, 20, 15, 18, 12, 3]   50.35
+Start column generation for root node of [1, 4, 2, 5, 1]
+
+==1==
+length of routes pool = 6739
+LP Objective Value = 271.9,   sum y = 3.0
+true  220
+
+==2==
+length of routes pool = 6959
+LP Objective Value = 270.2,   sum y = 3.0
+true  63
+
+==3==
+length of routes pool = 7022
+LP Objective Value = 270.2,   sum y = 3.0
+false  0
+MILP Result:
+278.17
+[1, 4, 2, 5, 1]    99.01
+[5, 14, 5]   18.44
+[4, 19, 17, 16, 15, 11, 9, 4]   72.61
+[4, 6, 8, 13, 10, 18, 12, 20, 7, 4]   88.11
+Lower bound= 313.22   [1, 2, 3, 1]    parkings: Set([3])
+Lower bound= 325.47   [1, 2, 1]    parkings: Set([2])
+Lower bound= 342.22   [1, 4, 2, 3, 1]    parkings: Set([4, 3])
+Lower bound= 343.5   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+Lower bound= 357.77   [1, 2, 4, 1]    parkings: Set([4, 2])
+Lower bound= 360.33   [1, 2, 5, 1]    parkings: Set([5])
+Lower bound= 369.2   [1, 4, 2, 5, 1]    parkings: Set([5, 4])
+Lower bound= 381.44   [1, 4, 1]    parkings: Set([4])
+Lower bound= 420.28   [1, 4, 3, 2, 5, 1]    parkings: Set([5, 3])
+min value exceed UB
+
+Total Execution time = 4.86
+
+time spent in soving root node = 0.0, takes percentage of 0.0%
+time spent in branching decision = 0.0, takes percentage of 0.0%
+time spent in solving child node = 0.0, takes percentage of 0.0%
+
+time spent in filtering = 0.0, takes percentage of 0.0%
+time spent in solving column generation = 0.0, takes percentage of 0.0%
+   - time spent in solving pricing = 0.99, takes percentage of Inf%
+   - time spent in building model = 0.6, takes percentage of Inf%
+   - time spent in adding columns = 0.56, takes percentage of Inf%
+   - time spent in solving RMP = 0.1, takes percentage of Inf%
+   - time spent in output = 0.13, takes percentage of Inf%
+
+deepest node dived to level 0
+
+Current optimal solution 241.59 found in interation 0 in level 0:
+[1, 2, 3, 1]  80.16
+[3, 19, 7, 9, 11, 6, 8, 13, 10, 3]  96.08
+[3, 15, 20, 17, 16, 3]  44.69
+[3, 14, 12, 18, 3]  20.66

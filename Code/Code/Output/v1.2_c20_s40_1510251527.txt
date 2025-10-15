@@ -1,0 +1,164 @@
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+
+--------Start column generation for root node of [1, 2, 1]--------
+Current global upper bound = Inf
+lp value of column generation : 366.81
+MILP Result:
+381.26
+[1, 2, 1]    97.67
+[2, 21, 8, 24, 10, 19, 2]   72.42
+[2, 7, 18, 23, 6, 13, 2]   61.95
+[2, 9, 14, 25, 16, 11, 2]   57.49
+[2, 12, 15, 22, 17, 20, 2]   91.73
+
+--------Start column generation for root node of [1, 2, 3, 1]--------
+Current global upper bound = 381.2635571095799
+lp value of column generation : 344.77
+MILP Result:
+345.61
+[1, 2, 3, 1]    98.11
+[3, 17, 22, 15, 3]   50.34
+[3, 11, 16, 25, 14, 9, 12, 3]   59.9
+[3, 8, 24, 10, 19, 21, 20, 3]   38.73
+[3, 13, 7, 18, 23, 6, 3]   98.54
+
+--------Start column generation for root node of [1, 4, 1]--------
+Current global upper bound = 345.6127085386223
+lp value of column generation : 446.1
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 2, 5, 1]--------
+Current global upper bound = 345.6127085386223
+lp value of column generation : 384.73
+Integer Solution Found  384.73331084525967
+
+--------Start column generation for root node of [1, 2, 4, 3, 1]--------
+Current global upper bound = 345.6127085386223
+lp value of column generation : 333.5
+MILP Result:
+334.34
+[1, 2, 4, 3, 1]    123.42
+[2, 7, 18, 23, 6, 13, 2]   61.95
+[3, 17, 22, 15, 3]   50.34
+[3, 11, 16, 25, 14, 9, 12, 3]   59.9
+[3, 8, 24, 10, 19, 21, 20, 3]   38.73
+
+--------Start column generation for root node of [1, 2, 4, 1]--------
+Current global upper bound = 334.3409742831964
+lp value of column generation : 385.14
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 2, 4, 5, 1]--------
+Current global upper bound = 334.3409742831964
+lp value of column generation : 337.43
+Integer Solution Found  337.43131699441244
+
+--------Start column generation for root node of [1, 4, 2, 3, 1]--------
+Current global upper bound = 334.3409742831964
+lp value of column generation : 340.39
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 2, 3, 4, 5, 1]--------
+Current global upper bound = 334.3409742831964
+lp value of column generation : 406.9
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 4, 2, 5, 1]--------
+Current global upper bound = 334.3409742831964
+lp value of column generation : 350.39
+Integer Solution Found  350.3879070002604
+==========================================================
+Lower bound= 333.5   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+Lower bound= 344.77   [1, 2, 3, 1]    parkings: Set([3])
+Lower bound= 366.81   [1, 2, 1]    parkings: Set([2])
+==========================================================
+
+--------Start column generation for root node of [1, 2, 4, 3, 1]--------
+Current global upper bound = 334.3409742831964
+lp value of column generation : 333.5
+MILP Result:
+334.34
+[1, 2, 4, 3, 1]    123.42
+[2, 7, 18, 23, 6, 13, 2]   61.95
+[3, 17, 22, 15, 3]   50.34
+[3, 11, 16, 25, 14, 9, 12, 3]   59.9
+[3, 8, 24, 10, 19, 21, 20, 3]   38.73
+Branching stack contains now 1 nodes, current upper bound is 334.34
+
+================Iteration 1 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 1.67
+  Branching node with cg lower bound: 333.5
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+
+Start column generation for node N_1, parent node N_0, depth 1
+
+   + Customers MUST     served together:   (17, 24)  
+Start column generation for node N_2, parent node N_0, depth 1
+
+   + Customers FORBIDDEN served together:   (17, 24)  
+Integer Solution Found  334.3409742831964
+Branching stack contains now 2 nodes, current upper bound is 334.34
+
+================Iteration 2 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node: from 2 nodes
+- Branching node in depth: 1
+
+   + Customers FORBIDDEN served together:   (17, 24)  
+  Branching node with fractional score: 0.0
+  Branching node with cg lower bound: 334.34
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Leaf Node Already
+Branching stack contains now 1 nodes, current upper bound is 334.34
+
+================Iteration 3 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node: from 1 nodes
+- Branching node in depth: 1
+
+   + Customers MUST     served together:   (17, 24)  
+  Branching node with fractional score: 2.9
+  Branching node with cg lower bound: 339.09
+  Branching node with LB reduction: 5.59
+  Branching node with FS reduction: 1.23
+  Total reduction: 6.83
+
+339.09, Exceed Upper Bound, prune
+Branching stack contains now 0 nodes, current upper bound is 334.34
+min value exceed UB
+
+Total Execution time = 8.99
+
+time spent in soving root node = 0.31, takes percentage of 3.0%
+time spent in branching decision = 0.05, takes percentage of 1.0%
+time spent in solving child node = 0.51, takes percentage of 6.0%
+
+time spent in filtering = 0.0, takes percentage of 0.0%
+time spent in solving column generation = 0.5, takes percentage of 6.0%
+   - time spent in solving pricing = 4.06, takes percentage of 816.0%
+   - time spent in building model = 1.79, takes percentage of 360.0%
+   - time spent in adding columns = 1.75, takes percentage of 351.0%
+   - time spent in solving RMP = 0.26, takes percentage of 53.0%
+   - time spent in output = 0.07, takes percentage of 13.0%
+
+deepest node dived to level 1
+
+Current optimal solution 334.34 found in interation 0 in level 0:
+[1, 2, 4, 3, 1]  123.42
+[2, 7, 18, 23, 6, 13, 2]  61.95
+[3, 17, 22, 15, 3]  50.34
+[3, 11, 16, 25, 14, 9, 12, 3]  59.9
+[3, 8, 24, 10, 19, 21, 20, 3]  38.73

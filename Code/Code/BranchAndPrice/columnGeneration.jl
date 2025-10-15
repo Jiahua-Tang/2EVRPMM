@@ -71,8 +71,8 @@ function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branching
     # y = nothing
     it = 1
     while true
-        println("\n==$it==")
-        println("length of routes pool = ",length(filtered_2e_routes))
+        # println("==CG iter $it==")
+        # println("length of routes pool = ",length(filtered_2e_routes))
         execution_time = @elapsed begin
             optimize!(model)
         end
@@ -82,13 +82,14 @@ function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branching
 
             execution_time_op = @elapsed begin
                 lpObjValue = objective_value(model) + filtered_1e_routes.cost
-                println("LP Objective Value = $(round(lpObjValue, digits=2)),   sum y = $(round(sum(value.(values(y_vars))), digits=2))")
-                for (rid, y) in y_vars
-                    if value(y)!=0
-                        # println("Route $(initial_2e_routes[rid].sequence): y = ", value(y))
-                        println("y$(filtered_2e_routes[rid].sequence) = ", round(value(y),digits=2), "  ", round(filtered_2e_routes[rid].cost, digits=2))
-                    end
-                end
+                # println("LP Objective Value = $(round(lpObjValue, digits=2)),   sum y = $(round(sum(value.(values(y_vars))), digits=2))")
+                # println("x[$(filtered_1e_routes.sequence)]     $(round(filtered_1e_routes.cost, digits=2))")
+                # for (rid, y) in y_vars
+                #     if value(y)!=0
+                #         # println("Route $(initial_2e_routes[rid].sequence): y = ", value(y))
+                #         println("y$(filtered_2e_routes[rid].sequence) = ", round(value(y),digits=2), "  ", round(filtered_2e_routes[rid].cost, digits=2))
+                #     end
+                # end
             end
             global execution_time_output += execution_time_op
 
@@ -132,7 +133,7 @@ function solveColumnGeneration(filtered_1e_routes, filtered_2e_routes, branching
             return nothing
         end
     end
-    
+    println("$it iterations of column generation")
     y_values = [value(y_vars[k]) for k in sort(collect(keys(y_vars)))]
 
     return filtered_2e_routes, y_values, lpObjValue 
@@ -280,7 +281,7 @@ function pricing(selected_parkings, routes_2e_pool, π1, π2, π3, π4, branchin
 
 
     end
-    println(new_routes_generated, "  ", length(routes_2e_pool[new_routes_from:end]))
+    # println(new_routes_generated, "  ", length(routes_2e_pool[new_routes_from:end]))
     if new_routes_generated
         return routes_2e_pool, new_routes_from
     else

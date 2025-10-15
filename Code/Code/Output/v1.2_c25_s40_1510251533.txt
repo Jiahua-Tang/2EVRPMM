@@ -1,0 +1,137 @@
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+
+--------Start column generation for root node of [1, 2, 1]--------
+Current global upper bound = Inf
+lp value of column generation : 408.68
+MILP Result:
+427.02
+[1, 2, 1]    97.67
+[2, 13, 21, 2]   45.72
+[2, 9, 11, 16, 25, 14, 2]   57.2
+[2, 7, 6, 23, 18, 26, 2]   57.42
+[2, 8, 17, 22, 27, 15, 2]   93.93
+[2, 30, 19, 10, 29, 24, 28, 20, 12, 2]   75.08
+
+--------Start column generation for root node of [1, 2, 3, 1]--------
+Current global upper bound = 427.0188160760632
+lp value of column generation : 376.37
+MILP Result:
+395.74
+[1, 2, 3, 1]    98.11
+[3, 21, 13, 12, 3]   44.85
+[3, 8, 17, 22, 27, 15, 3]   54.45
+[3, 11, 16, 25, 14, 9, 3]   56.7
+[3, 20, 28, 24, 29, 30, 19, 10, 3]   43.01
+[3, 12, 7, 26, 18, 23, 6, 3]   98.62
+
+--------Start column generation for root node of [1, 4, 1]--------
+Current global upper bound = 395.7417794848321
+lp value of column generation : 502.34
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 2, 5, 1]--------
+Current global upper bound = 395.7417794848321
+lp value of column generation : 434.78
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 2, 4, 3, 1]--------
+Current global upper bound = 395.7417794848321
+lp value of column generation : 352.47
+MILP Result:
+355.32
+[1, 2, 4, 3, 1]    123.42
+[2, 13, 2]   7.21
+[2, 7, 6, 23, 18, 26, 2]   57.42
+[3, 20, 21, 3]   10.86
+[3, 8, 17, 22, 27, 15, 3]   54.45
+[3, 11, 16, 25, 14, 9, 12, 3]   59.9
+[3, 28, 24, 29, 30, 19, 10, 3]   42.06
+
+--------Start column generation for root node of [1, 2, 4, 1]--------
+Current global upper bound = 355.32394738988955
+lp value of column generation : 425.62
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 2, 4, 5, 1]--------
+Current global upper bound = 355.32394738988955
+lp value of column generation : 376.44
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 4, 2, 3, 1]--------
+Current global upper bound = 355.32394738988955
+lp value of column generation : 358.21
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 2, 3, 4, 5, 1]--------
+Current global upper bound = 355.32394738988955
+lp value of column generation : 428.11
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 4, 2, 5, 1]--------
+Current global upper bound = 355.32394738988955
+lp value of column generation : 386.34
+lp result exceed global upper bound, prune
+==========================================================
+Lower bound= 352.47   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+Lower bound= 376.37   [1, 2, 3, 1]    parkings: Set([3])
+Lower bound= 408.68   [1, 2, 1]    parkings: Set([2])
+==========================================================
+
+--------Start column generation for root node of [1, 2, 4, 3, 1]--------
+Current global upper bound = 355.32394738988955
+lp value of column generation : 351.78
+MILP Result:
+354.12
+[1, 2, 4, 3, 1]    123.42
+[2, 13, 2]   7.21
+[2, 7, 6, 23, 18, 26, 2]   57.42
+[3, 20, 21, 3]   10.86
+[3, 8, 17, 22, 27, 15, 3]   54.45
+[3, 11, 16, 25, 14, 9, 12, 3]   59.9
+[3, 30, 19, 10, 29, 24, 28, 3]   40.85
+Branching stack contains now 1 nodes, current upper bound is 354.12
+
+================Iteration 1 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 3.5
+  Branching node with cg lower bound: 351.78
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+
+Branch on total number of 2e routes:  5.0, 6.0
+Start column generation for node N_1, parent node N_0, depth 1
+
+   # Total number of 2e routes cannot UNDER:   6  
+Start column generation for node N_2, parent node N_0, depth 1
+
+   # Total number of 2e routes cannot EXCEED:   5  
+Branching stack contains now 2 nodes, current upper bound is 354.12
+
+================Iteration 2 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node: from 2 nodes
+- Branching node in depth: 1
+
+   # Total number of 2e routes cannot EXCEED:   5  
+  Branching node with fractional score: 4.0
+  Branching node with cg lower bound: 351.97
+  Branching node with LB reduction: 0.19
+  Branching node with FS reduction: 0.5
+  Total reduction: 0.69
+
+Start column generation for node N_3, parent node N_2, depth 2
+
+   - MUST combination:  (2, 16)  
+   # Total number of 2e routes cannot EXCEED:   5  
+Start column generation for node N_4, parent node N_2, depth 2
+
+   - FORBIDDEN combination:   (2, 16)  
+   # Total number of 2e routes cannot EXCEED:   5  

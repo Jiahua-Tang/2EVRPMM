@@ -11,10 +11,10 @@ include("LrpLowerBound/solveLRP.jl")
 global root = "$(pwd())/TEST/"
 # global root = "/gpfs/workdir/tangj/2EVRPMM/Code/Code/"
 
-instance_size = 20
-random_seed = 42
+instance_size = 30
+random_seed = 41
 time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
-file_name = "Output/output_c"*string(instance_size)*"_s"*string(random_seed)*time_stamp*".txt"
+file_name = "Output/v1.2_c"*string(instance_size)*"_s"*string(random_seed)*time_stamp*".txt"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -26,7 +26,7 @@ open(file_name, "w") do io
 
         #=========================================================#
 
-        # solveCompactModelDisplayResult() 
+        solveCompactModelDisplayResult() 
 
         #=========================================================#
 
@@ -35,12 +35,6 @@ open(file_name, "w") do io
         #=========================================================#
 
         #region B&P: Prep
-        lb_lrp_per_route = calculateLRPLowerBoundByParking()
-        displayLRPLowerBound(deepcopy(lb_lrp_per_route))
-        #endregion
-
-        #region B&P: Start
-        global routes_2e = generate2eInitialRoutes()
         global num_iter_global = 1
         global upperBound = Inf
         global optimalSolution = nothing
@@ -64,6 +58,14 @@ open(file_name, "w") do io
         global optimal_found_in = 0
 
         execution_time_total = @elapsed begin
+        global routes_2e = generate2eInitialRoutes()
+        lb_lrp_per_route = calculateLRPLowerBoundByParking()
+        println("==========================================================")
+        displayLRPLowerBound(deepcopy(lb_lrp_per_route))
+        #endregion
+
+        #region B&P: Start
+            println("==========================================================")
             while !isempty(lb_lrp_per_route) # && num_iter_global < 2
                 min_value, min_route = findmin(lb_lrp_per_route)
                 if min_value > upperBound  
@@ -79,8 +81,6 @@ open(file_name, "w") do io
                 num_iter_global += 1
             end
         end
-
-        # branchAndPriceWithScore(generate1eRoute([1,2,4,3,1]))
 
         #===============================================================================================#
 
@@ -104,7 +104,7 @@ open(file_name, "w") do io
                 println(route.sequence, "  ", round(route.cost, digits=2))
             end   
         end
-        # #endregion
+        #endregion
 
     end
 end

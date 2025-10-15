@@ -1,0 +1,3112 @@
+Minimum 2e routes required: 3
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+Lower bound= 243.32   [1, 2, 5, 1]    parkings: Set([5])
+Lower bound= 246.37   [1, 2, 3, 1]    parkings: Set([3])
+Lower bound= 251.8   [1, 2, 1]    parkings: Set([2])
+Lower bound= 263.38   [1, 4, 2, 5, 1]    parkings: Set([5, 4])
+Lower bound= 266.25   [1, 4, 1]    parkings: Set([4])
+Lower bound= 266.4   [1, 4, 2, 3, 1]    parkings: Set([4, 3])
+Lower bound= 272.99   [1, 2, 4, 5, 1]    parkings: Set([5, 2])
+Lower bound= 275.85   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+Lower bound= 276.42   [1, 2, 4, 1]    parkings: Set([4, 2])
+Lower bound= 312.9   [1, 4, 3, 2, 5, 1]    parkings: Set([5, 3])
+
+
+================Iteration 0 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+-------------Iter CG 1-------------
+LP Objective Value = 1058.12,   sum y = 5.0
+x[1, 2, 5, 1],  100.58
+y[5, 11, 5] = 0.29  58.0
+y[5, 18, 5] = 0.29  100.66
+y[5, 17, 5] = 0.29  26.08
+y[5, 15, 5] = 0.29  90.0
+y[5, 19, 5] = 0.29  47.54
+y[5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 5] = 0.71  1000.0
+y[5, 9, 5] = 0.29  22.36
+y[5, 7, 5] = 0.29  28.28
+y[5, 8, 5] = 0.29  71.81
+y[5, 13, 5] = 0.29  87.66
+y[5, 6, 5] = 0.29  72.11
+y[5, 20, 5] = 0.29  80.62
+y[5, 14, 5] = 0.29  76.94
+y[5, 12, 5] = 0.29  18.11
+y[5, 16, 5] = 0.29  15.23
+y[5, 10, 5] = 0.29  56.0
+true  1740
+-------------Iter CG 2-------------
+LP Objective Value = 435.04,   sum y = 4.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 6, 20, 15, 11, 8, 19, 7, 9, 16, 5] = 1.0  154.98
+y[5, 18, 15, 20, 13, 14, 5] = 1.0  135.29
+y[5, 17, 5] = 1.0  26.08
+y[5, 12, 5] = 1.0  18.11
+true  519
+-------------Iter CG 3-------------
+LP Objective Value = 400.47,   sum y = 2.64
+x[1, 2, 5, 1],  100.58
+y[5, 12, 11, 18, 13, 14, 10, 5] = 0.27  143.41
+y[5, 12, 8, 11, 17, 7, 9, 16, 5] = 0.36  95.44
+y[5, 8, 11, 14, 13, 6, 5] = 0.09  149.41
+y[5, 7, 10, 6, 20, 15, 18, 13, 19, 5] = 0.36  164.45
+y[5, 18, 15, 20, 6, 14, 10, 9, 5] = 0.27  135.69
+y[5, 15, 20, 6, 14, 13, 5] = 0.18  135.3
+y[5, 12, 11, 8, 19, 5] = 0.18  84.4
+y[5, 9, 11, 8, 19, 5] = 0.18  83.12
+y[5, 12, 8, 11, 17, 7, 9, 16, 19, 5] = 0.18  129.95
+y[5, 18, 15, 20, 13, 14, 5] = 0.09  135.29
+y[5, 15, 20, 6, 14, 10, 7, 16, 19, 17, 5] = 0.09  166.39
+y[5, 16, 17, 5] = 0.36  26.31
+true  499
+-------------Iter CG 4-------------
+LP Objective Value = 376.4,   sum y = 2.56
+x[1, 2, 5, 1],  100.58
+y[5, 18, 15, 20, 6, 14, 10, 9, 5] = 0.33  135.69
+y[5, 12, 19, 17, 7, 9, 16, 5] = 0.22  72.01
+y[5, 18, 15, 20, 13, 14, 5] = 0.33  135.29
+y[5, 12, 8, 11, 17, 7, 9, 16, 5] = 0.22  95.44
+y[5, 12, 16, 11, 8, 19, 5] = 0.33  90.61
+y[5, 10, 14, 13, 6, 7, 17, 5] = 0.33  101.26
+y[5, 17, 7, 9, 16, 19, 8, 11, 5] = 0.22  98.0
+y[5, 12, 19, 8, 11, 5] = 0.22  82.42
+y[5, 10, 6, 20, 15, 18, 13, 5] = 0.33  132.68
+true  163
+-------------Iter CG 5-------------
+LP Objective Value = 355.96,   sum y = 2.4
+x[1, 2, 5, 1],  100.58
+y[5, 18, 15, 20, 6, 14, 10, 9, 5] = 0.2  135.69
+y[5, 16, 8, 11, 17, 7, 9, 5] = 0.2  86.35
+y[5, 9, 10, 14, 13, 6, 15, 5] = 0.2  125.84
+y[5, 16, 17, 7, 9, 5] = 0.4  32.62
+y[5, 12, 19, 8, 15, 13, 14, 10, 5] = 0.2  152.14
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.4  121.6
+y[5, 12, 19, 11, 15, 20, 18, 13, 5] = 0.2  143.05
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.2  153.41
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.4  86.01
+true  153
+-------------Iter CG 6-------------
+LP Objective Value = 346.47,   sum y = 2.33
+x[1, 2, 5, 1],  100.58
+y[5, 7, 20, 15, 18, 13, 14, 10, 5] = 0.33  126.7
+y[5, 9, 10, 14, 13, 6, 15, 20, 5] = 0.33  129.4
+y[5, 16, 17, 7, 9, 5] = 0.33  32.62
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 7, 6, 18, 15, 11, 8, 19, 12, 5] = 0.33  144.49
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 0.33  96.86
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.33  86.01
+true  59
+-------------Iter CG 7-------------
+LP Objective Value = 345.98,   sum y = 2.33
+x[1, 2, 5, 1],  100.58
+y[5, 7, 20, 15, 18, 13, 14, 10, 5] = 0.33  126.7
+y[5, 9, 17, 16, 5] = 0.33  31.16
+y[5, 9, 10, 14, 13, 6, 15, 20, 5] = 0.33  129.4
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 7, 6, 18, 15, 11, 8, 19, 12, 5] = 0.33  144.49
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 0.33  96.86
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.33  86.01
+true  40
+-------------Iter CG 8-------------
+LP Objective Value = 345.72,   sum y = 2.33
+x[1, 2, 5, 1],  100.58
+y[5, 7, 20, 15, 18, 13, 14, 10, 5] = 0.33  126.7
+y[5, 12, 19, 8, 11, 17, 9, 5] = 0.24  90.63
+y[5, 9, 10, 14, 6, 20, 15, 8, 11, 5] = 0.05  147.97
+y[5, 8, 15, 20, 6, 13, 14, 10, 5] = 0.05  149.92
+y[5, 9, 6, 20, 15, 18, 13, 5] = 0.14  120.76
+y[5, 9, 17, 16, 5] = 0.1  31.16
+y[5, 16, 15, 6, 13, 14, 10, 9, 5] = 0.14  126.1
+y[5, 16, 9, 10, 14, 6, 20, 15, 11, 19, 12, 5] = 0.1  145.31
+y[5, 16, 17, 7, 9, 5] = 0.19  32.62
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 9, 6, 18, 15, 8, 19, 12, 5] = 0.05  141.29
+y[5, 7, 6, 18, 15, 11, 8, 19, 12, 5] = 0.14  144.49
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.48  86.01
+true  21
+-------------Iter CG 9-------------
+LP Objective Value = 344.22,   sum y = 2.2
+x[1, 2, 5, 1],  100.58
+y[5, 7, 20, 15, 18, 13, 14, 10, 5] = 0.33  126.7
+y[5, 16, 17, 6, 13, 14, 10, 5] = 0.13  100.67
+y[5, 9, 6, 20, 15, 18, 13, 5] = 0.13  120.76
+y[5, 9, 10, 14, 13, 6, 20, 15, 7, 5] = 0.2  126.07
+y[5, 16, 17, 7, 9, 5] = 0.07  32.62
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.2  121.6
+y[5, 7, 6, 18, 15, 11, 8, 19, 12, 5] = 0.2  144.49
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 0.47  96.86
+y[5, 9, 6, 20, 15, 18, 14, 10, 5] = 0.13  130.55
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.33  86.01
+true  3
+-------------Iter CG 10-------------
+LP Objective Value = 344.0,   sum y = 2.25
+x[1, 2, 5, 1],  100.58
+y[5, 7, 20, 15, 18, 13, 14, 10, 5] = 0.25  126.7
+y[5, 16, 7, 6, 18, 13, 14, 10, 5] = 0.25  119.59
+y[5, 9, 10, 14, 13, 6, 20, 15, 7, 5] = 0.25  126.07
+y[5, 6, 20, 15, 18, 13, 9, 5] = 0.25  120.63
+y[5, 9, 6, 20, 15, 18, 14, 10, 5] = 0.25  130.55
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.25  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.75  86.01
+false  0
+MILP Result:
+374.87
+[1, 2, 5, 1]    100.58
+[5, 16, 5]   15.23
+[5, 12, 19, 8, 11, 20, 13, 14, 10, 5]   148.95
+[5, 17, 7, 15, 18, 6, 9, 5]   110.11
+Branching stack contains now 1 nodes, current upper bound is 374.87
+
+================Iteration 1 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 1.75
+  Branching node with cg lower bound: 344.0
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+Branch on total number of 2e routes:  2.0, 3.0
+
+Solve a child node 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 350.01,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 7, 20, 15, 18, 13, 14, 10, 5] = 0.33  126.7
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.5  85.34
+y[5, 8, 15, 20, 6, 13, 14, 10, 5] = 0.17  149.92
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.17  139.15
+y[5, 9, 17, 16, 5] = 0.5  31.16
+y[5, 12, 5] = 0.67  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 7, 6, 18, 15, 11, 8, 19, 12, 5] = 0.33  144.49
+false  0
+
+Solve a child node 2
+   # Total number of 2e routes cannot EXCEED:   2  
+
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 2 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 1, parent node 0: from 1 nodes
+- Branching node in depth: 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 350.01
+  Branching node with LB reduction: 6.02
+  Branching node with FS reduction: 0.92
+  Total reduction: 6.93
+
+Solve a child node 3
+   + Customers MUST      served together:  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 351.92,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.25  85.34
+y[5, 12, 19, 8, 11, 17, 9, 5] = 0.17  90.63
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.33  123.34
+y[5, 8, 15, 20, 6, 13, 14, 10, 5] = 0.08  149.92
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.25  139.15
+y[5, 9, 17, 16, 5] = 0.25  31.16
+y[5, 9, 6, 20, 18, 15, 8, 19, 5] = 0.17  136.89
+y[5, 16, 17, 7, 9, 5] = 0.17  32.62
+y[5, 12, 5] = 0.67  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.17  86.01
+y[5, 16, 11, 8, 15, 18, 20, 6, 7, 5] = 0.17  141.1
+false  0
+
+Solve a child node 4
+   + Customers FORBIDDEN served together:  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 366.23,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 13, 6, 9, 5] = 0.25  98.88
+y[5, 16, 17, 6, 13, 14, 10, 5] = 0.62  100.67
+y[5, 9, 17, 16, 5] = 0.12  31.16
+y[5, 12, 19, 11, 20, 13, 14, 10, 9, 5] = 0.12  137.13
+y[5, 16, 17, 7, 9, 5] = 0.25  32.62
+y[5, 12, 5] = 0.62  18.11
+y[5, 12, 8, 11, 15, 18, 20, 9, 5] = 0.12  143.67
+y[5, 9, 6, 18, 15, 8, 19, 12, 5] = 0.12  141.29
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.75  135.84
+false  0
+
+================Iteration 3 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 3, parent node 1: from 2 nodes
+- Branching node in depth: 2
+   + Customers MUST      served together:  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 351.92
+  Branching node with LB reduction: 0.95
+  Branching node with FS reduction: 0.0
+  Total reduction: 1.12
+
+Solve a child node 5
+   + Customers MUST      served together:  (8, 16)  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 352.95,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.33  85.34
+y[5, 10, 14, 6, 20, 15, 8, 11, 19, 16, 5] = 0.33  151.57
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.33  123.34
+y[5, 17, 7, 9, 5] = 0.33  32.38
+y[5, 12, 5] = 0.67  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 6, 20, 15, 18, 13, 9, 5] = 0.33  120.63
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.33  86.01
+false  0
+
+Solve a child node 6
+   + Customers MUST      served together:  (6, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 353.56,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 11, 17, 9, 5] = 0.17  90.63
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.33  123.34
+y[5, 8, 15, 20, 6, 13, 14, 10, 5] = 0.17  149.92
+y[5, 16, 5] = 0.5  15.23
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.17  139.15
+y[5, 9, 17, 16, 5] = 0.5  31.16
+y[5, 12, 5] = 0.17  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.33  153.41
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.33  92.08
+false  0
+
+================Iteration 4 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 5, parent node 3: from 3 nodes
+- Branching node in depth: 3
+   + Customers MUST      served together:  (8, 16)  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 352.95
+  Branching node with LB reduction: 0.34
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.49
+
+Solve a child node 7
+   + Customers MUST      served together:  (8, 16)  (6, 20)  (16, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 379.73,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 11, 20, 18, 6, 7, 16, 5] = 0.4  145.59
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.1  123.34
+y[5, 16, 17, 6, 20, 15, 8, 19, 12, 5] = 0.1  132.72
+y[5, 9, 10, 14, 13, 15, 11, 19, 5] = 0.3  135.71
+y[5, 16, 11, 8, 15, 18, 20, 6, 5] = 0.3  140.65
+y[5, 17, 7, 9, 5] = 0.5  32.38
+y[5, 12, 5] = 0.5  18.11
+y[5, 16, 6, 20, 18, 15, 8, 19, 5] = 0.2  138.29
+y[5, 10, 14, 13, 17, 5] = 0.4  99.98
+y[5, 10, 14, 13, 9, 5] = 0.2  97.53
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 8
+   + Customers MUST      served together:  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 354.46,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.5  85.34
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.25  123.34
+y[5, 17, 5] = 0.12  26.08
+y[5, 9, 10, 14, 13, 6, 20, 15, 7, 5] = 0.25  126.07
+y[5, 7, 20, 15, 18, 13, 6, 5] = 0.25  118.06
+y[5, 12, 5] = 0.62  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.25  121.6
+y[5, 16, 11, 8, 19, 5] = 0.12  75.75
+y[5, 9, 6, 20, 15, 18, 14, 10, 5] = 0.25  130.55
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.38  86.01
+false  0
+
+================Iteration 5 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 8, parent node 5: from 3 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.75
+  Branching node with cg lower bound: 354.46
+  Branching node with LB reduction: 0.38
+  Branching node with FS reduction: 0.02
+  Total reduction: 0.67
+
+Solve a child node 9
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 358.72,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 8, 15, 18, 13, 5] = 0.33  140.98
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.33  85.34
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.33  139.15
+y[5, 7, 6, 20, 15, 18, 14, 10, 9, 5] = 0.33  132.74
+y[5, 17, 7, 9, 5] = 0.33  32.38
+y[5, 12, 5] = 0.67  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.33  86.01
+false  0
+
+Solve a child node 10
+   + Customers MUST      served together:  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (14, 20)  (16, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 391.35,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 5] = 0.5  78.13
+y[5, 19, 8, 15, 13, 14, 10, 16, 5] = 0.25  150.22
+y[5, 7, 20, 15, 18, 13, 6, 5] = 0.25  118.06
+y[5, 17, 7, 9, 5] = 0.25  32.38
+y[5, 12, 5] = 0.25  18.11
+y[5, 6, 20, 15, 18, 13, 9, 5] = 0.5  120.63
+y[5, 12, 19, 11, 20, 18, 6, 7, 17, 5] = 0.25  132.88
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+y[5, 16, 8, 11, 7, 9, 14, 10, 5] = 0.25  141.85
+true  16
+-------------Iter CG 2-------------
+LP Objective Value = 386.62,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 5] = 0.5  78.13
+y[5, 7, 20, 15, 18, 13, 6, 5] = 0.5  118.06
+y[5, 6, 20, 15, 18, 13, 9, 5] = 0.5  120.63
+y[5, 9, 10, 14, 7, 17, 5] = 0.5  86.01
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+y[5, 12, 19, 8, 11, 16, 5] = 0.5  83.24
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 6 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 6, parent node 3: from 3 nodes
+- Branching node in depth: 3
+   + Customers MUST      served together:  (6, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 353.56
+  Branching node with LB reduction: 0.55
+  Branching node with FS reduction: 0.11
+  Total reduction: 0.94
+
+Solve a child node 11
+   + Customers MUST      served together:  (6, 20)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 365.99,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 19, 8, 11, 17, 5] = 0.2  78.29
+y[5, 12, 19, 11, 20, 18, 13, 6, 7, 5] = 0.2  137.6
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.6  123.34
+y[5, 12, 8, 11, 15, 18, 20, 6, 7, 5] = 0.2  147.23
+y[5, 16, 5] = 0.4  15.23
+y[5, 17, 5] = 0.2  26.08
+y[5, 12, 19, 8, 11, 20, 6, 14, 10, 9, 5] = 0.2  148.15
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.2  143.33
+y[5, 16, 17, 9, 5] = 0.6  31.16
+y[5, 9, 10, 14, 6, 20, 15, 8, 19, 12, 5] = 0.2  152.4
+false  0
+
+Solve a child node 12
+   + Customers MUST      served together:  (6, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  (12, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 354.83,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 11, 17, 9, 5] = 0.12  90.63
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.12  123.34
+y[5, 16, 15, 18, 13, 14, 5] = 0.12  122.21
+y[5, 16, 5] = 0.5  15.23
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.25  139.15
+y[5, 9, 17, 16, 5] = 0.25  31.16
+y[5, 8, 15, 18, 20, 6, 14, 10, 5] = 0.25  156.46
+y[5, 12, 5] = 0.25  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.25  121.6
+y[5, 6, 20, 15, 18, 13, 9, 5] = 0.12  120.63
+y[5, 16, 7, 6, 20, 15, 18, 13, 10, 5] = 0.12  129.17
+y[5, 12, 19, 8, 11, 17, 5] = 0.12  85.78
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+false  0
+
+================Iteration 7 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 12, parent node 6: from 4 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:  (6, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  (12, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 354.83
+  Branching node with LB reduction: 0.32
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.53
+
+Solve a child node 13
+   + Customers MUST      served together:  (6, 20)  (13, 15)  
+   + Customers FORBIDDEN served together:  (8, 16)  (12, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 365.86,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 11, 17, 9, 5] = 0.5  90.63
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.33  123.34
+y[5, 8, 15, 20, 6, 13, 14, 10, 5] = 0.17  149.92
+y[5, 16, 5] = 0.5  15.23
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.17  139.15
+y[5, 9, 17, 16, 5] = 0.17  31.16
+y[5, 18, 20, 6, 14, 5] = 0.33  123.28
+y[5, 12, 5] = 0.17  18.11
+y[5, 16, 7, 6, 20, 15, 18, 13, 10, 5] = 0.33  129.17
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.33  92.08
+false  0
+
+Solve a child node 14
+   + Customers MUST      served together:  (6, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  (13, 15)  (12, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 379.85,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 9, 10, 14, 6, 20, 15, 11, 8, 5] = 0.25  147.75
+y[5, 17, 15, 18, 20, 6, 7, 16, 5] = 0.25  112.41
+y[5, 10, 14, 13, 7, 17, 5] = 0.5  100.57
+y[5, 16, 5] = 0.25  15.23
+y[5, 9, 6, 20, 18, 15, 8, 19, 5] = 0.25  136.89
+y[5, 12, 19, 8, 11, 18, 13, 5] = 0.5  148.5
+y[5, 16, 17, 7, 9, 5] = 0.25  32.62
+y[5, 12, 5] = 0.5  18.11
+y[5, 16, 9, 10, 14, 6, 20, 15, 11, 19, 5] = 0.25  137.82
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 8 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 9, parent node 8: from 4 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 358.72
+  Branching node with LB reduction: 0.85
+  Branching node with FS reduction: -0.02
+  Total reduction: 1.6
+
+Solve a child node 15
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 362.78,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.67  85.34
+y[5, 9, 10, 14, 13, 6, 20, 15, 7, 5] = 0.33  126.07
+y[5, 7, 6, 20, 15, 18, 14, 10, 9, 5] = 0.33  132.74
+y[5, 12, 5] = 0.67  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 15, 18, 13, 9, 5] = 0.33  113.27
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.33  86.01
+false  0
+
+Solve a child node 16
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  (16, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 367.16,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 17, 15, 18, 13, 5] = 0.33  113.32
+y[5, 17, 5] = 0.33  26.08
+y[5, 9, 10, 14, 13, 6, 20, 15, 7, 5] = 0.33  126.07
+y[5, 17, 7, 9, 5] = 0.33  32.38
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 9, 6, 20, 15, 18, 14, 10, 5] = 0.33  130.55
+y[5, 12, 19, 8, 11, 16, 5] = 1.0  83.24
+false  0
+
+================Iteration 9 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 15, parent node 9: from 5 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 362.78
+  Branching node with LB reduction: 0.68
+  Branching node with FS reduction: -0.06
+  Total reduction: 1.33
+
+Solve a child node 17
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (16, 17)  (9, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 377.31,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 11, 15, 18, 13, 7, 5] = 0.5  126.15
+y[5, 19, 8, 17, 16, 5] = 0.5  77.51
+y[5, 7, 6, 20, 15, 18, 14, 10, 9, 5] = 0.5  132.74
+y[5, 12, 5] = 0.5  18.11
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+y[5, 9, 10, 14, 13, 6, 20, 5] = 0.5  112.93
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 18
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 367.75,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.33  85.34
+y[5, 7, 15, 18, 13, 10, 9, 5] = 0.17  122.33
+y[5, 14, 13, 6, 15, 20, 5] = 0.17  126.34
+y[5, 16, 8, 11, 17, 7, 9, 5] = 0.17  86.35
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.17  139.15
+y[5, 18, 15, 20, 6, 14, 10, 5] = 0.33  133.83
+y[5, 19, 8, 17, 7, 9, 16, 5] = 0.17  87.3
+y[5, 12, 5] = 0.67  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.33  86.01
+y[5, 9, 7, 15, 18, 13, 5] = 0.17  115.51
+false  0
+
+================Iteration 10 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 18, parent node 15: from 5 nodes
+- Branching node in depth: 7
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 367.75
+  Branching node with LB reduction: 0.71
+  Branching node with FS reduction: 0.05
+  Total reduction: 1.8
+
+Solve a child node 19
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (16, 17)  (7, 9)  
+   + Customers FORBIDDEN served together:  (16, 20)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 381.81,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 13, 6, 20, 5] = 0.38  111.07
+y[5, 12, 19, 11, 20, 18, 6, 14, 10, 5] = 0.12  150.11
+y[5, 16, 8, 11, 17, 7, 9, 5] = 0.25  86.35
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.12  139.15
+y[5, 18, 15, 20, 6, 14, 10, 5] = 0.38  133.83
+y[5, 19, 8, 17, 7, 9, 16, 5] = 0.25  87.3
+y[5, 12, 5] = 0.5  18.11
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+y[5, 9, 7, 15, 18, 13, 5] = 0.5  115.51
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 20
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  (9, 20)  (7, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 371.49,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.67  85.34
+y[5, 14, 13, 6, 15, 20, 5] = 0.33  126.34
+y[5, 12, 5] = 0.67  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 18, 15, 20, 6, 14, 10, 7, 5] = 0.33  140.56
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 0.33  96.86
+y[5, 7, 15, 18, 13, 10, 5] = 0.33  120.47
+false  0
+
+================Iteration 11 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 20, parent node 18: from 5 nodes
+- Branching node in depth: 8
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  (9, 20)  (7, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 371.49
+  Branching node with LB reduction: 0.47
+  Branching node with FS reduction: -0.04
+  Total reduction: 1.11
+
+Solve a child node 21
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (7, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  (9, 20)  (7, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 374.66,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.5  85.34
+y[5, 15, 20, 6, 14, 10, 7, 5] = 0.5  123.83
+y[5, 12, 5] = 0.5  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 15, 18, 13, 9, 5] = 0.5  113.27
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+false  0
+
+Solve a child node 22
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  (7, 20)  (9, 20)  (7, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 393.67,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 7, 5] = 0.5  28.28
+y[5, 14, 13, 6, 20, 5] = 0.5  109.88
+y[5, 18, 15, 20, 6, 14, 10, 5] = 0.5  133.83
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 1.0  96.86
+y[5, 7, 15, 18, 13, 10, 5] = 0.5  120.47
+true  5
+-------------Iter CG 2-------------
+LP Objective Value = 390.45,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 19, 8, 17, 7, 16, 5] = 0.25  82.63
+y[5, 10, 14, 13, 6, 20, 5] = 0.5  111.07
+y[5, 7, 13, 18, 15, 11, 19, 12, 5] = 0.25  136.89
+y[5, 9, 5] = 0.5  22.36
+y[5, 18, 15, 20, 6, 14, 10, 5] = 0.5  133.83
+y[5, 12, 8, 11, 16, 17, 7, 5] = 0.25  98.23
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 0.5  96.86
+y[5, 7, 15, 18, 13, 5] = 0.25  113.48
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 12 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 21, parent node 20: from 5 nodes
+- Branching node in depth: 9
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (7, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  (9, 20)  (7, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 374.66
+  Branching node with LB reduction: 0.35
+  Branching node with FS reduction: 0.07
+  Total reduction: 1.2
+
+Solve a child node 23
+   + Customers MUST      served together:  (14, 20)  (12, 16)  (8, 16)  (6, 20)  (7, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (16, 20)  (9, 20)  (7, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 377.12,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 9, 5] = 0.5  22.36
+y[5, 15, 20, 6, 14, 10, 7, 5] = 0.5  123.83
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 15, 18, 13, 9, 5] = 0.5  113.27
+y[5, 12, 19, 8, 11, 17, 16, 5] = 1.0  86.01
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 377.12,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 9, 5] = 0.5  22.36
+y[5, 15, 20, 6, 14, 10, 7, 5] = 0.5  123.83
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 15, 18, 13, 9, 5] = 0.5  113.27
+y[5, 12, 19, 8, 11, 17, 16, 5] = 1.0  86.01
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 377.12,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 9, 5] = 0.5  22.36
+y[5, 15, 20, 6, 14, 10, 7, 5] = 0.5  123.83
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 15, 18, 13, 9, 5] = 0.5  113.27
+y[5, 12, 19, 8, 11, 17, 16, 5] = 1.0  86.01
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 24
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (7, 20)  (16, 17)  
+   + Customers FORBIDDEN served together:  (12, 16)  (16, 20)  (9, 20)  (7, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 378.19,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.67  85.34
+y[5, 12, 19, 7, 10, 14, 13, 6, 15, 20, 5] = 0.33  172.0
+y[5, 8, 11, 17, 16, 5] = 0.33  78.49
+y[5, 12, 5] = 0.67  18.11
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 18, 15, 20, 6, 14, 10, 7, 5] = 0.33  140.56
+y[5, 15, 18, 13, 9, 5] = 0.33  113.27
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 13 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 16, parent node 9: from 4 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  (16, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 367.16
+  Branching node with LB reduction: 1.41
+  Branching node with FS reduction: -0.11
+  Total reduction: 2.78
+
+Solve a child node 25
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  (9, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  (16, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 378.49,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 17, 15, 18, 13, 5] = 0.5  113.32
+y[5, 7, 6, 20, 15, 18, 14, 10, 9, 5] = 0.5  132.74
+y[5, 7, 17, 5] = 0.5  30.34
+y[5, 9, 10, 14, 13, 6, 20, 5] = 0.5  112.93
+y[5, 12, 19, 8, 11, 16, 5] = 1.0  83.24
+true  13
+-------------Iter CG 2-------------
+LP Objective Value = 378.49,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 17, 15, 18, 13, 5] = 0.5  113.32
+y[5, 7, 6, 20, 15, 18, 14, 10, 9, 5] = 0.5  132.74
+y[5, 7, 17, 5] = 0.5  30.34
+y[5, 9, 10, 14, 13, 6, 20, 5] = 0.5  112.93
+y[5, 12, 19, 8, 11, 16, 5] = 1.0  83.24
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 378.49,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 17, 15, 18, 13, 5] = 0.5  113.32
+y[5, 7, 6, 20, 15, 18, 14, 10, 9, 5] = 0.5  132.74
+y[5, 7, 17, 5] = 0.5  30.34
+y[5, 9, 10, 14, 13, 6, 20, 5] = 0.5  112.93
+y[5, 12, 19, 8, 11, 16, 5] = 1.0  83.24
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 26
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  (16, 17)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 373.0,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 8, 15, 18, 13, 5] = 0.33  140.98
+y[5, 18, 15, 20, 6, 14, 10, 12, 5] = 0.33  151.89
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.33  139.15
+y[5, 17, 7, 9, 5] = 1.0  32.38
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 12, 19, 8, 11, 16, 5] = 0.67  83.24
+true  6
+-------------Iter CG 2-------------
+LP Objective Value = 371.45,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 8, 15, 18, 13, 5] = 0.33  140.98
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.33  139.15
+y[5, 18, 15, 20, 6, 14, 10, 5] = 0.33  133.83
+y[5, 17, 7, 9, 5] = 0.67  32.38
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 12, 17, 9, 5] = 0.33  45.81
+y[5, 12, 19, 8, 11, 16, 5] = 0.67  83.24
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 371.45,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 8, 15, 18, 13, 5] = 0.33  140.98
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.33  139.15
+y[5, 18, 15, 20, 6, 14, 10, 5] = 0.33  133.83
+y[5, 17, 7, 9, 5] = 0.67  32.38
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.33  121.6
+y[5, 12, 17, 9, 5] = 0.33  45.81
+y[5, 12, 19, 8, 11, 16, 5] = 0.67  83.24
+false  0
+
+================Iteration 14 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 26, parent node 16: from 4 nodes
+- Branching node in depth: 7
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  (16, 17)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 371.45
+  Branching node with LB reduction: 0.61
+  Branching node with FS reduction: 0.05
+  Total reduction: 1.57
+
+Solve a child node 27
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (13, 20)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  (16, 17)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 374.36,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.5  139.15
+y[5, 12, 19, 8, 16, 5] = 0.5  81.12
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 12, 8, 11, 15, 18, 7, 16, 5] = 0.5  143.83
+y[5, 17, 9, 5] = 1.0  30.93
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 374.36,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.5  139.15
+y[5, 12, 19, 8, 16, 5] = 0.5  81.12
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 12, 8, 11, 15, 18, 7, 16, 5] = 0.5  143.83
+y[5, 17, 9, 5] = 1.0  30.93
+false  0
+
+Solve a child node 28
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (6, 20)  
+   + Customers FORBIDDEN served together:  (13, 20)  (16, 20)  (16, 17)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 413.36,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 8, 15, 18, 13, 5] = 0.2  140.98
+y[5, 12, 19, 11, 20, 18, 6, 14, 10, 5] = 0.2  150.11
+y[5, 17, 7, 13, 18, 19, 12, 5] = 0.2  136.3
+y[5, 20, 6, 14, 5] = 0.4  102.97
+y[5, 16, 8, 11, 13, 5] = 0.2  131.55
+y[5, 17, 7, 9, 5] = 0.8  32.38
+y[5, 12, 19, 8, 11, 16, 9, 5] = 0.2  94.09
+y[5, 12, 19, 11, 15, 20, 6, 14, 10, 5] = 0.4  139.73
+y[5, 16, 8, 15, 18, 13, 10, 5] = 0.4  147.98
+true  22
+-------------Iter CG 2-------------
+LP Objective Value = 407.0,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 8, 15, 18, 13, 5] = 0.5  140.98
+y[5, 15, 20, 6, 14, 10, 7, 17, 5] = 0.5  125.89
+y[5, 12, 19, 11, 20, 18, 6, 14, 10, 5] = 0.5  150.11
+y[5, 9, 5] = 0.25  22.36
+y[5, 9, 13, 7, 17, 5] = 0.5  90.71
+y[5, 12, 5] = 0.25  18.11
+y[5, 16, 11, 8, 19, 5] = 0.25  75.75
+y[5, 12, 19, 8, 11, 16, 9, 5] = 0.25  94.09
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 15 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 27, parent node 26: from 4 nodes
+- Branching node in depth: 8
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (13, 20)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  (16, 17)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 374.36
+  Branching node with LB reduction: 0.36
+  Branching node with FS reduction: -0.04
+  Total reduction: 0.84
+
+Solve a child node 29
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (16, 19)  (13, 20)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 20)  (16, 17)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 395.1,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 15, 20, 6, 10, 14, 13, 5] = 0.5  150.94
+y[5, 18, 15, 17, 5] = 0.5  106.78
+y[5, 17, 7, 9, 5] = 0.5  32.38
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 12, 19, 8, 11, 16, 9, 5] = 0.5  94.09
+y[5, 12, 19, 8, 11, 16, 5] = 0.5  83.24
+true  25
+-------------Iter CG 2-------------
+LP Objective Value = 384.39,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 14, 13, 6, 15, 20, 5] = 0.5  126.34
+y[5, 17, 15, 18, 10, 9, 5] = 0.5  120.8
+y[5, 17, 7, 9, 5] = 0.5  32.38
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 12, 19, 8, 11, 16, 5] = 1.0  83.24
+true  2
+-------------Iter CG 3-------------
+LP Objective Value = 384.39,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 14, 13, 6, 15, 20, 5] = 0.5  126.34
+y[5, 17, 15, 18, 10, 9, 5] = 0.5  120.8
+y[5, 17, 7, 9, 5] = 0.5  32.38
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 12, 19, 8, 11, 16, 5] = 1.0  83.24
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 30
+   + Customers MUST      served together:  (14, 20)  (8, 16)  (13, 20)  (6, 20)  
+   + Customers FORBIDDEN served together:  (16, 19)  (16, 20)  (16, 17)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 388.47,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.5  139.15
+y[5, 16, 8, 11, 15, 18, 9, 5] = 0.5  137.77
+y[5, 17, 19, 12, 5] = 0.5  61.99
+y[5, 17, 7, 9, 5] = 0.5  32.38
+y[5, 7, 6, 20, 18, 13, 14, 10, 5] = 0.5  121.6
+y[5, 12, 8, 11, 16, 5] = 0.5  82.89
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 16 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 13, parent node 12: from 3 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:  (6, 20)  (13, 15)  
+   + Customers FORBIDDEN served together:  (8, 16)  (12, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 365.86
+  Branching node with LB reduction: 2.21
+  Branching node with FS reduction: -0.0
+  Total reduction: 4.23
+
+Solve a child node 31
+   + Customers MUST      served together:  (14, 20)  (6, 20)  (13, 15)  
+   + Customers FORBIDDEN served together:  (8, 16)  (12, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 378.44,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 5] = 0.5  15.23
+y[5, 10, 14, 13, 6, 20, 15, 11, 19, 5] = 0.5  139.15
+y[5, 18, 20, 6, 14, 5] = 0.5  123.28
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[5, 12, 8, 15, 18, 13, 10, 5] = 0.5  153.35
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 32
+   + Customers MUST      served together:  (6, 20)  (13, 15)  
+   + Customers FORBIDDEN served together:  (14, 20)  (8, 16)  (12, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 393.34,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 11, 17, 9, 5] = 0.5  90.63
+y[5, 9, 14, 7, 17, 5] = 0.5  83.68
+y[5, 16, 15, 18, 13, 14, 5] = 0.5  122.21
+y[5, 12, 5] = 0.5  18.11
+y[5, 10, 6, 20, 11, 19, 8, 5] = 0.5  141.73
+y[5, 16, 7, 6, 20, 15, 18, 13, 10, 5] = 0.5  129.17
+true  7
+-------------Iter CG 2-------------
+LP Objective Value = 386.99,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 7, 20, 15, 18, 13, 6, 5] = 1.0  118.06
+y[5, 16, 9, 14, 10, 5] = 1.0  82.58
+y[5, 12, 19, 8, 11, 17, 5] = 1.0  85.78
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 385.59,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 5] = 0.67  15.23
+y[5, 7, 20, 15, 18, 13, 6, 5] = 0.67  118.06
+y[5, 16, 9, 14, 10, 5] = 0.33  82.58
+y[5, 6, 20, 15, 18, 13, 9, 5] = 0.33  120.63
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.33  92.08
+y[5, 14, 10, 17, 11, 8, 19, 12, 5] = 0.67  146.58
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 17 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 11, parent node 6: from 2 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:  (6, 20)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.6
+  Branching node with cg lower bound: 365.99
+  Branching node with LB reduction: 3.11
+  Branching node with FS reduction: -0.1
+  Total reduction: 5.04
+
+Solve a child node 33
+   + Customers MUST      served together:  (8, 20)  (6, 20)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 366.14,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.67  123.34
+y[5, 16, 5] = 0.33  15.23
+y[5, 16, 17, 5] = 0.33  26.31
+y[5, 12, 19, 8, 11, 20, 6, 14, 10, 9, 5] = 0.33  148.15
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.33  143.33
+y[5, 17, 7, 9, 5] = 0.33  32.38
+y[5, 16, 17, 9, 5] = 0.33  31.16
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.33  153.41
+false  0
+
+Solve a child node 34
+   + Customers MUST      served together:  (6, 20)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 20)  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 381.92,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 19, 8, 11, 17, 5] = 0.6  78.29
+y[5, 8, 11, 17, 7, 9, 5] = 0.07  84.56
+y[5, 16, 7, 20, 18, 13, 6, 12, 5] = 0.4  126.18
+y[5, 18, 15, 20, 6, 14, 10, 12, 5] = 0.27  151.89
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.27  123.34
+y[5, 19, 8, 15, 13, 14, 10, 5] = 0.2  144.65
+y[5, 16, 5] = 0.13  15.23
+y[5, 9, 5] = 0.4  22.36
+y[5, 16, 9, 10, 14, 6, 20, 15, 11, 19, 12, 5] = 0.2  145.31
+y[5, 16, 7, 20, 6, 13, 14, 10, 12, 5] = 0.07  130.23
+y[5, 16, 17, 7, 9, 5] = 0.2  32.62
+y[5, 8, 11, 17, 9, 5] = 0.13  83.1
+y[5, 18, 15, 20, 13, 6, 12, 5] = 0.07  144.22
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 18 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 33, parent node 11: from 2 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:  (8, 20)  (6, 20)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 366.14
+  Branching node with LB reduction: 0.03
+  Branching node with FS reduction: 0.01
+  Total reduction: 0.08
+
+Solve a child node 35
+   + Customers MUST      served together:  (8, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 366.98,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.67  123.34
+y[5, 16, 17, 5] = 0.67  26.31
+y[5, 9, 5] = 0.33  22.36
+y[5, 12, 19, 8, 11, 20, 6, 14, 10, 9, 5] = 0.33  148.15
+y[5, 16, 17, 7, 9, 5] = 0.33  32.62
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.33  143.33
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.33  153.41
+false  0
+
+Solve a child node 36
+   + Customers MUST      served together:  (8, 20)  (6, 20)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  (16, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 375.76,   sum y = 3.5
+x[1, 2, 5, 1],  100.58
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.5  123.34
+y[5, 10, 14, 13, 7, 17, 5] = 0.25  100.57
+y[5, 16, 5] = 1.0  15.23
+y[5, 12, 19, 8, 11, 20, 6, 14, 10, 9, 5] = 0.25  148.15
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.25  143.33
+y[5, 17, 7, 9, 5] = 0.25  32.38
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.5  153.41
+y[5, 17, 9, 5] = 0.5  30.93
+true  7
+-------------Iter CG 2-------------
+LP Objective Value = 371.66,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 5] = 1.0  15.23
+y[5, 17, 7, 13, 14, 10, 9, 5] = 1.0  102.44
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 1.0  153.41
+false  0
+Integer solution found
+Update upper bound
+[5, 16, 5]   15.23
+[5, 12, 19, 8, 11, 20, 15, 18, 6, 5]   153.41
+[5, 17, 7, 13, 14, 10, 9, 5]   102.44
+
+================Iteration 19 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 35, parent node 33: from 2 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:  (8, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 366.98
+  Branching node with LB reduction: 0.14
+  Branching node with FS reduction: -0.06
+  Total reduction: 0.18
+
+Solve a child node 37
+   + Customers MUST      served together:  (9, 20)  (8, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 386.94,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 17, 5] = 1.0  26.31
+y[5, 12, 8, 15, 18, 20, 6, 9, 5] = 0.5  144.02
+y[5, 7, 13, 18, 15, 11, 19, 5] = 0.5  129.41
+y[5, 12, 19, 8, 11, 20, 6, 14, 10, 9, 5] = 0.5  148.15
+y[5, 7, 13, 14, 10, 5] = 0.5  98.52
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 38
+   + Customers MUST      served together:  (8, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 367.97,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 11, 20, 6, 14, 10, 5] = 0.33  146.29
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.67  123.34
+y[5, 16, 17, 5] = 0.33  26.31
+y[5, 9, 5] = 0.33  22.36
+y[5, 16, 17, 7, 9, 5] = 0.33  32.62
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.33  143.33
+y[5, 16, 17, 9, 5] = 0.33  31.16
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.33  153.41
+false  0
+
+================Iteration 20 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 38, parent node 35: from 2 nodes
+- Branching node in depth: 7
+   + Customers MUST      served together:  (8, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 367.97
+  Branching node with LB reduction: 0.14
+  Branching node with FS reduction: 0.05
+  Total reduction: 0.45
+
+Solve a child node 39
+   + Customers MUST      served together:  (9, 16)  (8, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 371.08,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 11, 20, 6, 14, 10, 5] = 0.33  146.29
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.67  123.34
+y[5, 7, 5] = 0.33  28.28
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.33  143.33
+y[5, 16, 17, 9, 5] = 1.0  31.16
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.33  153.41
+false  0
+
+Solve a child node 40
+   + Customers MUST      served together:  (8, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (9, 16)  (8, 16)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 379.71,   sum y = 3.67
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 11, 20, 18, 6, 7, 5] = 0.33  144.5
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.67  123.34
+y[5, 16, 17, 5] = 1.0  26.31
+y[5, 9, 5] = 1.0  22.36
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.33  143.33
+y[5, 10, 14, 6, 20, 15, 8, 11, 19, 12, 5] = 0.33  156.85
+true  9
+-------------Iter CG 2-------------
+LP Objective Value = 378.47,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 7, 15, 18, 13, 10, 9, 5] = 0.25  122.33
+y[5, 9, 14, 13, 18, 7, 5] = 0.25  116.65
+y[5, 9, 7, 5] = 0.25  30.32
+y[5, 16, 17, 5] = 1.0  26.31
+y[5, 9, 7, 13, 18, 14, 10, 5] = 0.25  126.56
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.25  143.33
+y[5, 10, 14, 6, 20, 15, 8, 11, 19, 12, 5] = 0.5  156.85
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.25  153.41
+true  2
+-------------Iter CG 3-------------
+LP Objective Value = 375.34,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 15, 13, 6, 20, 5] = 0.14  155.81
+y[5, 12, 8, 11, 15, 18, 20, 6, 7, 5] = 0.14  147.23
+y[5, 9, 7, 5] = 0.29  30.32
+y[5, 9, 10, 14, 13, 15, 11, 19, 5] = 0.14  135.71
+y[5, 16, 17, 5] = 1.0  26.31
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.14  143.33
+y[5, 10, 14, 6, 20, 15, 8, 11, 19, 12, 5] = 0.29  156.85
+y[5, 9, 10, 14, 13, 18, 7, 5] = 0.57  118.98
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.29  153.41
+true  1
+-------------Iter CG 4-------------
+LP Objective Value = 374.94,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 9, 7, 5] = 0.25  30.32
+y[5, 16, 17, 5] = 1.0  26.31
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.25  143.33
+y[5, 9, 13, 18, 15, 7, 5] = 0.25  113.48
+y[5, 10, 14, 6, 20, 15, 8, 11, 19, 12, 5] = 0.5  156.85
+y[5, 9, 10, 14, 13, 18, 7, 5] = 0.5  118.98
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.25  153.41
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 21 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 39, parent node 38: from 2 nodes
+- Branching node in depth: 8
+   + Customers MUST      served together:  (9, 16)  (8, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 1.67
+  Branching node with cg lower bound: 371.08
+  Branching node with LB reduction: 0.39
+  Branching node with FS reduction: -0.13
+  Total reduction: 0.68
+
+Solve a child node 41
+   + Customers MUST      served together:  (9, 16)  (8, 20)  (14, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (8, 16)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 391.51,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 12, 19, 8, 11, 20, 6, 14, 10, 5] = 1.0  146.29
+y[5, 9, 17, 16, 5] = 1.0  31.16
+y[5, 7, 15, 18, 13, 5] = 1.0  113.48
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 42
+   + Customers MUST      served together:  (9, 16)  (8, 20)  (6, 20)  (16, 17)  (12, 20)  
+   + Customers FORBIDDEN served together:  (14, 20)  (8, 16)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 381.58,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 7, 15, 18, 13, 14, 10, 5] = 0.5  123.34
+y[5, 10, 14, 5] = 0.5  78.13
+y[5, 9, 17, 16, 5] = 0.5  31.16
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[5, 12, 19, 8, 11, 20, 6, 13, 5] = 0.5  143.33
+y[5, 12, 19, 8, 11, 20, 15, 18, 6, 5] = 0.5  153.41
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 22 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 4, parent node 1: from 1 nodes
+- Branching node in depth: 2
+   + Customers FORBIDDEN served together:  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 366.23
+  Branching node with LB reduction: 8.11
+  Branching node with FS reduction: -0.33
+  Total reduction: 9.18
+
+Solve a child node 43
+   + Customers MUST      served together:  (9, 12)  
+   + Customers FORBIDDEN served together:  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 372.69,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 5] = 0.75  15.23
+y[5, 10, 14, 13, 6, 7, 17, 5] = 0.5  101.26
+y[5, 12, 19, 11, 20, 13, 14, 10, 9, 5] = 0.25  137.13
+y[5, 10, 14, 13, 6, 17, 5] = 0.25  100.43
+y[5, 12, 16, 17, 9, 5] = 0.25  46.02
+y[5, 12, 8, 11, 15, 18, 20, 9, 5] = 0.25  143.67
+y[5, 9, 6, 18, 15, 8, 19, 12, 5] = 0.25  141.29
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.5  135.84
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 44
+   + Customers FORBIDDEN served together:  (6, 20)  (9, 12)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 366.82,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 17, 6, 13, 14, 10, 5] = 0.33  100.67
+y[5, 9, 17, 16, 5] = 0.33  31.16
+y[5, 12, 5] = 0.67  18.11
+y[5, 17, 15, 18, 6, 9, 5] = 0.33  107.9
+y[5, 12, 19, 8, 11, 20, 13, 14, 10, 5] = 0.33  148.95
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.67  135.84
+y[5, 16, 7, 6, 13, 14, 10, 9, 5] = 0.33  102.15
+true  3
+-------------Iter CG 2-------------
+LP Objective Value = 366.82,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 17, 6, 13, 14, 10, 5] = 0.33  100.67
+y[5, 9, 17, 16, 5] = 0.33  31.16
+y[5, 12, 5] = 0.67  18.11
+y[5, 17, 15, 18, 6, 9, 5] = 0.33  107.9
+y[5, 12, 19, 8, 11, 20, 13, 14, 10, 5] = 0.33  148.95
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.67  135.84
+y[5, 16, 7, 6, 13, 14, 10, 9, 5] = 0.33  102.15
+false  0
+
+================Iteration 23 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 44, parent node 4: from 1 nodes
+- Branching node in depth: 3
+   + Customers FORBIDDEN served together:  (6, 20)  (9, 12)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 366.82
+  Branching node with LB reduction: 0.2
+  Branching node with FS reduction: 0.11
+  Total reduction: 0.44
+
+Solve a child node 45
+   + Customers MUST      served together:  (16, 17)  
+   + Customers FORBIDDEN served together:  (6, 20)  (9, 12)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 368.21,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 13, 6, 9, 5] = 0.5  98.88
+y[5, 16, 17, 6, 13, 14, 10, 5] = 0.5  100.67
+y[5, 12, 19, 8, 11, 20, 18, 15, 5] = 0.5  149.14
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[5, 12, 5] = 0.5  18.11
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.5  135.84
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 368.21,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 13, 6, 9, 5] = 0.5  98.88
+y[5, 16, 17, 6, 13, 14, 10, 5] = 0.5  100.67
+y[5, 12, 19, 8, 11, 20, 18, 15, 5] = 0.5  149.14
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[5, 12, 5] = 0.5  18.11
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.5  135.84
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 368.21,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 10, 14, 13, 6, 9, 5] = 0.5  98.88
+y[5, 16, 17, 6, 13, 14, 10, 5] = 0.5  100.67
+y[5, 12, 19, 8, 11, 20, 18, 15, 5] = 0.5  149.14
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[5, 12, 5] = 0.5  18.11
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.5  135.84
+false  0
+
+Solve a child node 46
+   + Customers FORBIDDEN served together:  (6, 20)  (16, 17)  (9, 12)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 373.9,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 5] = 0.3  15.23
+y[5, 10, 14, 13, 6, 7, 17, 5] = 0.3  101.26
+y[5, 17, 15, 20, 13, 14, 10, 5] = 0.05  119.8
+y[5, 20, 17, 9, 5] = 0.05  86.0
+y[5, 16, 7, 20, 18, 13, 14, 10, 5] = 0.05  118.44
+y[5, 12, 8, 11, 15, 18, 20, 7, 16, 5] = 0.15  144.06
+y[5, 12, 5] = 0.3  18.11
+y[5, 16, 9, 6, 18, 15, 11, 19, 5] = 0.15  126.71
+y[5, 17, 15, 18, 6, 9, 5] = 0.2  107.9
+y[5, 12, 19, 8, 11, 20, 13, 14, 10, 5] = 0.4  148.95
+y[5, 16, 6, 18, 15, 8, 19, 12, 5] = 0.15  142.69
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.3  135.84
+y[5, 16, 7, 6, 13, 14, 10, 9, 5] = 0.2  102.15
+y[5, 17, 9, 5] = 0.4  30.93
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 24 of B&P for SP1 [1, 2, 5, 1] parkings[5]================
+Display selected node 45, parent node 44: from 1 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:  (16, 17)  
+   + Customers FORBIDDEN served together:  (6, 20)  (9, 12)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 368.21
+  Branching node with LB reduction: 0.35
+  Branching node with FS reduction: 0.17
+  Total reduction: 0.86
+
+Solve a child node 47
+   + Customers MUST      served together:  (6, 16)  (16, 17)  
+   + Customers FORBIDDEN served together:  (6, 20)  (9, 12)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 377.56,   sum y = 4.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 17, 6, 13, 14, 10, 5] = 1.0  100.67
+y[5, 9, 5] = 1.0  22.36
+y[5, 12, 5] = 1.0  18.11
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 1.0  135.84
+true  18
+-------------Iter CG 2-------------
+LP Objective Value = 376.13,   sum y = 3.5
+x[1, 2, 5, 1],  100.58
+y[5, 16, 17, 6, 13, 14, 10, 5] = 1.0  100.67
+y[5, 9, 7, 5] = 0.5  30.32
+y[5, 9, 20, 18, 15, 8, 19, 11, 5] = 0.5  147.38
+y[5, 12, 5] = 1.0  18.11
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.5  135.84
+true  11
+-------------Iter CG 3-------------
+LP Objective Value = 376.13,   sum y = 3.5
+x[1, 2, 5, 1],  100.58
+y[5, 16, 17, 6, 13, 14, 10, 5] = 1.0  100.67
+y[5, 9, 7, 5] = 0.5  30.32
+y[5, 9, 20, 18, 15, 8, 19, 11, 5] = 0.5  147.38
+y[5, 12, 5] = 1.0  18.11
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.5  135.84
+true  30
+-------------Iter CG 4-------------
+LP Objective Value = 376.13,   sum y = 3.5
+x[1, 2, 5, 1],  100.58
+y[5, 16, 17, 6, 13, 14, 10, 5] = 1.0  100.67
+y[5, 9, 20, 18, 15, 8, 19, 11, 5] = 0.5  147.38
+y[5, 7, 9, 5] = 0.5  30.32
+y[5, 12, 5] = 1.0  18.11
+y[5, 7, 20, 18, 15, 11, 8, 19, 5] = 0.5  135.84
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 48
+   + Customers MUST      served together:  (16, 17)  
+   + Customers FORBIDDEN served together:  (6, 20)  (6, 16)  (9, 12)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 373.98,   sum y = 3.0
+x[1, 2, 5, 1],  100.58
+y[5, 16, 17, 5] = 0.67  26.31
+y[5, 7, 6, 13, 14, 10, 9, 5] = 0.67  101.06
+y[5, 9, 20, 18, 15, 8, 19, 5] = 0.33  133.66
+y[5, 12, 5] = 0.33  18.11
+y[5, 7, 6, 18, 15, 11, 8, 19, 12, 5] = 0.33  144.49
+y[5, 12, 19, 8, 11, 20, 13, 14, 10, 5] = 0.33  148.95
+y[5, 16, 11, 15, 18, 20, 17, 5] = 0.33  120.25
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP2 [1, 2, 3, 1] parkings[3]================
+-------------Iter CG 1-------------
+LP Objective Value = 995.94,   sum y = 5.0
+x[1, 2, 3, 1],  101.85
+y[3, 12, 3] = 0.29  37.2
+y[3, 18, 3] = 0.29  76.55
+y[3, 16, 3] = 0.29  11.66
+y[3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 3] = 0.71  1000.0
+y[3, 7, 3] = 0.29  8.94
+y[3, 17, 3] = 0.29  2.83
+y[3, 11, 3] = 0.29  36.06
+y[3, 19, 3] = 0.29  32.56
+y[3, 13, 3] = 0.29  67.91
+y[3, 10, 3] = 0.29  50.12
+y[3, 14, 3] = 0.29  65.12
+y[3, 8, 3] = 0.29  53.85
+y[3, 6, 3] = 0.29  50.6
+y[3, 20, 3] = 0.29  56.04
+y[3, 15, 3] = 0.29  63.78
+y[3, 9, 3] = 0.29  16.12
+true  2475
+-------------Iter CG 2-------------
+LP Objective Value = 369.38,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 7, 10, 6, 20, 15, 11, 19, 8, 12, 16, 3] = 1.0  163.28
+y[3, 17, 3] = 1.0  2.83
+y[3, 18, 13, 14, 9, 3] = 1.0  101.43
+true  179
+-------------Iter CG 3-------------
+LP Objective Value = 347.59,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 19, 8, 11, 12, 16, 9, 7, 3] = 0.5  98.02
+y[3, 18, 15, 20, 6, 14, 10, 9, 3] = 0.5  120.52
+y[3, 17, 3] = 1.0  2.83
+y[3, 18, 13, 14, 10, 7, 16, 3] = 0.5  111.05
+y[3, 12, 19, 8, 11, 6, 13, 20, 15, 3] = 0.5  156.23
+true  304
+-------------Iter CG 4-------------
+LP Objective Value = 326.75,   sum y = 2.67
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 0.33  2.83
+y[3, 7, 15, 20, 6, 13, 14, 10, 9, 3] = 0.33  113.29
+y[3, 12, 19, 8, 11, 15, 18, 20, 6, 3] = 0.33  145.92
+y[3, 7, 9, 16, 12, 19, 8, 11, 3] = 0.33  92.57
+y[3, 17, 16, 12, 19, 8, 11, 3] = 0.33  82.88
+y[3, 6, 20, 18, 13, 14, 10, 3] = 0.33  107.45
+y[3, 16, 9, 7, 17, 3] = 0.33  22.69
+y[3, 7, 10, 14, 13, 18, 15, 3] = 0.33  107.09
+true  18
+-------------Iter CG 5-------------
+LP Objective Value = 325.54,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 6, 13, 14, 10, 9, 16, 3] = 0.5  91.79
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 10, 14, 13, 18, 15, 20, 3] = 0.5  111.47
+y[3, 12, 19, 8, 11, 15, 18, 20, 6, 3] = 0.5  145.92
+y[3, 7, 9, 16, 12, 19, 8, 11, 3] = 0.5  92.57
+true  5
+-------------Iter CG 6-------------
+LP Objective Value = 324.22,   sum y = 2.5
+x[1, 2, 3, 1],  101.85
+y[3, 7, 6, 13, 14, 10, 9, 16, 3] = 0.5  93.32
+y[3, 17, 3] = 0.5  2.83
+y[3, 7, 10, 14, 13, 18, 15, 20, 3] = 0.5  111.47
+y[3, 12, 19, 8, 11, 15, 18, 20, 6, 3] = 0.5  145.92
+y[3, 17, 9, 16, 12, 19, 8, 11, 3] = 0.5  91.22
+true  5
+-------------Iter CG 7-------------
+LP Objective Value = 323.86,   sum y = 2.29
+x[1, 2, 3, 1],  101.85
+y[3, 15, 18, 6, 14, 10, 9, 16, 3] = 0.14  118.14
+y[3, 17, 3] = 0.14  2.83
+y[3, 7, 15, 20, 6, 13, 14, 10, 9, 3] = 0.29  113.29
+y[3, 7, 10, 14, 13, 18, 15, 20, 3] = 0.14  111.47
+y[3, 12, 19, 8, 11, 15, 18, 20, 6, 3] = 0.14  145.92
+y[3, 20, 15, 18, 13, 6, 7, 3] = 0.14  96.54
+y[3, 17, 16, 12, 19, 8, 11, 3] = 0.29  82.88
+y[3, 17, 9, 16, 12, 19, 8, 11, 3] = 0.57  91.22
+y[3, 6, 20, 18, 13, 14, 10, 7, 3] = 0.29  107.46
+y[3, 7, 10, 14, 13, 18, 15, 3] = 0.14  107.09
+false  0
+MILP Result:
+334.17
+[1, 2, 3, 1]    101.85
+[3, 17, 3]   2.83
+[3, 16, 12, 19, 8, 11, 15, 18, 20, 3]   141.22
+[3, 7, 6, 13, 14, 10, 9, 3]   88.27
+Branching stack contains now 1 nodes, current upper bound is 334.17
+
+================Iteration 1 of B&P for SP2 [1, 2, 3, 1] parkings[3]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 2.14
+  Branching node with cg lower bound: 323.86
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+Branch on total number of 2e routes:  2.0, 3.0
+
+Solve a child node 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 325.05,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 0.75  2.83
+y[3, 9, 6, 13, 18, 15, 3] = 0.25  98.39
+y[3, 7, 15, 20, 6, 13, 14, 10, 9, 3] = 0.25  113.29
+y[3, 7, 10, 14, 13, 18, 15, 20, 3] = 0.25  111.47
+y[3, 15, 18, 20, 6, 14, 10, 9, 7, 3] = 0.25  117.59
+y[3, 17, 9, 16, 12, 19, 8, 11, 3] = 0.25  91.22
+y[3, 16, 12, 19, 8, 11, 3] = 0.75  81.64
+y[3, 6, 20, 18, 13, 14, 10, 7, 3] = 0.25  107.46
+false  0
+
+Solve a child node 2
+   # Total number of 2e routes cannot EXCEED:   2  
+
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 2 of B&P for SP2 [1, 2, 3, 1] parkings[3]================
+Display selected node 1, parent node 0: from 1 nodes
+- Branching node in depth: 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 325.05
+  Branching node with LB reduction: 1.19
+  Branching node with FS reduction: -0.14
+  Total reduction: 1.05
+
+Solve a child node 3
+   + Customers MUST      served together:  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 325.05,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 0.75  2.83
+y[3, 7, 15, 20, 6, 13, 14, 10, 9, 3] = 0.25  113.29
+y[3, 15, 18, 20, 6, 14, 10, 9, 7, 3] = 0.25  117.59
+y[3, 9, 6, 13, 18, 15, 20, 3] = 0.25  102.77
+y[3, 17, 9, 16, 12, 19, 8, 11, 3] = 0.25  91.22
+y[3, 16, 12, 19, 8, 11, 3] = 0.75  81.64
+y[3, 6, 20, 18, 13, 14, 10, 7, 3] = 0.25  107.46
+y[3, 7, 10, 14, 13, 18, 15, 3] = 0.25  107.09
+false  0
+
+Solve a child node 4
+   + Customers FORBIDDEN served together:  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 334.17,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 12, 19, 8, 11, 15, 18, 20, 3] = 1.0  141.22
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 6, 13, 14, 10, 9, 3] = 1.0  88.27
+true  10
+-------------Iter CG 2-------------
+LP Objective Value = 334.17,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 12, 19, 8, 11, 15, 18, 20, 3] = 1.0  141.22
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 6, 13, 14, 10, 9, 3] = 1.0  88.27
+true  3
+-------------Iter CG 3-------------
+LP Objective Value = 334.17,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 12, 19, 8, 11, 15, 18, 20, 3] = 1.0  141.22
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 6, 13, 14, 10, 9, 3] = 1.0  88.27
+true  6
+-------------Iter CG 4-------------
+LP Objective Value = 334.17,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 12, 19, 8, 11, 15, 18, 20, 3] = 1.0  141.22
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 6, 13, 14, 10, 9, 3] = 1.0  88.27
+true  5
+-------------Iter CG 5-------------
+LP Objective Value = 334.17,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 12, 19, 8, 11, 15, 18, 20, 3] = 1.0  141.22
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 6, 13, 14, 10, 9, 3] = 1.0  88.27
+true  29
+-------------Iter CG 6-------------
+LP Objective Value = 334.17,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 12, 19, 8, 11, 15, 18, 20, 3] = 1.0  141.22
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 6, 13, 14, 10, 9, 3] = 1.0  88.27
+true  2
+-------------Iter CG 7-------------
+LP Objective Value = 334.17,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 12, 19, 8, 11, 15, 18, 20, 3] = 1.0  141.22
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 6, 13, 14, 10, 9, 3] = 1.0  88.27
+true  1
+-------------Iter CG 8-------------
+LP Objective Value = 334.17,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 12, 19, 8, 11, 15, 18, 20, 3] = 1.0  141.22
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 6, 13, 14, 10, 9, 3] = 1.0  88.27
+false  0
+Integer solution found
+
+================Iteration 3 of B&P for SP2 [1, 2, 3, 1] parkings[3]================
+Display selected node 3, parent node 1: from 1 nodes
+- Branching node in depth: 2
+   + Customers MUST      served together:  (6, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 325.05
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 5
+   + Customers MUST      served together:  (6, 20)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 328.32,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 0.67  2.83
+y[3, 15, 18, 20, 6, 14, 10, 9, 7, 3] = 0.33  117.59
+y[3, 9, 6, 13, 18, 15, 20, 3] = 0.33  102.77
+y[3, 17, 16, 12, 19, 8, 11, 3] = 0.33  82.88
+y[3, 7, 6, 20, 13, 14, 10, 9, 3] = 0.33  100.14
+y[3, 16, 12, 19, 8, 11, 3] = 0.67  81.64
+y[3, 7, 10, 14, 13, 18, 15, 3] = 0.33  107.09
+true  2
+-------------Iter CG 2-------------
+LP Objective Value = 328.32,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 0.67  2.83
+y[3, 15, 18, 20, 6, 14, 10, 9, 7, 3] = 0.33  117.59
+y[3, 9, 6, 13, 18, 15, 20, 3] = 0.33  102.77
+y[3, 17, 16, 12, 19, 8, 11, 3] = 0.33  82.88
+y[3, 7, 6, 20, 13, 14, 10, 9, 3] = 0.33  100.14
+y[3, 16, 12, 19, 8, 11, 3] = 0.67  81.64
+y[3, 7, 10, 14, 13, 18, 15, 3] = 0.33  107.09
+false  0
+
+Solve a child node 6
+   + Customers MUST      served together:  (6, 20)  
+   + Customers FORBIDDEN served together:  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 327.72,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 15, 20, 6, 13, 14, 10, 7, 3] = 0.33  107.96
+y[3, 9, 16, 12, 19, 8, 11, 3] = 0.67  91.16
+y[3, 17, 3] = 0.67  2.83
+y[3, 12, 19, 8, 11, 15, 18, 20, 6, 3] = 0.33  145.92
+y[3, 16, 9, 17, 3] = 0.33  21.23
+y[3, 6, 20, 18, 13, 14, 10, 7, 3] = 0.33  107.46
+y[3, 7, 10, 14, 13, 18, 15, 3] = 0.33  107.09
+true  6
+-------------Iter CG 2-------------
+LP Objective Value = 327.72,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 15, 20, 6, 13, 14, 10, 7, 3] = 0.33  107.96
+y[3, 9, 16, 12, 19, 8, 11, 3] = 0.67  91.16
+y[3, 17, 3] = 0.67  2.83
+y[3, 12, 19, 8, 11, 15, 18, 20, 6, 3] = 0.33  145.92
+y[3, 16, 9, 17, 3] = 0.33  21.23
+y[3, 6, 20, 18, 13, 14, 10, 7, 3] = 0.33  107.46
+y[3, 7, 10, 14, 13, 18, 15, 3] = 0.33  107.09
+false  0
+
+================Iteration 4 of B&P for SP2 [1, 2, 3, 1] parkings[3]================
+Display selected node 5, parent node 3: from 2 nodes
+- Branching node in depth: 3
+   + Customers MUST      served together:  (6, 20)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 328.32
+  Branching node with LB reduction: 1.09
+  Branching node with FS reduction: 0.11
+  Total reduction: 1.72
+
+Solve a child node 7
+   + Customers MUST      served together:  (14, 20)  (6, 20)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 340.06,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 3] = 0.5  11.66
+y[3, 17, 3] = 0.5  2.83
+y[3, 7, 15, 20, 6, 13, 14, 10, 9, 3] = 0.5  113.29
+y[3, 15, 18, 20, 6, 14, 10, 9, 7, 3] = 0.5  117.59
+y[3, 12, 19, 8, 11, 18, 13, 3] = 0.5  148.17
+y[3, 17, 16, 12, 19, 8, 11, 3] = 0.5  82.88
+true  58
+-------------Iter CG 2-------------
+LP Objective Value = 339.26,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 0.5  2.83
+y[3, 15, 18, 20, 6, 14, 10, 9, 7, 3] = 0.5  117.59
+y[3, 7, 6, 20, 13, 14, 10, 9, 3] = 0.5  100.14
+y[3, 16, 12, 19, 8, 11, 3] = 1.0  81.64
+y[3, 15, 18, 13, 17, 3] = 0.5  90.99
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 8
+   + Customers MUST      served together:  (6, 20)  (9, 20)  
+   + Customers FORBIDDEN served together:  (14, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 347.63,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 1.0  2.83
+y[3, 16, 12, 19, 8, 11, 15, 20, 6, 9, 3] = 1.0  140.88
+y[3, 18, 13, 14, 10, 7, 3] = 1.0  102.07
+true  23
+-------------Iter CG 2-------------
+LP Objective Value = 347.63,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 1.0  2.83
+y[3, 16, 12, 19, 8, 11, 15, 20, 6, 9, 3] = 1.0  140.88
+y[3, 18, 13, 14, 10, 7, 3] = 1.0  102.07
+true  2
+-------------Iter CG 3-------------
+LP Objective Value = 347.63,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 1.0  2.83
+y[3, 16, 12, 19, 8, 11, 15, 20, 6, 9, 3] = 1.0  140.88
+y[3, 18, 13, 14, 10, 7, 3] = 1.0  102.07
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 5 of B&P for SP2 [1, 2, 3, 1] parkings[3]================
+Display selected node 6, parent node 3: from 1 nodes
+- Branching node in depth: 3
+   + Customers MUST      served together:  (6, 20)  
+   + Customers FORBIDDEN served together:  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 327.72
+  Branching node with LB reduction: 0.89
+  Branching node with FS reduction: 0.11
+  Total reduction: 1.43
+
+Solve a child node 9
+   + Customers MUST      served together:  (14, 20)  (6, 20)  
+   + Customers FORBIDDEN served together:  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 336.63,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 15, 20, 6, 13, 14, 10, 7, 3] = 0.33  107.96
+y[3, 18, 15, 20, 6, 14, 10, 7, 3] = 0.33  118.84
+y[3, 9, 16, 12, 19, 8, 11, 3] = 1.0  91.16
+y[3, 17, 3] = 0.67  2.83
+y[3, 15, 18, 13, 17, 3] = 0.33  90.99
+y[3, 6, 20, 18, 13, 14, 10, 7, 3] = 0.33  107.46
+true  10
+-------------Iter CG 2-------------
+LP Objective Value = 335.04,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 9, 16, 12, 19, 8, 11, 3] = 0.5  91.16
+y[3, 17, 3] = 1.0  2.83
+y[3, 6, 20, 18, 13, 14, 10, 7, 3] = 0.5  107.46
+y[3, 15, 18, 13, 9, 16, 3] = 0.5  102.09
+y[3, 12, 19, 8, 11, 15, 20, 6, 14, 10, 7, 3] = 0.5  160.02
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 10
+   + Customers MUST      served together:  (6, 20)  
+   + Customers FORBIDDEN served together:  (14, 20)  (9, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 343.08,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 17, 3] = 1.0  2.83
+y[3, 16, 12, 19, 8, 11, 15, 20, 6, 7, 3] = 1.0  134.65
+y[3, 18, 13, 14, 10, 9, 3] = 1.0  103.76
+true  2
+-------------Iter CG 2-------------
+LP Objective Value = 342.95,   sum y = 3.0
+x[1, 2, 3, 1],  101.85
+y[3, 16, 12, 19, 8, 11, 15, 20, 6, 3] = 1.0  133.12
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 9, 10, 14, 13, 18, 3] = 1.0  105.16
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP3 [1, 2, 1] parkings[2]================
+-------------Iter CG 1-------------
+LP Objective Value = 1000.5,   sum y = 5.0
+x[1, 2, 1],  100.42
+y[2, 14, 2] = 0.29  42.8
+y[2, 20, 2] = 0.29  12.81
+y[2, 10, 2] = 0.29  46.39
+y[2, 7, 2] = 0.29  39.7
+y[2, 11, 2] = 0.29  51.42
+y[2, 8, 2] = 0.29  70.23
+y[2, 17, 2] = 0.29  43.27
+y[2, 15, 2] = 0.29  26.31
+y[2, 18, 2] = 0.29  32.8
+y[2, 9, 2] = 0.29  46.86
+y[2, 16, 2] = 0.29  54.41
+y[2, 12, 2] = 0.29  80.99
+y[2, 6, 2] = 0.29  11.66
+y[2, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 2] = 0.71  1000.0
+y[2, 13, 2] = 0.29  28.64
+y[2, 19, 2] = 0.29  62.0
+true  1295
+-------------Iter CG 2-------------
+LP Objective Value = 433.89,   sum y = 5.0
+x[1, 2, 1],  100.42
+y[2, 14, 2] = 1.0  42.8
+y[2, 10, 12, 16, 7, 9, 19, 11, 8, 15, 20, 6, 2] = 1.0  185.96
+y[2, 17, 2] = 1.0  43.27
+y[2, 18, 2] = 1.0  32.8
+y[2, 13, 2] = 1.0  28.64
+true  1147
+-------------Iter CG 3-------------
+LP Objective Value = 343.61,   sum y = 2.25
+x[1, 2, 1],  100.42
+y[2, 12, 16, 19, 8, 11, 7, 9, 10, 14, 2] = 0.25  172.65
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+y[2, 12, 16, 19, 8, 11, 17, 9, 2] = 0.25  143.89
+y[2, 12, 16, 19, 8, 11, 17, 9, 7, 2] = 0.25  145.31
+y[2, 12, 16, 19, 8, 11, 17, 7, 6, 2] = 0.25  145.1
+y[2, 6, 14, 10, 9, 17, 7, 2] = 0.25  82.02
+true  159
+-------------Iter CG 4-------------
+LP Objective Value = 318.02,   sum y = 2.25
+x[1, 2, 1],  100.42
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+y[2, 11, 8, 19, 12, 16, 10, 14, 6, 2] = 0.25  143.07
+y[2, 11, 8, 19, 12, 16, 9, 17, 7, 2] = 0.75  120.5
+y[2, 6, 14, 10, 9, 17, 7, 2] = 0.25  82.02
+true  37
+-------------Iter CG 5-------------
+LP Objective Value = 318.02,   sum y = 2.25
+x[1, 2, 1],  100.42
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+y[2, 11, 8, 19, 12, 16, 10, 14, 6, 2] = 0.25  143.07
+y[2, 11, 8, 19, 12, 16, 9, 17, 7, 2] = 0.75  120.5
+y[2, 6, 14, 10, 9, 17, 7, 2] = 0.25  82.02
+true  26
+-------------Iter CG 6-------------
+LP Objective Value = 317.17,   sum y = 2.25
+x[1, 2, 1],  100.42
+y[2, 11, 8, 19, 12, 16, 17, 7, 2] = 0.25  112.16
+y[2, 6, 14, 10, 9, 16, 17, 7, 2] = 0.25  88.25
+y[2, 11, 8, 19, 12, 9, 10, 14, 6, 2] = 0.25  141.79
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+y[2, 11, 8, 19, 12, 16, 9, 17, 7, 2] = 0.5  120.5
+true  8
+-------------Iter CG 7-------------
+LP Objective Value = 317.17,   sum y = 2.25
+x[1, 2, 1],  100.42
+y[2, 11, 8, 19, 12, 16, 17, 7, 2] = 0.25  112.16
+y[2, 6, 14, 10, 9, 16, 17, 7, 2] = 0.25  88.25
+y[2, 11, 8, 19, 12, 9, 10, 14, 6, 2] = 0.25  141.79
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+y[2, 11, 8, 19, 12, 16, 9, 17, 7, 2] = 0.5  120.5
+false  0
+MILP Result:
+320.56
+[1, 2, 1]    100.42
+[2, 6, 2]   11.66
+[2, 20, 15, 18, 13, 14, 10, 2]   87.98
+[2, 11, 8, 19, 12, 16, 9, 17, 7, 2]   120.5
+Branching stack contains now 1 nodes, current upper bound is 320.56
+
+================Iteration 1 of B&P for SP3 [1, 2, 1] parkings[2]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 2.25
+  Branching node with cg lower bound: 317.17
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+Branch on total number of 2e routes:  2.0, 3.0
+
+Solve a child node 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 320.56,   sum y = 3.0
+x[1, 2, 1],  100.42
+y[2, 20, 15, 18, 13, 14, 10, 2] = 1.0  87.98
+y[2, 11, 8, 19, 12, 16, 9, 17, 7, 2] = 1.0  120.5
+y[2, 6, 2] = 1.0  11.66
+false  0
+Integer solution found
+
+Solve a child node 2
+   # Total number of 2e routes cannot EXCEED:   2  
+
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+
+================Iteration 0 of B&P for SP4 [1, 4, 2, 5, 1] parkings[5, 4]================
+-------------Iter CG 1-------------
+LP Objective Value = 344.27,   sum y = 4.5
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 4] = 0.75  17.2
+y[4, 20, 4] = 0.75  11.66
+y[4, 13, 4] = 0.25  24.17
+y[4, 18, 4] = 1.0  8.94
+y[5, 10, 14, 13, 6, 17, 16, 5] = 0.25  100.67
+y[5, 10, 14, 6, 20, 15, 8, 11, 19, 12, 5] = 0.25  156.85
+y[5, 9, 10, 14, 13, 6, 7, 16, 5] = 0.5  102.15
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+true  223
+-------------Iter CG 2-------------
+LP Objective Value = 333.73,   sum y = 4.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 4] = 0.5  17.2
+y[4, 20, 15, 4] = 0.5  22.68
+y[4, 18, 4] = 1.0  8.94
+y[4, 20, 6, 13, 14, 10, 4] = 0.5  80.17
+y[5, 16, 7, 6, 13, 14, 10, 9, 5] = 0.5  102.15
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+true  236
+-------------Iter CG 3-------------
+LP Objective Value = 323.01,   sum y = 3.5
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 4] = 1.0  17.2
+y[4, 20, 6, 10, 14, 13, 18, 4] = 1.0  77.2
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.5  83.24
+true  155
+-------------Iter CG 4-------------
+LP Objective Value = 320.34,   sum y = 3.5
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[4, 18, 4] = 1.0  8.94
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.5  83.24
+true  53
+-------------Iter CG 5-------------
+LP Objective Value = 317.69,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 6, 20, 15, 18, 4] = 0.25  43.89
+y[4, 15, 18, 4] = 0.25  24.48
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[4, 18, 4] = 0.5  8.94
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.25  76.69
+y[4, 20, 6, 13, 14, 10, 9, 7, 16, 5] = 0.25  87.5
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+true  14
+-------------Iter CG 6-------------
+LP Objective Value = 317.69,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 6, 20, 15, 18, 4] = 0.25  43.89
+y[4, 15, 18, 4] = 0.25  24.48
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[4, 18, 4] = 0.5  8.94
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.25  76.69
+y[4, 20, 6, 13, 14, 10, 9, 7, 16, 5] = 0.25  87.5
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+true  17
+-------------Iter CG 7-------------
+LP Objective Value = 317.27,   sum y = 2.92
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 6, 14, 10, 9, 7, 16, 5] = 0.08  91.58
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.42  82.79
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.17  94.27
+y[4, 18, 4] = 0.75  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.25  51.42
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.08  76.69
+y[4, 6, 14, 10, 9, 7, 17, 16, 12, 5] = 0.08  94.46
+y[4, 20, 6, 13, 14, 10, 9, 16, 5] = 0.08  82.17
+y[4, 15, 11, 8, 19, 16, 7, 10, 14, 6, 20, 4] = 0.08  146.9
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.42  86.01
+true  5
+-------------Iter CG 8-------------
+LP Objective Value = 317.27,   sum y = 2.92
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 6, 14, 10, 9, 7, 16, 5] = 0.08  91.58
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.42  82.79
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.17  94.27
+y[4, 18, 4] = 0.75  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.25  51.42
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.08  76.69
+y[4, 6, 14, 10, 9, 7, 17, 16, 12, 5] = 0.08  94.46
+y[4, 20, 6, 13, 14, 10, 9, 16, 5] = 0.08  82.17
+y[4, 15, 11, 8, 19, 16, 7, 10, 14, 6, 20, 4] = 0.08  146.9
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.42  86.01
+false  0
+MILP Result:
+323.69
+[1, 4, 2, 5, 1]    124.64
+[5, 16, 5]   15.23
+[4, 18, 4]   8.94
+[5, 12, 19, 8, 11, 17, 7, 9, 5]   92.08
+[4, 15, 20, 6, 10, 14, 13, 4]   82.79
+Branching stack contains now 1 nodes, current upper bound is 320.56
+
+================Iteration 1 of B&P for SP4 [1, 4, 2, 5, 1] parkings[5, 4]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 2.42
+  Branching node with cg lower bound: 317.27
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+Branch on total number of 2e routes:  2.0, 3.0
+
+Solve a child node 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 317.42,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 6, 14, 10, 9, 7, 17, 16, 5] = 0.25  79.61
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.25  94.27
+y[4, 18, 4] = 0.75  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.25  51.42
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+y[5, 12, 19, 8, 11, 16, 5] = 0.25  83.24
+false  0
+
+Solve a child node 2
+   # Total number of 2e routes cannot EXCEED:   2  
+
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 2 of B&P for SP4 [1, 4, 2, 5, 1] parkings[5, 4]================
+Display selected node 1, parent node 0: from 1 nodes
+- Branching node in depth: 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.5
+  Branching node with cg lower bound: 317.42
+  Branching node with LB reduction: 0.15
+  Branching node with FS reduction: 0.08
+  Total reduction: 0.23
+
+Solve a child node 3
+   - MUST      combination:  (5, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 319.92,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 6, 20, 15, 18, 4] = 0.17  43.89
+y[4, 20, 6, 13, 14, 10, 9, 7, 5] = 0.17  86.41
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.33  82.79
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.17  94.27
+y[4, 18, 4] = 0.67  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.17  51.42
+y[4, 15, 6, 14, 10, 7, 9, 5] = 0.17  89.44
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.17  76.69
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.33  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.67  86.01
+true  3
+-------------Iter CG 2-------------
+LP Objective Value = 317.86,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.25  94.27
+y[4, 18, 4] = 0.75  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.25  51.42
+y[5, 16, 17, 7, 9, 5] = 0.25  32.62
+y[4, 6, 14, 10, 9, 7, 11, 8, 19, 12, 5] = 0.25  138.07
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.25  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 317.86,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.25  94.27
+y[4, 18, 4] = 0.75  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.25  51.42
+y[5, 16, 17, 7, 9, 5] = 0.25  32.62
+y[4, 6, 14, 10, 9, 7, 11, 8, 19, 12, 5] = 0.25  138.07
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.25  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.5  86.01
+false  0
+
+Solve a child node 4
+   - FORBIDDEN combination:  (5, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 340.74,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[5, 17, 4] = 0.5  46.64
+y[4, 13, 14, 10, 9, 16, 12, 5] = 0.5  86.21
+y[4, 18, 4] = 0.5  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.5  51.42
+y[4, 15, 11, 8, 19, 16, 7, 10, 14, 6, 20, 4] = 0.5  146.9
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+true  190
+-------------Iter CG 2-------------
+LP Objective Value = 338.68,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[5, 9, 4] = 0.12  46.56
+y[4, 15, 11, 8, 19, 16, 9, 10, 14, 4] = 0.24  139.96
+y[4, 13, 14, 10, 16, 17, 6, 4] = 0.12  105.8
+y[4, 20, 6, 13, 14, 10, 9, 7, 16, 12, 5] = 0.06  102.36
+y[4, 13, 14, 10, 16, 17, 7, 4] = 0.12  104.45
+y[4, 18, 4] = 0.47  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.53  51.42
+y[4, 6, 14, 10, 9, 7, 17, 16, 12, 5] = 0.06  94.46
+y[4, 15, 11, 8, 19, 16, 7, 10, 14, 6, 20, 4] = 0.24  146.9
+y[5, 12, 5] = 0.35  18.11
+y[4, 13, 14, 10, 16, 17, 20, 4] = 0.18  103.03
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.53  92.08
+true  253
+-------------Iter CG 3-------------
+LP Objective Value = 336.78,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 11, 8, 19, 16, 9, 10, 14, 4] = 0.2  139.96
+y[4, 13, 14, 10, 16, 17, 6, 4] = 0.3  105.8
+y[4, 13, 14, 10, 9, 16, 7, 20, 15, 4] = 0.1  114.38
+y[4, 18, 4] = 0.5  8.94
+y[4, 13, 14, 10, 9, 16, 7, 6, 20, 4] = 0.1  107.61
+y[4, 15, 20, 6, 13, 18, 4] = 0.4  51.42
+y[4, 15, 11, 8, 19, 16, 7, 10, 14, 6, 20, 4] = 0.2  146.9
+y[5, 12, 5] = 0.4  18.11
+y[4, 13, 14, 10, 16, 17, 20, 4] = 0.1  103.03
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.6  92.08
+y[4, 18, 15, 20, 4] = 0.1  29.95
+true  76
+-------------Iter CG 4-------------
+LP Objective Value = 336.78,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 11, 8, 19, 16, 9, 10, 14, 4] = 0.2  139.96
+y[4, 13, 14, 10, 16, 17, 6, 4] = 0.3  105.8
+y[4, 13, 14, 10, 9, 16, 7, 20, 15, 4] = 0.1  114.38
+y[4, 18, 4] = 0.5  8.94
+y[4, 13, 14, 10, 9, 16, 7, 6, 20, 4] = 0.1  107.61
+y[4, 15, 20, 6, 13, 18, 4] = 0.4  51.42
+y[4, 15, 11, 8, 19, 16, 7, 10, 14, 6, 20, 4] = 0.2  146.9
+y[5, 12, 5] = 0.4  18.11
+y[4, 13, 14, 10, 16, 17, 20, 4] = 0.1  103.03
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.6  92.08
+y[4, 18, 15, 20, 4] = 0.1  29.95
+true  45
+-------------Iter CG 5-------------
+LP Objective Value = 336.78,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 11, 8, 19, 16, 9, 10, 14, 4] = 0.2  139.96
+y[4, 13, 14, 10, 16, 17, 6, 4] = 0.3  105.8
+y[4, 13, 14, 10, 9, 16, 7, 20, 15, 4] = 0.1  114.38
+y[4, 18, 4] = 0.5  8.94
+y[4, 13, 14, 10, 9, 16, 7, 6, 20, 4] = 0.1  107.61
+y[4, 15, 20, 6, 13, 18, 4] = 0.4  51.42
+y[4, 15, 11, 8, 19, 16, 7, 10, 14, 6, 20, 4] = 0.2  146.9
+y[5, 12, 5] = 0.4  18.11
+y[4, 13, 14, 10, 16, 17, 20, 4] = 0.1  103.03
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.6  92.08
+y[4, 18, 15, 20, 4] = 0.1  29.95
+true  3
+-------------Iter CG 6-------------
+LP Objective Value = 336.78,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 11, 8, 19, 16, 9, 10, 14, 4] = 0.2  139.96
+y[4, 13, 14, 10, 16, 17, 6, 4] = 0.3  105.8
+y[4, 13, 14, 10, 9, 16, 7, 20, 15, 4] = 0.1  114.38
+y[4, 18, 4] = 0.5  8.94
+y[4, 13, 14, 10, 9, 16, 7, 6, 20, 4] = 0.1  107.61
+y[4, 15, 20, 6, 13, 18, 4] = 0.4  51.42
+y[4, 15, 11, 8, 19, 16, 7, 10, 14, 6, 20, 4] = 0.2  146.9
+y[5, 12, 5] = 0.4  18.11
+y[4, 13, 14, 10, 16, 17, 20, 4] = 0.1  103.03
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.6  92.08
+y[4, 18, 15, 20, 4] = 0.1  29.95
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 3 of B&P for SP4 [1, 4, 2, 5, 1] parkings[5, 4]================
+Display selected node 3, parent node 1: from 1 nodes
+- Branching node in depth: 2
+   - MUST      combination:  (5, 16)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.5
+  Branching node with cg lower bound: 317.86
+  Branching node with LB reduction: 0.22
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.26
+
+Solve a child node 5
+   - MUST      combination:  (5, 16)  (5, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 320.34,   sum y = 3.5
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[4, 18, 4] = 1.0  8.94
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.5  83.24
+true  18
+-------------Iter CG 2-------------
+LP Objective Value = 318.71,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[4, 18, 4] = 0.75  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.25  51.42
+y[4, 15, 20, 6, 14, 10, 7, 11, 8, 19, 12, 5] = 0.25  148.18
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.25  76.69
+y[5, 16, 17, 7, 9, 5] = 0.25  32.62
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 0.25  96.86
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.25  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+true  6
+-------------Iter CG 3-------------
+LP Objective Value = 318.71,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[4, 18, 4] = 0.75  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.25  51.42
+y[4, 15, 20, 6, 14, 10, 7, 11, 8, 19, 12, 5] = 0.25  148.18
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.25  76.69
+y[5, 16, 17, 7, 9, 5] = 0.25  32.62
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 0.25  96.86
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.25  92.08
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+false  0
+
+Solve a child node 6
+   - MUST      combination:  (5, 16)  
+   - FORBIDDEN combination:  (5, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 339.29,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 18, 4] = 1.0  24.48
+y[4, 20, 6, 13, 14, 10, 9, 7, 4] = 1.0  104.16
+y[5, 12, 19, 8, 11, 17, 16, 5] = 1.0  86.01
+true  206
+-------------Iter CG 2-------------
+LP Objective Value = 338.8,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 20, 6, 13, 14, 10, 9, 7, 4] = 0.5  104.16
+y[4, 18, 15, 20, 4] = 0.5  29.95
+y[5, 12, 19, 8, 11, 17, 16, 5] = 1.0  86.01
+y[4, 18, 4] = 0.5  8.94
+y[4, 15, 6, 9, 7, 10, 14, 13, 4] = 0.5  113.25
+true  164
+-------------Iter CG 3-------------
+LP Objective Value = 328.33,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 13, 14, 10, 9, 7, 6, 20, 15, 4] = 1.0  108.73
+y[5, 12, 19, 8, 11, 17, 16, 5] = 1.0  86.01
+y[4, 18, 4] = 1.0  8.94
+true  107
+-------------Iter CG 4-------------
+LP Objective Value = 328.33,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 13, 14, 10, 9, 7, 6, 20, 15, 4] = 1.0  108.73
+y[5, 12, 19, 8, 11, 17, 16, 5] = 1.0  86.01
+y[4, 18, 4] = 1.0  8.94
+true  64
+-------------Iter CG 5-------------
+LP Objective Value = 328.33,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 13, 14, 10, 9, 7, 6, 20, 15, 4] = 1.0  108.73
+y[5, 12, 19, 8, 11, 17, 16, 5] = 1.0  86.01
+y[4, 18, 4] = 1.0  8.94
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 4 of B&P for SP4 [1, 4, 2, 5, 1] parkings[5, 4]================
+Display selected node 5, parent node 3: from 1 nodes
+- Branching node in depth: 3
+   - MUST      combination:  (5, 16)  (5, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.5
+  Branching node with cg lower bound: 318.71
+  Branching node with LB reduction: 0.28
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.4
+
+Solve a child node 7
+   - MUST      combination:  (5, 12)  (5, 16)  (5, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 320.34,   sum y = 3.5
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[4, 18, 4] = 1.0  8.94
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.5  83.24
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 320.34,   sum y = 3.5
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[4, 18, 4] = 1.0  8.94
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.5  83.24
+false  0
+
+Solve a child node 8
+   - MUST      combination:  (5, 16)  (5, 9)  
+   - FORBIDDEN combination:  (5, 12)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 344.28,   sum y = 3.5
+x[1, 4, 2, 5, 1],  124.64
+y[5, 17, 4] = 0.5  46.64
+y[4, 15, 20, 6, 14, 10, 7, 11, 8, 19, 12, 5] = 0.5  148.18
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.5  76.69
+y[5, 9, 17, 16, 5] = 0.5  31.16
+y[4, 18, 4] = 1.0  8.94
+y[4, 13, 6, 20, 15, 11, 8, 19, 12, 5] = 0.5  118.71
+true  212
+-------------Iter CG 2-------------
+LP Objective Value = 340.75,   sum y = 3.11
+x[1, 4, 2, 5, 1],  124.64
+y[5, 19, 8, 11, 17, 5] = 0.11  78.29
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.56  94.27
+y[4, 15, 20, 6, 14, 10, 7, 11, 8, 19, 12, 5] = 0.11  148.18
+y[4, 6, 14, 10, 17, 12, 5] = 0.22  91.12
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.11  76.69
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.11  85.34
+y[5, 16, 17, 7, 9, 5] = 0.22  32.62
+y[4, 6, 17, 12, 19, 8, 11, 4] = 0.33  133.7
+y[4, 18, 4] = 1.0  8.94
+y[4, 13, 6, 20, 15, 11, 8, 19, 12, 5] = 0.33  118.71
+true  147
+-------------Iter CG 3-------------
+LP Objective Value = 335.34,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.33  94.27
+y[4, 20, 6, 14, 10, 17, 12, 5] = 0.33  93.31
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.33  76.69
+y[4, 6, 7, 17, 12, 19, 8, 11, 15, 4] = 0.33  136.96
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.33  85.34
+y[4, 18, 4] = 1.0  8.94
+y[4, 13, 6, 20, 15, 11, 8, 19, 12, 5] = 0.33  118.71
+true  36
+-------------Iter CG 4-------------
+LP Objective Value = 335.08,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.33  94.27
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.33  76.69
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.33  85.34
+y[4, 6, 17, 12, 19, 8, 11, 15, 4] = 0.33  136.13
+y[4, 18, 4] = 1.0  8.94
+y[4, 13, 6, 20, 15, 11, 8, 19, 12, 5] = 0.33  118.71
+y[4, 20, 6, 14, 10, 7, 17, 12, 5] = 0.33  93.36
+true  34
+-------------Iter CG 5-------------
+LP Objective Value = 335.08,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.33  94.27
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.33  76.69
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.33  85.34
+y[4, 6, 17, 12, 19, 8, 11, 15, 4] = 0.33  136.13
+y[4, 18, 4] = 1.0  8.94
+y[4, 13, 6, 20, 15, 11, 8, 19, 12, 5] = 0.33  118.71
+y[4, 20, 6, 14, 10, 7, 17, 12, 5] = 0.33  93.36
+true  17
+-------------Iter CG 6-------------
+LP Objective Value = 335.08,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.33  94.27
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.33  76.69
+y[5, 16, 19, 8, 11, 17, 9, 5] = 0.33  85.34
+y[4, 6, 17, 12, 19, 8, 11, 15, 4] = 0.33  136.13
+y[4, 18, 4] = 1.0  8.94
+y[4, 13, 6, 20, 15, 11, 8, 19, 12, 5] = 0.33  118.71
+y[4, 20, 6, 14, 10, 7, 17, 12, 5] = 0.33  93.36
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 5 of B&P for SP4 [1, 4, 2, 5, 1] parkings[5, 4]================
+Display selected node 7, parent node 5: from 1 nodes
+- Branching node in depth: 4
+   - MUST      combination:  (5, 12)  (5, 16)  (5, 9)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 1.5
+  Branching node with cg lower bound: 320.34
+  Branching node with LB reduction: 0.41
+  Branching node with FS reduction: -0.25
+  Total reduction: 0.27
+Branch on total number of 2e routes:  3.0, 4.0
+
+Solve a child node 9
+   - MUST      combination:  (5, 12)  (5, 16)  (5, 9)  
+   # Total number of 2e routes cannot UNDER:   4  3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 323.44,   sum y = 4.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[4, 20, 6, 10, 14, 13, 4] = 0.5  71.77
+y[4, 15, 4] = 0.5  17.2
+y[5, 16, 17, 7, 9, 5] = 0.5  32.62
+y[4, 18, 4] = 1.0  8.94
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.5  83.24
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 10
+   - MUST      combination:  (5, 12)  (5, 16)  (5, 9)  
+   # Total number of 2e routes cannot EXCEED:   3  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 320.55,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[4, 15, 20, 6, 14, 10, 7, 11, 8, 19, 5] = 0.25  140.69
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.25  76.69
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+y[5, 12, 16, 17, 7, 9, 5] = 0.25  47.47
+y[4, 18, 4] = 0.75  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.25  51.42
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 0.25  96.86
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.25  92.08
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 320.55,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.5  82.79
+y[4, 15, 20, 6, 14, 10, 7, 11, 8, 19, 5] = 0.25  140.69
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.25  76.69
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+y[5, 12, 16, 17, 7, 9, 5] = 0.25  47.47
+y[4, 18, 4] = 0.75  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.25  51.42
+y[5, 12, 19, 8, 11, 17, 16, 9, 5] = 0.25  96.86
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.25  92.08
+false  0
+
+================Iteration 6 of B&P for SP4 [1, 4, 2, 5, 1] parkings[5, 4]================
+Display selected node 10, parent node 7: from 1 nodes
+- Branching node in depth: 5
+   - MUST      combination:  (5, 12)  (5, 16)  (5, 9)  
+   # Total number of 2e routes cannot EXCEED:   3  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.5
+  Branching node with cg lower bound: 320.55
+  Branching node with LB reduction: 0.04
+  Branching node with FS reduction: 0.2
+  Total reduction: 0.46
+
+Solve a child node 11
+   - MUST      combination:  (5, 12)  (5, 16)  (5, 9)  (5, 8)  
+   # Total number of 2e routes cannot EXCEED:   3  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 320.81,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 15, 20, 6, 10, 14, 13, 4] = 0.57  82.79
+y[5, 16, 7, 9, 10, 14, 13, 20, 15, 4] = 0.14  94.27
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.29  86.01
+y[4, 6, 10, 14, 13, 18, 4] = 0.14  75.01
+y[5, 16, 17, 7, 9, 5] = 0.29  32.62
+y[5, 12, 19, 8, 11, 16, 9, 5] = 0.14  94.09
+y[4, 18, 15, 20, 6, 14, 10, 7, 5] = 0.14  94.7
+y[4, 18, 4] = 0.57  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.14  51.42
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.43  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.14  83.24
+false  0
+Exceed Upper Bound, prune
+
+Solve a child node 12
+   - MUST      combination:  (5, 12)  (5, 16)  (5, 9)  
+   - FORBIDDEN combination:  (5, 8)  
+   # Total number of 2e routes cannot EXCEED:   3  
+   # Total number of 2e routes cannot UNDER:   3  
+
+-------------Iter CG 1-------------
+LP Objective Value = 354.74,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[5, 17, 4] = 0.11  46.64
+y[4, 20, 6, 14, 10, 7, 17, 19, 8, 5] = 0.11  131.19
+y[4, 15, 8, 11, 10, 14, 13, 4] = 0.11  131.71
+y[5, 12, 19, 11, 17, 7, 9, 5] = 0.11  78.4
+y[4, 20, 6, 10, 14, 13, 18, 4] = 0.44  77.2
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.33  76.69
+y[5, 12, 16, 17, 9, 5] = 0.11  46.02
+y[4, 6, 20, 15, 18, 4] = 0.11  43.89
+y[4, 13, 6, 20, 15, 11, 8, 19, 4] = 0.33  128.24
+y[5, 12, 16, 17, 5] = 0.11  41.17
+y[4, 18, 15, 11, 8, 19, 5] = 0.44  89.7
+y[5, 12, 16, 17, 7, 9, 5] = 0.44  47.47
+y[5, 12, 4] = 0.11  61.49
+y[5, 12, 5] = 0.11  18.11
+true  619
+-------------Iter CG 2-------------
+LP Objective Value = 337.05,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 20, 6, 10, 14, 13, 18, 4] = 0.5  77.2
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.5  76.69
+y[5, 12, 16, 17, 7, 9, 5] = 0.5  47.47
+y[4, 20, 6, 19, 8, 11, 15, 18, 4] = 0.5  115.95
+y[4, 15, 11, 8, 19, 17, 5] = 0.5  89.39
+y[5, 12, 5] = 0.5  18.11
+true  100
+-------------Iter CG 3-------------
+LP Objective Value = 336.39,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 20, 6, 10, 14, 13, 18, 4] = 0.5  77.2
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.5  76.69
+y[5, 12, 16, 17, 9, 5] = 0.5  46.02
+y[4, 15, 11, 8, 19, 17, 7, 6, 20, 4] = 0.5  115.77
+y[4, 18, 15, 11, 8, 19, 5] = 0.5  89.7
+y[5, 12, 5] = 0.5  18.11
+true  94
+-------------Iter CG 4-------------
+LP Objective Value = 336.39,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 20, 6, 10, 14, 13, 18, 4] = 0.5  77.2
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.5  76.69
+y[5, 12, 16, 17, 9, 5] = 0.5  46.02
+y[4, 15, 11, 8, 19, 17, 7, 6, 20, 4] = 0.5  115.77
+y[4, 18, 15, 11, 8, 19, 5] = 0.5  89.7
+y[5, 12, 5] = 0.5  18.11
+true  6
+-------------Iter CG 5-------------
+LP Objective Value = 336.39,   sum y = 3.0
+x[1, 4, 2, 5, 1],  124.64
+y[4, 20, 6, 10, 14, 13, 18, 4] = 0.5  77.2
+y[5, 16, 7, 9, 10, 14, 13, 4] = 0.5  76.69
+y[5, 12, 16, 17, 9, 5] = 0.5  46.02
+y[4, 15, 11, 8, 19, 17, 7, 6, 20, 4] = 0.5  115.77
+y[4, 18, 15, 11, 8, 19, 5] = 0.5  89.7
+y[5, 12, 5] = 0.5  18.11
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP5 [1, 4, 1] parkings[4]================
+-------------Iter CG 1-------------
+LP Objective Value = 372.89,   sum y = 3.0
+x[1, 4, 1],  124.45
+y[4, 13, 14, 10, 9, 16, 7, 20, 4] = 1.0  103.36
+y[4, 6, 17, 12, 19, 8, 11, 15, 4] = 1.0  136.13
+y[4, 18, 4] = 1.0  8.94
+true  228
+-------------Iter CG 2-------------
+LP Objective Value = 366.02,   sum y = 2.5
+x[1, 4, 1],  124.45
+y[4, 20, 6, 10, 14, 13, 18, 4] = 0.5  77.2
+y[4, 20, 9, 12, 16, 17, 7, 13, 4] = 0.5  120.07
+y[4, 6, 7, 17, 12, 19, 8, 11, 15, 4] = 0.5  136.96
+y[4, 15, 11, 8, 19, 16, 9, 10, 14, 4] = 0.5  139.96
+y[4, 18, 4] = 0.5  8.94
+true  138
+-------------Iter CG 3-------------
+LP Objective Value = 357.04,   sum y = 2.5
+x[1, 4, 1],  124.45
+y[4, 20, 11, 8, 19, 12, 16, 17, 7, 6, 4] = 0.5  135.52
+y[4, 13, 14, 10, 9, 17, 7, 4] = 0.5  98.22
+y[4, 18, 13, 6, 15, 4] = 0.5  51.39
+y[4, 20, 11, 8, 19, 12, 16, 9, 10, 14, 4] = 0.5  155.58
+y[4, 15, 18, 4] = 0.5  24.48
+true  43
+-------------Iter CG 4-------------
+LP Objective Value = 356.29,   sum y = 2.56
+x[1, 4, 1],  124.45
+y[4, 15, 8, 19, 12, 16, 9, 10, 14, 4] = 0.11  154.34
+y[4, 20, 11, 8, 19, 12, 16, 17, 7, 6, 4] = 0.44  135.52
+y[4, 13, 14, 10, 9, 17, 7, 4] = 0.44  98.22
+y[4, 15, 11, 8, 12, 16, 9, 10, 14, 4] = 0.11  156.87
+y[4, 6, 7, 17, 12, 19, 8, 11, 15, 4] = 0.11  136.96
+y[4, 20, 11, 8, 19, 12, 16, 9, 10, 14, 4] = 0.11  155.58
+y[4, 15, 18, 4] = 0.11  24.48
+y[4, 15, 11, 8, 19, 16, 9, 10, 14, 4] = 0.11  139.96
+y[4, 13, 14, 10, 9, 16, 12, 19, 11, 4] = 0.11  141.91
+y[4, 18, 4] = 0.44  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.44  51.42
+true  13
+-------------Iter CG 5-------------
+LP Objective Value = 354.18,   sum y = 2.5
+x[1, 4, 1],  124.45
+y[4, 15, 11, 8, 19, 12, 16, 17, 7, 4] = 0.36  134.99
+y[4, 6, 14, 10, 9, 7, 17, 15, 4] = 0.07  106.95
+y[4, 20, 6, 14, 13, 18, 4] = 0.21  61.56
+y[4, 20, 11, 8, 19, 12, 16, 17, 7, 6, 4] = 0.14  135.52
+y[4, 13, 14, 10, 9, 17, 7, 4] = 0.43  98.22
+y[4, 15, 11, 8, 19, 12, 16, 9, 10, 6, 4] = 0.21  152.05
+y[4, 20, 11, 8, 19, 12, 16, 9, 10, 14, 4] = 0.29  155.58
+y[4, 18, 4] = 0.43  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.36  51.42
+true  13
+-------------Iter CG 6-------------
+LP Objective Value = 354.18,   sum y = 2.5
+x[1, 4, 1],  124.45
+y[4, 15, 11, 8, 19, 12, 16, 17, 7, 4] = 0.36  134.99
+y[4, 6, 14, 10, 9, 7, 17, 15, 4] = 0.07  106.95
+y[4, 20, 6, 14, 13, 18, 4] = 0.21  61.56
+y[4, 20, 11, 8, 19, 12, 16, 17, 7, 6, 4] = 0.14  135.52
+y[4, 13, 14, 10, 9, 17, 7, 4] = 0.43  98.22
+y[4, 15, 11, 8, 19, 12, 16, 9, 10, 6, 4] = 0.21  152.05
+y[4, 20, 11, 8, 19, 12, 16, 9, 10, 14, 4] = 0.29  155.58
+y[4, 18, 4] = 0.43  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.36  51.42
+true  2
+-------------Iter CG 7-------------
+LP Objective Value = 354.08,   sum y = 2.5
+x[1, 4, 1],  124.45
+y[4, 15, 11, 8, 19, 12, 16, 17, 7, 4] = 0.38  134.99
+y[4, 20, 6, 14, 13, 18, 4] = 0.25  61.56
+y[4, 20, 11, 8, 19, 12, 16, 17, 7, 6, 4] = 0.12  135.52
+y[4, 13, 14, 10, 9, 17, 7, 4] = 0.44  98.22
+y[4, 20, 6, 14, 10, 9, 7, 17, 15, 4] = 0.06  109.14
+y[4, 15, 11, 8, 19, 12, 16, 9, 10, 6, 4] = 0.25  152.05
+y[4, 20, 11, 8, 19, 12, 16, 9, 10, 14, 4] = 0.25  155.58
+y[4, 18, 4] = 0.44  8.94
+y[4, 15, 20, 6, 13, 18, 4] = 0.31  51.42
+true  2
+-------------Iter CG 8-------------
+LP Objective Value = 353.58,   sum y = 2.5
+x[1, 4, 1],  124.45
+y[4, 15, 11, 8, 19, 12, 16, 17, 7, 4] = 0.25  134.99
+y[4, 20, 6, 14, 13, 18, 4] = 0.25  61.56
+y[4, 15, 11, 8, 19, 12, 16, 9, 7, 6, 20, 4] = 0.25  142.81
+y[4, 13, 14, 10, 9, 17, 7, 4] = 0.5  98.22
+y[4, 20, 6, 10, 14, 13, 18, 4] = 0.25  77.2
+y[4, 15, 11, 8, 19, 12, 16, 9, 10, 6, 4] = 0.25  152.05
+y[4, 15, 11, 8, 19, 12, 16, 17, 20, 4] = 0.25  133.57
+y[4, 18, 4] = 0.5  8.94
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP6 [1, 4, 2, 3, 1] parkings[4, 3]================
+-------------Iter CG 1-------------
+LP Objective Value = 313.03,   sum y = 4.0
+x[1, 4, 2, 3, 1],  125.9
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 9, 16, 12, 19, 8, 11, 3] = 1.0  92.57
+y[4, 18, 4] = 1.0  8.94
+true  88
+-------------Iter CG 2-------------
+LP Objective Value = 313.03,   sum y = 4.0
+x[1, 4, 2, 3, 1],  125.9
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 9, 16, 12, 19, 8, 11, 3] = 1.0  92.57
+y[4, 18, 4] = 1.0  8.94
+true  64
+-------------Iter CG 3-------------
+LP Objective Value = 313.03,   sum y = 4.0
+x[1, 4, 2, 3, 1],  125.9
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 9, 16, 12, 19, 8, 11, 3] = 1.0  92.57
+y[4, 18, 4] = 1.0  8.94
+true  55
+-------------Iter CG 4-------------
+LP Objective Value = 313.03,   sum y = 4.0
+x[1, 4, 2, 3, 1],  125.9
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 9, 16, 12, 19, 8, 11, 3] = 1.0  92.57
+y[4, 18, 4] = 1.0  8.94
+false  0
+Integer solution found
+Update upper bound
+[3, 17, 3]   2.83
+[4, 18, 4]   8.94
+[3, 7, 9, 16, 12, 19, 8, 11, 3]   92.57
+[4, 15, 20, 6, 10, 14, 13, 4]   82.79
+
+
+================Iteration 0 of B&P for SP7 [1, 2, 4, 5, 1] parkings[5, 2]================
+-------------Iter CG 1-------------
+LP Objective Value = 327.4,   sum y = 2.5
+x[1, 2, 4, 5, 1],  124.66
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[2, 6, 14, 10, 9, 16, 17, 7, 2] = 0.5  88.25
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.5  83.24
+true  66
+-------------Iter CG 2-------------
+LP Objective Value = 327.34,   sum y = 2.5
+x[1, 2, 4, 5, 1],  124.66
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.33  86.01
+y[5, 16, 9, 7, 8, 11, 19, 12, 5] = 0.33  100.45
+y[2, 6, 14, 10, 9, 16, 17, 7, 2] = 0.33  88.25
+y[2, 6, 14, 10, 2] = 0.17  56.81
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.33  92.08
+true  69
+-------------Iter CG 3-------------
+LP Objective Value = 320.53,   sum y = 2.5
+x[1, 2, 4, 5, 1],  124.66
+y[5, 16, 7, 9, 10, 14, 6, 2] = 0.25  72.53
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+y[2, 6, 14, 10, 9, 7, 17, 16, 5] = 0.25  73.73
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.5  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.25  83.24
+true  41
+-------------Iter CG 4-------------
+LP Objective Value = 320.19,   sum y = 2.5
+x[1, 2, 4, 5, 1],  124.66
+y[2, 15, 18, 20, 2] = 0.2  41.25
+y[5, 16, 7, 9, 10, 14, 13, 6, 2] = 0.2  79.44
+y[2, 20, 15, 18, 13, 6, 2] = 0.4  53.92
+y[5, 12, 19, 8, 11, 7, 9, 10, 14, 6, 2] = 0.1  132.19
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.3  86.01
+y[2, 6, 14, 10, 9, 7, 17, 16, 5] = 0.3  73.73
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.4  87.98
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.4  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.2  83.24
+true  9
+-------------Iter CG 5-------------
+LP Objective Value = 320.19,   sum y = 2.5
+x[1, 2, 4, 5, 1],  124.66
+y[2, 15, 18, 20, 2] = 0.2  41.25
+y[5, 16, 7, 9, 10, 14, 13, 6, 2] = 0.2  79.44
+y[2, 20, 15, 18, 13, 6, 2] = 0.4  53.92
+y[5, 12, 19, 8, 11, 7, 9, 10, 14, 6, 2] = 0.1  132.19
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.3  86.01
+y[2, 6, 14, 10, 9, 7, 17, 16, 5] = 0.3  73.73
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.4  87.98
+y[5, 12, 19, 8, 11, 17, 7, 9, 5] = 0.4  92.08
+y[5, 12, 19, 8, 11, 16, 5] = 0.2  83.24
+true  4
+-------------Iter CG 6-------------
+LP Objective Value = 319.15,   sum y = 2.25
+x[1, 2, 4, 5, 1],  124.66
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[5, 12, 19, 8, 11, 7, 9, 10, 14, 6, 2] = 0.25  132.19
+y[5, 16, 9, 7, 17, 8, 11, 19, 12, 5] = 0.5  101.1
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+y[2, 6, 14, 10, 9, 7, 17, 16, 5] = 0.25  73.73
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+true  6
+-------------Iter CG 7-------------
+LP Objective Value = 319.15,   sum y = 2.25
+x[1, 2, 4, 5, 1],  124.66
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[5, 12, 19, 8, 11, 7, 9, 10, 14, 6, 2] = 0.25  132.19
+y[5, 16, 9, 7, 17, 8, 11, 19, 12, 5] = 0.5  101.1
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+y[2, 6, 14, 10, 9, 7, 17, 16, 5] = 0.25  73.73
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+true  1
+-------------Iter CG 8-------------
+LP Objective Value = 319.15,   sum y = 2.25
+x[1, 2, 4, 5, 1],  124.66
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[5, 12, 19, 8, 11, 7, 9, 10, 14, 6, 2] = 0.25  132.19
+y[5, 16, 9, 7, 17, 8, 11, 19, 12, 5] = 0.5  101.1
+y[5, 12, 19, 8, 11, 17, 16, 5] = 0.25  86.01
+y[2, 6, 14, 10, 9, 7, 17, 16, 5] = 0.25  73.73
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP8 [1, 2, 4, 3, 1] parkings[2, 3]================
+-------------Iter CG 1-------------
+LP Objective Value = 320.52,   sum y = 3.5
+x[1, 2, 4, 3, 1],  125.77
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 9, 16, 12, 19, 8, 11, 3] = 1.0  92.57
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[2, 6, 14, 10, 2] = 0.5  56.81
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+true  49
+-------------Iter CG 2-------------
+LP Objective Value = 320.52,   sum y = 3.5
+x[1, 2, 4, 3, 1],  125.77
+y[3, 17, 3] = 1.0  2.83
+y[3, 7, 9, 16, 12, 19, 8, 11, 3] = 1.0  92.57
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[2, 6, 14, 10, 2] = 0.5  56.81
+y[2, 20, 15, 18, 13, 14, 10, 2] = 0.5  87.98
+true  43
+-------------Iter CG 3-------------
+LP Objective Value = 315.02,   sum y = 2.5
+x[1, 2, 4, 3, 1],  125.77
+y[2, 6, 14, 10, 9, 7, 17, 3] = 0.5  61.88
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[3, 7, 10, 14, 13, 18, 15, 20, 2] = 0.5  89.85
+y[3, 17, 9, 16, 12, 19, 8, 11, 3] = 0.5  91.22
+y[3, 16, 12, 19, 8, 11, 3] = 0.5  81.64
+true  13
+-------------Iter CG 4-------------
+LP Objective Value = 315.02,   sum y = 2.5
+x[1, 2, 4, 3, 1],  125.77
+y[2, 6, 14, 10, 9, 7, 17, 3] = 0.5  61.88
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[3, 7, 10, 14, 13, 18, 15, 20, 2] = 0.5  89.85
+y[3, 17, 9, 16, 12, 19, 8, 11, 3] = 0.5  91.22
+y[3, 16, 12, 19, 8, 11, 3] = 0.5  81.64
+true  3
+-------------Iter CG 5-------------
+LP Objective Value = 315.02,   sum y = 2.5
+x[1, 2, 4, 3, 1],  125.77
+y[2, 6, 14, 10, 9, 7, 17, 3] = 0.5  61.88
+y[2, 20, 15, 18, 13, 6, 2] = 0.5  53.92
+y[3, 7, 10, 14, 13, 18, 15, 20, 2] = 0.5  89.85
+y[3, 17, 9, 16, 12, 19, 8, 11, 3] = 0.5  91.22
+y[3, 16, 12, 19, 8, 11, 3] = 0.5  81.64
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP9 [1, 2, 4, 1] parkings[4, 2]================
+-------------Iter CG 1-------------
+LP Objective Value = 336.71,   sum y = 3.0
+x[1, 2, 4, 1],  124.48
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[2, 11, 8, 19, 12, 16, 9, 17, 7, 2] = 1.0  120.5
+y[4, 18, 4] = 1.0  8.94
+true  55
+-------------Iter CG 2-------------
+LP Objective Value = 336.71,   sum y = 3.0
+x[1, 2, 4, 1],  124.48
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[2, 11, 8, 19, 12, 16, 9, 17, 7, 2] = 1.0  120.5
+y[4, 18, 4] = 1.0  8.94
+true  8
+-------------Iter CG 3-------------
+LP Objective Value = 336.71,   sum y = 3.0
+x[1, 2, 4, 1],  124.48
+y[4, 15, 20, 6, 10, 14, 13, 4] = 1.0  82.79
+y[2, 11, 8, 19, 12, 16, 9, 17, 7, 2] = 1.0  120.5
+y[4, 18, 4] = 1.0  8.94
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP10 [1, 4, 3, 2, 5, 1] parkings[5, 3]================
+-------------Iter CG 1-------------
+LP Objective Value = 390.33,   sum y = 2.43
+x[1, 4, 3, 2, 5, 1],  168.39
+y[3, 17, 3] = 0.14  2.83
+y[3, 20, 15, 18, 13, 6, 7, 3] = 0.29  96.54
+y[3, 15, 18, 6, 14, 10, 9, 16, 3] = 0.14  118.14
+y[3, 7, 15, 20, 6, 13, 14, 10, 9, 3] = 0.14  113.29
+y[3, 7, 10, 14, 13, 18, 15, 20, 3] = 0.29  111.47
+y[3, 17, 16, 12, 19, 8, 11, 3] = 0.29  82.88
+y[3, 19, 8, 11, 6, 13, 14, 10, 3] = 0.14  129.52
+y[3, 17, 9, 16, 12, 19, 8, 11, 3] = 0.57  91.22
+y[3, 6, 20, 18, 13, 14, 10, 7, 3] = 0.14  107.46
+y[3, 15, 18, 20, 6, 14, 10, 9, 7, 3] = 0.14  117.59
+y[5, 12, 5] = 0.14  18.11
+true  13
+-------------Iter CG 2-------------
+LP Objective Value = 389.97,   sum y = 2.44
+x[1, 4, 3, 2, 5, 1],  168.39
+y[3, 17, 3] = 0.25  2.83
+y[5, 12, 16, 9, 10, 14, 13, 6, 3] = 0.12  108.43
+y[3, 15, 18, 6, 14, 10, 9, 16, 3] = 0.12  118.14
+y[3, 7, 6, 13, 18, 15, 11, 19, 3] = 0.06  112.93
+y[3, 7, 15, 20, 6, 13, 14, 10, 9, 3] = 0.06  113.29
+y[3, 11, 8, 19, 12, 16, 9, 7, 17, 3] = 0.25  92.67
+y[3, 7, 9, 10, 14, 6, 20, 15, 8, 19, 3] = 0.06  135.71
+y[3, 7, 10, 14, 13, 18, 15, 20, 3] = 0.31  111.47
+y[3, 9, 6, 13, 18, 15, 20, 3] = 0.25  102.77
+y[3, 17, 16, 12, 19, 8, 11, 3] = 0.5  82.88
+y[3, 6, 20, 18, 13, 14, 10, 7, 3] = 0.19  107.46
+y[3, 9, 10, 14, 6, 20, 15, 8, 11, 3] = 0.06  133.88
+y[3, 15, 18, 20, 6, 14, 10, 9, 7, 3] = 0.06  117.59
+y[3, 11, 8, 19, 12, 5] = 0.12  71.45
+true  20
+-------------Iter CG 3-------------
+LP Objective Value = 386.69,   sum y = 3.0
+x[1, 4, 3, 2, 5, 1],  168.39
+y[3, 17, 3] = 0.5  2.83
+y[3, 16, 9, 7, 17, 3] = 0.5  22.69
+y[3, 6, 13, 14, 10, 9, 16, 3] = 0.5  91.79
+y[5, 12, 19, 8, 11, 15, 18, 20, 6, 3] = 0.5  136.38
+y[3, 7, 10, 14, 13, 18, 15, 20, 3] = 0.5  111.47
+y[3, 11, 8, 19, 12, 5] = 0.5  71.45
+true  4
+-------------Iter CG 4-------------
+LP Objective Value = 385.9,   sum y = 2.5
+x[1, 4, 3, 2, 5, 1],  168.39
+y[3, 17, 3] = 0.5  2.83
+y[3, 17, 9, 16, 11, 8, 19, 12, 5] = 0.5  91.03
+y[5, 12, 19, 8, 11, 15, 18, 20, 6, 3] = 0.5  136.38
+y[3, 7, 6, 13, 14, 10, 9, 16, 3] = 0.5  93.32
+y[3, 7, 10, 14, 13, 18, 15, 20, 3] = 0.5  111.47
+false  0
+Exceed Upper Bound, prune
+
+Total Execution time = 17.32
+
+time spent in soving root node = 0.0, takes percentage of 0.0%
+time spent in branching decision = 0.0, takes percentage of 0.0%
+time spent in solving child node = 0.0, takes percentage of 0.0%
+
+time spent in filtering = 0.0, takes percentage of 0.0%
+time spent in solving column generation = 0.0, takes percentage of 0.0%
+   - time spent in building model = 0.0, takes percentage of NaN%
+       - time spent in setting bound = 0.0, takes percentage of NaN%
+       - time spent in adding columns = 1.63, takes percentage of Inf%
+   - time spent in solving pricing = 0.0, takes percentage of NaN%
+   - time spent in solving RMP = 0.0, takes percentage of NaN%
+Current optimal solution 313.03 found in interation 0 in level 0:
+[1, 4, 2, 3, 1]  125.9
+[3, 17, 3]  2.83
+[4, 18, 4]  8.94
+[3, 7, 9, 16, 12, 19, 8, 11, 3]  92.57
+[4, 15, 20, 6, 10, 14, 13, 4]  82.79

@@ -1,38 +1,3 @@
-# include("labelling.jl")
-
-function calculateLRPLowerBound(routes_1e_complete)
-    lb_per_route = Dict{Int, Float64}()
-
-    for (r, route) in enumerate(routes_1e_complete)
-        available_parkings = getServedParking1eRoute(route)
-        empty_parkings = setdiff!(collect(satellites), available_parkings)
-        available_points = sort(collect(union(available_parkings, customers)))
-    
-        model = Model(CPLEX.Optimizer)
-        set_silent(model)
-
-        @variable(model, x[A2, A2], Bin)
-        @variable(model, u[customers]>=0,Int)
-    
-        @constraint(model, [i in customers], sum(x[i,j] for j in A2)==1)
-        @constraint(model, [p in empty_parkings], sum(x[p,i] for i in A2) == 0)
-        @constraint(model, [p in available_parkings], sum(x[p,j] for j in A2)>=1)
-        @constraint(model, [i in available_parkings, j in available_parkings], x[i,j]==0)
-        @constraint(model, [i in available_points], sum(x[i,j] for j in A2) == sum(x[j,i] for j in A2))
-        @constraint(model, [i in customers, j in customers], u[i] + 1 <= u[j] + length(customers)*(1-x[i,j]))
-        
-        @objective(model, Min, route.cost + sum(arc_cost[i,j]*x[i,j] for i in A2 for j in A2))
-    
-        optimize!(model)
-    
-        status = termination_status(model)
-        if status == MOI.OPTIMAL || status == MOI.FEASIBLE_POINT 
-            lb_per_route[r] = objective_value(model)
-        end
-    end
-
-    return lb_per_route
-end
 
 function calculateTSP1e(selected_parkings)
     # println("Calculate TSP 1e\n")
@@ -86,7 +51,6 @@ function calculateTSP1e(selected_parkings)
 
     return generate1eRoute(transformRoute(x))
 end
-
 
 function solveLRP_RLMP(selected_parkings, routes_pool)
     # println("Solve LRP 2e RLMP  ", selected_parkings)
@@ -173,8 +137,8 @@ function calculateLRP2eCG(selected_parkings)
     return lower_bound
 end
 
-function calculateLRP2eMILP(selected_parkings)
-    # println("Calculate LRP 2e")
+function calculateLRP2eSimplified(route_1e::Route)
+    selected_parkings = getServedParking1eRoute(route_1e)
     ## Solve a multi depot VRP
     empty_parkings = setdiff!(collect(satellites), selected_parkings)
     available_points = sort(collect(union(selected_parkings, customers)))
@@ -212,6 +176,19 @@ function calculateLRP2eMILP(selected_parkings)
     end
 end
 
+function calculateLRP2eMILP(route_1e::Route)
+    # root_branch = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(),Set{Route}(),Set{Route}(), 0)
+    # root_branch.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
+    # CG for root node
+    branchingNode = createRootNode(route_1e)
+    
+    if !isnothing(branchingNode)
+        return branchingNode.cgLowerBound
+    else
+        return nothing
+    end
+end
+
 function calculateLRPLowerBoundByParking()
     # display("$minimum_parkings_required")
     lowerbound_1e_routes = Dict{Route, Float64}()
@@ -225,8 +202,11 @@ function calculateLRPLowerBoundByParking()
         for parking_subset in combinations(satellites, num_parking)
             # println("\n================================Parking subset = ", parking_subset,"================================")
             route_1e = calculateTSP1e(parking_subset)
-            lowerbound_2e = calculateLRP2eMILP(parking_subset)
-            lowerbound_1e_routes[route_1e] = route_1e.cost + lowerbound_2e
+            # lowerbound_2e = calculateLRP2eSimplified(route_1e)
+            lowerbound_2e = calculateLRP2eMILP(route_1e)
+            if !isnothing(lowerbound_2e)
+                lowerbound_1e_routes[route_1e] = lowerbound_2e
+            end
             # @info "$(route_1e.sequence)  Lower bound found: $(round(route_1e.cost, digits=2))  $(round(lowerbound_2e, digits=2))  Total: $(round(route_1e.cost + lowerbound_2e, digits=2))"
         end
     end 

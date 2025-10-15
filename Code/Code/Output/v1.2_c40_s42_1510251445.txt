@@ -1,0 +1,229 @@
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+--------Start column generation for root node of [1, 2, 4, 3, 1]--------
+==CG iter 1==
+length of routes pool = 164
+LP Objective Value = 1135.66,   sum y = 7.0
+true  30873
+==CG iter 2==
+length of routes pool = 31037
+LP Objective Value = 962.9,   sum y = 10.0
+true  19675
+==CG iter 3==
+length of routes pool = 50712
+LP Objective Value = 737.49,   sum y = 10.0
+true  10200
+==CG iter 4==
+length of routes pool = 60912
+LP Objective Value = 536.03,   sum y = 8.25
+true  2340
+==CG iter 5==
+length of routes pool = 63252
+LP Objective Value = 516.57,   sum y = 7.84
+true  2554
+==CG iter 6==
+length of routes pool = 65806
+LP Objective Value = 506.24,   sum y = 7.47
+true  1589
+==CG iter 7==
+length of routes pool = 67395
+LP Objective Value = 486.78,   sum y = 7.26
+true  981
+==CG iter 8==
+length of routes pool = 68376
+LP Objective Value = 478.38,   sum y = 7.35
+true  690
+==CG iter 9==
+length of routes pool = 69066
+LP Objective Value = 477.24,   sum y = 7.29
+true  335
+==CG iter 10==
+length of routes pool = 69401
+LP Objective Value = 475.22,   sum y = 7.4
+true  183
+==CG iter 11==
+length of routes pool = 69584
+LP Objective Value = 472.72,   sum y = 7.4
+true  124
+==CG iter 12==
+length of routes pool = 69708
+LP Objective Value = 472.51,   sum y = 7.56
+true  41
+==CG iter 13==
+length of routes pool = 69749
+LP Objective Value = 472.51,   sum y = 7.56
+true  3
+==CG iter 14==
+length of routes pool = 69752
+LP Objective Value = 472.51,   sum y = 7.56
+false  0
+MILP Result:
+477.24
+[1, 2, 4, 3, 1]    123.2
+[3, 31, 23, 14, 18, 3]   46.55
+[3, 10, 36, 25, 8, 13, 3]   48.75
+[2, 42, 30, 45, 35, 27, 22, 38, 2]   75.66
+[2, 9, 32, 26, 6, 24, 11, 2]   32.95
+[3, 15, 20, 17, 44, 16, 3]   47.07
+[2, 19, 37, 28, 40, 34, 43, 29, 41, 7, 2]   74.89
+[3, 12, 33, 39, 21, 3]   28.17
+--------Start column generation for root node of [1, 2, 4, 1]--------
+==CG iter 1==
+length of routes pool = 32823
+LP Objective Value = 707.0,   sum y = 7.0
+true  6765
+==CG iter 2==
+length of routes pool = 39588
+LP Objective Value = 608.71,   sum y = 7.0
+true  2
+==CG iter 3==
+length of routes pool = 39590
+LP Objective Value = 603.95,   sum y = 7.0
+false  0
+--------Start column generation for root node of [1, 2, 4, 5, 1]--------
+==CG iter 1==
+length of routes pool = 32989
+LP Objective Value = 608.03,   sum y = 9.97
+true  8143
+==CG iter 2==
+length of routes pool = 41132
+LP Objective Value = 511.08,   sum y = 7.44
+true  609
+==CG iter 3==
+length of routes pool = 41741
+LP Objective Value = 496.76,   sum y = 7.2
+true  54
+==CG iter 4==
+length of routes pool = 41795
+LP Objective Value = 494.69,   sum y = 7.22
+true  17
+==CG iter 5==
+length of routes pool = 41812
+LP Objective Value = 493.6,   sum y = 7.25
+true  4
+==CG iter 6==
+length of routes pool = 41816
+LP Objective Value = 493.6,   sum y = 7.25
+false  0
+--------Start column generation for root node of [1, 4, 2, 3, 1]--------
+==CG iter 1==
+length of routes pool = 5842
+LP Objective Value = 598.21,   sum y = 8.71
+true  6484
+==CG iter 2==
+length of routes pool = 12326
+LP Objective Value = 558.24,   sum y = 7.67
+true  2951
+==CG iter 3==
+length of routes pool = 15277
+LP Objective Value = 525.19,   sum y = 7.01
+true  2500
+==CG iter 4==
+length of routes pool = 17777
+LP Objective Value = 505.46,   sum y = 7.0
+false  0
+--------Start column generation for root node of [1, 4, 3, 2, 5, 1]--------
+==CG iter 1==
+length of routes pool = 9797
+LP Objective Value = 597.21,   sum y = 7.45
+true  4550
+==CG iter 2==
+length of routes pool = 14347
+LP Objective Value = 571.9,   sum y = 7.0
+true  531
+==CG iter 3==
+length of routes pool = 14878
+LP Objective Value = 563.51,   sum y = 7.0
+true  406
+==CG iter 4==
+length of routes pool = 15284
+LP Objective Value = 555.41,   sum y = 7.15
+true  233
+==CG iter 5==
+length of routes pool = 15517
+LP Objective Value = 550.54,   sum y = 7.0
+true  47
+==CG iter 6==
+length of routes pool = 15564
+LP Objective Value = 549.19,   sum y = 7.0
+true  23
+==CG iter 7==
+length of routes pool = 15587
+LP Objective Value = 547.55,   sum y = 7.0
+true  5
+==CG iter 8==
+length of routes pool = 15592
+LP Objective Value = 547.21,   sum y = 7.0
+false  0
+--------Start column generation for root node of [1, 4, 2, 5, 1]--------
+==CG iter 1==
+length of routes pool = 10390
+LP Objective Value = 593.24,   sum y = 7.36
+true  4728
+==CG iter 2==
+length of routes pool = 15118
+LP Objective Value = 578.37,   sum y = 7.17
+true  2831
+==CG iter 3==
+length of routes pool = 17949
+LP Objective Value = 568.94,   sum y = 7.0
+true  1843
+==CG iter 4==
+length of routes pool = 19792
+LP Objective Value = 565.56,   sum y = 7.0
+true  1169
+==CG iter 5==
+length of routes pool = 20961
+LP Objective Value = 563.97,   sum y = 7.04
+true  1419
+==CG iter 6==
+length of routes pool = 22380
+LP Objective Value = 563.89,   sum y = 7.04
+true  992
+==CG iter 7==
+length of routes pool = 23372
+LP Objective Value = 563.85,   sum y = 7.04
+true  251
+==CG iter 8==
+length of routes pool = 23623
+LP Objective Value = 563.85,   sum y = 7.04
+true  79
+==CG iter 9==
+length of routes pool = 23702
+LP Objective Value = 563.81,   sum y = 7.0
+true  78
+==CG iter 10==
+length of routes pool = 23780
+LP Objective Value = 563.81,   sum y = 7.0
+false  0
+Lower bound= 595.71   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+min value exceed UB
+
+Total Execution time = 104.68
+
+time spent in soving root node = 0.0, takes percentage of 0.0%
+time spent in branching decision = 0.0, takes percentage of 0.0%
+time spent in solving child node = 0.0, takes percentage of 0.0%
+
+time spent in filtering = 0.0, takes percentage of 0.0%
+time spent in solving column generation = 0.0, takes percentage of 0.0%
+   - time spent in solving pricing = 89.34, takes percentage of Inf%
+   - time spent in building model = 9.8, takes percentage of Inf%
+   - time spent in adding columns = 9.76, takes percentage of Inf%
+   - time spent in solving RMP = 0.89, takes percentage of Inf%
+   - time spent in output = 0.8, takes percentage of Inf%
+
+deepest node dived to level 0
+
+Current optimal solution 477.24 found in interation 0 in level 0:
+[1, 2, 4, 3, 1]  123.2
+[3, 31, 23, 14, 18, 3]  46.55
+[3, 10, 36, 25, 8, 13, 3]  48.75
+[2, 42, 30, 45, 35, 27, 22, 38, 2]  75.66
+[2, 9, 32, 26, 6, 24, 11, 2]  32.95
+[3, 15, 20, 17, 44, 16, 3]  47.07
+[2, 19, 37, 28, 40, 34, 43, 29, 41, 7, 2]  74.89
+[3, 12, 33, 39, 21, 3]  28.17

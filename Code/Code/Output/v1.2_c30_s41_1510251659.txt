@@ -1,0 +1,709 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_TimeLimit                               3600
+Tried aggregator 1 time.
+MIP Presolve eliminated 243 rows and 118 columns.
+MIP Presolve modified 3240 coefficients.
+Reduced MIP has 3353 rows, 2312 columns, and 12872 nonzeros.
+Reduced MIP has 1134 binaries, 1148 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.00 sec. (8.61 ticks)
+Probing time = 0.00 sec. (4.62 ticks)
+Cover probing fixed 0 vars, tightened 30 bounds.
+Tried aggregator 1 time.
+Detecting symmetries...
+Reduced MIP has 3353 rows, 2312 columns, and 12872 nonzeros.
+Reduced MIP has 1134 binaries, 1148 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.00 sec. (7.56 ticks)
+Probing time = 0.01 sec. (4.51 ticks)
+Cover probing fixed 0 vars, tightened 24 bounds.
+Clique table members: 519.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 12 threads.
+Root relaxation solution time = 0.02 sec. (45.91 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0      276.8179   135                    276.8179     1136         
+      0     0      294.0849   178                   Cuts: 236     1402         
+      0     0      297.4965   201                   Cuts: 138     1553         
+      0     0      299.4318   218                   Cuts: 130     1732         
+      0     0      301.5904   208                    Cuts: 71     1847         
+      0     0      302.3064   219                    Cuts: 84     1922         
+Detecting symmetries...
+      0     0      303.2333   217                    Cuts: 47     1982         
+      0     0      305.5562   222                    Cuts: 47     2058         
+      0     0      309.9376   208                    Cuts: 65     2144         
+      0     0      309.9997   204                    Cuts: 32     2172         
+      0     0      309.9997   207                    Cuts: 16     2195         
+      0     0      309.9997   190                 Flowcuts: 1     2196         
+      0     0      310.0454   203                    Cuts: 43     2246         
+      0     0      310.0454   207                    Cuts: 54     2286         
+*     0+    0                          585.9549      310.0454            47.09%
+*     0+    0                          538.5686      310.0454            42.43%
+      0     0  -1.00000e+75     0      538.5686      310.0454     2286   42.43%
+Detecting symmetries...
+      0     2      310.0454   194      538.5686      310.0454     2286   42.43%
+Elapsed time = 0.54 sec. (1344.40 ticks, tree = 0.02 MB, solutions = 1)
+*     1+    1                          531.1072      310.0454            41.62%
+*     5+    3                          524.1375      311.4299            40.58%
+*    18+    9                          492.6282      311.4299            36.78%
+*    25+   10                          483.6340      311.4299            35.61%
+     44    30      406.7652   181      483.6340      311.4299     7568   35.61%
+    258   209      490.1198   168      483.6340      311.4299    25799   35.61%
+*   292+   10                          477.2399      311.4299            34.74%
+*   351+   10                          471.7208      311.4299            33.98%
+    566   426      406.4646    88      471.7208      334.4279    50281   29.10%
+    995   715      377.1544   143      471.7208      338.5201    73182   28.24%
+   1722  1249      366.4160   164      471.7208      338.5201   101404   28.24%
+   2339  1676      375.0798   151      471.7208      363.8017   122687   22.88%
+   2979  2390      395.2582   141      471.7208      363.8017   155959   22.88%
+   3567  2950      465.7363    88      471.7208      365.9254   185415   22.43%
+
+Performing restart 1
+
+Repeating presolve.
+Tried aggregator 1 time.
+Reduced MIP has 3353 rows, 2312 columns, and 12872 nonzeros.
+Reduced MIP has 1134 binaries, 1148 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.00 sec. (5.52 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 3353 rows, 2312 columns, and 12872 nonzeros.
+Reduced MIP has 1134 binaries, 1148 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.00 sec. (7.73 ticks)
+Represolve time = 0.02 sec. (38.24 ticks)
+*  3931+    0                          466.5463      366.4160            21.46%
+   3931     0      324.7108   216      466.5463     Cuts: 158   209168   21.46%
+   3931     0      330.3531   239      466.5463     Cuts: 192   209692   21.46%
+   3931     0      331.7916   245      466.5463     Cuts: 193   209967   21.46%
+*  3931+    0                          450.1527      366.4160            18.60%
+   3931     0  -1.00000e+75     0      450.1527      366.4160   209967   18.60%
+   3931     0      332.5394   234      450.1527      Cuts: 91   210201   18.60%
+   3931     0      333.0299   260      450.1527     Cuts: 109   210363   18.60%
+   3931     0      333.7740   251      450.1527     Cuts: 111   210661   18.60%
+   3931     0      334.6248   254      450.1527     Cuts: 134   210931   18.60%
+   3931     0      335.0477   259      450.1527     Cuts: 150   211138   18.60%
+*  3931+    0                          448.8474      366.4160            18.37%
+   3931     0  -1.00000e+75     0      448.8474      366.4160   211138   18.37%
+   3931     2      335.0477   259      448.8474      366.4160   211138   18.37%
+   3935     6      419.9228   174      448.8474      366.4160   213009   18.37%
+Elapsed time = 132.73 sec. (8515.12 ticks, tree = 0.02 MB, solutions = 17)
+   4017    41      436.0376   179      448.8474      366.4160   219975   18.37%
+   4543   358      416.8620   169      448.8474      366.4160   254216   18.37%
+   5312   934      441.3469   143      448.8474      366.4160   313891   18.37%
+   6267  1754      437.7119   159      448.8474      388.3377   402020   13.48%
+   6941  2366      446.8148   126      448.8474      388.3377   452931   13.48%
+   7972  3163      425.2396   184      448.8474      403.8438   547192   10.03%
+   8856  3621      448.4709   120      448.8474      409.3239   596135    8.81%
+   9769  4163      429.1458   116      448.8474      416.6034   674897    7.18%
+  10753  5026        cutoff            448.8474      419.3504   739033    6.57%
+  11451  5593      430.2428   160      448.8474      419.8468   793675    6.46%
+Elapsed time = 136.87 sec. (18061.47 ticks, tree = 20.90 MB, solutions = 17)
+  12450  6336      443.9447   152      448.8474      419.8744   851245    6.45%
+  13109  7044      448.7345   100      448.8474      420.5146   933511    6.31%
+  14014  7994      434.3001   138      448.8474      421.0556  1025789    6.19%
+  14905  8445      428.9974   171      448.8474      421.4684  1063803    6.10%
+  15671  9370      430.0670   173      448.8474      421.7793  1158207    6.03%
+* 16415+ 9673                          442.3754      421.9508             4.62%
+  16526  7285      439.8541   143      442.3754      421.9508  1222381    4.62%
+  17251  7780      429.1671   172      442.3754      422.1786  1291226    4.57%
+* 17383+ 7636                          442.0227      422.2367             4.48%
+* 17742+ 7781                          440.9778      422.3328             4.23%
+  17800  8159      432.2295   134      440.9778      422.4519  1364583    4.20%
+  18757  8137      433.9903    38      440.9778      422.4941  1408930    4.19%
+  19522  9006      438.7539   180      440.9778      422.7228  1509661    4.14%
+Elapsed time = 141.10 sec. (27617.40 ticks, tree = 31.47 MB, solutions = 20)
+  20402  9564      437.5601   153      440.9778      422.8550  1576546    4.11%
+  21252 10356      438.8561    98      440.9778      423.0632  1664553    4.06%
+  22205 10993      438.1308   143      440.9778      423.1065  1738952    4.05%
+  22962 11943      436.9688   104      440.9778      423.3365  1850497    4.00%
+  23735 12567      438.1755   145      440.9778      423.5747  1922930    3.95%
+  24593 13010      430.5729   179      440.9778      423.7370  1984102    3.91%
+  25390 13782      437.3978   111      440.9778      423.7691  2071515    3.90%
+  26293 14316        cutoff            440.9778      423.9988  2143342    3.85%
+  27077 14915      440.3302   133      440.9778      424.1372  2208035    3.82%
+* 27416+15232                          439.2219      424.1390             3.43%
+* 27618+15129                          438.7455      424.1643             3.32%
+  27915 13536      436.2021   114      438.7455      424.2217  2310826    3.31%
+Elapsed time = 145.39 sec. (37161.38 ticks, tree = 45.94 MB, solutions = 22)
+  28784 14144      431.9925   193      438.7455      424.3506  2392122    3.28%
+  29369 14826      431.4743   168      438.7455      424.5337  2477853    3.24%
+  30101 15330      435.4734   147      438.7455      424.6019  2546216    3.22%
+  30831 15731      435.7635   143      438.7455      424.7317  2604663    3.19%
+  31509 16300      437.0837   165      438.7455      424.8962  2702827    3.16%
+  32223 16679      436.5789   185      438.7455      425.0012  2764469    3.13%
+  32832 17478      434.4929   188      438.7455      425.0844  2895615    3.11%
+  33586 18041      437.4360   111      438.7455      425.1236  2966279    3.10%
+  34372 18280      432.9037   172      438.7455      425.2755  3010753    3.07%
+  35049 18917      430.1837   187      438.7455      425.3760  3104589    3.05%
+Elapsed time = 149.72 sec. (46715.05 ticks, tree = 65.18 MB, solutions = 22)
+  35559 19549      437.2610   180      438.7455      425.4750  3201245    3.02%
+  36126 19756      433.1789   175      438.7455      425.5465  3246732    3.01%
+  36896 20348      436.6015   149      438.7455      425.6422  3337850    2.99%
+  37566 20905      435.4181   177      438.7455      425.6833  3424401    2.98%
+  38269 21240      434.3368   161      438.7455      425.7574  3477950    2.96%
+  38856 21731      437.3849   133      438.7455      425.8257  3574494    2.94%
+  39470 21905        cutoff            438.7455      425.9083  3600331    2.93%
+  40321 22811      435.7188   180      438.7455      425.9716  3756688    2.91%
+  40986 23351      432.2712   118      438.7455      426.1161  3831671    2.88%
+  41537 23651      437.7796    78      438.7455      426.1228  3877407    2.88%
+Elapsed time = 154.15 sec. (56265.90 ticks, tree = 81.46 MB, solutions = 22)
+  42024 24155      432.7545   144      438.7455      426.2662  3967452    2.84%
+  42637 24254      434.4319    81      438.7455      426.3186  3979102    2.83%
+  43386 24765      434.8635   181      438.7455      426.4016  4079405    2.81%
+  44013 25246      435.2083   161      438.7455      426.4592  4146773    2.80%
+  44582 25782      437.1242   137      438.7455      426.4592  4218228    2.80%
+  45133 26335      436.2781   181      438.7455      426.5904  4324385    2.77%
+  45733 26716      436.9097   150      438.7455      426.7031  4380248    2.74%
+  46301 26774      437.9422   193      438.7455      426.7717  4393131    2.73%
+  46987 27032      437.2785   139      438.7455      426.8374  4448371    2.71%
+  47568 27727      438.4468   196      438.7455      426.9173  4567481    2.70%
+Elapsed time = 158.53 sec. (65817.54 ticks, tree = 106.13 MB, solutions = 22)
+  48234 27919      449.4771   137      438.7455      426.9914  4608599    2.68%
+  48919 28257        cutoff            438.7455      427.0239  4675735    2.67%
+  49530 28813      437.5172   194      438.7455      427.1158  4783723    2.65%
+  50093 29308      438.1830   140      438.7455      427.1984  4884341    2.63%
+  50588 29739      436.0331   141      438.7455      427.2801  4982763    2.61%
+  51069 30313      438.7088   132      438.7455      427.3530  5098122    2.60%
+  51626 30412      434.9458   154      438.7455      427.4019  5117809    2.59%
+  52246 30488      437.6429   105      438.7455      427.4440  5135766    2.58%
+  52848 31405      435.9032   169      438.7455      427.4869  5307998    2.57%
+  53494 31288      437.9577   173      438.7455      427.5172  5284162    2.56%
+Elapsed time = 162.98 sec. (75365.05 ticks, tree = 120.96 MB, solutions = 22)
+  54031 31958        cutoff            438.7455      427.5763  5411507    2.55%
+  54715 32176        cutoff            438.7455      427.6405  5456397    2.53%
+  55289 32537      433.9237   190      438.7455      427.7048  5536509    2.52%
+  55859 33409      438.5521   168      438.7455      427.7737  5701426    2.50%
+  56349 33627      434.0560   137      438.7455      427.8111  5756225    2.49%
+  57092 33874      435.0205   161      438.7455      427.8756  5803661    2.48%
+  57555 34145      434.6705   168      438.7455      427.9312  5858250    2.46%
+  57937 34264      433.6257   189      438.7455      428.0011  5886179    2.45%
+  58339 34934      437.1440   116      438.7455      428.0534  6018991    2.44%
+  58862 34972        cutoff            438.7455      428.1139  6024371    2.42%
+Elapsed time = 167.45 sec. (84912.57 ticks, tree = 134.95 MB, solutions = 22)
+  59371 35410        cutoff            438.7455      428.1673  6124557    2.41%
+  59905 35857      434.0969   159      438.7455      428.2305  6223747    2.40%
+  60434 35966      433.4370   173      438.7455      428.2715  6251443    2.39%
+  60977 36202      437.2329   105      438.7455      428.2938  6314378    2.38%
+  61515 36827      436.7311   129      438.7455      428.3543  6461263    2.37%
+  62071 37032      438.6077   179      438.7455      428.3986  6511553    2.36%
+  62633 37602        cutoff            438.7455      428.4545  6640116    2.35%
+  63143 37525      437.0241   189      438.7455      428.4857  6624949    2.34%
+  63621 38054      436.8306   172      438.7455      428.5581  6764009    2.32%
+  65467 39150      438.3125   133      438.7455      428.7029  7037735    2.29%
+Elapsed time = 173.28 sec. (97336.77 ticks, tree = 154.70 MB, solutions = 22)
+  67621 40140        cutoff            438.7455      428.9366  7266453    2.24%
+  69564 41255        cutoff            438.7455      429.0980  7496194    2.20%
+  71701 42436        cutoff            438.7455      429.3312  7759070    2.15%
+  73790 43303        cutoff            438.7455      429.4988  7979207    2.11%
+  75771 44588      438.0368   179      438.7455      429.6731  8335874    2.07%
+  77783 45674      437.5169   183      438.7455      429.8708  8642014    2.02%
+  80079 46758        cutoff            438.7455      430.0091  8941336    1.99%
+  81891 47819    infeasible            438.7455      430.1461  9199157    1.96%
+  83582 48532      438.6381   158      438.7455      430.3138  9481658    1.92%
+  84768 49257      436.0727   151      438.7455      430.4731  9757376    1.89%
+Elapsed time = 191.60 sec. (135506.63 ticks, tree = 230.59 MB, solutions = 22)
+  86162 49673      437.7883   196      438.7455      430.5840  9902303    1.86%
+  87483 50137      437.3449   149      438.7455      430.7146 10165601    1.83%
+  88826 50624      437.3319   135      438.7455      430.8190 10390117    1.81%
+  90096 51090      435.9944   207      438.7455      430.9516 10656755    1.78%
+  91222 51249      435.0674   156      438.7455      431.0899 10842605    1.74%
+  92384 51469      436.0550   130      438.7455      431.2095 10962516    1.72%
+  93607 51873        cutoff            438.7455      431.3583 11243334    1.68%
+  94666 52242        cutoff            438.7455      431.4823 11538403    1.66%
+  95880 52444      438.6147   139      438.7455      431.5904 11708139    1.63%
+  96889 52722      437.3271   189      438.7455      431.6822 11944637    1.61%
+Elapsed time = 210.29 sec. (173668.73 ticks, tree = 251.21 MB, solutions = 22)
+  97995 52870        cutoff            438.7455      431.7982 12105800    1.58%
+  99135 53112      436.8654   183      438.7455      431.8962 12345824    1.56%
+ 100074 53258      437.3359   162      438.7455      432.0073 12505660    1.54%
+*100740+53303                          438.6540      432.0530             1.50%
+*100740+53301                          438.5466      432.0530             1.48%
+ 101339 52333      438.1900   156      438.5466      432.1059 12852825    1.47%
+ 102572 52446      434.3856   196      438.5466      432.1764 13038334    1.45%
+ 103839 52596      434.2365    99      438.5466      432.2682 13294074    1.43%
+ 104954 52801      437.5503   178      438.5466      432.3689 13546065    1.41%
+*105266 52776      integral     0      437.8933      432.3983 13600582    1.25%
+*105515+45860                          437.5499      432.4332             1.17%
+ 106529 41305        cutoff            437.5499      432.5231 13833979    1.15%
+ 107793 41234      437.2711    62      437.5499      432.6117 13997596    1.13%
+Elapsed time = 227.27 sec. (209072.10 ticks, tree = 199.14 MB, solutions = 27)
+ 109254 40927      435.1859   167      437.5499      432.7139 14247908    1.11%
+ 110705 40653      436.7439   238      437.5499      432.8337 14429883    1.08%
+ 112168 40143      435.1975   168      437.5499      432.9591 14815112    1.05%
+ 113673 40022        cutoff            437.5499      433.1373 14915490    1.01%
+ 115189 39661      437.3216   129      437.5499      433.3230 15172101    0.97%
+ 116701 39075      435.8133   147      437.5499      433.4561 15448610    0.94%
+ 118393 38344      436.2144   115      437.5499      433.6053 15731949    0.90%
+ 120200 37899      435.6614   125      437.5499      433.7540 15932483    0.87%
+ 121823 37554        cutoff            437.5499      433.9103 16106918    0.83%
+ 123736 36873      435.4264   171      437.5499      434.0885 16368111    0.79%
+Elapsed time = 245.29 sec. (247248.63 ticks, tree = 178.92 MB, solutions = 27)
+ 125615 36150      436.1441   220      437.5499      434.2303 16727108    0.76%
+ 127646 35448        cutoff            437.5499      434.3717 16984666    0.73%
+ 129775 34625        cutoff            437.5499      434.5647 17265594    0.68%
+ 131991 33647        cutoff            437.5499      434.7146 17510130    0.65%
+ 134166 32857        cutoff            437.5499      434.9015 17728876    0.61%
+ 136472 31760        cutoff            437.5499      435.0011 17974124    0.58%
+ 139165 30788      436.5077    93      437.5499      435.1818 18155994    0.54%
+ 142105 29429        cutoff            437.5499      435.3991 18431410    0.49%
+ 145189 27597      436.4391   168      437.5499      435.5436 18689352    0.46%
+ 148500 25639        cutoff            437.5499      435.7418 18982200    0.41%
+Elapsed time = 263.68 sec. (285414.34 ticks, tree = 124.42 MB, solutions = 27)
+ 151820 23786      436.7475   171      437.5499      435.9189 19228990    0.37%
+ 155173 22209      436.7880   150      437.5499      436.0995 19420618    0.33%
+ 159086 19397      437.5448   186      437.5499      436.3213 19680211    0.28%
+ 163469 16271        cutoff            437.5499      436.5273 19920848    0.23%
+ 168661 11921        cutoff            437.5499      436.7795 20151623    0.18%
+ 174973  6830        cutoff            437.5499      437.1207 20328898    0.10%
+
+GUB cover cuts applied:  62
+Clique cuts applied:  11
+Cover cuts applied:  20
+Implied bound cuts applied:  95
+Flow cuts applied:  303
+Mixed integer rounding cuts applied:  1271
+Flow path cuts applied:  1
+Zero-half cuts applied:  12
+Lift and project cuts applied:  23
+Gomory fractional cuts applied:  9
+
+Root node processing (before b&c):
+  Real time             =    0.53 sec. (1332.45 ticks)
+Parallel b&c, 12 threads:
+  Real time             =  276.00 sec. (309701.73 ticks)
+  Sync time (average)   =    8.58 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =  276.53 sec. (311034.19 ticks)
+
+Total execution time: 276.977989708 seconds
+Total distance traveled: 437.54989954073284
+File name: randomSeed
+Capacity of FEV: 256
+Capacity of Microhub: 500
+Capacity of SEV: 50
+Number of customers: 30
+Number of parkings: 4
+Number of microhubs: 2
+Number of robots/MM: 5
+Parking generation rule: random
+Optimal solution found!
+
+2 -> 22 -> 15 -> 18 -> 20 -> 6 -> 2 is : 53.26
+2 -> 26 -> 25 -> 11 -> 8 -> 19 -> 16 -> 3 is : 77.15
+2 -> 28 -> 34 -> 13 -> 14 -> 21 -> 2 is : 53.19
+2 -> 29 -> 23 -> 33 -> 2 is : 16.23
+3 -> 31 -> 32 -> 12 -> 27 -> 24 -> 30 -> 10 -> 2 is : 94.71
+3 -> 35 -> 17 -> 7 -> 9 -> 3 is : 18.26
+/Users/jiahua/Library/CloudStorage/OneDrive-EcoledeManagementdeNormandie/2EVRPMM/Code/Code/TEST/Result/Fig/randomSeed-random-O-15-10-2025-17-04-result.svg
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+
+--------Start column generation for root node of [1, 2, 4, 3, 1]--------
+Current global upper bound = Inf
+7 iterations of column generation
+lp value of column generation : 432.57
+MILP Result:
+445.91
+[1, 2, 4, 3, 1]    124.75
+[2, 29, 2]   4.47
+[3, 27, 12, 32, 19, 8, 11, 22, 2]   103.54
+[3, 16, 31, 3]   21.64
+[2, 6, 23, 14, 21, 2]   38.35
+[2, 13, 34, 28, 18, 15, 20, 2]   55.6
+[3, 7, 26, 25, 17, 35, 3]   29.57
+[2, 33, 10, 30, 24, 9, 3]   67.97
+
+--------Start column generation for root node of [1, 2, 4, 1]--------
+Current global upper bound = 445.9055218714718
+9 iterations of column generation
+lp value of column generation : 473.63
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 2, 4, 5, 1]--------
+Current global upper bound = 445.9055218714718
+9 iterations of column generation
+lp value of column generation : 455.13
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 4, 2, 3, 1]--------
+Current global upper bound = 445.9055218714718
+6 iterations of column generation
+lp value of column generation : 442.21
+MILP Result:
+442.81
+[1, 4, 2, 3, 1]    124.95
+[3, 9, 35, 17, 3]   16.91
+[3, 16, 19, 8, 11, 25, 26, 7, 3]   75.5
+[4, 20, 22, 15, 18, 4]   37.64
+[3, 31, 12, 32, 27, 24, 30, 10, 3]   98.86
+[4, 6, 29, 33, 23, 4]   36.59
+[4, 28, 13, 21, 14, 34, 4]   52.36
+
+--------Start column generation for root node of [1, 4, 3, 2, 5, 1]--------
+Current global upper bound = 442.80743622724475
+9 iterations of column generation
+lp value of column generation : 578.99
+lp result exceed global upper bound, prune
+
+--------Start column generation for root node of [1, 4, 2, 5, 1]--------
+Current global upper bound = 442.80743622724475
+7 iterations of column generation
+lp value of column generation : 491.34
+lp result exceed global upper bound, prune
+==========================================================
+Lower bound= 432.57   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+Lower bound= 442.21   [1, 4, 2, 3, 1]    parkings: Set([4, 3])
+==========================================================
+
+--------Start column generation for root node of [1, 2, 4, 3, 1]--------
+Current global upper bound = 442.80743622724475
+1 iterations of column generation
+lp value of column generation : 431.74
+MILP Result:
+438.69
+[1, 2, 4, 3, 1]    124.75
+[2, 6, 23, 33, 29, 2]   19.03
+[2, 22, 15, 18, 20, 2]   50.56
+[3, 16, 19, 8, 11, 25, 26, 7, 3]   75.5
+[2, 21, 14, 13, 34, 28, 2]   53.19
+[3, 31, 12, 32, 27, 24, 30, 10, 3]   98.86
+[3, 35, 17, 9, 3]   16.81
+Branching stack contains now 1 nodes, current upper bound is 438.69
+
+================Iteration 1 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 5.47
+  Branching node with cg lower bound: 431.74
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+
+Start column generation for node N_1, parent node N_0, depth 1
+
+   - MUST combination:  (2, 9)  
+4 iterations of column generation
+value of column generation : 436.43
+Start column generation for node N_2, parent node N_0, depth 1
+
+   - FORBIDDEN combination:   (2, 9)  
+1 iterations of column generation
+value of column generation : 432.1
+Branching stack contains now 2 nodes, current upper bound is 438.69
+
+================Iteration 2 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 1: from 2 nodes
+- Branching node in depth: 1
+
+   - MUST combination:  (2, 9)  
+  Branching node with fractional score: 5.77
+  Branching node with cg lower bound: 436.43
+  Branching node with LB reduction: -4.69
+  Branching node with FS reduction: -0.31
+  Total reduction: -4.99
+
+Start column generation for node N_3, parent node N_1, depth 2
+
+   - MUST combination:  (2, 22)  (2, 9)  
+2 iterations of column generation
+value of column generation : 437.33
+Start column generation for node N_4, parent node N_1, depth 2
+
+   - MUST combination:  (2, 9)  
+   - FORBIDDEN combination:   (2, 22)  
+4 iterations of column generation
+lp result exceed global upper bound, prune
+Branching stack contains now 2 nodes, current upper bound is 438.69
+
+================Iteration 3 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 2: from 2 nodes
+- Branching node in depth: 1
+
+   - FORBIDDEN combination:   (2, 9)  
+  Branching node with fractional score: 5.85
+  Branching node with cg lower bound: 432.1
+  Branching node with LB reduction: -0.36
+  Branching node with FS reduction: -0.38
+  Total reduction: -0.74
+
+Start column generation for node N_5, parent node N_2, depth 2
+
+   - MUST combination:  (2, 24)  
+   - FORBIDDEN combination:   (2, 9)  
+5 iterations of column generation
+lp result exceed global upper bound, prune
+Start column generation for node N_6, parent node N_2, depth 2
+
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+1 iterations of column generation
+value of column generation : 435.11
+Branching stack contains now 2 nodes, current upper bound is 438.69
+
+================Iteration 4 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 6: from 2 nodes
+- Branching node in depth: 2
+
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+  Branching node with fractional score: 5.33
+  Branching node with cg lower bound: 435.11
+  Branching node with LB reduction: -1.5
+  Branching node with FS reduction: 0.26
+  Total reduction: -1.47
+
+Start column generation for node N_7, parent node N_6, depth 3
+
+   - MUST combination:  (2, 14)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+3 iterations of column generation
+value of column generation : 435.27
+Start column generation for node N_8, parent node N_6, depth 3
+
+   - FORBIDDEN combination:   (2, 14)  (2, 24)  (2, 9)  
+3 iterations of column generation
+lp result exceed global upper bound, prune
+Branching stack contains now 2 nodes, current upper bound is 438.69
+
+================Iteration 5 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 3: from 2 nodes
+- Branching node in depth: 2
+
+   - MUST combination:  (2, 22)  (2, 9)  
+  Branching node with fractional score: 6.0
+  Branching node with cg lower bound: 437.33
+  Branching node with LB reduction: -0.45
+  Branching node with FS reduction: -0.11
+  Total reduction: -0.67
+
+Start column generation for node N_9, parent node N_3, depth 3
+
+   - MUST combination:  (2, 22)  (2, 9)  
+   + Customers MUST     served together:   (20, 22)  
+2 iterations of column generation
+lp result exceed global upper bound, prune
+Start column generation for node N_10, parent node N_3, depth 3
+
+   - MUST combination:  (2, 22)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+6 iterations of column generation
+value of column generation : 437.4
+Branching stack contains now 2 nodes, current upper bound is 438.69
+
+================Iteration 6 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 10: from 2 nodes
+- Branching node in depth: 3
+
+   - MUST combination:  (2, 22)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+  Branching node with fractional score: 5.5
+  Branching node with cg lower bound: 437.4
+  Branching node with LB reduction: -0.02
+  Branching node with FS reduction: 0.17
+  Total reduction: 0.21
+
+Start column generation for node N_11, parent node N_10, depth 4
+
+   - MUST combination:  (2, 8)  (2, 22)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+3 iterations of column generation
+lp result exceed global upper bound, prune
+Start column generation for node N_12, parent node N_10, depth 4
+
+   - MUST combination:  (2, 22)  (2, 9)  
+   - FORBIDDEN combination:   (2, 8)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+2 iterations of column generation
+lp result exceed global upper bound, prune
+Branching stack contains now 1 nodes, current upper bound is 438.69
+
+================Iteration 7 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 7: from 1 nodes
+- Branching node in depth: 3
+
+   - MUST combination:  (2, 14)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+  Branching node with fractional score: 3.25
+  Branching node with cg lower bound: 435.27
+  Branching node with LB reduction: -0.05
+  Branching node with FS reduction: 0.69
+  Total reduction: 0.92
+
+Start column generation for node N_13, parent node N_7, depth 4
+
+   - MUST combination:  (2, 14)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers MUST     served together:   (20, 22)  
+3 iterations of column generation
+value of column generation : 437.58
+Start column generation for node N_14, parent node N_7, depth 4
+
+   - MUST combination:  (2, 14)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+2 iterations of column generation
+value of column generation : 437.24
+Branching stack contains now 2 nodes, current upper bound is 438.69
+
+================Iteration 8 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 14: from 2 nodes
+- Branching node in depth: 4
+
+   - MUST combination:  (2, 14)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+  Branching node with fractional score: 3.86
+  Branching node with cg lower bound: 437.24
+  Branching node with LB reduction: -0.49
+  Branching node with FS reduction: -0.15
+  Total reduction: -1.08
+
+Start column generation for node N_15, parent node N_14, depth 5
+
+   - MUST combination:  (2, 14)  (3, 35)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+4 iterations of column generation
+value of column generation : 437.4
+Start column generation for node N_16, parent node N_14, depth 5
+
+   - MUST combination:  (2, 14)  
+   - FORBIDDEN combination:   (3, 35)  (2, 24)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+3 iterations of column generation
+Integer Solution Found  439.06609019300754
+Branching stack contains now 2 nodes, current upper bound is 438.69
+
+================Iteration 9 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 13: from 2 nodes
+- Branching node in depth: 4
+
+   - MUST combination:  (2, 14)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers MUST     served together:   (20, 22)  
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 437.58
+  Branching node with LB reduction: -0.58
+  Branching node with FS reduction: 0.06
+  Total reduction: -0.87
+
+Start column generation for node N_17, parent node N_13, depth 5
+
+   - MUST combination:  (2, 14)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers MUST     served together:   (20, 22)  (20, 28)  
+2 iterations of column generation
+lp result exceed global upper bound, prune
+Start column generation for node N_18, parent node N_13, depth 5
+
+   - MUST combination:  (2, 14)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers MUST     served together:   (20, 22)  
+   + Customers FORBIDDEN served together:   (20, 28)  
+1 iterations of column generation
+Integer Solution Found  438.68573364035313
+Update upper bound
+[2, 6, 23, 33, 29, 2]   19.03
+[2, 22, 15, 18, 20, 2]   50.56
+[2, 21, 14, 13, 34, 28, 2]   53.19
+[3, 31, 12, 32, 27, 24, 30, 10, 3]   98.86
+[3, 35, 17, 9, 3]   16.81
+Branching stack contains now 1 nodes, current upper bound is 438.69
+
+================Iteration 10 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 15: from 1 nodes
+- Branching node in depth: 5
+
+   - MUST combination:  (2, 14)  (3, 35)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+  Branching node with fractional score: 4.0
+  Branching node with cg lower bound: 437.4
+  Branching node with LB reduction: -0.03
+  Branching node with FS reduction: -0.03
+  Total reduction: -0.12
+
+Start column generation for node N_19, parent node N_15, depth 6
+
+   - MUST combination:  (2, 14)  (3, 35)  (3, 16)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+1 iterations of column generation
+value of column generation : 437.54
+Start column generation for node N_20, parent node N_15, depth 6
+
+   - MUST combination:  (2, 14)  (3, 35)  
+   - FORBIDDEN combination:   (3, 16)  (2, 24)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+4 iterations of column generation
+lp result exceed global upper bound, prune
+Branching stack contains now 1 nodes, current upper bound is 438.69
+
+================Iteration 11 of B&P for SP1 [1, 2, 4, 3, 1]================
+
+Display selected node 19: from 1 nodes
+- Branching node in depth: 6
+
+   - MUST combination:  (2, 14)  (3, 35)  (3, 16)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+  Branching node with fractional score: 4.25
+  Branching node with cg lower bound: 437.54
+  Branching node with LB reduction: -0.02
+  Branching node with FS reduction: -0.04
+  Total reduction: -0.14
+
+Start column generation for node N_21, parent node N_19, depth 7
+
+   - MUST combination:  (2, 14)  (3, 35)  (3, 16)  (2, 12)  
+   - FORBIDDEN combination:   (2, 24)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+5 iterations of column generation
+lp result exceed global upper bound, prune
+Start column generation for node N_22, parent node N_19, depth 7
+
+   - MUST combination:  (2, 14)  (3, 35)  (3, 16)  
+   - FORBIDDEN combination:   (2, 24)  (2, 12)  (2, 9)  
+   + Customers FORBIDDEN served together:   (20, 22)  
+2 iterations of column generation
+lp result exceed global upper bound, prune
+Branching stack contains now 0 nodes, current upper bound is 438.69
+min value exceed UB
+
+Total Execution time = 28.98
+
+time spent in soving root node = 0.89, takes percentage of 3.0%
+time spent in branching decision = 0.45, takes percentage of 2.0%
+time spent in solving child node = 11.51, takes percentage of 40.0%
+
+time spent in filtering = 0.04, takes percentage of 0.0%
+time spent in solving column generation = 11.45, takes percentage of 40.0%
+   - time spent in solving pricing = 15.28, takes percentage of 133.0%
+   - time spent in building model = 9.65, takes percentage of 84.0%
+   - time spent in adding columns = 9.61, takes percentage of 84.0%
+   - time spent in solving RMP = 1.42, takes percentage of 12.0%
+   - time spent in output = 0.0, takes percentage of 0.0%
+
+deepest node dived to level 6
+
+Current optimal solution 438.69 found in interation 0 in level 5:
+[1, 2, 4, 3, 1]  124.75
+[2, 6, 23, 33, 29, 2]  19.03
+[2, 22, 15, 18, 20, 2]  50.56
+[2, 21, 14, 13, 34, 28, 2]  53.19
+[3, 31, 12, 32, 27, 24, 30, 10, 3]  98.86
+[3, 35, 17, 9, 3]  16.81
