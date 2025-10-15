@@ -1,0 +1,14 @@
+Minimum 2e routes required: 7
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+-------------Iter CG 1-------------
+LP Objective Value = 1146.61,   sum y = 7.0
+true  10605
+-------------Iter CG 2-------------
+LP Objective Value = 1033.86,   sum y = 10.0
+true  15076
+-------------Iter CG 3-------------
+LP Objective Value = 616.74,   sum y = 10.0

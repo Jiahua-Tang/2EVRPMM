@@ -12,7 +12,7 @@ include("LrpLowerBound/solveLRP.jl")
 global root = "$(pwd())/TEST/"
 # global root = "/gpfs/workdir/tangj/2EVRPMM/Code/Code/"
 
-instance_size = 40
+instance_size = 15
 random_seed = 41
 time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 file_name = "Outout/output.txt"
@@ -63,8 +63,8 @@ open(file_name, "w") do io
         execution_time_total = @elapsed begin
 
             generate2eInitialRoutes()
-            lb_lrp_per_route = calculateLRPLowerBoundCG()
-        #     lb_lrp_per_route = calculateLRPLowerBoundByParking()
+            # lb_lrp_per_route = calculateLRPLowerBoundCG()
+            lb_lrp_per_route = calculateLRPLowerBoundByParking()
             displayLRPLowerBound(deepcopy(lb_lrp_per_route))
 
             #region B&P: Start

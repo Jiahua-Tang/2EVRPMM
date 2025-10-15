@@ -123,21 +123,18 @@ function solve_column_generation(route_1e, routes_2e_pool,
     while true # num_iter_cg < 16
         println("-------------Iter CG $num_iter_cg-------------")
         # * 1. solve formulation
-        execution_time_lp = @elapsed begin
         optimize!(model)
-        end
-        global execution_time_rmp += execution_time_lp
         if has_values(model)
             # execution_time_op = @elapsed begin
                 lpObjValue = objective_value(model) + route_1e.cost
                 #region : display lp result
                 println("LP Objective Value = $(round(lpObjValue, digits=2)),   sum y = $(round(sum(value.(values(y_vars))), digits=2))")
-                # println("x$(route_1e.sequence),  $(round(route_1e.cost, digits=2))")
-                # for (rid, y) in y_vars
-                #     if value(y)!=0
-                #         println("y$(routes_2e[rid].sequence) = ", round(value(y),digits=2), "  ", round(routes_2e[rid].cost, digits=2))
-                #     end
-                # end
+                println("x$(route_1e.sequence),  $(round(route_1e.cost, digits=2))")
+                for (rid, y) in y_vars
+                    if value(y)!=0
+                        println("y$(routes_2e[rid].sequence) = ", round(value(y),digits=2), "  ", round(routes_2e[rid].cost, digits=2))
+                    end
+                end
                 #endregion
 
             # end
@@ -158,11 +155,9 @@ function solve_column_generation(route_1e, routes_2e_pool,
             #endregion
 
             # * 3. execute labelling algorithm
-            execution_time_p = @elapsed begin
+            # execution_time = @elapsed begin
                 routes_2e_pool, new_routes_from = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, branchingInfo)
-            end
-            global execution_time_pricing += execution_time_p
-
+            # end
             # * 4. check existance new routes
             if new_routes_from == false
                 break
@@ -261,78 +256,69 @@ function solve_root_node(route_1e::Route)
 
     root_node_branching_info = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(),Set{Route}(),Set{Route}(), 0)
     root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
-    
+        
     #region : create model
-    execution_time = @elapsed begin
-        model = Model(CPLEX.Optimizer)
-        set_silent(model)
-        # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
-        # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
+    model = Model(CPLEX.Optimizer)
+    set_silent(model)
+    # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
+    # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
 
-        y_vars = Dict{Int, VariableRef}()
+    y_vars = Dict{Int, VariableRef}()
 
-        @objective(model, Min, 0.0)
+    @objective(model, Min, 0.0)
 
-        sync = Vector{ConstraintRef}(undef, length(satellites))
-        for (k,_) in enumerate(satellites)
-            # println("$k $s")
-            sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
-        end
-
-        custVisit = Vector{ConstraintRef}(undef, length(customers))
-        for (k,_) in enumerate(customers) 
-            custVisit[k] = @constraint(model, 1.0 <= 0.0)
-        end
-
-        number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
-        for (k,_) in enumerate(satellites)
-            number2evfixe[k] = @constraint(model, 0.0 == 0.0)
-        end
-
-        maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
-        for (k,_) in enumerate(satellites) 
-            maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
-        end
-
-        global lower_bound_2e_routes = minimum_2e_vehicle_required
-        global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
-
-        globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required) 
-        globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
+    sync = Vector{ConstraintRef}(undef, length(satellites))
+    for (k,_) in enumerate(satellites)
+        # println("$k $s")
+        sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
     end
-    global execution_time_build_model += execution_time
+
+    custVisit = Vector{ConstraintRef}(undef, length(customers))
+    for (k,_) in enumerate(customers) 
+        custVisit[k] = @constraint(model, 1.0 <= 0.0)
+    end
+
+    number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
+    for (k,_) in enumerate(satellites)
+        number2evfixe[k] = @constraint(model, 0.0 == 0.0)
+    end
+
+    maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
+    for (k,_) in enumerate(satellites) 
+        maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
+    end
+
+    global lower_bound_2e_routes = minimum_2e_vehicle_required
+    global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
+
+    # globalLowerBound = @constraint(model, 0 <= -lower_bound_2e_routes) 
+    # globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
+
+    globalLowerBound = @constraint(model, 0 <= minimum_2e_vehicle_required) 
+    globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
+
     #endregion
 
     #region : initial columns
-    execution_time = @elapsed begin
-        _, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
+    _, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
+
+    for (route,_) in enumerate(routes_2e)
+        add_2eroute!(model, route, sync, custVisit, number2evfixe, 
+                     maxVolumnMM, globalLowerBound, globalUpperBound, y_vars)
     end
-    global execution_time_filtering += execution_time
 
-    execution_time = @elapsed begin
-        for (route,_) in enumerate(routes_2e)
-            add_2eroute!(model, route, sync, custVisit, number2evfixe, 
-                        maxVolumnMM, globalLowerBound, globalUpperBound, y_vars)
-        end
-
-        for idx in columns_to_be_deleted
-            if haskey(y_vars, idx)
-                y = y_vars[idx]
-                JuMP.set_upper_bound(y, 0.0)
-                JuMP.set_lower_bound(y, 0.0)
-            end
+    for idx in columns_to_be_deleted
+        if haskey(y_vars, idx)
+            y = y_vars[idx]
+            JuMP.set_upper_bound(y, 0.0)
+            JuMP.set_lower_bound(y, 0.0)
         end
     end
-    global execution_time_build_model += execution_time
     #endregion
 
-    execution_time = @elapsed begin
-        root_node = solve_column_generation(route_1e, routes_2e, 
-                                            model, y_vars, sync, custVisit, number2evfixe, maxVolumnMM,globalLowerBound,globalUpperBound,
-                                            root_node_branching_info, 0,0,0,0)
-    end
-    global execution_time_column_generation += execution_time
-
+    root_node = solve_column_generation(route_1e, routes_2e, 
+                                        model, y_vars, sync, custVisit, number2evfixe, maxVolumnMM,globalLowerBound,globalUpperBound,
+                                        root_node_branching_info, 0,0,0,0)
     if !isnothing(root_node)
         if root_node.isLeaf
             println("Integer solution found in root node")
@@ -342,6 +328,8 @@ function solve_root_node(route_1e::Route)
                 global optimalSolution = Vector{Route}()
 
                 push!(optimalSolution, route_1e)
+                # display(length(root_node.y_value))
+                # display(length(root_node.routes_pool))
                 for (_, y) in enumerate([r for r in 1:length(root_node.y_value) if root_node.y_value[r]==1]) 
                     push!(optimalSolution, routes_2e[y])
                 end
@@ -366,65 +354,56 @@ end
 function solve_child_node(route_1e, model, y_vars, sync, custVisit, number2evfixe, maxVolumnMM, 
                           globalLowerBound, globalUpperBound, node::BranchingNode, branching_decision::BranchingInfo, id)
     println("")
-    @info "Solve child node $id"
-    println("Solve child node $id")
+    @info "Solve a child node $id"
+    println("Solve a child node $id")
     displayBranchingRule(branching_decision)
     # * Instead of copying the model, just filter out routes and set bounds to 0
-    execution_time = @elapsed begin
-        routes_2e_pool, columns_to_be_deleted = filter_2e_routes(branching_decision, collect(1:length(routes_2e)))
-    end
-    global execution_time_filtering += execution_time
-
-    execution_time = @elapsed begin
-        # * Set bounds to 0 for deleted routes instead of actually deleting them
-        for route_idx in columns_to_be_deleted
-            if haskey(y_vars, route_idx)
-                y = y_vars[route_idx]
-                JuMP.set_upper_bound(y, 0.0)
-                JuMP.set_lower_bound(y, 0.0)
-            end
-        end
-
-        # * Global Lower bound
-        if !isempty(branching_decision.lower_bound_number_2e_routes)
-            lower_bound_number_2e_routes = maximum(branching_decision.lower_bound_number_2e_routes)
-            set_normalized_rhs(globalLowerBound, -lower_bound_number_2e_routes)
-        else
-            set_normalized_rhs(globalLowerBound, -lower_bound_2e_routes)
-        end
-        
-        # * Global Upper Bound
-        if !isempty(branching_decision.upper_bound_number_2e_routes)
-            upper_bound_number_2e_routes = minimum(branching_decision.upper_bound_number_2e_routes)
-            set_normalized_rhs(globalUpperBound, upper_bound_number_2e_routes)
-        else
-            set_normalized_rhs(globalUpperBound, upper_bound_2e_routes)
-        end
-    end
-    global execution_time_set_bound += execution_time
-    global execution_time_build_model += execution_time
+    routes_2e_pool, columns_to_be_deleted = filter_2e_routes(branching_decision, collect(1:length(routes_2e)))
     
-    execution_time = @elapsed begin
-        child_node = solve_column_generation(route_1e, routes_2e_pool, model, y_vars,
-                                            sync, custVisit, number2evfixe, maxVolumnMM, 
-                                            globalLowerBound, globalUpperBound,
-                                            branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id) 
+    # println("number of y variables : $(length(y_vars))")
+    # println("number of 2e routes : $(length(routes_2e))")
+    # println("number of filtered 2e routes : $(length(routes_2e_pool))")
+    # println("number of deleting 2e routes : $(length(columns_to_be_deleted))")
 
-    end
-    global execution_time_column_generation += execution_time
-
-    execution_time = @elapsed begin
-        # *  Reset bounds after solving
-        for route_idx in columns_to_be_deleted
-            if haskey(y_vars, route_idx)
-                y = y_vars[route_idx]
-                JuMP.set_upper_bound(y, 1.0)
-                JuMP.set_lower_bound(y, 0.0)
-            end
+    # * Set bounds to 0 for deleted routes instead of actually deleting them
+    for route_idx in columns_to_be_deleted
+        if haskey(y_vars, route_idx)
+            y = y_vars[route_idx]
+            JuMP.set_upper_bound(y, 0.0)
+            JuMP.set_lower_bound(y, 0.0)
         end
     end
-    global execution_time_set_bound += execution_time
-    global execution_time_build_model += execution_time
+
+    # * Global Lower bound
+    # println(JuMP.constraint_object(node.globalLowerBound))
+    if !isempty(branching_decision.lower_bound_number_2e_routes)
+        lower_bound_number_2e_routes = maximum(branching_decision.lower_bound_number_2e_routes)
+        set_normalized_rhs(globalLowerBound, -lower_bound_number_2e_routes)
+    else
+        set_normalized_rhs(globalLowerBound, -lower_bound_2e_routes)
+    end
+    
+    # * Global Upper Bound
+    if !isempty(branching_decision.upper_bound_number_2e_routes)
+        upper_bound_number_2e_routes = minimum(branching_decision.upper_bound_number_2e_routes)
+        set_normalized_rhs(globalUpperBound, upper_bound_number_2e_routes)
+    else
+        set_normalized_rhs(globalUpperBound, upper_bound_2e_routes)
+    end
+    
+    child_node = solve_column_generation(route_1e, routes_2e_pool, model, y_vars,
+                                         sync, custVisit, number2evfixe, maxVolumnMM, 
+                                         globalLowerBound, globalUpperBound,
+                                         branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id) 
+
+    # *  Reset bounds after solving
+    for route_idx in columns_to_be_deleted
+        if haskey(y_vars, route_idx)
+            y = y_vars[route_idx]
+            JuMP.set_upper_bound(y, 1.0)  # Assuming binary variables
+            JuMP.set_lower_bound(y, 0.0)
+        end
+    end
 
     return child_node
 end
@@ -452,11 +431,11 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route)
     #endregion
 
     # * 1. Obtain root node : build model
-    execution_time = @elapsed begin
+    # execution_time = @elapsed begin
         println("\n================Iteration 0 of B&P for SP$num_iter_global $(route_1e.sequence) parkings$([r for r in getServedParking1eRoute(route_1e)])================")
         result_root_node = solve_root_node(route_1e)
-    end
-    global execution_time_root_node += execution_time
+    # end
+    # global execution_time_root_node += execution_time
 
     if isnothing(result_root_node)
         return
@@ -480,6 +459,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route)
             println("\n================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e.sequence) parkings$([r for r in getServedParking1eRoute(route_1e)])================")
             
             # * 2.1 Select a node from search tree
+
             node = select_node_from_tree(node_stack)
             
             if node.cgLowerBound > upperBound
@@ -487,12 +467,9 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route)
                 println("$(round(node.cgLowerBound, digits=2)), Exceed Upper Bound, prune")
             else
                 # * 2.2 Obtain branching strategy
-                execution_time = @elapsed begin
+                # execprintln(length(node_stack))ution_time = @elapsed begin
                     branching_decisions = branchingStrategy(node.y_value, route_1e, node.routes_pool, node.branchingInfo)
-                end
-                global execution_time_branching += execution_time
-
-                execution_time = @elapsed begin
+                    # @info branching_decisions
                     left_child_node  = solve_child_node(route_1e, model, y_vars, sync, custVisit, number2evfixe, 
                                                         maxVolumnMM, globalLowerBound, globalUpperBound,
                                                         node, branching_decisions[1], current_node_id + 1)
@@ -506,8 +483,6 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route)
                     if !isnothing(right_child_node)
                         push!(node_stack, right_child_node)
                     end
-                end
-                global execution_time_child_node += execution_time
             end
             num_iter_sp += 1
         end
