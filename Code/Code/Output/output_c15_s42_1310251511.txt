@@ -1,0 +1,4553 @@
+Minimum 2e routes required: 3
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+Lower bound= 190.02   [1, 2, 3, 1]    parkings: Set([3])
+Lower bound= 190.43   [1, 2, 1]    parkings: Set([2])
+Lower bound= 196.54   [1, 2, 5, 1]    parkings: Set([5])
+Lower bound= 207.45   [1, 4, 1]    parkings: Set([4])
+Lower bound= 212.99   [1, 4, 2, 3, 1]    parkings: Set([4, 3])
+Lower bound= 213.22   [1, 2, 4, 1]    parkings: Set([4, 2])
+Lower bound= 214.32   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+Lower bound= 219.52   [1, 4, 2, 5, 1]    parkings: Set([5, 4])
+Lower bound= 220.92   [1, 2, 4, 5, 1]    parkings: Set([5, 2])
+Lower bound= 253.77   [1, 4, 3, 2, 5, 1]    parkings: Set([5, 3])
+
+
+================Iteration 0 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+-------------Iter CG 1-------------
+LP Objective Value = 923.64,   sum y = 5.0
+true  1352
+-------------Iter CG 2-------------
+LP Objective Value = 298.37,   sum y = 5.0
+true  790
+-------------Iter CG 3-------------
+LP Objective Value = 241.6,   sum y = 3.0
+true  176
+-------------Iter CG 4-------------
+LP Objective Value = 241.3,   sum y = 2.5
+true  274
+-------------Iter CG 5-------------
+LP Objective Value = 239.83,   sum y = 2.33
+true  185
+-------------Iter CG 6-------------
+LP Objective Value = 239.83,   sum y = 2.33
+true  65
+-------------Iter CG 7-------------
+LP Objective Value = 237.89,   sum y = 2.38
+true  83
+-------------Iter CG 8-------------
+LP Objective Value = 230.85,   sum y = 2.33
+true  81
+-------------Iter CG 9-------------
+LP Objective Value = 230.85,   sum y = 2.33
+true  24
+-------------Iter CG 10-------------
+LP Objective Value = 230.84,   sum y = 2.33
+true  11
+-------------Iter CG 11-------------
+LP Objective Value = 229.74,   sum y = 2.33
+true  5
+-------------Iter CG 12-------------
+LP Objective Value = 229.36,   sum y = 2.24
+true  9
+-------------Iter CG 13-------------
+LP Objective Value = 228.96,   sum y = 2.25
+true  5
+-------------Iter CG 14-------------
+LP Objective Value = 228.96,   sum y = 2.25
+true  1
+-------------Iter CG 15-------------
+LP Objective Value = 228.96,   sum y = 2.25
+false  0
+MILP Result:
+239.67
+[1, 2, 3, 1]    80.16
+[3, 18, 3]   10.2
+[3, 14, 13, 8, 6, 10, 12, 3]   64.54
+[3, 16, 17, 20, 19, 7, 9, 11, 15, 3]   84.77
+Branching stack contains now 1 nodes, current upper bound is 239.67
+
+================Iteration 1 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 2.25
+  Branching node with cg lower bound: 228.96
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+Branch on total number of 2e routes:  2.0, 3.0
+
+Solve a child node 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 3077
+number of deleting 2e routes : 240
+-------------Iter CG 1-------------
+LP Objective Value = 232.63,   sum y = 3.0
+false  0
+
+Solve a child node 2
+   # Total number of 2e routes cannot EXCEED:   2  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 3077
+number of deleting 2e routes : 240
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 2 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 1, parent node 0: from 1 nodes
+- Branching node in depth: 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 232.63
+  Branching node with LB reduction: 3.66
+  Branching node with FS reduction: 0.75
+  Total reduction: 4.41
+
+Solve a child node 3
+   + Customers MUST      served together:   (9, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 1438
+number of deleting 2e routes : 1879
+-------------Iter CG 1-------------
+LP Objective Value = 233.74,   sum y = 3.0
+false  0
+
+Solve a child node 4
+   + Customers FORBIDDEN served together:   (9, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 2832
+number of deleting 2e routes : 485
+-------------Iter CG 1-------------
+LP Objective Value = 240.23,   sum y = 3.0
+false  0
+
+================Iteration 3 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 3, parent node 1: from 2 nodes
+- Branching node in depth: 2
+   + Customers MUST      served together:   (9, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 233.74
+  Branching node with LB reduction: 0.55
+  Branching node with FS reduction: -0.33
+  Total reduction: 0.26
+
+Solve a child node 5
+   + Customers MUST      served together:   (9, 17)  (19, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 985
+number of deleting 2e routes : 2332
+-------------Iter CG 1-------------
+LP Objective Value = 234.21,   sum y = 3.0
+false  0
+
+Solve a child node 6
+   + Customers MUST      served together:   (9, 17)  
+   + Customers FORBIDDEN served together:   (19, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 836
+number of deleting 2e routes : 2481
+-------------Iter CG 1-------------
+LP Objective Value = 242.72,   sum y = 3.0
+false  0
+
+================Iteration 4 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 5, parent node 3: from 3 nodes
+- Branching node in depth: 3
+   + Customers MUST      served together:   (9, 17)  (19, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 234.21
+  Branching node with LB reduction: 0.16
+  Branching node with FS reduction: 0.22
+  Total reduction: 0.54
+
+Solve a child node 7
+   + Customers MUST      served together:   (9, 17)  (19, 20)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 201
+number of deleting 2e routes : 3116
+-------------Iter CG 1-------------
+LP Objective Value = 259.3,   sum y = 3.0
+false  0
+
+Solve a child node 8
+   + Customers MUST      served together:   (9, 17)  (19, 20)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 907
+number of deleting 2e routes : 2410
+-------------Iter CG 1-------------
+LP Objective Value = 234.21,   sum y = 3.0
+false  0
+
+================Iteration 5 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 8, parent node 5: from 4 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:   (9, 17)  (19, 20)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 234.21
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 9
+   + Customers MUST      served together:   (9, 17)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 427
+number of deleting 2e routes : 2890
+-------------Iter CG 1-------------
+LP Objective Value = 234.21,   sum y = 3.0
+false  0
+
+Solve a child node 10
+   + Customers MUST      served together:   (9, 17)  (19, 20)  
+   + Customers FORBIDDEN served together:   (8, 19)  (17, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 811
+number of deleting 2e routes : 2506
+-------------Iter CG 1-------------
+LP Objective Value = 266.8,   sum y = 3.33
+false  0
+
+================Iteration 6 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 9, parent node 8: from 5 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:   (9, 17)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 234.21
+  Branching node with LB reduction: -0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: -0.0
+
+Solve a child node 11
+   + Customers MUST      served together:   (9, 17)  (16, 19)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 228
+number of deleting 2e routes : 3089
+-------------Iter CG 1-------------
+LP Objective Value = 234.21,   sum y = 3.0
+true  10
+-------------Iter CG 2-------------
+LP Objective Value = 234.21,   sum y = 3.0
+false  0
+
+Solve a child node 12
+   + Customers MUST      served together:   (9, 17)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (16, 19)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3087
+number of 2e routes : 3327
+number of filtered 2e routes : 388
+number of deleting 2e routes : 2939
+-------------Iter CG 1-------------
+LP Objective Value = 246.19,   sum y = 3.0
+true  57
+-------------Iter CG 2-------------
+LP Objective Value = 246.19,   sum y = 3.0
+true  3
+-------------Iter CG 3-------------
+LP Objective Value = 245.69,   sum y = 3.0
+false  0
+
+================Iteration 7 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 11, parent node 9: from 6 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:   (9, 17)  (16, 19)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 234.21
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 13
+   + Customers MUST      served together:   (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3147
+number of 2e routes : 3387
+number of filtered 2e routes : 118
+number of deleting 2e routes : 3269
+-------------Iter CG 1-------------
+LP Objective Value = 237.72,   sum y = 3.0
+false  0
+
+Solve a child node 14
+   + Customers MUST      served together:   (9, 17)  (16, 19)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (12, 19)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3147
+number of 2e routes : 3387
+number of filtered 2e routes : 218
+number of deleting 2e routes : 3169
+-------------Iter CG 1-------------
+LP Objective Value = 239.67,   sum y = 3.0
+false  0
+Integer solution found
+
+================Iteration 8 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 13, parent node 11: from 6 nodes
+- Branching node in depth: 7
+   + Customers MUST      served together:   (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 237.72
+  Branching node with LB reduction: 0.5
+  Branching node with FS reduction: -0.14
+  Total reduction: 0.85
+
+Solve a child node 15
+   + Customers MUST      served together:   (6, 8)  (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3147
+number of 2e routes : 3387
+number of filtered 2e routes : 51
+number of deleting 2e routes : 3336
+-------------Iter CG 1-------------
+LP Objective Value = 249.98,   sum y = 3.0
+false  0
+
+Solve a child node 16
+   + Customers MUST      served together:   (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (6, 8)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3147
+number of 2e routes : 3387
+number of filtered 2e routes : 104
+number of deleting 2e routes : 3283
+-------------Iter CG 1-------------
+LP Objective Value = 241.58,   sum y = 3.0
+true  8
+-------------Iter CG 2-------------
+LP Objective Value = 241.58,   sum y = 3.0
+true  9
+-------------Iter CG 3-------------
+LP Objective Value = 241.58,   sum y = 3.0
+false  0
+Integer solution found
+
+================Iteration 9 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 4, parent node 1: from 6 nodes
+- Branching node in depth: 2
+   + Customers FORBIDDEN served together:   (9, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 240.23
+  Branching node with LB reduction: 3.8
+  Branching node with FS reduction: -0.17
+  Total reduction: 4.29
+240.23, Exceed Upper Bound, prune
+
+================Iteration 10 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 6, parent node 3: from 5 nodes
+- Branching node in depth: 3
+   + Customers MUST      served together:   (9, 17)  
+   + Customers FORBIDDEN served together:   (19, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 242.72
+  Branching node with LB reduction: 3.0
+  Branching node with FS reduction: 0.22
+  Total reduction: 4.6
+242.72, Exceed Upper Bound, prune
+
+================Iteration 11 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 12, parent node 9: from 4 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:   (9, 17)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (16, 19)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 1.67
+  Branching node with cg lower bound: 245.69
+  Branching node with LB reduction: 1.91
+  Branching node with FS reduction: -0.22
+  Total reduction: 3.63
+245.69, Exceed Upper Bound, prune
+
+================Iteration 12 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 15, parent node 13: from 3 nodes
+- Branching node in depth: 8
+   + Customers MUST      served together:   (6, 8)  (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 249.98
+  Branching node with LB reduction: 1.53
+  Branching node with FS reduction: 0.0
+  Total reduction: 3.98
+249.98, Exceed Upper Bound, prune
+
+================Iteration 13 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 7, parent node 5: from 2 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:   (9, 17)  (19, 20)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 259.3
+  Branching node with LB reduction: 6.27
+  Branching node with FS reduction: 0.0
+  Total reduction: 10.51
+259.3, Exceed Upper Bound, prune
+
+================Iteration 14 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 10, parent node 8: from 1 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:   (9, 17)  (19, 20)  
+   + Customers FORBIDDEN served together:   (8, 19)  (17, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.33
+  Branching node with cg lower bound: 266.8
+  Branching node with LB reduction: 6.52
+  Branching node with FS reduction: 0.07
+  Total reduction: 12.62
+266.8, Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP2 [1, 2, 1] parkings[2]================
+-------------Iter CG 1-------------
+LP Objective Value = 921.77,   sum y = 5.0
+true  2378
+-------------Iter CG 2-------------
+LP Objective Value = 300.1,   sum y = 3.0
+true  595
+-------------Iter CG 3-------------
+LP Objective Value = 268.7,   sum y = 2.5
+true  312
+-------------Iter CG 4-------------
+LP Objective Value = 256.54,   sum y = 2.67
+true  245
+-------------Iter CG 5-------------
+LP Objective Value = 242.94,   sum y = 2.5
+true  27
+-------------Iter CG 6-------------
+LP Objective Value = 242.53,   sum y = 2.2
+true  31
+-------------Iter CG 7-------------
+LP Objective Value = 241.33,   sum y = 2.22
+true  5
+-------------Iter CG 8-------------
+LP Objective Value = 240.67,   sum y = 2.18
+true  5
+-------------Iter CG 9-------------
+LP Objective Value = 239.53,   sum y = 2.33
+true  5
+-------------Iter CG 10-------------
+LP Objective Value = 239.53,   sum y = 2.33
+true  2
+-------------Iter CG 11-------------
+LP Objective Value = 239.53,   sum y = 2.33
+false  0
+MILP Result:
+242.3
+[1, 2, 1]    80.0
+[2, 7, 19, 2]   22.46
+[2, 9, 11, 6, 8, 13, 15, 2]   70.87
+[2, 20, 17, 16, 14, 12, 18, 10, 2]   68.97
+Branching stack contains now 1 nodes, current upper bound is 239.67
+
+================Iteration 1 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 239.53
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+Branch on total number of 2e routes:  2.0, 3.0
+
+Solve a child node 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3621
+number of 2e routes : 7009
+number of filtered 2e routes : 3621
+number of deleting 2e routes : 3388
+-------------Iter CG 1-------------
+LP Objective Value = 242.3,   sum y = 3.0
+false  0
+
+Solve a child node 2
+   # Total number of 2e routes cannot EXCEED:   2  
+
+number of y variables : 3621
+number of 2e routes : 7009
+number of filtered 2e routes : 3621
+number of deleting 2e routes : 3388
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 2 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 1, parent node 0: from 1 nodes
+- Branching node in depth: 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 0.0
+  Branching node with cg lower bound: 242.3
+  Branching node with LB reduction: 2.77
+  Branching node with FS reduction: -2.0
+  Total reduction: 0.77
+242.3, Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP3 [1, 2, 5, 1] parkings[5]================
+-------------Iter CG 1-------------
+LP Objective Value = 993.24,   sum y = 5.0
+true  1425
+-------------Iter CG 2-------------
+LP Objective Value = 374.86,   sum y = 5.0
+true  657
+-------------Iter CG 3-------------
+LP Objective Value = 304.07,   sum y = 2.5
+true  558
+-------------Iter CG 4-------------
+LP Objective Value = 289.04,   sum y = 2.33
+true  623
+-------------Iter CG 5-------------
+LP Objective Value = 264.04,   sum y = 2.14
+true  108
+-------------Iter CG 6-------------
+LP Objective Value = 257.81,   sum y = 2.2
+true  23
+-------------Iter CG 7-------------
+LP Objective Value = 257.08,   sum y = 2.19
+true  13
+-------------Iter CG 8-------------
+LP Objective Value = 256.27,   sum y = 2.17
+true  27
+-------------Iter CG 9-------------
+LP Objective Value = 253.92,   sum y = 2.12
+true  3
+-------------Iter CG 10-------------
+LP Objective Value = 253.92,   sum y = 2.12
+false  0
+MILP Result:
+275.16
+[1, 2, 5, 1]    80.59
+[5, 14, 5]   18.44
+[5, 13, 8, 15, 18, 5]   75.82
+[5, 16, 17, 20, 19, 7, 9, 11, 6, 10, 12, 5]   100.31
+Branching stack contains now 1 nodes, current upper bound is 239.67
+
+================Iteration 1 of B&P for SP3 [1, 2, 5, 1] parkings[5]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 1.62
+  Branching node with cg lower bound: 253.92
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+253.92, Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP4 [1, 4, 1] parkings[4]================
+-------------Iter CG 1-------------
+LP Objective Value = 986.07,   sum y = 5.0
+true  2991
+-------------Iter CG 2-------------
+LP Objective Value = 346.87,   sum y = 4.0
+true  919
+-------------Iter CG 3-------------
+LP Objective Value = 292.97,   sum y = 2.33
+true  233
+-------------Iter CG 4-------------
+LP Objective Value = 281.16,   sum y = 2.12
+true  160
+-------------Iter CG 5-------------
+LP Objective Value = 276.33,   sum y = 2.09
+true  24
+-------------Iter CG 6-------------
+LP Objective Value = 274.78,   sum y = 2.14
+true  20
+-------------Iter CG 7-------------
+LP Objective Value = 274.02,   sum y = 2.09
+true  1
+-------------Iter CG 8-------------
+LP Objective Value = 274.02,   sum y = 2.09
+false  0
+MILP Result:
+281.26
+[1, 4, 1]    98.41
+[4, 9, 4]   10.2
+[4, 19, 17, 16, 12, 18, 10, 15, 4]   82.84
+[4, 7, 20, 14, 13, 8, 6, 11, 4]   89.81
+Branching stack contains now 1 nodes, current upper bound is 239.67
+
+================Iteration 1 of B&P for SP4 [1, 4, 1] parkings[4]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 2.04
+  Branching node with cg lower bound: 274.02
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+274.02, Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+-------------Iter CG 1-------------
+LP Objective Value = 242.95,   sum y = 2.5
+true  94
+-------------Iter CG 2-------------
+LP Objective Value = 241.3,   sum y = 2.56
+true  49
+-------------Iter CG 3-------------
+LP Objective Value = 236.66,   sum y = 2.33
+true  11
+-------------Iter CG 4-------------
+LP Objective Value = 236.66,   sum y = 2.33
+false  0
+MILP Result:
+243.43
+[1, 4, 2, 3, 1]    98.59
+[3, 14, 12, 10, 18, 3]   26.09
+[4, 9, 11, 6, 8, 13, 3]   57.29
+[3, 16, 17, 20, 15, 7, 19, 4]   61.47
+Branching stack contains now 1 nodes, current upper bound is 239.67
+
+================Iteration 1 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 236.66
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+Branch on total number of 2e routes:  2.0, 3.0
+
+Solve a child node 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 7714
+number of deleting 2e routes : 7234
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 2
+   # Total number of 2e routes cannot EXCEED:   2  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 7714
+number of deleting 2e routes : 7234
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 2 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 1, parent node 0: from 1 nodes
+- Branching node in depth: 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 1.48
+  Branching node with FS reduction: 0.67
+  Total reduction: 2.14
+
+Solve a child node 3
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 4
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 5930
+number of deleting 2e routes : 9018
+-------------Iter CG 1-------------
+LP Objective Value = 247.47,   sum y = 3.0
+false  0
+
+================Iteration 3 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 3, parent node 1: from 2 nodes
+- Branching node in depth: 2
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 5
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 6
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 4 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 5, parent node 3: from 2 nodes
+- Branching node in depth: 3
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 7
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 8
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 5 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 7, parent node 5: from 2 nodes
+- Branching node in depth: 4
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 9
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 10
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 6 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 9, parent node 7: from 2 nodes
+- Branching node in depth: 5
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 11
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 12
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 7 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 11, parent node 9: from 2 nodes
+- Branching node in depth: 6
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: -0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: -0.0
+
+Solve a child node 13
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 14
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 8 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 13, parent node 11: from 2 nodes
+- Branching node in depth: 7
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 15
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 16
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 9 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 15, parent node 13: from 2 nodes
+- Branching node in depth: 8
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 17
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 18
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 10 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 17, parent node 15: from 2 nodes
+- Branching node in depth: 9
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 19
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 20
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 11 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 19, parent node 17: from 2 nodes
+- Branching node in depth: 10
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 21
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 22
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 12 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 21, parent node 19: from 2 nodes
+- Branching node in depth: 11
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 23
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 24
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 13 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 23, parent node 21: from 2 nodes
+- Branching node in depth: 12
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 25
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 26
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 14 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 25, parent node 23: from 2 nodes
+- Branching node in depth: 13
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 27
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 28
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 15 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 27, parent node 25: from 2 nodes
+- Branching node in depth: 14
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 29
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 30
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 16 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 29, parent node 27: from 2 nodes
+- Branching node in depth: 15
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 31
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 32
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 17 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 31, parent node 29: from 2 nodes
+- Branching node in depth: 16
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 33
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 34
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 18 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 33, parent node 31: from 2 nodes
+- Branching node in depth: 17
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 35
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 36
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 19 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 35, parent node 33: from 2 nodes
+- Branching node in depth: 18
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 37
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 38
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 20 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 37, parent node 35: from 2 nodes
+- Branching node in depth: 19
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 39
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 40
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 21 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 39, parent node 37: from 2 nodes
+- Branching node in depth: 20
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 41
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 42
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 22 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 41, parent node 39: from 2 nodes
+- Branching node in depth: 21
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 43
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 44
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 23 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 43, parent node 41: from 2 nodes
+- Branching node in depth: 22
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 45
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 46
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 24 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 45, parent node 43: from 2 nodes
+- Branching node in depth: 23
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 47
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 48
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 25 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 47, parent node 45: from 2 nodes
+- Branching node in depth: 24
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 49
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 50
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 26 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 49, parent node 47: from 2 nodes
+- Branching node in depth: 25
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 51
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 52
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 27 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 51, parent node 49: from 2 nodes
+- Branching node in depth: 26
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 53
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 54
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 28 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 53, parent node 51: from 2 nodes
+- Branching node in depth: 27
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 55
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 56
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 29 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 55, parent node 53: from 2 nodes
+- Branching node in depth: 28
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 57
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 58
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 30 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 57, parent node 55: from 2 nodes
+- Branching node in depth: 29
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 59
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 60
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 31 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 59, parent node 57: from 2 nodes
+- Branching node in depth: 30
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 61
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 62
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 32 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 61, parent node 59: from 2 nodes
+- Branching node in depth: 31
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 63
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 64
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 33 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 63, parent node 61: from 2 nodes
+- Branching node in depth: 32
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 65
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 66
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 34 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 65, parent node 63: from 2 nodes
+- Branching node in depth: 33
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 67
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 68
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 35 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 67, parent node 65: from 2 nodes
+- Branching node in depth: 34
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 69
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 70
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 36 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 69, parent node 67: from 2 nodes
+- Branching node in depth: 35
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 71
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 72
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 37 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 71, parent node 69: from 2 nodes
+- Branching node in depth: 36
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 73
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 74
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 38 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 73, parent node 71: from 2 nodes
+- Branching node in depth: 37
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 75
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 76
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 39 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 75, parent node 73: from 2 nodes
+- Branching node in depth: 38
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 77
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 78
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 40 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 77, parent node 75: from 2 nodes
+- Branching node in depth: 39
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 79
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 80
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 41 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 79, parent node 77: from 2 nodes
+- Branching node in depth: 40
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 81
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 82
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 42 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 81, parent node 79: from 2 nodes
+- Branching node in depth: 41
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 83
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 84
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 43 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 83, parent node 81: from 2 nodes
+- Branching node in depth: 42
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 85
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 86
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 44 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 85, parent node 83: from 2 nodes
+- Branching node in depth: 43
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 87
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 88
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 45 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 87, parent node 85: from 2 nodes
+- Branching node in depth: 44
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 89
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 90
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 46 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 89, parent node 87: from 2 nodes
+- Branching node in depth: 45
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 91
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 92
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 47 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 91, parent node 89: from 2 nodes
+- Branching node in depth: 46
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 93
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 94
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 48 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 93, parent node 91: from 2 nodes
+- Branching node in depth: 47
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 95
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 96
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 49 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 95, parent node 93: from 2 nodes
+- Branching node in depth: 48
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 97
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 98
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 50 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 97, parent node 95: from 2 nodes
+- Branching node in depth: 49
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 99
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 100
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 51 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 99, parent node 97: from 2 nodes
+- Branching node in depth: 50
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 101
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 102
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 52 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 101, parent node 99: from 2 nodes
+- Branching node in depth: 51
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 103
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 104
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 53 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 103, parent node 101: from 2 nodes
+- Branching node in depth: 52
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 105
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 106
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 54 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 105, parent node 103: from 2 nodes
+- Branching node in depth: 53
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 107
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 108
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 55 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 107, parent node 105: from 2 nodes
+- Branching node in depth: 54
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 109
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 110
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 56 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 109, parent node 107: from 2 nodes
+- Branching node in depth: 55
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 111
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 112
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 57 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 111, parent node 109: from 2 nodes
+- Branching node in depth: 56
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 113
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 114
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 58 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 113, parent node 111: from 2 nodes
+- Branching node in depth: 57
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 115
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 116
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 59 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 115, parent node 113: from 2 nodes
+- Branching node in depth: 58
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 117
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 118
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 60 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 117, parent node 115: from 2 nodes
+- Branching node in depth: 59
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 119
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 120
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 61 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 119, parent node 117: from 2 nodes
+- Branching node in depth: 60
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 121
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 122
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 62 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 121, parent node 119: from 2 nodes
+- Branching node in depth: 61
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 123
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 124
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 63 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 123, parent node 121: from 2 nodes
+- Branching node in depth: 62
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 125
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 126
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 64 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 125, parent node 123: from 2 nodes
+- Branching node in depth: 63
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 127
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 128
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 65 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 127, parent node 125: from 2 nodes
+- Branching node in depth: 64
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 129
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 130
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 66 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 129, parent node 127: from 2 nodes
+- Branching node in depth: 65
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 131
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 132
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 67 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 131, parent node 129: from 2 nodes
+- Branching node in depth: 66
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 133
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 134
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 68 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 133, parent node 131: from 2 nodes
+- Branching node in depth: 67
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 135
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 136
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 69 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 135, parent node 133: from 2 nodes
+- Branching node in depth: 68
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 137
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 138
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 70 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 137, parent node 135: from 2 nodes
+- Branching node in depth: 69
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 139
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 140
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 71 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 139, parent node 137: from 2 nodes
+- Branching node in depth: 70
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 141
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 142
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 72 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 141, parent node 139: from 2 nodes
+- Branching node in depth: 71
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 143
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 144
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 73 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 143, parent node 141: from 2 nodes
+- Branching node in depth: 72
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 145
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 146
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 74 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 145, parent node 143: from 2 nodes
+- Branching node in depth: 73
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 147
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 148
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 75 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 147, parent node 145: from 2 nodes
+- Branching node in depth: 74
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 149
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 150
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 76 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 149, parent node 147: from 2 nodes
+- Branching node in depth: 75
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 151
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 152
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 77 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 151, parent node 149: from 2 nodes
+- Branching node in depth: 76
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 153
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 154
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 78 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 153, parent node 151: from 2 nodes
+- Branching node in depth: 77
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 155
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 156
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 79 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 155, parent node 153: from 2 nodes
+- Branching node in depth: 78
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 157
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 158
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 80 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 157, parent node 155: from 2 nodes
+- Branching node in depth: 79
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 159
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 160
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 81 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 159, parent node 157: from 2 nodes
+- Branching node in depth: 80
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 161
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 162
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 82 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 161, parent node 159: from 2 nodes
+- Branching node in depth: 81
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 163
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 164
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 83 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 163, parent node 161: from 2 nodes
+- Branching node in depth: 82
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 165
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 166
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 84 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 165, parent node 163: from 2 nodes
+- Branching node in depth: 83
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 167
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 168
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 85 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 167, parent node 165: from 2 nodes
+- Branching node in depth: 84
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 169
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 170
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 86 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 169, parent node 167: from 2 nodes
+- Branching node in depth: 85
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 171
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 172
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 87 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 171, parent node 169: from 2 nodes
+- Branching node in depth: 86
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 173
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 174
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 88 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 173, parent node 171: from 2 nodes
+- Branching node in depth: 87
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 175
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 176
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 89 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 175, parent node 173: from 2 nodes
+- Branching node in depth: 88
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 177
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 178
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 90 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 177, parent node 175: from 2 nodes
+- Branching node in depth: 89
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 179
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 180
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 91 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 179, parent node 177: from 2 nodes
+- Branching node in depth: 90
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 181
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 182
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 92 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 181, parent node 179: from 2 nodes
+- Branching node in depth: 91
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 183
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 184
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 93 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 183, parent node 181: from 2 nodes
+- Branching node in depth: 92
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 185
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 186
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 94 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 185, parent node 183: from 2 nodes
+- Branching node in depth: 93
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 187
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 188
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 95 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 187, parent node 185: from 2 nodes
+- Branching node in depth: 94
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 189
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 190
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 96 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 189, parent node 187: from 2 nodes
+- Branching node in depth: 95
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 191
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 192
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 97 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 191, parent node 189: from 2 nodes
+- Branching node in depth: 96
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 193
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 194
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 98 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 193, parent node 191: from 2 nodes
+- Branching node in depth: 97
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 195
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 196
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 99 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 195, parent node 193: from 2 nodes
+- Branching node in depth: 98
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 197
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 198
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 100 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 197, parent node 195: from 2 nodes
+- Branching node in depth: 99
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 199
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 200
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 101 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 199, parent node 197: from 2 nodes
+- Branching node in depth: 100
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 201
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 202
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 102 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 201, parent node 199: from 2 nodes
+- Branching node in depth: 101
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 203
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 204
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 103 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 203, parent node 201: from 2 nodes
+- Branching node in depth: 102
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 205
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 206
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 104 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 205, parent node 203: from 2 nodes
+- Branching node in depth: 103
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 207
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 208
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 105 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 207, parent node 205: from 2 nodes
+- Branching node in depth: 104
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 209
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 210
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 106 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 209, parent node 207: from 2 nodes
+- Branching node in depth: 105
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 211
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 212
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 107 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 211, parent node 209: from 2 nodes
+- Branching node in depth: 106
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 213
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 214
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 108 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+Display selected node 213, parent node 211: from 2 nodes
+- Branching node in depth: 107
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 238.14
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve a child node 215
+   - MUST      combination:  (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 4460
+number of deleting 2e routes : 10488
+-------------Iter CG 1-------------
+LP Objective Value = 238.14,   sum y = 3.0
+false  0
+
+Solve a child node 216
+   - MUST      combination:  (3, 10)  
+   - FORBIDDEN combination:   (3, 10)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 7714
+number of 2e routes : 14948
+number of filtered 2e routes : 2676
+number of deleting 2e routes : 12272

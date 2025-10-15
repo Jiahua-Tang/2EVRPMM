@@ -83,6 +83,7 @@ function dominanceCheck(unprocessedLabelsList, processedLabelsList)
     return unprocessedLabels, processedLabels
 end
 
+
 function solve_2e_labelling(pi1, pi2, pi3, pi4, startParking, branchingInfo)
     println("Start labelling algo for parking $startParking")
     ## prep

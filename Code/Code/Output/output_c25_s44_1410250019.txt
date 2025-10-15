@@ -1,0 +1,122 @@
+Minimum 2e routes required: 5
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+
+===================Iter 1===================
+Display 4 Unprocessed Labels
+Display 0 Depot Labels
+
+===================Iter 2===================
+Display 28 Unprocessed Labels
+Display 3 Depot Labels
+
+===================Iter 3===================
+Display 27 Unprocessed Labels
+Display 6 Depot Labels
+
+===================Iter 4===================
+Display 26 Unprocessed Labels
+Display 9 Depot Labels
+
+===================Iter 5===================
+Display 25 Unprocessed Labels
+Display 12 Depot Labels
+
+===================Iter 6===================
+Display 24 Unprocessed Labels
+Display 16 Depot Labels
+
+===================Iter 7===================
+Display 23 Unprocessed Labels
+Display 20 Depot Labels
+
+===================Iter 8===================
+Display 22 Unprocessed Labels
+Display 24 Depot Labels
+
+===================Iter 9===================
+Display 21 Unprocessed Labels
+Display 28 Depot Labels
+
+===================Iter 10===================
+Display 20 Unprocessed Labels
+Display 32 Depot Labels
+
+===================Iter 11===================
+Display 19 Unprocessed Labels
+Display 36 Depot Labels
+
+===================Iter 12===================
+Display 18 Unprocessed Labels
+Display 40 Depot Labels
+
+===================Iter 13===================
+Display 17 Unprocessed Labels
+Display 44 Depot Labels
+
+===================Iter 14===================
+Display 16 Unprocessed Labels
+Display 48 Depot Labels
+
+===================Iter 15===================
+Display 15 Unprocessed Labels
+Display 52 Depot Labels
+
+===================Iter 16===================
+Display 14 Unprocessed Labels
+Display 56 Depot Labels
+
+===================Iter 17===================
+Display 13 Unprocessed Labels
+Display 60 Depot Labels
+
+===================Iter 18===================
+Display 12 Unprocessed Labels
+Display 64 Depot Labels
+
+===================Iter 19===================
+Display 11 Unprocessed Labels
+Display 68 Depot Labels
+
+===================Iter 20===================
+Display 10 Unprocessed Labels
+Display 72 Depot Labels
+
+===================Iter 21===================
+Display 9 Unprocessed Labels
+Display 76 Depot Labels
+
+===================Iter 22===================
+Display 8 Unprocessed Labels
+Display 80 Depot Labels
+
+===================Iter 23===================
+Display 7 Unprocessed Labels
+Display 84 Depot Labels
+
+===================Iter 24===================
+Display 6 Unprocessed Labels
+Display 88 Depot Labels
+
+===================Iter 25===================
+Display 5 Unprocessed Labels
+Display 92 Depot Labels
+
+===================Iter 26===================
+Display 4 Unprocessed Labels
+Display 96 Depot Labels
+
+===================Iter 27===================
+Display 3 Unprocessed Labels
+Display 100 Depot Labels
+
+===================Iter 28===================
+Display 2 Unprocessed Labels
+Display 104 Depot Labels
+
+===================Iter 29===================
+Display 1 Unprocessed Labels
+Display 108 Depot Labels

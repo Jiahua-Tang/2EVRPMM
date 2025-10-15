@@ -1,0 +1,216 @@
+Minimum 2e routes required: 7
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+-------------Iter CG 1-------------
+LP Objective Value = 1146.61,   sum y = 7.0
+true  10605
+-------------Iter CG 2-------------
+LP Objective Value = 1033.86,   sum y = 10.0
+true  15076
+-------------Iter CG 3-------------
+LP Objective Value = 616.74,   sum y = 10.0
+true  14645
+-------------Iter CG 4-------------
+LP Objective Value = 545.18,   sum y = 8.75
+true  1852
+-------------Iter CG 5-------------
+LP Objective Value = 522.07,   sum y = 8.01
+true  1578
+-------------Iter CG 6-------------
+LP Objective Value = 514.23,   sum y = 8.25
+true  1510
+-------------Iter CG 7-------------
+LP Objective Value = 505.7,   sum y = 7.83
+true  549
+-------------Iter CG 8-------------
+LP Objective Value = 495.11,   sum y = 7.0
+true  154
+-------------Iter CG 9-------------
+LP Objective Value = 492.19,   sum y = 7.15
+true  186
+-------------Iter CG 10-------------
+LP Objective Value = 481.52,   sum y = 7.0
+true  15
+-------------Iter CG 11-------------
+LP Objective Value = 481.52,   sum y = 7.0
+true  15
+-------------Iter CG 12-------------
+LP Objective Value = 481.52,   sum y = 7.0
+true  1
+-------------Iter CG 13-------------
+LP Objective Value = 481.52,   sum y = 7.0
+true  2
+-------------Iter CG 14-------------
+LP Objective Value = 480.64,   sum y = 7.0
+true  32
+-------------Iter CG 15-------------
+LP Objective Value = 479.16,   sum y = 7.0
+false  0
+MILP Result:
+494.43
+[1, 2, 4, 3, 1]    124.75
+[2, 39, 30, 24, 44, 3]   76.7
+[3, 35, 17, 3]   12.18
+[2, 36, 10, 21, 14, 23, 6, 2]   55.74
+[3, 31, 27, 12, 32, 45, 3]   41.81
+[2, 29, 33, 43, 2]   12.19
+[3, 9, 7, 26, 37, 25, 3]   32.69
+[2, 20, 15, 18, 28, 34, 13, 2]   55.6
+[3, 16, 40, 38, 19, 42, 8, 11, 41, 22, 2]   82.76
+Branching stack contains now 1 nodes, current upper bound is 494.43
+-------------Iter CG 1-------------
+LP Objective Value = 886.54,   sum y = 7.48
+true  17778
+-------------Iter CG 2-------------
+LP Objective Value = 698.84,   sum y = 8.3
+true  16624
+-------------Iter CG 3-------------
+LP Objective Value = 624.39,   sum y = 7.44
+true  6045
+-------------Iter CG 4-------------
+LP Objective Value = 593.9,   sum y = 7.25
+true  9148
+-------------Iter CG 5-------------
+LP Objective Value = 571.85,   sum y = 7.15
+true  1705
+-------------Iter CG 6-------------
+LP Objective Value = 554.47,   sum y = 7.0
+true  710
+-------------Iter CG 7-------------
+LP Objective Value = 548.39,   sum y = 7.0
+true  179
+-------------Iter CG 8-------------
+LP Objective Value = 546.87,   sum y = 7.0
+true  46
+-------------Iter CG 9-------------
+LP Objective Value = 544.2,   sum y = 7.0
+true  49
+-------------Iter CG 10-------------
+LP Objective Value = 543.39,   sum y = 7.0
+true  27
+-------------Iter CG 11-------------
+LP Objective Value = 543.28,   sum y = 7.0
+true  5
+-------------Iter CG 12-------------
+LP Objective Value = 543.28,   sum y = 7.0
+false  0
+Exceed Upper Bound, prune
+-------------Iter CG 1-------------
+LP Objective Value = 664.86,   sum y = 7.59
+true  20084
+-------------Iter CG 2-------------
+LP Objective Value = 533.17,   sum y = 7.0
+true  2060
+-------------Iter CG 3-------------
+LP Objective Value = 528.69,   sum y = 7.0
+true  284
+-------------Iter CG 4-------------
+LP Objective Value = 523.77,   sum y = 7.0
+true  10
+-------------Iter CG 5-------------
+LP Objective Value = 521.1,   sum y = 7.0
+true  96
+-------------Iter CG 6-------------
+LP Objective Value = 513.84,   sum y = 7.0
+true  77
+-------------Iter CG 7-------------
+LP Objective Value = 510.27,   sum y = 7.0
+false  0
+Exceed Upper Bound, prune
+-------------Iter CG 1-------------
+LP Objective Value = 515.18,   sum y = 7.68
+true  588
+-------------Iter CG 2-------------
+LP Objective Value = 502.7,   sum y = 7.0
+true  111
+-------------Iter CG 3-------------
+LP Objective Value = 495.05,   sum y = 7.0
+true  10
+-------------Iter CG 4-------------
+LP Objective Value = 494.65,   sum y = 7.0
+true  4
+-------------Iter CG 5-------------
+LP Objective Value = 493.72,   sum y = 7.0
+false  0
+MILP Result:
+505.04
+[1, 4, 2, 3, 1]    124.95
+[3, 16, 40, 38, 19, 42, 8, 11, 41, 37, 3]   74.64
+[3, 35, 17, 25, 26, 7, 3]   29.57
+[3, 45, 31, 32, 12, 27, 44, 3]   62.91
+[4, 20, 22, 15, 18, 4]   37.64
+[4, 13, 21, 14, 34, 28, 4]   51.82
+[3, 9, 36, 10, 39, 30, 24, 3]   86.92
+[4, 23, 43, 33, 29, 6, 4]   36.59
+Branching stack contains now 1 nodes, current upper bound is 494.43
+-------------Iter CG 1-------------
+LP Objective Value = 661.27,   sum y = 7.0
+true  2288
+-------------Iter CG 2-------------
+LP Objective Value = 659.38,   sum y = 7.11
+true  2540
+-------------Iter CG 3-------------
+LP Objective Value = 649.01,   sum y = 7.02
+true  719
+-------------Iter CG 4-------------
+LP Objective Value = 634.8,   sum y = 7.0
+false  0
+Exceed Upper Bound, prune
+-------------Iter CG 1-------------
+LP Objective Value = 579.1,   sum y = 7.0
+true  1894
+-------------Iter CG 2-------------
+LP Objective Value = 574.78,   sum y = 7.0
+true  612
+-------------Iter CG 3-------------
+LP Objective Value = 559.17,   sum y = 7.0
+true  505
+-------------Iter CG 4-------------
+LP Objective Value = 556.49,   sum y = 7.0
+true  198
+-------------Iter CG 5-------------
+LP Objective Value = 552.83,   sum y = 7.0
+true  39
+-------------Iter CG 6-------------
+LP Objective Value = 550.87,   sum y = 7.0
+true  6
+-------------Iter CG 7-------------
+LP Objective Value = 550.33,   sum y = 7.0
+true  7
+-------------Iter CG 8-------------
+LP Objective Value = 549.97,   sum y = 7.0
+true  4
+-------------Iter CG 9-------------
+LP Objective Value = 549.65,   sum y = 7.0
+false  0
+Exceed Upper Bound, prune
+Lower bound= 603.91   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+Lower bound= 618.67   [1, 4, 2, 3, 1]    parkings: Set([4, 3])
+lower bound of subproblem exceed UB, stop algo
+
+Total Execution time = 918.58
+
+time spent in soving root node = 0.0, takes percentage of 0.0%
+time spent in branching decision = 0.0, takes percentage of 0.0%
+time spent in solving child node = 0.0, takes percentage of 0.0%
+
+time spent in filtering = 0.1, takes percentage of 0.0%
+time spent in solving column generation = 869.12, takes percentage of 95.0%
+   - time spent in building model = 46.28, takes percentage of 5.0%
+       - time spent in setting bound = 0.0, takes percentage of 0.0%
+       - time spent in adding columns = 59.65, takes percentage of 7.000000000000001%
+   - time spent in solving pricing = 848.96, takes percentage of 98.0%
+   - time spent in solving RMP = 3.97, takes percentage of 0.0%
+Current optimal solution 494.43 found in interation 0 in level 0:
+[1, 2, 4, 3, 1]  124.75
+[2, 39, 30, 24, 44, 3]  76.7
+[3, 35, 17, 3]  12.18
+[2, 36, 10, 21, 14, 23, 6, 2]  55.74
+[3, 31, 27, 12, 32, 45, 3]  41.81
+[2, 29, 33, 43, 2]  12.19
+[3, 9, 7, 26, 37, 25, 3]  32.69
+[2, 20, 15, 18, 28, 34, 13, 2]  55.6
+[3, 16, 40, 38, 19, 42, 8, 11, 41, 22, 2]  82.76

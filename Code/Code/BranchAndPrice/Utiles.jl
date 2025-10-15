@@ -33,7 +33,7 @@ function generate2eRoute(route::Vector{Int})
     a = getA(route)
     b2in = getB2In(route)
     b2out = getB2Out(route)
-    return Route(cost, route, length(route), load, b1, a, b2in, b2out) 
+    return Route(cost, route, length(routes_2e)+1, load, b1, a, b2in, b2out) 
 end
 
 
@@ -180,42 +180,35 @@ function generateNonDominate1eRoutes(least_required_mm::Int)
 end
 
 function generate2eInitialRoutes()
-    function generate2eDummyRoute()
-        routes = Vector{Route}()
-        
-        for startParking in satellites
-            for endParking in satellites
-                sequence = Vector{Int}()
-                push!(sequence, startParking)
-                for cust in customers 
-                    push!(sequence, cust)
-                end
-                push!(sequence, endParking)
-                route = generate2eRoute(sequence)
-                route.cost = 1e3
-                push!(routes, route)   
-                # println("dummy route = ", route.sequence, " cost = ", route.cost)         
+    global routes_2e = Vector{Route}()
+    global dummyRoutes = Vector{Route}()
+    
+    # * generate dummy routes
+    for startParking in satellites
+        for endParking in satellites
+            sequence = Vector{Int}()
+            push!(sequence, startParking)
+            for cust in customers 
+                push!(sequence, cust)
             end
+            push!(sequence, endParking)
+            route = generate2eRoute(sequence)
+            route.cost = 1e3
+            push!(routes_2e, route)    
+            push!(dummyRoutes, route)
         end
-        return routes
     end
 
-    result = Vector{Route}()
-    global dummyRoutes
-    dummyRoutes = generate2eDummyRoute()
-    for (_, route) in enumerate(dummyRoutes)
-        push!(result, route)
-    end
+    # * generate initial feasible routes
     for cust in customers
         for parkingStart in satellites
             for parkingEnd in satellites
                 if arc_cost[parkingStart, cust] + arc_cost[cust, parkingEnd] <= maximum_duration_2e_vehicle
-                    push!(result, generate2eRoute([parkingStart, cust, parkingEnd]))
+                    push!(routes_2e, generate2eRoute([parkingStart, cust, parkingEnd]))
                 end              
             end
         end
     end
-    return result
 end
 
 function displayBranchingNode(branchingNode::BranchingNode)

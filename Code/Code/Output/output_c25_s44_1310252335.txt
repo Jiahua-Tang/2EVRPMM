@@ -1,0 +1,1600 @@
+Minimum 2e routes required: 5
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+Lower bound= 262.36   [1, 2, 3, 1]    parkings: Set([3])
+Lower bound= 273.79   [1, 2, 1]    parkings: Set([2])
+Lower bound= 283.14   [1, 2, 5, 1]    parkings: Set([5])
+Lower bound= 297.71   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+Lower bound= 297.85   [1, 4, 2, 3, 1]    parkings: Set([4, 3])
+Lower bound= 301.91   [1, 4, 1]    parkings: Set([4])
+Lower bound= 309.27   [1, 2, 4, 1]    parkings: Set([4, 2])
+Lower bound= 318.62   [1, 4, 2, 5, 1]    parkings: Set([5, 4])
+Lower bound= 318.81   [1, 2, 4, 5, 1]    parkings: Set([5, 2])
+Lower bound= 355.27   [1, 4, 3, 2, 5, 1]    parkings: Set([5, 3])
+
+
+================Iteration 0 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+-------------Iter CG 1-------------
+LP Objective Value = 1107.87,   sum y = 5.0
+true  4119
+-------------Iter CG 2-------------
+LP Objective Value = 954.05,   sum y = 5.0
+true  3624
+-------------Iter CG 3-------------
+LP Objective Value = 504.05,   sum y = 5.0
+true  1032
+-------------Iter CG 4-------------
+LP Objective Value = 480.92,   sum y = 5.0
+true  715
+-------------Iter CG 5-------------
+LP Objective Value = 454.42,   sum y = 5.0
+true  254
+-------------Iter CG 6-------------
+LP Objective Value = 443.32,   sum y = 5.0
+true  7
+-------------Iter CG 7-------------
+LP Objective Value = 433.79,   sum y = 5.0
+false  0
+MILP Result:
+439.83
+[1, 2, 3, 1]    98.09
+[3, 13, 17, 11, 18, 3]   82.86
+[3, 27, 6, 19, 29, 3]   37.15
+[3, 9, 25, 7, 26, 30, 3]   83.11
+[3, 16, 8, 28, 10, 12, 22, 24, 20, 3]   89.85
+[3, 23, 20, 21, 14, 15, 3]   48.77
+Branching stack contains now 1 nodes, current upper bound is 439.83
+
+================Iteration 1 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 433.79
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+
+Solve child node 1
+   + Customers MUST      served together:  (12, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 434.03,   sum y = 5.0
+false  0
+
+Solve child node 2
+   + Customers FORBIDDEN served together:  (12, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 439.47,   sum y = 5.0
+true  2
+-------------Iter CG 2-------------
+LP Objective Value = 437.25,   sum y = 5.0
+false  0
+
+================Iteration 2 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 1, parent node 0: from 2 nodes
+- Branching node in depth: 1
+   + Customers MUST      served together:  (12, 16)  
+
+  Branching node with fractional score: 3.33
+  Branching node with cg lower bound: 434.03
+  Branching node with LB reduction: 0.24
+  Branching node with FS reduction: 0.33
+  Total reduction: 0.57
+
+Solve child node 3
+   + Customers MUST      served together:  (12, 16)  (16, 20)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 448.82,   sum y = 5.0
+true  96
+-------------Iter CG 2-------------
+LP Objective Value = 436.63,   sum y = 5.0
+false  0
+Integer solution found
+Update upper bound
+[3, 27, 6, 19, 29, 3]   37.15
+[3, 9, 25, 7, 26, 30, 3]   83.11
+[3, 16, 8, 28, 10, 12, 22, 24, 20, 3]   89.85
+[3, 23, 21, 14, 15, 3]   47.86
+[3, 18, 13, 17, 11, 3]   80.57
+
+Solve child node 4
+   + Customers MUST      served together:  (12, 16)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 433.01,   sum y = 5.0
+false  0
+
+================Iteration 3 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 4, parent node 1: from 2 nodes
+- Branching node in depth: 2
+   + Customers MUST      served together:  (12, 16)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+
+  Branching node with fractional score: 3.8
+  Branching node with cg lower bound: 433.01
+  Branching node with LB reduction: -0.51
+  Branching node with FS reduction: 0.23
+  Total reduction: -0.32
+
+Solve child node 5
+   + Customers MUST      served together:  (12, 16)  (20, 24)  
+   + Customers FORBIDDEN served together:  (16, 20)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 439.72,   sum y = 5.0
+true  18
+-------------Iter CG 2-------------
+LP Objective Value = 438.05,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 6
+   + Customers MUST      served together:  (12, 16)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 436.24,   sum y = 5.0
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 434.83,   sum y = 5.0
+true  3
+-------------Iter CG 3-------------
+LP Objective Value = 433.43,   sum y = 5.0
+false  0
+
+================Iteration 4 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 6, parent node 4: from 2 nodes
+- Branching node in depth: 3
+   + Customers MUST      served together:  (12, 16)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  
+
+  Branching node with fractional score: 3.13
+  Branching node with cg lower bound: 433.43
+  Branching node with LB reduction: 0.14
+  Branching node with FS reduction: -0.22
+  Total reduction: -0.12
+
+Solve child node 7
+   + Customers MUST      served together:  (12, 16)  (7, 20)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 438.48,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 8
+   + Customers MUST      served together:  (12, 16)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  (7, 20)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 434.83,   sum y = 5.0
+false  0
+
+================Iteration 5 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 8, parent node 6: from 2 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:  (12, 16)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  (7, 20)  
+
+  Branching node with fractional score: 2.8
+  Branching node with cg lower bound: 434.83
+  Branching node with LB reduction: 0.35
+  Branching node with FS reduction: -0.08
+  Total reduction: 0.45
+
+Solve child node 9
+   + Customers MUST      served together:  (12, 16)  (9, 30)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  (7, 20)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 436.24,   sum y = 5.0
+false  0
+
+Solve child node 10
+   + Customers MUST      served together:  (12, 16)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  (7, 20)  (9, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 442.15,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 6 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 9, parent node 8: from 2 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:  (12, 16)  (9, 30)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  (7, 20)  
+
+  Branching node with fractional score: 3.67
+  Branching node with cg lower bound: 436.24
+  Branching node with LB reduction: 0.28
+  Branching node with FS reduction: 0.17
+  Total reduction: 0.87
+
+Solve child node 11
+   + Customers MUST      served together:  (12, 16)  (9, 30)  (20, 26)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  (7, 20)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 436.64,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 12
+   + Customers MUST      served together:  (12, 16)  (9, 30)  
+   + Customers FORBIDDEN served together:  (20, 24)  (16, 20)  (7, 20)  (20, 26)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 437.35,   sum y = 5.0
+true  4
+-------------Iter CG 2-------------
+LP Objective Value = 437.35,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 7 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 2, parent node 0: from 1 nodes
+- Branching node in depth: 1
+   + Customers FORBIDDEN served together:  (12, 16)  
+
+  Branching node with fractional score: 3.67
+  Branching node with cg lower bound: 437.25
+  Branching node with LB reduction: 3.47
+  Branching node with FS reduction: 0.67
+  Total reduction: 4.13
+437.25, Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP2 [1, 2, 1] parkings[2]================
+-------------Iter CG 1-------------
+LP Objective Value = 1099.21,   sum y = 5.0
+true  4371
+-------------Iter CG 2-------------
+LP Objective Value = 925.74,   sum y = 5.0
+true  2975
+-------------Iter CG 3-------------
+LP Objective Value = 462.94,   sum y = 5.0
+true  792
+-------------Iter CG 4-------------
+LP Objective Value = 426.14,   sum y = 5.0
+true  336
+-------------Iter CG 5-------------
+LP Objective Value = 417.35,   sum y = 5.0
+true  46
+-------------Iter CG 6-------------
+LP Objective Value = 410.17,   sum y = 5.0
+true  15
+-------------Iter CG 7-------------
+LP Objective Value = 406.06,   sum y = 5.0
+false  0
+MILP Result:
+425.56
+[1, 2, 1]    97.67
+[2, 26, 25, 9, 15, 20, 24, 2]   87.76
+[2, 17, 11, 18, 13, 2]   38.13
+[2, 23, 12, 28, 10, 22, 2]   64.99
+[2, 21, 7, 30, 14, 2]   39.75
+[2, 15, 27, 19, 29, 6, 8, 16, 2]   97.25
+Branching stack contains now 1 nodes, current upper bound is 425.56
+
+================Iteration 1 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 4.0
+  Branching node with cg lower bound: 406.06
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+
+Solve child node 1
+   + Customers MUST      served together:  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 413.43,   sum y = 5.0
+true  13
+-------------Iter CG 2-------------
+LP Objective Value = 401.69,   sum y = 5.0
+false  0
+
+Solve child node 2
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 407.67,   sum y = 5.0
+true  18
+-------------Iter CG 2-------------
+LP Objective Value = 407.67,   sum y = 5.0
+false  0
+
+================Iteration 2 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 1, parent node 0: from 2 nodes
+- Branching node in depth: 1
+   + Customers MUST      served together:  (15, 16)  
+
+  Branching node with fractional score: 1.67
+  Branching node with cg lower bound: 401.69
+  Branching node with LB reduction: -4.37
+  Branching node with FS reduction: -2.33
+  Total reduction: -6.7
+
+Solve child node 3
+   + Customers MUST      served together:  (15, 16)  (9, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 403.9,   sum y = 5.0
+true  4
+-------------Iter CG 2-------------
+LP Objective Value = 403.9,   sum y = 5.0
+false  0
+
+Solve child node 4
+   + Customers MUST      served together:  (15, 16)  
+   + Customers FORBIDDEN served together:  (9, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 411.56,   sum y = 5.0
+false  0
+
+================Iteration 3 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 2, parent node 0: from 3 nodes
+- Branching node in depth: 1
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+  Branching node with fractional score: 3.62
+  Branching node with cg lower bound: 407.67
+  Branching node with LB reduction: 1.61
+  Branching node with FS reduction: -0.37
+  Total reduction: 1.23
+
+Solve child node 5
+   + Customers MUST      served together:  (23, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 409.28,   sum y = 5.0
+false  0
+
+Solve child node 6
+   + Customers FORBIDDEN served together:  (23, 24)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 409.67,   sum y = 5.0
+false  0
+
+================Iteration 4 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 5, parent node 2: from 4 nodes
+- Branching node in depth: 2
+   + Customers MUST      served together:  (23, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+  Branching node with fractional score: 4.0
+  Branching node with cg lower bound: 409.28
+  Branching node with LB reduction: 0.81
+  Branching node with FS reduction: 0.19
+  Total reduction: 1.17
+
+Solve child node 7
+   + Customers MUST      served together:  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 412.95,   sum y = 5.0
+true  46
+-------------Iter CG 2-------------
+LP Objective Value = 407.81,   sum y = 5.0
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 406.87,   sum y = 5.0
+false  0
+
+Solve child node 8
+   + Customers MUST      served together:  (23, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 409.11,   sum y = 5.0
+false  0
+
+================Iteration 5 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 7, parent node 5: from 5 nodes
+- Branching node in depth: 3
+   + Customers MUST      served together:  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 406.87
+  Branching node with LB reduction: -0.8
+  Branching node with FS reduction: -0.67
+  Total reduction: -2.1
+
+Solve child node 9
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 407.81,   sum y = 5.0
+false  0
+
+Solve child node 10
+   + Customers MUST      served together:  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (14, 30)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 409.65,   sum y = 5.0
+false  0
+
+================Iteration 6 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 8, parent node 5: from 6 nodes
+- Branching node in depth: 3
+   + Customers MUST      served together:  (23, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.67
+  Branching node with cg lower bound: 409.11
+  Branching node with LB reduction: -0.06
+  Branching node with FS reduction: -0.11
+  Total reduction: -0.24
+
+Solve child node 11
+   + Customers MUST      served together:  (23, 24)  (15, 30)  
+   + Customers FORBIDDEN served together:  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 416.73,   sum y = 5.0
+true  6
+-------------Iter CG 2-------------
+LP Objective Value = 413.54,   sum y = 5.0
+true  2
+-------------Iter CG 3-------------
+LP Objective Value = 413.05,   sum y = 5.0
+false  0
+
+Solve child node 12
+   + Customers MUST      served together:  (23, 24)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 411.47,   sum y = 5.0
+false  0
+
+================Iteration 7 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 12, parent node 8: from 7 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:  (23, 24)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.62
+  Branching node with cg lower bound: 411.47
+  Branching node with LB reduction: 0.59
+  Branching node with FS reduction: -0.01
+  Total reduction: 0.97
+
+Solve child node 13
+   + Customers MUST      served together:  (23, 24)  (8, 16)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 414.21,   sum y = 5.0
+true  3
+-------------Iter CG 2-------------
+LP Objective Value = 411.66,   sum y = 5.0
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 411.66,   sum y = 5.0
+false  0
+
+Solve child node 14
+   + Customers MUST      served together:  (23, 24)  
+   + Customers FORBIDDEN served together:  (8, 16)  (15, 30)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 421.93,   sum y = 5.0
+true  13
+-------------Iter CG 2-------------
+LP Objective Value = 417.64,   sum y = 5.0
+false  0
+
+================Iteration 8 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 13, parent node 12: from 8 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:  (23, 24)  (8, 16)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.29
+  Branching node with cg lower bound: 411.66
+  Branching node with LB reduction: 0.04
+  Branching node with FS reduction: -0.07
+  Total reduction: -0.06
+
+Solve child node 15
+   + Customers MUST      served together:  (23, 24)  (8, 16)  (16, 20)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 412.59,   sum y = 5.0
+true  15
+-------------Iter CG 2-------------
+LP Objective Value = 412.28,   sum y = 5.0
+false  0
+
+Solve child node 16
+   + Customers MUST      served together:  (23, 24)  (8, 16)  
+   + Customers FORBIDDEN served together:  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 412.44,   sum y = 5.0
+false  0
+
+================Iteration 9 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 15, parent node 13: from 9 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:  (23, 24)  (8, 16)  (16, 20)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 412.28
+  Branching node with LB reduction: 0.1
+  Branching node with FS reduction: -0.05
+  Total reduction: 0.12
+
+Solve child node 17
+   + Customers MUST      served together:  (23, 24)  (8, 16)  (16, 20)  (9, 25)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 413.74,   sum y = 5.0
+false  0
+
+Solve child node 18
+   + Customers MUST      served together:  (23, 24)  (8, 16)  (16, 20)  
+   + Customers FORBIDDEN served together:  (15, 30)  (9, 25)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 418.97,   sum y = 5.0
+false  0
+Integer solution found
+Update upper bound
+[2, 24, 23, 21, 2]   21.45
+[2, 26, 7, 25, 30, 14, 2]   70.27
+[2, 7, 9, 27, 29, 19, 6, 8, 16, 20, 2]   111.19
+[2, 18, 13, 11, 17, 2]   34.71
+[2, 22, 12, 10, 28, 15, 21, 2]   83.66
+
+================Iteration 10 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 16, parent node 13: from 9 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:  (23, 24)  (8, 16)  
+   + Customers FORBIDDEN served together:  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 412.44
+  Branching node with LB reduction: 0.13
+  Branching node with FS reduction: -0.05
+  Total reduction: 0.18
+
+Solve child node 19
+   + Customers MUST      served together:  (23, 24)  (8, 16)  (16, 19)  
+   + Customers FORBIDDEN served together:  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 414.78,   sum y = 5.0
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 414.78,   sum y = 5.0
+false  0
+
+Solve child node 20
+   + Customers MUST      served together:  (23, 24)  (8, 16)  
+   + Customers FORBIDDEN served together:  (16, 19)  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 422.24,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 11 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 17, parent node 15: from 9 nodes
+- Branching node in depth: 7
+   + Customers MUST      served together:  (23, 24)  (8, 16)  (16, 20)  (9, 25)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 413.74
+  Branching node with LB reduction: 0.21
+  Branching node with FS reduction: -0.05
+  Total reduction: 0.38
+
+Solve child node 21
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 20)  (9, 25)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 415.93,   sum y = 5.0
+false  0
+
+Solve child node 22
+   + Customers MUST      served together:  (23, 24)  (8, 16)  (16, 20)  (9, 25)  
+   + Customers FORBIDDEN served together:  (12, 16)  (15, 30)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 426.73,   sum y = 5.0
+true  35
+-------------Iter CG 2-------------
+LP Objective Value = 423.8,   sum y = 5.0
+true  15
+-------------Iter CG 3-------------
+LP Objective Value = 423.8,   sum y = 5.0
+true  4
+-------------Iter CG 4-------------
+LP Objective Value = 423.64,   sum y = 5.0
+true  2
+-------------Iter CG 5-------------
+LP Objective Value = 422.4,   sum y = 5.0
+true  2
+-------------Iter CG 6-------------
+LP Objective Value = 422.4,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 12 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 21, parent node 17: from 9 nodes
+- Branching node in depth: 8
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 20)  (9, 25)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.33
+  Branching node with cg lower bound: 415.93
+  Branching node with LB reduction: 0.27
+  Branching node with FS reduction: 0.08
+  Total reduction: 0.93
+
+Solve child node 23
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 19)  (16, 20)  (9, 25)  
+   + Customers FORBIDDEN served together:  (15, 30)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 416.47,   sum y = 5.0
+true  5
+-------------Iter CG 2-------------
+LP Objective Value = 416.47,   sum y = 5.0
+false  0
+Integer solution found
+Update upper bound
+[2, 25, 9, 15, 22, 2]   105.47
+[2, 24, 23, 21, 2]   21.45
+[2, 26, 7, 30, 14, 2]   37.61
+[2, 18, 13, 11, 17, 2]   34.71
+[2, 12, 10, 28, 8, 6, 19, 29, 27, 16, 20, 2]   119.55
+
+Solve child node 24
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 20)  (9, 25)  
+   + Customers FORBIDDEN served together:  (16, 19)  (15, 30)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 446.27,   sum y = 5.0
+true  178
+-------------Iter CG 2-------------
+LP Objective Value = 430.72,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 13 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 19, parent node 16: from 8 nodes
+- Branching node in depth: 7
+   + Customers MUST      served together:  (23, 24)  (8, 16)  (16, 19)  
+   + Customers FORBIDDEN served together:  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 4.0
+  Branching node with cg lower bound: 414.78
+  Branching node with LB reduction: 0.33
+  Branching node with FS reduction: 0.14
+  Total reduction: 1.13
+
+Solve child node 25
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 19)  
+   + Customers FORBIDDEN served together:  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 415.77,   sum y = 5.0
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 415.77,   sum y = 5.0
+false  0
+
+Solve child node 26
+   + Customers MUST      served together:  (23, 24)  (8, 16)  (16, 19)  
+   + Customers FORBIDDEN served together:  (12, 16)  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 417.69,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 14 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 25, parent node 19: from 8 nodes
+- Branching node in depth: 8
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 19)  
+   + Customers FORBIDDEN served together:  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.5
+  Branching node with cg lower bound: 415.77
+  Branching node with LB reduction: 0.12
+  Branching node with FS reduction: -0.06
+  Total reduction: 0.16
+
+Solve child node 27
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (16, 22)  (8, 16)  (16, 19)  
+   + Customers FORBIDDEN served together:  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 417.88,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 28
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 19)  
+   + Customers FORBIDDEN served together:  (16, 22)  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 416.41,   sum y = 5.0
+false  0
+
+================Iteration 15 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 28, parent node 25: from 8 nodes
+- Branching node in depth: 9
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 19)  
+   + Customers FORBIDDEN served together:  (16, 22)  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 416.41
+  Branching node with LB reduction: 0.07
+  Branching node with FS reduction: -0.06
+  Total reduction: 0.04
+
+Solve child node 29
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 19)  (20, 24)  
+   + Customers FORBIDDEN served together:  (16, 22)  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 416.42,   sum y = 5.0
+false  0
+
+Solve child node 30
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 19)  
+   + Customers FORBIDDEN served together:  (16, 22)  (15, 30)  (20, 24)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 417.35,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 16 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 29, parent node 28: from 8 nodes
+- Branching node in depth: 10
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 19)  (20, 24)  
+   + Customers FORBIDDEN served together:  (16, 22)  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 416.42
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+Solve child node 31
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (20, 22)  (8, 16)  (16, 19)  (20, 24)  
+   + Customers FORBIDDEN served together:  (16, 22)  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 418.06,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 32
+   + Customers MUST      served together:  (12, 16)  (23, 24)  (8, 16)  (16, 19)  (20, 24)  
+   + Customers FORBIDDEN served together:  (16, 22)  (20, 22)  (15, 30)  (16, 20)  (15, 16)  (12, 24)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 417.38,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 17 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 9, parent node 7: from 7 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+  Branching node with fractional score: 4.0
+  Branching node with cg lower bound: 407.81
+  Branching node with LB reduction: 0.23
+  Branching node with FS reduction: 0.5
+  Total reduction: 1.23
+
+Solve child node 33
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 20)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 409.0,   sum y = 5.0
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 409.0,   sum y = 5.0
+false  0
+
+Solve child node 34
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 408.59,   sum y = 5.0
+false  0
+
+================Iteration 18 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 33, parent node 9: from 8 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 20)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 409.0
+  Branching node with LB reduction: 0.24
+  Branching node with FS reduction: -0.2
+  Total reduction: 0.07
+
+Solve child node 35
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (16, 20)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 414.2,   sum y = 5.0
+true  24
+-------------Iter CG 2-------------
+LP Objective Value = 410.57,   sum y = 5.0
+false  0
+
+Solve child node 36
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 20)  (12, 24)  
+   + Customers FORBIDDEN served together:  (9, 16)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 415.07,   sum y = 5.0
+true  7
+-------------Iter CG 2-------------
+LP Objective Value = 411.62,   sum y = 5.0
+false  0
+
+================Iteration 19 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 35, parent node 33: from 9 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (16, 20)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+  Branching node with fractional score: 1.67
+  Branching node with cg lower bound: 410.57
+  Branching node with LB reduction: 0.26
+  Branching node with FS reduction: -0.22
+  Total reduction: 0.08
+
+Solve child node 37
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (16, 20)  (25, 30)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 414.92,   sum y = 5.0
+true  8
+-------------Iter CG 2-------------
+LP Objective Value = 414.92,   sum y = 5.0
+false  0
+
+Solve child node 38
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (16, 20)  (12, 24)  
+   + Customers FORBIDDEN served together:  (25, 30)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 419.12,   sum y = 5.0
+true  5
+-------------Iter CG 2-------------
+LP Objective Value = 419.12,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 20 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 34, parent node 9: from 9 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 20)  (15, 16)  
+
+  Branching node with fractional score: 4.0
+  Branching node with cg lower bound: 408.59
+  Branching node with LB reduction: 0.16
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.3
+
+Solve child node 39
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 28)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 411.95,   sum y = 5.0
+false  0
+
+Solve child node 40
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 28)  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 408.67,   sum y = 5.0
+false  0
+
+================Iteration 21 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 40, parent node 34: from 10 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 28)  (16, 20)  (15, 16)  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 408.67
+  Branching node with LB reduction: 0.01
+  Branching node with FS reduction: -0.17
+  Total reduction: -0.33
+
+Solve child node 41
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 28)  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 412.39,   sum y = 5.0
+false  0
+
+Solve child node 42
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (9, 16)  (16, 28)  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 412.12,   sum y = 5.0
+false  0
+
+================Iteration 22 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 36, parent node 33: from 11 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 20)  (12, 24)  
+   + Customers FORBIDDEN served together:  (9, 16)  (15, 16)  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 411.62
+  Branching node with LB reduction: 0.44
+  Branching node with FS reduction: -0.17
+  Total reduction: 0.58
+
+Solve child node 43
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 20)  (9, 30)  (12, 24)  
+   + Customers FORBIDDEN served together:  (9, 16)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 418.98,   sum y = 5.0
+true  2
+-------------Iter CG 2-------------
+LP Objective Value = 418.98,   sum y = 5.0
+true  9
+-------------Iter CG 3-------------
+LP Objective Value = 417.52,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 44
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 20)  (12, 24)  
+   + Customers FORBIDDEN served together:  (9, 16)  (15, 16)  (9, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 412.93,   sum y = 5.0
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 412.93,   sum y = 5.0
+true  6
+-------------Iter CG 3-------------
+LP Objective Value = 412.93,   sum y = 5.0
+false  0
+Integer solution found
+Update upper bound
+[2, 30, 14, 21, 2]   30.55
+[2, 22, 10, 28, 12, 23, 24, 2]   65.07
+[2, 18, 13, 11, 17, 2]   34.71
+[2, 16, 8, 19, 29, 6, 27, 20, 2]   97.37
+[2, 15, 9, 25, 7, 26, 2]   87.56
+
+================Iteration 23 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 39, parent node 34: from 10 nodes
+- Branching node in depth: 6
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 28)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 20)  (15, 16)  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 411.95
+  Branching node with LB reduction: 0.56
+  Branching node with FS reduction: -0.28
+  Total reduction: 0.61
+
+Solve child node 45
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 28)  (21, 30)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 414.61,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 46
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (16, 28)  (12, 24)  
+   + Customers FORBIDDEN served together:  (21, 30)  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 415.18,   sum y = 5.0
+true  39
+-------------Iter CG 2-------------
+LP Objective Value = 415.18,   sum y = 5.0
+true  3
+-------------Iter CG 3-------------
+LP Objective Value = 415.02,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 24 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 42, parent node 40: from 9 nodes
+- Branching node in depth: 7
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (9, 16)  (16, 28)  (16, 20)  (15, 16)  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 412.12
+  Branching node with LB reduction: 0.49
+  Branching node with FS reduction: -0.1
+  Total reduction: 0.94
+
+Solve child node 47
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (21, 30)  (12, 24)  
+   + Customers FORBIDDEN served together:  (9, 16)  (16, 28)  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 414.78,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 48
+   + Customers MUST      served together:  (14, 30)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (9, 16)  (16, 28)  (21, 30)  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 415.07,   sum y = 5.0
+true  4
+-------------Iter CG 2-------------
+LP Objective Value = 415.07,   sum y = 5.0
+true  3
+-------------Iter CG 3-------------
+LP Objective Value = 413.27,   sum y = 5.0
+true  4
+-------------Iter CG 4-------------
+LP Objective Value = 413.27,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 25 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 41, parent node 40: from 8 nodes
+- Branching node in depth: 7
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 28)  (16, 20)  (15, 16)  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 412.39
+  Branching node with LB reduction: 0.53
+  Branching node with FS reduction: -0.1
+  Total reduction: 1.04
+
+Solve child node 49
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (20, 30)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 28)  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 416.21,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 50
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 28)  (20, 30)  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 412.92,   sum y = 5.0
+false  0
+
+================Iteration 26 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 50, parent node 41: from 8 nodes
+- Branching node in depth: 8
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 28)  (20, 30)  (16, 20)  (15, 16)  
+
+  Branching node with fractional score: 1.67
+  Branching node with cg lower bound: 412.92
+  Branching node with LB reduction: 0.07
+  Branching node with FS reduction: -0.08
+  Total reduction: -0.04
+
+Solve child node 51
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (25, 30)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 28)  (20, 30)  (16, 20)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 417.11,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 52
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (16, 28)  (20, 30)  (16, 20)  (25, 30)  (15, 16)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 421.47,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 27 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 3, parent node 1: from 7 nodes
+- Branching node in depth: 2
+   + Customers MUST      served together:  (15, 16)  (9, 30)  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 403.9
+  Branching node with LB reduction: 1.11
+  Branching node with FS reduction: 0.17
+  Total reduction: 1.5
+
+Solve child node 53
+   + Customers MUST      served together:  (14, 30)  (15, 16)  (9, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 406.22,   sum y = 5.0
+true  2
+-------------Iter CG 2-------------
+LP Objective Value = 406.22,   sum y = 5.0
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 406.22,   sum y = 5.0
+true  6
+-------------Iter CG 4-------------
+LP Objective Value = 406.22,   sum y = 5.0
+false  0
+Integer solution found
+Update upper bound
+[2, 26, 21, 2]   27.03
+[2, 15, 27, 19, 29, 6, 8, 16, 2]   97.25
+[2, 22, 10, 28, 12, 23, 20, 24, 2]   67.42
+[2, 7, 25, 9, 30, 14, 2]   82.13
+[2, 18, 13, 11, 17, 2]   34.71
+
+Solve child node 54
+   + Customers MUST      served together:  (15, 16)  (9, 30)  
+   + Customers FORBIDDEN served together:  (14, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 405.97,   sum y = 5.0
+true  18
+-------------Iter CG 2-------------
+LP Objective Value = 405.97,   sum y = 5.0
+false  0
+Integer solution found
+Update upper bound
+[2, 14, 21, 2]   26.65
+[2, 15, 27, 19, 29, 6, 8, 16, 2]   97.25
+[2, 22, 10, 28, 12, 23, 20, 24, 2]   67.42
+[2, 26, 7, 25, 9, 30, 2]   82.26
+[2, 18, 13, 11, 17, 2]   34.71
+
+================Iteration 28 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 6, parent node 2: from 6 nodes
+- Branching node in depth: 2
+   + Customers FORBIDDEN served together:  (23, 24)  (15, 16)  
+
+  Branching node with fractional score: 4.0
+  Branching node with cg lower bound: 409.67
+  Branching node with LB reduction: 1.0
+  Branching node with FS reduction: 0.19
+  Total reduction: 1.4
+409.67, Exceed Upper Bound, prune
+
+================Iteration 29 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 10, parent node 7: from 5 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:  (23, 24)  (12, 24)  
+   + Customers FORBIDDEN served together:  (14, 30)  (15, 16)  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 409.65
+  Branching node with LB reduction: 0.69
+  Branching node with FS reduction: 0.25
+  Total reduction: 1.58
+409.65, Exceed Upper Bound, prune
+
+================Iteration 30 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 37, parent node 35: from 4 nodes
+- Branching node in depth: 7
+   + Customers MUST      served together:  (14, 30)  (9, 16)  (23, 24)  (16, 20)  (25, 30)  (12, 24)  
+   + Customers FORBIDDEN served together:  (15, 16)  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 414.92
+  Branching node with LB reduction: 0.62
+  Branching node with FS reduction: 0.05
+  Total reduction: 1.59
+414.92, Exceed Upper Bound, prune
+
+================Iteration 31 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 11, parent node 8: from 3 nodes
+- Branching node in depth: 4
+   + Customers MUST      served together:  (23, 24)  (15, 30)  
+   + Customers FORBIDDEN served together:  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.73
+  Branching node with cg lower bound: 413.05
+  Branching node with LB reduction: 0.99
+  Branching node with FS reduction: 0.02
+  Total reduction: 1.68
+413.05, Exceed Upper Bound, prune
+
+================Iteration 32 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 14, parent node 12: from 2 nodes
+- Branching node in depth: 5
+   + Customers MUST      served together:  (23, 24)  
+   + Customers FORBIDDEN served together:  (8, 16)  (15, 30)  (15, 16)  (12, 24)  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 417.64
+  Branching node with LB reduction: 1.24
+  Branching node with FS reduction: -0.12
+  Total reduction: 2.13
+417.64, Exceed Upper Bound, prune
+
+================Iteration 33 of B&P for SP2 [1, 2, 1] parkings[2]================
+Display selected node 4, parent node 1: from 1 nodes
+- Branching node in depth: 2
+   + Customers MUST      served together:  (15, 16)  
+   + Customers FORBIDDEN served together:  (9, 30)  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 411.56
+  Branching node with LB reduction: 4.93
+  Branching node with FS reduction: 0.67
+  Total reduction: 6.62
+411.56, Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP3 [1, 2, 5, 1] parkings[5]================
+-------------Iter CG 1-------------
+LP Objective Value = 1167.79,   sum y = 5.0
+true  2709
+-------------Iter CG 2-------------
+LP Objective Value = 1065.61,   sum y = 5.0
+true  2467
+-------------Iter CG 3-------------
+LP Objective Value = 707.36,   sum y = 5.0
+true  1544
+-------------Iter CG 4-------------
+LP Objective Value = 592.14,   sum y = 5.0
+true  632
+-------------Iter CG 5-------------
+LP Objective Value = 548.57,   sum y = 5.0
+true  330
+-------------Iter CG 6-------------
+LP Objective Value = 531.04,   sum y = 5.0
+true  10
+-------------Iter CG 7-------------
+LP Objective Value = 525.35,   sum y = 5.0
+true  5
+-------------Iter CG 8-------------
+LP Objective Value = 525.35,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP4 [1, 2, 4, 3, 1] parkings[2, 3]================
+-------------Iter CG 1-------------
+LP Objective Value = 388.46,   sum y = 5.0
+true  1
+-------------Iter CG 2-------------
+LP Objective Value = 388.46,   sum y = 5.0
+true  4
+-------------Iter CG 3-------------
+LP Objective Value = 388.46,   sum y = 5.0
+true  22
+-------------Iter CG 4-------------
+LP Objective Value = 383.61,   sum y = 5.0
+true  1
+-------------Iter CG 5-------------
+LP Objective Value = 383.61,   sum y = 5.0
+false  0
+MILP Result:
+390.21
+[1, 2, 4, 3, 1]    126.18
+[3, 15, 30, 7, 25, 9, 3]   75.2
+[2, 26, 14, 21, 2]   32.47
+[2, 22, 10, 28, 12, 23, 20, 24, 2]   67.42
+[2, 18, 13, 11, 17, 2]   34.71
+[3, 16, 8, 6, 19, 29, 27, 3]   54.22
+Branching stack contains now 1 nodes, current upper bound is 390.21
+
+================Iteration 1 of B&P for SP4 [1, 2, 4, 3, 1] parkings[2, 3]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 383.61
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+
+Solve child node 1
+   - MUST      combination:  (2, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 391.09,   sum y = 5.67
+true  132
+-------------Iter CG 2-------------
+LP Objective Value = 389.63,   sum y = 5.0
+true  85
+-------------Iter CG 3-------------
+LP Objective Value = 389.63,   sum y = 5.0
+false  0
+
+Solve child node 2
+   - FORBIDDEN combination:  (2, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 390.12,   sum y = 5.0
+true  58
+-------------Iter CG 2-------------
+LP Objective Value = 390.12,   sum y = 5.0
+true  8
+-------------Iter CG 3-------------
+LP Objective Value = 390.12,   sum y = 5.0
+true  2
+-------------Iter CG 4-------------
+LP Objective Value = 390.12,   sum y = 5.0
+false  0
+
+================Iteration 2 of B&P for SP4 [1, 2, 4, 3, 1] parkings[2, 3]================
+Display selected node 1, parent node 0: from 2 nodes
+- Branching node in depth: 1
+   - MUST      combination:  (2, 30)  
+
+  Branching node with fractional score: 2.8
+  Branching node with cg lower bound: 389.63
+  Branching node with LB reduction: 6.03
+  Branching node with FS reduction: 0.8
+  Total reduction: 6.83
+
+Solve child node 3
+   - MUST      combination:  (2, 30)  (2, 9)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 393.8,   sum y = 5.14
+true  135
+-------------Iter CG 2-------------
+LP Objective Value = 393.8,   sum y = 5.14
+true  59
+-------------Iter CG 3-------------
+LP Objective Value = 393.8,   sum y = 5.14
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 4
+   - MUST      combination:  (2, 30)  
+   - FORBIDDEN combination:  (2, 9)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 393.85,   sum y = 5.0
+true  86
+-------------Iter CG 2-------------
+LP Objective Value = 393.85,   sum y = 5.0
+true  46
+-------------Iter CG 3-------------
+LP Objective Value = 393.85,   sum y = 5.0
+true  18
+-------------Iter CG 4-------------
+LP Objective Value = 393.85,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+================Iteration 3 of B&P for SP4 [1, 2, 4, 3, 1] parkings[2, 3]================
+Display selected node 2, parent node 0: from 1 nodes
+- Branching node in depth: 1
+   - FORBIDDEN combination:  (2, 30)  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 390.12
+  Branching node with LB reduction: 6.51
+  Branching node with FS reduction: 0.33
+  Total reduction: 6.85
+
+Solve child node 5
+   - MUST      combination:  (2, 14)  
+   - FORBIDDEN combination:  (2, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 390.21,   sum y = 5.0
+true  157
+-------------Iter CG 2-------------
+LP Objective Value = 390.21,   sum y = 5.0
+true  96
+-------------Iter CG 3-------------
+LP Objective Value = 390.21,   sum y = 5.0
+true  12
+-------------Iter CG 4-------------
+LP Objective Value = 390.21,   sum y = 5.0
+false  0
+Integer solution found
+
+Solve child node 6
+   - FORBIDDEN combination:  (2, 14)  (2, 30)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 390.09,   sum y = 5.0
+true  13
+-------------Iter CG 2-------------
+LP Objective Value = 390.09,   sum y = 5.0
+false  0
+
+================Iteration 4 of B&P for SP4 [1, 2, 4, 3, 1] parkings[2, 3]================
+Display selected node 6, parent node 2: from 1 nodes
+- Branching node in depth: 2
+   - FORBIDDEN combination:  (2, 14)  (2, 30)  
+
+  Branching node with fractional score: 2.8
+  Branching node with cg lower bound: 390.09
+  Branching node with LB reduction: -0.01
+  Branching node with FS reduction: 0.23
+  Total reduction: 0.26
+
+Solve child node 7
+   - FORBIDDEN combination:  (2, 14)  (2, 30)  
+   + Customers MUST      served together:  (12, 21)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 395.09,   sum y = 5.07
+true  107
+-------------Iter CG 2-------------
+LP Objective Value = 394.63,   sum y = 5.07
+true  2
+-------------Iter CG 3-------------
+LP Objective Value = 394.63,   sum y = 5.07
+false  0
+Exceed Upper Bound, prune
+
+Solve child node 8
+   - FORBIDDEN combination:  (2, 14)  (2, 30)  
+   + Customers FORBIDDEN served together:  (12, 21)  
+
+-------------Iter CG 1-------------
+LP Objective Value = 391.29,   sum y = 5.4
+true  32
+-------------Iter CG 2-------------
+LP Objective Value = 391.29,   sum y = 5.4
+true  17
+-------------Iter CG 3-------------
+LP Objective Value = 391.29,   sum y = 5.4
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP5 [1, 4, 2, 3, 1] parkings[4, 3]================
+-------------Iter CG 1-------------
+LP Objective Value = 443.34,   sum y = 5.38
+true  271
+-------------Iter CG 2-------------
+LP Objective Value = 408.51,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP6 [1, 4, 1] parkings[4]================
+-------------Iter CG 1-------------
+LP Objective Value = 1171.75,   sum y = 5.0
+true  3113
+-------------Iter CG 2-------------
+LP Objective Value = 794.03,   sum y = 5.0
+true  1335
+-------------Iter CG 3-------------
+LP Objective Value = 576.62,   sum y = 5.0
+true  1957
+-------------Iter CG 4-------------
+LP Objective Value = 521.29,   sum y = 5.0
+true  135
+-------------Iter CG 5-------------
+LP Objective Value = 521.29,   sum y = 5.0
+true  14
+-------------Iter CG 6-------------
+LP Objective Value = 512.85,   sum y = 5.0
+true  5
+-------------Iter CG 7-------------
+LP Objective Value = 512.56,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP7 [1, 2, 4, 1] parkings[4, 2]================
+-------------Iter CG 1-------------
+LP Objective Value = 422.48,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP8 [1, 4, 2, 5, 1] parkings[5, 4]================
+-------------Iter CG 1-------------
+LP Objective Value = 460.99,   sum y = 5.0
+true  7
+-------------Iter CG 2-------------
+LP Objective Value = 457.3,   sum y = 5.0
+true  1
+-------------Iter CG 3-------------
+LP Objective Value = 454.19,   sum y = 5.0
+true  38
+-------------Iter CG 4-------------
+LP Objective Value = 446.25,   sum y = 5.0
+true  42
+-------------Iter CG 5-------------
+LP Objective Value = 446.25,   sum y = 5.0
+true  3
+-------------Iter CG 6-------------
+LP Objective Value = 446.04,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP9 [1, 2, 4, 5, 1] parkings[5, 2]================
+-------------Iter CG 1-------------
+LP Objective Value = 410.12,   sum y = 5.0
+true  112
+-------------Iter CG 2-------------
+LP Objective Value = 395.98,   sum y = 5.0
+true  63
+-------------Iter CG 3-------------
+LP Objective Value = 395.98,   sum y = 5.0
+true  32
+-------------Iter CG 4-------------
+LP Objective Value = 393.09,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+
+================Iteration 0 of B&P for SP10 [1, 4, 3, 2, 5, 1] parkings[5, 3]================
+-------------Iter CG 1-------------
+LP Objective Value = 501.87,   sum y = 5.0
+false  0
+Exceed Upper Bound, prune
+
+Total Execution time = 77.87
+
+time spent in soving root node = 62.8, takes percentage of 81.0%
+time spent in branching decision = 0.06, takes percentage of 0.0%
+time spent in solving child node = 14.73, takes percentage of 19.0%
+
+time spent in filtering = 0.93, takes percentage of 1.0%
+time spent in solving column generation = 68.2, takes percentage of 88.0%
+   - time spent in building model = 7.76, takes percentage of 11.0%
+       - time spent in setting bound = 1.11, takes percentage of 2.0%
+       - time spent in adding columns = 7.51, takes percentage of 11.0%
+   - time spent in solving pricing = 63.53, takes percentage of 93.0%
+   - time spent in solving RMP = 1.68, takes percentage of 2.0%
+Current optimal solution 390.21 found in interation 0 in level 0:
+[1, 2, 4, 3, 1]  126.18
+[3, 15, 30, 7, 25, 9, 3]  75.2
+[2, 26, 14, 21, 2]  32.47
+[2, 22, 10, 28, 12, 23, 20, 24, 2]  67.42
+[2, 18, 13, 11, 17, 2]  34.71
+[3, 16, 8, 6, 19, 29, 27, 3]  54.22

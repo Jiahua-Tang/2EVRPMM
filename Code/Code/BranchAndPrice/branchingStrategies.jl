@@ -1,59 +1,51 @@
 function displayBranchingRule(branchingInfo::BranchingInfo)
 
-    if !isempty(branchingInfo.special_order_set_must_include)
-        print("   ^ Special order set 2e reversed route must include:\n")
-        for route in branchingInfo.special_order_set_must_include
-            println("       ", route.sequence)
-        end
-    end
-
-    if !isempty(branchingInfo.special_order_set_forbidden_include)
-        print("\n   ^ Special order set 2e reversed route forbidden include:\n")
-        for route in branchingInfo.special_order_set_forbidden_include
-            println("       ", route.sequence)
-        end
-    end
-
     if !isempty(branchingInfo.must_include_combinations)
-        print("\n   - MUST combination:  ")
+        print("   - MUST      combination:  ")
         for value in branchingInfo.must_include_combinations 
             print(value, "  ")
         end        
+        print("\n")
     end
 
     if !isempty(branchingInfo.forbidden_combinations)
-        print("\n   - FORBIDDEN combination:   ")
+        print("   - FORBIDDEN combination:  ")
         for value in branchingInfo.forbidden_combinations 
             print(value, "  ")
         end     
+        print("\n")
     end
 
     if !isempty(branchingInfo.must_served_together)
-        print("\n   + Customers MUST     served together:   ")
+        print("   + Customers MUST      served together:  ")
         for value in branchingInfo.must_served_together
             print(value, "  ")
         end
+        print("\n")
     end
     
     if !isempty(branchingInfo.forbidden_served_together)
-        print("\n   + Customers FORBIDDEN served together:   ")
+        print("   + Customers FORBIDDEN served together:  ")
         for value in branchingInfo.forbidden_served_together 
             print(value, "  ")
         end
+        print("\n")
     end
 
     if !isempty(branchingInfo.upper_bound_number_2e_routes)
-        print("\n   # Total number of 2e routes cannot EXCEED:   ")
+        print("   # Total number of 2e routes cannot EXCEED:   ")
         for value in branchingInfo.upper_bound_number_2e_routes
             print(value, "  ")
         end
+        print("\n")
     end
 
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
-        print("\n   # Total number of 2e routes cannot UNDER:   ")
+        print("   # Total number of 2e routes cannot UNDER:   ")
         for value in branchingInfo.lower_bound_number_2e_routes 
             print(value, "  ")
         end
+        print("\n")
     end
 
     # if branchingInfo.depth != 0
@@ -136,7 +128,7 @@ function branchOnReverseRoute(branchingInfo, reverse_route)
     return left_branch, right_branch
 end
 
-function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
+function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_pool)
     routes = deepcopy(routes_pool)
     # @info "Start to branch on most fractional route's most visited customer"
     left_branch = deepcopy(branchingInfo)
@@ -144,16 +136,22 @@ function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
     left_branch.depth += 1
     right_branch.depth += 1
 
-    sorted_fractional_y = sort([r for r in 1:length(y) if 0 < y[r]], by = r -> y[r] * (1 - y[r]), rev = true)
-
     branchingDecision = nothing
     branchingDecisionFound = false
 
+    #region : sort fractional routes
+    sorted_fractional_y = sort([r for r in 1:length(y) if 0 < y[r]], by = r -> y[r] * (1 - y[r]), rev = true)
     selected_routes = Set{Vector{Int}}()
     for y_value in sorted_fractional_y 
         push!(selected_routes, routes_2e[routes_pool[y_value]].sequence)
     end
+    # println("selected routes: ")
+    # for route in selected_routes 
+    #     println(route)
+    # end
+    #endregion
 
+    #region : calculate and sort customers selecte times
     customers_selected_times = Dict{Int, Int}()
     for cust in customers 
         customers_selected_times[cust] = 0
@@ -164,38 +162,44 @@ function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
         end
     end
     sorted_customers = [k for (k, v) in sort(collect(customers_selected_times), by = x -> x[2], rev = true)]
+    #endregion
 
-    for cust in sorted_customers 
-        for route in selected_routes 
-            if cust in route
-                existance1 = branchingDecision in branchingInfo.must_include_combinations
-                existance2 = branchingDecision in branchingInfo.forbidden_combinations
-
-                if !existance1 && !existance2
-                    valide = false
+    # * branch on combination parking-customer
+    if length(getServedParking1eRoute(route_1e)) > 1
+        for cust in sorted_customers 
+            for route in selected_routes 
+                if cust in route
+                    # * select the combination of 
+                    # * start point of most fractional route and the most selected customer
                     branchingDecision = (route[1], cust)
-                    for route_2 in selected_routes 
-                        if route_2[1] != route[1] && cust in route_2
-                            valide = true
-                            break
-                        end
-                    end
+
+                    existance1 = branchingDecision in branchingInfo.must_include_combinations
+                    existance2 = branchingDecision in branchingInfo.forbidden_combinations
                     
-                    if valide                       
-                        push!(left_branch.must_include_combinations, branchingDecision)
-                        push!(right_branch.forbidden_combinations, branchingDecision)
-                        @info "Branch on combination parking-customer: $branchingDecision"
-                        return left_branch, right_branch 
+                    if !existance1 && !existance2
+                        valide = false
+                        for route_2 in selected_routes 
+                            if route_2[1] != route[1] && cust in route_2
+                                valide = true
+                                break
+                            end
+                        end
+                        
+                        if valide                       
+                            push!(left_branch.must_include_combinations, branchingDecision)
+                            push!(right_branch.forbidden_combinations, branchingDecision)
+                            @info "Branch on combination parking-customer: $branchingDecision"
+                            return left_branch, right_branch 
+                        end
                     end
                 end
             end
-        end
+        end      
     end
-    # for route in selected_routes 
-    #     println(route)
-    # end
+
+    # * branch on combination customers
     for (idx1, cust1) in enumerate(sorted_customers)
-        for (idx2, cust2) in enumerate(sorted_customers[idx1+1:end])
+        for (_, cust2) in enumerate(sorted_customers[idx1+1:end])
             existance_cust_1 = false
             existance_cust_2 = false
             existance_together = false            
@@ -204,7 +208,6 @@ function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
             for route in selected_routes
                 if cust1 in route && cust2 in route
                     existance_together = true
-                    # println(cust1, "  ", cust2, "  ", route)
                 end
                 if cust1 in route && !(cust2 in route)
                     existance_cust_1 = true
@@ -226,11 +229,28 @@ function branchOnCombinationParkingCustomer(branchingInfo, y, routes_pool)
                 if !existance1 && !existance2
                     push!(left_branch.must_served_together, branchingDecision)
                     push!(right_branch.forbidden_served_together, branchingDecision)
-                    @info "Branch on combination customers: $branchingDecision"
+                    # @info "Branch on combination customers: $branchingDecision"
                     return left_branch, right_branch
                 end                
             end
-
         end
     end
+    
+    # # # * branch on arc
+    # sorted_arc = Dict{Tuple{Int,Int}, Int}()
+
+    # for route in selected_routes
+    #     println(route)
+    #     if length(route) > 3
+    #         for i in 2:(length(route)-2)
+    #             a = route[i]
+    #             b = route[i+1]
+    #             key = minmax(a, b)
+    #             println(key)
+    #             sorted_arc[key] = get(sorted_arc, key, 0) + 1
+    #         end
+    #     end
+    # end
+    # println(sorted_arc)
+
 end

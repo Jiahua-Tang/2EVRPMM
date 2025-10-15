@@ -1,3 +1,4 @@
+
 struct Dataset
     arc_cost::Matrix{Float64}
     coor::Vector{Vector{Float64}}
@@ -26,7 +27,7 @@ end
 mutable struct Route
     cost::Float64
     sequence::Vector{Int}
-    length::Int
+    id::Int
     load::Int
     b1::Vector{Int}
     a::Vector{Int}
@@ -55,11 +56,19 @@ end
 
 mutable struct BranchingNode
     branchingInfo::BranchingInfo
+    # model::Model
+    # y_vars::Dict{Int, VariableRef}
+    # sync::Vector{ConstraintRef}
+    # custVisit::Vector{ConstraintRef}
+    # number2evfixe::Vector{ConstraintRef}
+    # maxVolumnMM::Vector{ConstraintRef}
+    # globalLowerBound::ConstraintRef
+    # globalUpperBound::ConstraintRef
     cgLowerBound::Float64
     y_value::Vector{Float64}
+    routes_pool::Vector{Int}
     isLeaf::Bool
     fractionalScore::Float64
-    routes_pool::Vector{Int} ## Routes pool before filter (of father node)
     gradientLB::Float64
     gradientFS::Float64
     id::Int

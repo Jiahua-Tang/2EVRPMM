@@ -1,0 +1,483 @@
+parking availability[1] = 0
+parking availability[2] = 1
+parking availability[3] = 0
+parking availability[4] = 1
+parking availability[5] = 0
+Lower bound= 190.02   [1, 2, 3, 1]    parkings: Set([3])
+Lower bound= 190.43   [1, 2, 1]    parkings: Set([2])
+Lower bound= 196.54   [1, 2, 5, 1]    parkings: Set([5])
+Lower bound= 207.45   [1, 4, 1]    parkings: Set([4])
+Lower bound= 212.99   [1, 4, 2, 3, 1]    parkings: Set([4, 3])
+Lower bound= 213.22   [1, 2, 4, 1]    parkings: Set([4, 2])
+Lower bound= 214.32   [1, 2, 4, 3, 1]    parkings: Set([2, 3])
+Lower bound= 219.52   [1, 4, 2, 5, 1]    parkings: Set([5, 4])
+Lower bound= 220.92   [1, 2, 4, 5, 1]    parkings: Set([5, 2])
+Lower bound= 253.77   [1, 4, 3, 2, 5, 1]    parkings: Set([5, 3])
+
+
+================Iteration 0 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+-------------Iter CG 1-------------
+LP Objective Value = 923.64,   sum y = 5.0
+true  1352
+-------------Iter CG 2-------------
+LP Objective Value = 298.37,   sum y = 5.0
+true  790
+-------------Iter CG 3-------------
+LP Objective Value = 241.6,   sum y = 3.0
+true  176
+-------------Iter CG 4-------------
+LP Objective Value = 241.3,   sum y = 2.5
+true  274
+-------------Iter CG 5-------------
+LP Objective Value = 239.83,   sum y = 2.33
+true  185
+-------------Iter CG 6-------------
+LP Objective Value = 239.83,   sum y = 2.33
+true  65
+-------------Iter CG 7-------------
+LP Objective Value = 237.89,   sum y = 2.38
+true  83
+-------------Iter CG 8-------------
+LP Objective Value = 230.85,   sum y = 2.33
+true  81
+-------------Iter CG 9-------------
+LP Objective Value = 230.85,   sum y = 2.33
+true  24
+-------------Iter CG 10-------------
+LP Objective Value = 230.84,   sum y = 2.33
+true  11
+-------------Iter CG 11-------------
+LP Objective Value = 229.74,   sum y = 2.33
+true  5
+-------------Iter CG 12-------------
+LP Objective Value = 229.36,   sum y = 2.24
+true  9
+-------------Iter CG 13-------------
+LP Objective Value = 228.96,   sum y = 2.25
+true  5
+-------------Iter CG 14-------------
+LP Objective Value = 228.96,   sum y = 2.25
+true  1
+-------------Iter CG 15-------------
+LP Objective Value = 228.96,   sum y = 2.25
+false  0
+MILP Result:
+239.67
+[1, 2, 3, 1]    80.16
+[3, 18, 3]   10.2
+[3, 14, 13, 8, 6, 10, 12, 3]   64.54
+[3, 16, 17, 20, 19, 7, 9, 11, 15, 3]   84.77
+Branching stack contains now 1 nodes, current upper bound is 239.67
+
+================Iteration 1 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 0, parent node 0: from 1 nodes
+- Branching node in depth: 0
+
+  Branching node with fractional score: 2.25
+  Branching node with cg lower bound: 228.96
+  Branching node with LB reduction: Inf
+  Branching node with FS reduction: Inf
+  Total reduction: -0.0
+Branch on total number of 2e routes:  2.0, 3.0
+
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 3077
+number of deleting 2e routes : 240
+-------------Iter CG 1-------------
+LP Objective Value = 232.63,   sum y = 3.0
+false  0
+
+   # Total number of 2e routes cannot EXCEED:   2  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 3077
+number of deleting 2e routes : 240
+-------------Iter CG 1-------------
+No feasible solution for LMP
+
+================Iteration 2 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 1, parent node 0: from 1 nodes
+- Branching node in depth: 1
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 232.63
+  Branching node with LB reduction: 3.66
+  Branching node with FS reduction: 0.75
+  Total reduction: 4.41
+
+   + Customers MUST     served together:   (9, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 1438
+number of deleting 2e routes : 1879
+-------------Iter CG 1-------------
+LP Objective Value = 233.74,   sum y = 3.0
+false  0
+
+   + Customers FORBIDDEN served together:   (9, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 2832
+number of deleting 2e routes : 485
+-------------Iter CG 1-------------
+LP Objective Value = 240.23,   sum y = 3.0
+false  0
+
+================Iteration 3 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 3, parent node 1: from 2 nodes
+- Branching node in depth: 2
+   + Customers MUST     served together:   (9, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.33
+  Branching node with cg lower bound: 233.74
+  Branching node with LB reduction: 0.55
+  Branching node with FS reduction: -0.33
+  Total reduction: 0.26
+
+   + Customers MUST     served together:   (9, 17)  (19, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 985
+number of deleting 2e routes : 2332
+-------------Iter CG 1-------------
+LP Objective Value = 234.21,   sum y = 3.0
+false  0
+
+   + Customers MUST     served together:   (9, 17)  
+   + Customers FORBIDDEN served together:   (19, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 836
+number of deleting 2e routes : 2481
+-------------Iter CG 1-------------
+LP Objective Value = 242.72,   sum y = 3.0
+false  0
+
+================Iteration 4 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 5, parent node 3: from 3 nodes
+- Branching node in depth: 3
+   + Customers MUST     served together:   (9, 17)  (19, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 234.21
+  Branching node with LB reduction: 0.16
+  Branching node with FS reduction: 0.22
+  Total reduction: 0.54
+
+   + Customers MUST     served together:   (9, 17)  (19, 20)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 201
+number of deleting 2e routes : 3116
+-------------Iter CG 1-------------
+LP Objective Value = 259.3,   sum y = 3.0
+false  0
+
+   + Customers MUST     served together:   (9, 17)  (19, 20)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 907
+number of deleting 2e routes : 2410
+-------------Iter CG 1-------------
+LP Objective Value = 234.21,   sum y = 3.0
+false  0
+
+================Iteration 5 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 8, parent node 5: from 4 nodes
+- Branching node in depth: 4
+   + Customers MUST     served together:   (9, 17)  (19, 20)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 234.21
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+   + Customers MUST     served together:   (9, 17)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 427
+number of deleting 2e routes : 2890
+-------------Iter CG 1-------------
+LP Objective Value = 234.21,   sum y = 3.0
+false  0
+
+   + Customers MUST     served together:   (9, 17)  (19, 20)  
+   + Customers FORBIDDEN served together:   (8, 19)  (17, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 811
+number of deleting 2e routes : 2506
+-------------Iter CG 1-------------
+LP Objective Value = 266.8,   sum y = 3.33
+false  0
+
+================Iteration 6 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 9, parent node 8: from 5 nodes
+- Branching node in depth: 5
+   + Customers MUST     served together:   (9, 17)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 234.21
+  Branching node with LB reduction: -0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: -0.0
+
+   + Customers MUST     served together:   (9, 17)  (16, 19)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3077
+number of 2e routes : 3317
+number of filtered 2e routes : 228
+number of deleting 2e routes : 3089
+-------------Iter CG 1-------------
+LP Objective Value = 234.21,   sum y = 3.0
+true  10
+-------------Iter CG 2-------------
+LP Objective Value = 234.21,   sum y = 3.0
+false  0
+
+   + Customers MUST     served together:   (9, 17)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (16, 19)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3087
+number of 2e routes : 3327
+number of filtered 2e routes : 388
+number of deleting 2e routes : 2939
+-------------Iter CG 1-------------
+LP Objective Value = 246.19,   sum y = 3.0
+true  57
+-------------Iter CG 2-------------
+LP Objective Value = 246.19,   sum y = 3.0
+true  3
+-------------Iter CG 3-------------
+LP Objective Value = 245.69,   sum y = 3.0
+false  0
+
+================Iteration 7 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 11, parent node 9: from 6 nodes
+- Branching node in depth: 6
+   + Customers MUST     served together:   (9, 17)  (16, 19)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 234.21
+  Branching node with LB reduction: 0.0
+  Branching node with FS reduction: 0.0
+  Total reduction: 0.0
+
+   + Customers MUST     served together:   (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3147
+number of 2e routes : 3387
+number of filtered 2e routes : 118
+number of deleting 2e routes : 3269
+-------------Iter CG 1-------------
+LP Objective Value = 237.72,   sum y = 3.0
+false  0
+
+   + Customers MUST     served together:   (9, 17)  (16, 19)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (12, 19)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3147
+number of 2e routes : 3387
+number of filtered 2e routes : 218
+number of deleting 2e routes : 3169
+-------------Iter CG 1-------------
+LP Objective Value = 239.67,   sum y = 3.0
+false  0
+
+================Iteration 8 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 14, parent node 11: from 7 nodes
+- Branching node in depth: 7
+   + Customers MUST     served together:   (9, 17)  (16, 19)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (12, 19)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 0.0
+  Branching node with cg lower bound: 239.67
+  Branching node with LB reduction: 0.78
+  Branching node with FS reduction: -0.43
+  Total reduction: 0.84
+239.67, Exceed Upper Bound, prune
+
+================Iteration 9 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 13, parent node 11: from 6 nodes
+- Branching node in depth: 7
+   + Customers MUST     served together:   (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 237.72
+  Branching node with LB reduction: 0.5
+  Branching node with FS reduction: -0.14
+  Total reduction: 0.85
+
+   + Customers MUST     served together:   (6, 8)  (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3147
+number of 2e routes : 3387
+number of filtered 2e routes : 51
+number of deleting 2e routes : 3336
+-------------Iter CG 1-------------
+LP Objective Value = 249.98,   sum y = 3.0
+false  0
+
+   + Customers MUST     served together:   (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (6, 8)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+number of y variables : 3147
+number of 2e routes : 3387
+number of filtered 2e routes : 104
+number of deleting 2e routes : 3283
+-------------Iter CG 1-------------
+LP Objective Value = 241.58,   sum y = 3.0
+true  8
+-------------Iter CG 2-------------
+LP Objective Value = 241.58,   sum y = 3.0
+true  9
+-------------Iter CG 3-------------
+LP Objective Value = 241.58,   sum y = 3.0
+false  0
+
+================Iteration 10 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 16, parent node 13: from 7 nodes
+- Branching node in depth: 8
+   + Customers MUST     served together:   (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (6, 8)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 0.0
+  Branching node with cg lower bound: 241.58
+  Branching node with LB reduction: 0.48
+  Branching node with FS reduction: -0.25
+  Total reduction: 0.61
+241.58, Exceed Upper Bound, prune
+
+================Iteration 11 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 4, parent node 1: from 6 nodes
+- Branching node in depth: 2
+   + Customers FORBIDDEN served together:   (9, 17)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.67
+  Branching node with cg lower bound: 240.23
+  Branching node with LB reduction: 3.8
+  Branching node with FS reduction: -0.17
+  Total reduction: 4.29
+240.23, Exceed Upper Bound, prune
+
+================Iteration 12 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 6, parent node 3: from 5 nodes
+- Branching node in depth: 3
+   + Customers MUST     served together:   (9, 17)  
+   + Customers FORBIDDEN served together:   (19, 20)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 242.72
+  Branching node with LB reduction: 3.0
+  Branching node with FS reduction: 0.22
+  Total reduction: 4.6
+242.72, Exceed Upper Bound, prune
+
+================Iteration 13 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 12, parent node 9: from 4 nodes
+- Branching node in depth: 6
+   + Customers MUST     served together:   (9, 17)  (19, 20)  (17, 19)  
+   + Customers FORBIDDEN served together:   (16, 19)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 1.67
+  Branching node with cg lower bound: 245.69
+  Branching node with LB reduction: 1.91
+  Branching node with FS reduction: -0.22
+  Total reduction: 3.63
+245.69, Exceed Upper Bound, prune
+
+================Iteration 14 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 15, parent node 13: from 3 nodes
+- Branching node in depth: 8
+   + Customers MUST     served together:   (6, 8)  (9, 17)  (16, 19)  (19, 20)  (12, 19)  (17, 19)  
+   + Customers FORBIDDEN served together:   (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 2.0
+  Branching node with cg lower bound: 249.98
+  Branching node with LB reduction: 1.53
+  Branching node with FS reduction: 0.0
+  Total reduction: 3.98
+249.98, Exceed Upper Bound, prune
+
+================Iteration 15 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 7, parent node 5: from 2 nodes
+- Branching node in depth: 4
+   + Customers MUST     served together:   (9, 17)  (19, 20)  (8, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.0
+  Branching node with cg lower bound: 259.3
+  Branching node with LB reduction: 6.27
+  Branching node with FS reduction: 0.0
+  Total reduction: 10.51
+259.3, Exceed Upper Bound, prune
+
+================Iteration 16 of B&P for SP1 [1, 2, 3, 1] parkings[3]================
+Display selected node 10, parent node 8: from 1 nodes
+- Branching node in depth: 5
+   + Customers MUST     served together:   (9, 17)  (19, 20)  
+   + Customers FORBIDDEN served together:   (8, 19)  (17, 19)  
+   # Total number of 2e routes cannot UNDER:   3  
+
+  Branching node with fractional score: 3.33
+  Branching node with cg lower bound: 266.8
+  Branching node with LB reduction: 6.52
+  Branching node with FS reduction: 0.07
+  Total reduction: 12.62
+266.8, Exceed Upper Bound, prune
+
+Total Execution time = 2.27
+Current optimal solution 239.67 found in interation 0 in level 0:
+[1, 2, 3, 1]  80.16
+[3, 18, 3]  10.2
+[3, 14, 13, 8, 6, 10, 12, 3]  64.54
+[3, 16, 17, 20, 19, 7, 9, 11, 15, 3]  84.77

@@ -7,199 +7,67 @@ import Test  #src
 include("Utiles.jl")
 include("../Utiles.jl")
 
-function solveColumnGeneration(filtered_1e_routes::Route, filtered_2e_routes::Vector{Int}, branchingInfo)
-    selected_parkings = getServedParking1eRoute(filtered_1e_routes)
-
-    execution_time = @elapsed begin
-        #region : create model
-        model = Model(CPLEX.Optimizer)
-        set_silent(model)
-        set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
-        set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
-
-        y_vars = Dict{Int, VariableRef}()
-
-        @objective(model, Min, 0.0)
-
-        sync = Vector{ConstraintRef}(undef, length(satellites))
-        for (k,s) in enumerate(satellites)
-            # println("$k $s")
-            sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
-        end
-
-        custVisit = Vector{ConstraintRef}(undef, length(customers))
-        for (k,s) in enumerate(customers) 
-            custVisit[k] = @constraint(model, 1.0 <= 0.0)
-        end
-
-        number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
-        for (k,s) in enumerate(satellites)
-            number2evfixe[k] = @constraint(model, 0.0 == 0.0)
-        end
-
-        maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
-        for (k,s) in enumerate(satellites) 
-            maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
-        end
-
-        lower_bound = minimum_2e_vehicle_required
-        if !isempty(branchingInfo.lower_bound_number_2e_routes)
-            lower_bound = maximum(branchingInfo.lower_bound_number_2e_routes) 
-        end
-        upper_bound = nb_parking * nb_vehicle_per_satellite
-        if !isempty(branchingInfo.upper_bound_number_2e_routes)
-            upper_bound = minimum(branchingInfo.upper_bound_number_2e_routes) 
-        end
-        globalLowerBound = @constraint(model, lower_bound <= 0)
-        globalUpperBound = @constraint(model, -upper_bound <= 0)
-
-        #endregion
-
-        # ## Initial columns
-        execution_time_initial_columns = @elapsed begin
-            for (idx, route) in enumerate(filtered_2e_routes)
-                add_2eroute!(model, idx, route, 
-                    sync, custVisit, number2evfixe, maxVolumnMM, globalLowerBound, globalUpperBound,
-                    demands, y_vars)
-            end
-        end
-        global execution_time_add_columns += execution_time_initial_columns
-    end
-    global execution_time_build_model += execution_time
-    
-    lpObjValue = filtered_1e_routes.cost
-    # y = nothing
-    it = 1
-    while true
-        println("\n==$it==")
-        println("length of routes pool = ",length(filtered_2e_routes))
-        execution_time = @elapsed begin
-            optimize!(model)
-        end
-        global execution_time_rmp += execution_time
-
-        if has_values(model)
-
-            execution_time_op = @elapsed begin
-                lpObjValue = objective_value(model) + filtered_1e_routes.cost
-                println("LP Objective Value = $(round(lpObjValue, digits=2)),   sum y = $(round(sum(value.(values(y_vars))), digits=2))")
-                for (rid, y) in y_vars
-                    if value(y)!=0
-                        # println("Route $(initial_2e_routes[rid].sequence): y = ", value(y))
-                        println("y$(routes_2e[filtered_2e_routes[rid]].sequence) = ", round(value(y),digits=2), "  ", round(routes_2e[filtered_2e_routes[rid]].cost, digits=2))
-                    end
-                end
-            end
-            global execution_time_output += execution_time_op
-
-            #region : retrieve and display dual multiplier
-            # Keep JuMP's original dual signs
-            π1 = vcat(0, abs.(shadow_price.(sync)))
-            π2 = vcat(zeros(1+length(satellites)), abs.(shadow_price.(custVisit)))
-            π3 = vcat(0, abs.(shadow_price.(number2evfixe)))
-            π4 = vcat(0, abs.(shadow_price.(maxVolumnMM)))
-
-            # println("π1= $(round.(π1,digits=2))")
-            # println("π2= $(round.(π2[customers],digits=2))")
-            # println("π3= $(round.(π3,digits=2))")
-            # println("π4= $(round.(π4,digits=2))")
-
-            #endregion
-            execution_time = @elapsed begin
-                filtered_2e_routes, new_routes_from = pricing(selected_parkings, filtered_2e_routes, π1, π2, π3, π4, branchingInfo)
-            end
-            global execution_time_pricing += execution_time
-
-            if new_routes_from == false
-                break
-            end
-
-            # println(length(new_routes_2e))
-            r_id = new_routes_from
-            execution_time = @elapsed begin
-                for route in filtered_2e_routes[new_routes_from:end]
-                    add_2eroute!(model, r_id, route,
-                                    sync, custVisit, number2evfixe, 
-                                    maxVolumnMM, globalLowerBound, globalUpperBound,demands,y_vars)
-                    r_id += 1
-                end
-            end
-            global execution_time_build_model += execution_time
-            global execution_time_add_columns += execution_time
-
-            it += 1
-        else
-            return nothing
-        end
-    end
-    
-    y_values = [value(y_vars[k]) for k in sort(collect(keys(y_vars)))]
-
-    return filtered_2e_routes, y_values, lpObjValue 
-
-end
-
-function add_2eroute!(model::Model,
-                      r_id::Int, route::Int,
+function add_2eroute!(model::Model, route::Int,
                       sync::Vector{ConstraintRef},
                       custVisit::Vector{ConstraintRef},
                       number2evfixe::Vector{ConstraintRef},
                       maxVolumnMM::Vector{ConstraintRef},
                       globalLowerBound::ConstraintRef,
                       globalUpperBound::ConstraintRef,
-                      demands::AbstractVector,
                       y_vars::Dict{Int, VariableRef})
-    route = routes_2e[route]
-    ## create column variable
-    y = @variable(model, lower_bound = 0.0)
-    y_vars[r_id] = y
+    execution_time_ac = @elapsed begin
+        route = routes_2e[route]
+        ## create column variable
+        y = @variable(model, lower_bound = 0.0)
+        y_vars[route.id] = y
 
-    ## objective coefficients
-    JuMP.set_objective_coefficient(model, y, route.cost)
+        ## objective coefficients
+        JuMP.set_objective_coefficient(model, y, route.cost)
 
-    ## sync constraint : + b2out[s] * y
-    @inbounds for s in eachindex(sync) 
-        b = route.b2out[s+1]
-        # println("$(route.sequence) b2out[$(s+1)] = $b")
-        if b != 0
-            JuMP.set_normalized_coefficient(sync[s], y, b)
+        ## sync constraint : + b2out[s] * y
+        @inbounds for s in eachindex(sync) 
+            b = route.b2out[s+1]
+            # println("$(route.sequence) b2out[$(s+1)] = $b")
+            if b != 0
+                JuMP.set_normalized_coefficient(sync[s], y, b)
+            end
         end
-    end
 
-    ## customer-coverage: 1 - sum(a_i * y) <= 0  → coefficient is -a_i
-    # println("")
-    @inbounds for i in eachindex(custVisit)
-        ai = route.a[i+length(A1)]
-        # ai == 1 && println(route.sequence, " a[$(i+length(A1))] = $ai")
-        if ai != 0
-            set_normalized_coefficient(custVisit[i], y, -ai)
+        ## customer-coverage: 1 - sum(a_i * y) <= 0  → coefficient is -a_i
+        # println("")
+        @inbounds for i in eachindex(custVisit)
+            ai = route.a[i+length(A1)]
+            # ai == 1 && println(route.sequence, " a[$(i+length(A1))] = $ai")
+            if ai != 0
+                set_normalized_coefficient(custVisit[i], y, -ai)
+            end
         end
-    end
 
-    ## 2E flow balance per satellite: sum(b2in) - sum(b2out) == 0
-    @inbounds for s in eachindex(number2evfixe)
-        coeff = route.b2in[s+1] - route.b2out[s+1]
-        if coeff != 0
-            set_normalized_coefficient(number2evfixe[s], y, coeff)
+        ## 2E flow balance per satellite: sum(b2in) - sum(b2out) == 0
+        @inbounds for s in eachindex(number2evfixe)
+            coeff = route.b2in[s+1] - route.b2out[s+1]
+            if coeff != 0
+                set_normalized_coefficient(number2evfixe[s], y, coeff)
+            end
         end
-    end
 
-    ## microhub capacity at origin s0: ∑ a_i * demand_i * y - cap ≤ 0  (only for origin)
-    load = 0
-    for i in route.sequence 
-        load += demands[i]
-    end
-
-    @inbounds for s in eachindex(maxVolumnMM) 
-        b = route.b2out[s+1]
-        if b != 0
-            JuMP.set_normalized_coefficient(maxVolumnMM[s], y, load)
+        ## microhub capacity at origin s0: ∑ a_i * demand_i * y - cap ≤ 0  (only for origin)
+        load = 0
+        for i in route.sequence 
+            load += demands[i]
         end
+
+        @inbounds for s in eachindex(maxVolumnMM) 
+            b = route.b2out[s+1]
+            if b != 0
+                JuMP.set_normalized_coefficient(maxVolumnMM[s], y, load)
+            end
+        end
+
+        JuMP.set_normalized_coefficient(globalLowerBound, y, -1)  # For sum(y) ≥ bound: sum(-y) ≤ -lowerbound
+        JuMP.set_normalized_coefficient(globalUpperBound, y, 1)   # For sum(y) ≤ bound: sum(y) ≤ upperbound
     end
-
-    JuMP.set_normalized_coefficient(globalLowerBound, y, -1)
-    JuMP.set_normalized_coefficient(globalUpperBound, y, 1)
-
+    global execution_time_add_columns += execution_time_ac
     return y
 end
 
@@ -250,15 +118,15 @@ function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, 
     # end
     #endregion
 
-    execution_time = @elapsed begin
+    execution_time_sp = @elapsed begin
         subproblem_2e_result = labelling(π1, π2, π3, π4, selected_parkings, branchingInfo)
     end
-    global execution_time_subproblem += execution_time
+    global execution_time_subproblem += execution_time_sp
     # println("TEST return result from labelling")
     new_routes_from = length(routes_2e_pool) + 1
     new_routes_generated = false
     for label in subproblem_2e_result
-        
+
         route_existed = false
         for route in routes_2e[routes_2e_pool]
             if route.sequence == label.visitedNodes
@@ -321,11 +189,129 @@ function extendLabel_v2(π2, π3, π4, label::Label, next_node::Int)
 
 end
 
+
+function labelling_compact()
+
+    unprocessedLabels = Dict{Int, Vector{Label}}()
+    processedLabels = Dict{Int, Vector{Label}}()
+    depotLabels = Vector{Label}()
+
+    for node in A2
+        unprocessedLabels[node] = Vector{Label}()
+        processedLabels[node] = Vector{Label}()
+    end
+
+    for parking in satellites
+        l = Label(parking, parking, 0, 0, 0, [parking])
+        push!(unprocessedLabels[parking], l)
+    end
+
+    result = []
+
+    num_iter_labelling = 1
+    while !isempty(collect(Iterators.flatten(values(unprocessedLabels)))) &&  num_iter_labelling < 51
+        #region : Display labels
+        println("\n===================Iter $num_iter_labelling===================")
+        println("Display $(length(collect(Iterators.flatten(values(unprocessedLabels))))) Unprocessed Labels")
+        # for node in active_nodes
+        #     if !isempty(unprocessedLabels[node])
+        #         print("-")
+        #     end
+        #     for (idx, ele) in enumerate(unprocessedLabels[node])
+        #         if idx > 1
+        #             print(" ")
+        #         else
+        #             print("")
+        #         end
+        #        displayLabel(ele)
+        #     end
+        # end
+
+        println("Display $(length(depotLabels)) Depot Labels")
+        # for label in depotLabels
+        #    displayLabel(label) 
+        # end
+        # println("")
+        #endregion
+
+        ## Line 3
+        all_labels = collect(Iterators.flatten(values(unprocessedLabels)))
+        min_label = all_labels[findmin(l -> l.reduced_cost, all_labels)[2]]
+
+        min_idx = findfirst(==(min_label), unprocessedLabels[min_label.visitedNodes[end]])
+        deleteat!(unprocessedLabels[min_label.visitedNodes[end]], min_idx)
+
+        ## Line 9
+        push!(processedLabels[min_label.visitedNodes[end]], min_label)
+
+        ## Line 4 : Propagation to new node
+        ## Line 5
+        # @info "Propagate labels:"
+        current_node = min_label.visitedNodes[end]
+        for node in A2
+
+            # Set node in visiting sequence as unreachable
+            if node in satellites || (!(node in min_label.visitedNodes) && !(node in satellites))
+                # println("Propagate from $(min_label.visitedNodes[end]) to $node")
+                new_label = extendLabel_v2(zeros(length(A2)+1), zeros(length(A2)+1), zeros(length(A2)+1), min_label, node)
+                # println(new_label)     
+                ## Line 6
+                if !isnothing(new_label)
+                    ## Line 7
+                    if node in satellites
+                        push!(depotLabels, new_label)
+                        if length(new_label.visitedNodes)>2
+                            push!(result, new_label)
+                        end
+                    else
+                        new_label_is_dominated = false                            
+                        ## Line 8
+                        ## Check if new label is dominated, if yes, do not add it in
+                        for label in processedLabels[node]
+                            # if label.visitedNodes[1] == new_label.visitedNodes[1]
+                            if dominanceCheckSingle(new_label, label) == 1
+                                ## new label is dominated by a processed label
+                                new_label_is_dominated = true
+                                break
+                            end                               
+                            # end
+                        end
+                    
+                        ## Check if new label is dominated by or dominates a unprocessed label
+                        if !new_label_is_dominated
+                            for label in unprocessedLabels[node]
+                                # if label.visitedNodes[1] == new_label.visitedNodes[1]
+                                if dominanceCheckSingle(new_label, label) == 1
+                                    ## new label is dominated by a unprocessed label
+                                    new_label_is_dominated = true
+                                    break
+                                elseif dominanceCheckSingle(new_label,label) == 2
+                                    # println("a unprocessed label is dominated")
+                                    min_idx = findfirst(==(label), unprocessedLabels[node])
+                                    deleteat!(unprocessedLabels[node], min_idx)
+                                end
+                                # end
+                            end
+                        end
+                        # println(new_label_is_dominated)
+                        if !new_label_is_dominated 
+                            push!(unprocessedLabels[node], new_label)
+                        end
+                    end
+                end    
+            end
+        end
+        num_iter_labelling += 1
+    end
+
+    return result
+end
+
+
 function labelling(π1, π2, π3, π4, selected_parkings, branchingInfo)
 
     ## Branching strategies include: 
     ## Case A : total number of 2e routes (constraint added in master problem)
-    ## Case B : special order set (constraint added in master problem) TODO 
     ## Case C : combination of parking - customer
     ## Case D : combination of customer - customer
 
