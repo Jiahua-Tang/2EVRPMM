@@ -14,11 +14,11 @@ function select_node_from_tree(node_stack)
     end
 
     @info "Display selected node $(node.id), parent node $(node.parent_id): from $(length(node_stack)) nodes"
-    println("Display selected node $(node.id), parent node $(node.parent_id): from $(length(node_stack)) nodes")
+    println("Display selected node $(node.id), parent node $(node.parent_id): from $(length(node_stack)) nodes, current upper bound = $(round(upperBound, digits=2))")
     displayBranchingNode(node)
 
     deleteat!(node_stack, findfirst(==(node), node_stack))
-    return node#, node_stack
+    return node
 end
 
 function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
@@ -104,192 +104,75 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
     return result, routes_to_delete
 end
 
-#region : solve column generation
-function solve_column_generation(route_1e, routes_2e_pool, 
-                                 model, y_vars, sync, custVisit, number2evfixe, maxVolumnMM, globalLowerBound, globalUpperBound,
-                                 branchingInfo::BranchingInfo, cgLB, fs, id, parent_id)
-    # * Column generation process:
-    # *     - 1. solve formulation
-    # *     - 2. get dual multiplier
-    # *     - 3. execute labelling algorithm
-    # *     - 4. check existance new routes
+function preparation_branch_and_price()
+    #region B&P: Prep
+    global num_iter_global = 1
+    global upperBound = Inf
+    global optimalSolution = nothing
 
-    selected_parkings = getServedParking1eRoute(route_1e)
-    
-    # @info "Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)"
-    # println("Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)")
-    
-    num_iter_cg = 1
-    while true # num_iter_cg < 16
-        println("-------------Iter CG $num_iter_cg-------------")
-        # * 1. solve formulation
-        execution_time_lp = @elapsed begin
-        optimize!(model)
-        end
-        global execution_time_rmp += execution_time_lp
-        if has_values(model)
-            # execution_time_op = @elapsed begin
-                lpObjValue = objective_value(model) + route_1e.cost
-                #region : display lp result
-                println("LP Objective Value = $(round(lpObjValue, digits=2)),   sum y = $(round(sum(value.(values(y_vars))), digits=2))")
-                # println("x$(route_1e.sequence),  $(round(route_1e.cost, digits=2))")
-                # for (rid, y) in y_vars
-                #     if value(y)!=0
-                #         println("y$(routes_2e[rid].sequence) = ", round(value(y),digits=2), "  ", round(routes_2e[rid].cost, digits=2))
-                #     end
-                # end
-                #endregion
+    global optimal_found_iteration = 0
+    global execution_time_total = 0
+    global execution_time_branchandprice = 0
+    global execution_time_root_node = 0
+    global execution_time_child_node = 0
+    global execution_time_branching = 0
+    global execution_time_column_generation = 0
+    global execution_time_set_bound = 0
+    global execution_time_test = 0
+    global execution_time_pricing = 0
+    global execution_time_output = 0
+    global execution_time_subproblem = 0
+    global execution_time_build_model = 0
+    global execution_time_add_columns = 0
+    global execution_time_rmp = 0
+    global execution_time_filtering = 0
+    global deepest_level = 0
+    global optimal_found_in = 0
+    #endregion
 
-            # end
+    generate2eInitialRoutes()
+    global neighbours = get_neighbours_optimized(10)
 
-            # global execution_time_output += execution_time_op
-            
-            # * 2. get dual multiplier
-            #region : retrieve and display dual multiplier
-            π1 = vcat(0, abs.(shadow_price.(sync)))
-            π2 = vcat(zeros(1+length(satellites)), abs.(shadow_price.(custVisit)))
-            π3 = vcat(0, abs.(shadow_price.(number2evfixe)))
-            π4 = vcat(0, abs.(shadow_price.(maxVolumnMM)))
-
-            # println("π1= $(round.(π1,digits=2))")
-            # println("π2= $(round.(π2[customers],digits=2))")
-            # println("π3= $(round.(π3,digits=2))")
-            # println("π4= $(round.(π4,digits=2))")
-            #endregion
-
-            # * 3. execute labelling algorithm
-            execution_time_p = @elapsed begin
-                routes_2e_pool, new_routes_from = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, branchingInfo)
-            end
-            global execution_time_pricing += execution_time_p
-
-            # * 4. check existance new routes
-            if new_routes_from == false
-                break
-            else
-                # execution_time = @elapsed begin
-                    for route in routes_2e_pool[new_routes_from:end]
-                        add_2eroute!(model, route,
-                                     sync, custVisit, number2evfixe, maxVolumnMM, 
-                                     globalLowerBound, globalUpperBound, y_vars)
-                    end
-                # end    
-            end
-        else
-            println("No feasible solution for LMP")
-            return nothing
-        end
-        num_iter_cg += 1
+    execution_time = @elapsed begin
+        lrp_subproblems = get_sorted_2e_subproblems(5)
     end
+    println("time to get sorted 2e subproblem = $(round(execution_time, digits=2))s")
 
-    if objective_value(model)+route_1e.cost > upperBound
-        @info "Exceed Upper Bound, prune"
-        println("Exceed Upper Bound, prune")
-        return nothing
-    end
-
-    y_values = [value(y_vars[k]) for k in sort(collect(keys(y_vars)))]
-    # Define isLeaf
-    # Define fractional score
-    fractionalScore = 0
-    if isempty([r for r in 1:length(y_values) if 0 < y_values[r] < 1])
-        @info "Integer solution found"
-        println("Integer solution found")
-        isLeaf = true
-        if objective_value(model)+route_1e.cost < upperBound
-            @info "Update upper bound"
-            println("Update upper bound")
-
-            global upperBound = objective_value(model)+route_1e.cost
-            global optimalSolution = Vector{Route}()
-
-            push!(optimalSolution, route_1e)
-            for (_, y) in enumerate([r for r in 1:length(y_values) if y_values[r]==1]) 
-                println(routes_2e[y].sequence, "   ", round(routes_2e[y].cost, digits=2))
-                push!(optimalSolution, routes_2e[y])
-            end
-        end
-
-        return nothing
-    else
-        isLeaf = false
-        for value in y_values
-            if value <= 0.5
-                fractionalScore += value
-            else
-                fractionalScore += 1 - value
-            end
-        end
-    end
-
-    # Define gradientLB
-    gradientLB = objective_value(model) + route_1e.cost - cgLB
-    # Define gradientFS
-    gradientFS = fractionalScore - fs
-    result = BranchingNode(branchingInfo,
-                        objective_value(model)+route_1e.cost,
-                        y_values,
-                        routes_2e_pool,
-                        isLeaf,
-                        fractionalScore,
-                        gradientLB,
-                        gradientFS,
-                        id,
-                        parent_id)
-
-
-    return result
+    return lrp_subproblems
 end
-#endregion
-function update_optimal_solution(lpValue, route_1e, routes_2e_pool, y_value)
-    global upperBound= lpObjValue
 
-    global optimalSolution = Vector{Route}()
-
-    @info "Update upper bound"
-    println("Update upper bound")
-
-    push!(optimalSolution, route_1e)
-    for (_, y) in enumerate([r for r in 1:length(y_value) if y_value[r]==1]) 
-        println(routes_2e_pool[y].sequence, "   ", round(routes_2e_pool[y].cost, digits=2))
-        push!(optimalSolution, routes_2e_pool[y])
-    end
-end
-#endregion
-#region : solve a root node
-function solve_root_node(route_1e::Route)
-
-    root_node_branching_info = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(),Set{Route}(),Set{Route}(), 0)
-    root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
+function solve_virtual_root_node()
+    println("\nSolve virtual root node")
+    root_node_branching_info = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(), 0)
     
     #region : create model
     execution_time = @elapsed begin
-        model = Model(CPLEX.Optimizer)
+        global model = Model(CPLEX.Optimizer)
         set_silent(model)
         # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
         # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
 
-        y_vars = Dict{Int, VariableRef}()
+        global y_vars = Dict{Int, VariableRef}()
 
         @objective(model, Min, 0.0)
 
-        sync = Vector{ConstraintRef}(undef, length(satellites))
+        global sync = Vector{ConstraintRef}(undef, length(satellites))
         for (k,_) in enumerate(satellites)
             # println("$k $s")
             sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
         end
 
-        custVisit = Vector{ConstraintRef}(undef, length(customers))
+        global custVisit = Vector{ConstraintRef}(undef, length(customers))
         for (k,_) in enumerate(customers) 
             custVisit[k] = @constraint(model, 1.0 <= 0.0)
         end
 
-        number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
+        global number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
         for (k,_) in enumerate(satellites)
             number2evfixe[k] = @constraint(model, 0.0 == 0.0)
         end
 
-        maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
+        global maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
         for (k,_) in enumerate(satellites) 
             maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
         end
@@ -326,12 +209,244 @@ function solve_root_node(route_1e::Route)
     global execution_time_build_model += execution_time
     #endregion
 
+    root_node = solve_column_generation(generate1eRoute([1]), root_node_branching_info, 0,0,0,0)
+end
+
+#region : column generation
+function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, fs, id, parent_id)
+    # * Column generation process:
+    # *     - 1. solve formulation
+    # *     - 2. get dual multiplier
+    # *     - 3. execute labelling algorithm
+    # *     - 4. check existence new routes
+
+    if route_1e.sequence == [1]
+        selected_parkings = collect(satellites)
+    else
+        selected_parkings = getServedParking1eRoute(route_1e)
+    end
+
+    # println("TEST in solving column generation : $(route_1e.sequence),  $(getServedParking1eRoute(route_1e))")
+    # @info "Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)"
+    # println("Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)")
+    
+    num_iter_cg = 1
+    is_virtual_root = (route_1e.sequence == [1])  # Check if called from virtual root node
+    
+    # Pre-allocate dual multiplier arrays to avoid reallocation each iteration
+    n_satellites = length(satellites)
+    n_customers = length(customers)
+    π1 = Vector{Float64}(undef, n_satellites + 1)
+    π2 = Vector{Float64}(undef, n_satellites + n_customers + 1)
+    π3 = Vector{Float64}(undef, n_satellites + 1)
+    π4 = Vector{Float64}(undef, n_satellites + 1)
+    
+    while true # num_iter_cg < 2 # && true
+        # println("-------------Iter CG $num_iter_cg-------------")
+        # * 1. solve formulation
+        execution_time_lp = @elapsed begin
+            optimize!(model)
+        end
+        global execution_time_rmp += execution_time_lp
+        if has_values(model)
+            # Cache objective value (used multiple times)
+            obj_val = objective_value(model)
+            lpObjValue = obj_val + route_1e.cost
+            
+            # * 2. get dual multiplier - optimized to avoid allocations
+            #region : retrieve dual multiplier
+            π1[1] = 0.0
+            @inbounds for i in 1:n_satellites
+                π1[i+1] = abs(shadow_price(sync[i]))
+            end
+            
+            π2[1] = 0.0
+            @inbounds for i in 1:n_satellites
+                π2[i+1] = 0.0
+            end
+            @inbounds for i in 1:n_customers
+                π2[n_satellites + i + 1] = abs(shadow_price(custVisit[i]))
+            end
+            
+            π3[1] = 0.0
+            @inbounds for i in 1:n_satellites
+                π3[i+1] = abs(shadow_price(number2evfixe[i]))
+            end
+            
+            π4[1] = 0.0
+            @inbounds for i in 1:n_satellites
+                π4[i+1] = abs(shadow_price(maxVolumnMM[i]))
+            end
+            #endregion
+
+            # * 3. execute labelling algorithm
+            execution_time_p = @elapsed begin
+                routes_2e_pool, new_routes_from = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, branchingInfo)
+            end
+            global execution_time_pricing += execution_time_p
+
+            # * 4. check existance new routes
+            if new_routes_from == false
+                break
+            else
+                # Break after first iteration if this is the virtual root node (before adding new routes)
+                if is_virtual_root && num_iter_cg >= 1
+                    println("Virtual root node: stopping after 1 iteration")
+                    break
+                end
+                
+                # Add new routes
+                @inbounds for i in new_routes_from:length(routes_2e_pool)
+                    add_2eroute!(routes_2e_pool[i])
+                end
+            end
+        else
+            println("No feasible solution for LMP")
+            return nothing
+        end
+        num_iter_cg += 1
+    end
+
+    # Virtual root node: just for generating routes, no need for final result
+    if is_virtual_root
+        println("Virtual root node: routes generated, returning without final result")
+        for route in routes_2e
+            println(route.sequence)
+        end
+        return nothing
+    end
+
+    # Cache objective value (used multiple times below)
+    obj_val = objective_value(model)
+    total_obj = obj_val + route_1e.cost
+    
+    if total_obj > upperBound
+        @info "Exceed Upper Bound, prune"
+        println("Exceed Upper Bound, prune")
+        return nothing
+    end
+
+    # Extract y_values more efficiently - avoid sort and collect
+    n_vars = length(y_vars)
+    y_values = Vector{Float64}(undef, n_vars)
+    sorted_keys = sort!(collect(keys(y_vars)))
+    @inbounds for (idx, k) in enumerate(sorted_keys)
+        y_values[idx] = value(y_vars[k])
+    end
+    
+    # Check for integer solution and compute fractional score
+    isLeaf = true
+    fractionalScore = 0.0
+    @inbounds for y_val in y_values
+        if 0 < y_val < 1
+            isLeaf = false
+            if y_val <= 0.5
+                fractionalScore += y_val
+            else
+                fractionalScore += 1 - y_val
+            end
+        end
+    end
+    
+    if isLeaf
+        @info "Integer solution found"
+        println("Integer solution found")
+        
+        if total_obj < upperBound
+            @info "Update upper bound"
+            println("Update upper bound")
+
+            global upperBound = total_obj
+            println("Upper bound = $upperBound")
+            global optimalSolution = Vector{Route}()
+            sizehint!(optimalSolution, n_vars + 1)
+
+            push!(optimalSolution, route_1e)
+            println("$(route_1e.sequence)", "   ", round(route_1e.cost, digits=2))
+            @inbounds for i in 1:length(y_values)
+                if y_values[i] == 1.0
+                    println(routes_2e[i].sequence, "   ", round(routes_2e[i].cost, digits=2))
+                    push!(optimalSolution, routes_2e[i])
+                end
+            end
+        end
+
+        return nothing
+    end
+
+    println("LP result of column generation: $(round(total_obj, digits=2))")
+    # Define gradientLB
+    gradientLB = total_obj - cgLB
+    # Define gradientFS
+    gradientFS = fractionalScore - fs
+    result = BranchingNode(branchingInfo,
+                        total_obj,
+                        y_values,
+                        isLeaf,
+                        fractionalScore,
+                        gradientLB,
+                        gradientFS,
+                        id,
+                        parent_id)
+    return result
+end
+#endregion
+function update_optimal_solution(lpValue, route_1e, routes_2e_pool, y_value)
+    global upperBound= lpObjValue
+
+    global optimalSolution = Vector{Route}()
+
+    @info "Update upper bound"
+    println("Update upper bound")
+
+    push!(optimalSolution, route_1e)
+    for (_, y) in enumerate([r for r in 1:length(y_value) if y_value[r]==1]) 
+        println(routes_2e_pool[y].sequence, "   ", round(routes_2e_pool[y].cost, digits=2))
+        push!(optimalSolution, routes_2e_pool[y])
+    end
+end
+#endregion
+#region : root node
+function solve_root_node(route_1e::Route)
+    println("\nSolve root node of $(route_1e.sequence),   $(getServedParking1eRoute(route_1e))")
+    root_node_branching_info = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(), 0)
+    root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
+
+    #region : initial columns
     execution_time = @elapsed begin
-        root_node = solve_column_generation(route_1e, routes_2e, 
-                                            model, y_vars, sync, custVisit, number2evfixe, maxVolumnMM,globalLowerBound,globalUpperBound,
-                                            root_node_branching_info, 0,0,0,0)
+        columns_to_be_kept, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
+    end
+    global execution_time_filtering += execution_time
+
+    execution_time = @elapsed begin
+        # for (route,_) in enumerate(routes_2e)
+        #     add_2eroute!(model, route, sync, custVisit, number2evfixe, 
+        #                 maxVolumnMM, globalLowerBound, globalUpperBound, y_vars)
+        # end
+
+        for idx in columns_to_be_deleted
+            if haskey(y_vars, idx)
+                y = y_vars[idx]
+                JuMP.set_upper_bound(y, 0.0)
+                JuMP.set_lower_bound(y, 0.0)
+            end
+        end
+        for idx in columns_to_be_kept
+            if haskey(y_vars, idx)
+                y = y_vars[idx]
+                JuMP.set_upper_bound(y, 1.0)
+                JuMP.set_lower_bound(y, 0.0)
+            end
+        end
+    end
+    global execution_time_build_model += execution_time
+    #endregion
+
+    execution_time = @elapsed begin
+        root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
     end
     global execution_time_column_generation += execution_time
+    # println("execution time of column generation : $(round(execution_time, digits=2))s")
 
     if !isnothing(root_node)
         if root_node.isLeaf
@@ -353,7 +468,7 @@ function solve_root_node(route_1e::Route)
             solve_MILP_model(route_1e)    
 
             println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")  
-            return node_stack, model, y_vars, sync, custVisit, number2evfixe, maxVolumnMM,globalLowerBound,globalUpperBound
+            return node_stack
         end       
     else
         return nothing 
@@ -361,26 +476,33 @@ function solve_root_node(route_1e::Route)
 
 
 end
+
 #endregion
-#region : solve a child node
-function solve_child_node(route_1e, model, y_vars, sync, custVisit, number2evfixe, maxVolumnMM, 
-                          globalLowerBound, globalUpperBound, node::BranchingNode, branching_decision::BranchingInfo, id)
+#region : child node
+function solve_child_node(route_1e, node::BranchingNode, branching_decision::BranchingInfo, id)
     println("")
     @info "Solve child node $id"
     println("Solve child node $id")
     displayBranchingRule(branching_decision)
     # * Instead of copying the model, just filter out routes and set bounds to 0
     execution_time = @elapsed begin
-        routes_2e_pool, columns_to_be_deleted = filter_2e_routes(branching_decision, collect(1:length(routes_2e)))
+        routes_2e_to_keep, columns_to_be_deleted = filter_2e_routes(branching_decision, collect(1:length(routes_2e)))
     end
     global execution_time_filtering += execution_time
 
     execution_time = @elapsed begin
-        # * Set bounds to 0 for deleted routes instead of actually deleting them
+        # * Set bounds instead of actually deleting them
         for route_idx in columns_to_be_deleted
             if haskey(y_vars, route_idx)
                 y = y_vars[route_idx]
                 JuMP.set_upper_bound(y, 0.0)
+                JuMP.set_lower_bound(y, 0.0)
+            end
+        end
+        for route_idx in routes_2e_to_keep
+            if haskey(y_vars, route_idx)
+                y = y_vars[route_idx]
+                JuMP.set_upper_bound(y, 1.0)
                 JuMP.set_lower_bound(y, 0.0)
             end
         end
@@ -405,10 +527,8 @@ function solve_child_node(route_1e, model, y_vars, sync, custVisit, number2evfix
     global execution_time_build_model += execution_time
     
     execution_time = @elapsed begin
-        child_node = solve_column_generation(route_1e, routes_2e_pool, model, y_vars,
-                                            sync, custVisit, number2evfixe, maxVolumnMM, 
-                                            globalLowerBound, globalUpperBound,
-                                            branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id) 
+        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, 
+                                             node.fractionalScore, id, node.id) 
 
     end
     global execution_time_column_generation += execution_time
@@ -429,50 +549,12 @@ function solve_child_node(route_1e, model, y_vars, sync, custVisit, number2evfix
     return child_node
 end
 #endregion
-#region : solve branch and price 2e subproblem
-function solve_branch_and_price_2e_subproblem(route_1e::Route)
-    #region
-    # * Each BranchNode contains :
-    # *    - branchingInfo
-    # *    - column generation result : rmp obj value
-    # *    - column generation result : y value
-    # *    - column generation result : routes pool
-    # *    - whether it is a leaf node (integer)
-    # *    - fractional score
-    # *    - gradient lower bound
-    # *    - gradient fractional score
-    # *    - node id
-    # *    - parent node id
+#region : branch and price 2e subproblem
+function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
 
-    # * 1. Obtain root node : build model
-    # * 2. Branch and Price chide nodes
-        # * 2.1 Select a node from search tree
-        # * 2.2 Obtain Branching strategy (delete columns)
-        # * 2.3 Column generation two child nodes (add columns)
-    #endregion
-
-    # * 1. Obtain root node : build model
-    execution_time = @elapsed begin
-        println("\n================Iteration 0 of B&P for SP$num_iter_global $(route_1e.sequence) parkings$([r for r in getServedParking1eRoute(route_1e)])================")
-        result_root_node = solve_root_node(route_1e)
-    end
-    global execution_time_root_node += execution_time
-
-    if isnothing(result_root_node)
+    if isnothing(node_stack)
         return
     else
-        #region : pass parameters
-        node_stack = result_root_node[1]
-        model = result_root_node[2]
-        y_vars = result_root_node[3]
-        sync = result_root_node[4]
-        custVisit = result_root_node[5]
-        number2evfixe = result_root_node[6]
-        maxVolumnMM = result_root_node[7]
-        globalLowerBound = result_root_node[8]
-        globalUpperBound = result_root_node[9]
-        #endregion
-
         # * 2. Branch and Price child nodes
         num_iter_sp = 1
         current_node_id = 0
@@ -488,17 +570,13 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route)
             else
                 # * 2.2 Obtain branching strategy
                 execution_time = @elapsed begin
-                    branching_decisions = branchingStrategy(node.y_value, route_1e, node.routes_pool, node.branchingInfo)
+                    branching_decisions = branchingStrategy(node.y_value, route_1e, routes_2e, node.branchingInfo)
                 end
                 global execution_time_branching += execution_time
 
                 execution_time = @elapsed begin
-                    left_child_node  = solve_child_node(route_1e, model, y_vars, sync, custVisit, number2evfixe, 
-                                                        maxVolumnMM, globalLowerBound, globalUpperBound,
-                                                        node, branching_decisions[1], current_node_id + 1)
-                    right_child_node = solve_child_node(route_1e, model, y_vars, sync, custVisit, number2evfixe, 
-                                                        maxVolumnMM, globalLowerBound, globalUpperBound,
-                                                        node, branching_decisions[2], current_node_id + 2)
+                    left_child_node  = solve_child_node(route_1e, node, branching_decisions[1], current_node_id + 1)
+                    right_child_node = solve_child_node(route_1e, node, branching_decisions[2], current_node_id + 2)
                     current_node_id += 2
                     if !isnothing(left_child_node)
                         push!(node_stack, left_child_node)

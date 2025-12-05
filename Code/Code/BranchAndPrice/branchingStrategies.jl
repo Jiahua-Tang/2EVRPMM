@@ -48,9 +48,6 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
         print("\n")
     end
 
-    # if branchingInfo.depth != 0
-    #     println("   Depth:  ", branchingInfo.depth)
-    # end
     println("")
 end
 
@@ -59,7 +56,7 @@ function checkExistanceReversedRoute(y, routes)
 
     fractional_routes = Set{Vector{Int}}()
     for y_value in y
-        push!(fractional_routes, routes_2e[routes[y_value]].sequence)
+        push!(fractional_routes, routes[y_value].sequence)
     end
     
     for (_, route) in enumerate(fractional_routes)
@@ -98,33 +95,8 @@ function branchOnReverseRoute(branchingInfo, reverse_route)
         push!(right_branch.forbidden_combinations, Tuple(sort([reverse_route[n], reverse_route[end]])))
         return left_branch, right_branch
     end
-    
-    routeExistanceMust = false
-    routeExistanceForbidden = false
-    for route in branchingInfo.special_order_set_must_include 
-        if route.sequence == reverse_route
-            routeExistanceMust == true
-            break
-        end
-    end
-    for route in branchingInfo.special_order_set_forbidden_include
-        if route.sequence == reverse_route
-            routeExistanceForbidden == true
-            break
-        end
-    end
 
-    if routeExistanceMust || routeExistanceForbidden
-        @info "Branching decision : special order set: $(reverse(reverse_route))"
-        push!(left_branch.special_order_set_must_include, generate2eRoute(reverse(reverse_route)))
-        push!(right_branch.special_order_set_forbidden_include, generate2eRoute(reverse(reverse_route)))
-    else
-        @info "Branching decision : special order set: $reverse_route"
-        push!(left_branch.special_order_set_must_include, generate2eRoute(reverse_route))
-        push!(right_branch.special_order_set_forbidden_include, generate2eRoute(reverse_route))
-    end
-
-
+    # If no branching decision could be made, return the branches as-is
     return left_branch, right_branch
 end
 
@@ -143,7 +115,7 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
     sorted_fractional_y = sort([r for r in 1:length(y) if 0 < y[r]], by = r -> y[r] * (1 - y[r]), rev = true)
     selected_routes = Set{Vector{Int}}()
     for y_value in sorted_fractional_y 
-        push!(selected_routes, routes_2e[routes_pool[y_value]].sequence)
+        push!(selected_routes, routes_pool[y_value].sequence)
     end
     # println("selected routes: ")
     # for route in selected_routes 

@@ -16,8 +16,10 @@ function generate1eRoute(route)
     a =  Vector{}()
     b2in = Vector{}()
     b2out = Vector{}()
-    return Route(cost, route, length(route), load, b1, a, b2in, b2out) 
+    arrival_time = zeros(Int, length(points))
+    return Route(cost, route, length(route), load, b1, a, b2in, b2out, arrival_time) 
 end
+
 function generate2eRoute(route::Vector{Int})
     cost = 0
     load = 0
@@ -33,7 +35,20 @@ function generate2eRoute(route::Vector{Int})
     a = getA(route)
     b2in = getB2In(route)
     b2out = getB2Out(route)
-    return Route(cost, route, length(routes_2e)+1, load, b1, a, b2in, b2out) 
+    arrival_time = fill(Float64(planning_horizon), length(points))
+    arrival_time[route[1]] = 0
+    # println(arrival_time)
+    # println(route)
+    for node in 2:length(route)
+        # println(route[node],"   ",time_window[route[node]][2])
+        time = time_window[route[node]][1] > arrival_time[route[node-1]]+arc_cost[route[node-1], route[node]] ? time_window[route[node]][2] : arrival_time[route[node-1]] + arc_cost[route[node-1], route[node]]
+        arrival_time[route[node]] = time
+        # println("arc cost between $(route[node-1]) and $(route[node]) is ",arc_cost[route[node-1], route[node]])
+        # println("arrival_time of $node is $time")
+        # arrival_time[route[node]] = time_window[route[node]][2]
+        # arrival_time[route[node]] = arrival_time[route[node-1]]+arc_cost[route[node-1], route[node]]
+    end
+    return Route(cost, route, length(routes_2e)+1, load, b1, a, b2in, b2out, arrival_time) 
 end
 
 

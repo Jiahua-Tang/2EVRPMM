@@ -53,7 +53,7 @@ function calculateTSP1e(selected_parkings)
     return generate1eRoute(transformRoute(x))
 end
 
-function calculateLRP2eMILP(route_1e::Route)
+function calculateLRP2eCG(route_1e::Route)
 
     result = solve_root_node(route_1e)
     if !isnothing(result)
@@ -77,7 +77,7 @@ function calculateLRPLowerBoundByParking()
         for parking_subset in combinations(satellites, num_parking)
             # println("\n================================Parking subset = ", parking_subset,"================================")
             route_1e = calculateTSP1e(parking_subset)
-            lowerbound_2e = calculateLRP2eMILP(route_1e)
+            lowerbound_2e = calculateLRP2eCG(route_1e)
             lowerbound_1e_routes[route_1e] = route_1e.cost + lowerbound_2e
             # @info "$(route_1e.sequence)  Lower bound found: $(round(route_1e.cost, digits=2))  $(round(lowerbound_2e, digits=2))  Total: $(round(route_1e.cost + lowerbound_2e, digits=2))"
         end
@@ -93,16 +93,15 @@ function calculateLRPLowerBoundCG()
         println("parking availability[$idx] = ", parking)
     end
 
-
     parkingCombination = Dict{Route, Float64}()
     for num_parking in minimum_parkings_required:nb_microhub
         for parking_subset in combinations(satellites, num_parking)
             # println("\n================================Parking subset = ", parking_subset,"================================")
             route_1e = calculateTSP1e(parking_subset)
 
-            lowerbound_2e = calculateLRP2eMILP(route_1e)
+            lowerbound_2e = calculateLRP2eCG(route_1e)
             if !isnothing(lowerbound_2e)
-                lowerbound_1e_routes[route_1e] = route_1e.cost + lowerbound_2e
+                lowerbound_1e_routes[route_1e] = lowerbound_2e
             end
             # @info "$(route_1e.sequence)  Lower bound found: $(round(route_1e.cost, digits=2))  $(round(lowerbound_2e, digits=2))  Total: $(round(route_1e.cost + lowerbound_2e, digits=2))"
         end
@@ -120,4 +119,116 @@ function displayLRPLowerBound(lb_lrp_per_route)
         delete!(lb_lrp_per_route, min_route)
         count += 1
     end
+end
+
+function get_sorted_2e_subproblems(theta)
+    lrp_subproblems = PriorityQueue()
+
+    for (idx, parking) in enumerate(parking_availability)   
+        println("parking availability[$idx] = ", parking)
+    end
+    println("")
+
+    for num_parking in minimum_parkings_required:nb_microhub
+        for parking_subset in combinations(satellites, num_parking)
+            # println("\n================================Parking subset = ", parking_subset,"================================")
+            route_1e = calculateTSP1e(parking_subset)
+            # println(route_1e.sequence)
+
+            lower_bound_subproblem = route_1e.cost
+            # lower_bound_subproblem += solve_location_allocation(parking_subset)
+            lower_bound_subproblem += solve_LRP_LP(parking_subset)
+
+            enqueue!(lrp_subproblems, route_1e, lower_bound_subproblem)
+        end
+    end 
+
+    for (route, solution) in lrp_subproblems
+        println(route.sequence, "   $(getServedParking1eRoute(route)),   $(round(solution, digits=2))")
+    end
+
+    # for (route, _) in Iterators.take(lrp_subproblems, theta)
+    #     lrp_solution_value = calculate_LRP_LP(getServedParking1eRoute(route))
+    #     println(round(lrp_solution_value + route.cost, digits=2))
+    # end
+    
+    return lrp_subproblems
+
+end
+
+function solve_LRP_LP(selected_parkings)
+    model = Model(CPLEX.Optimizer)
+    set_silent(model)
+    # set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60)
+    # println("solve lrp lp of subproblem $selected_parkings ")
+
+    @variable(model, x[A2, A2]>=0)
+    @variable(model, capacity_2e_vehicle>=f[A2, A2]>=0)
+
+    @objective(model, Min, sum(arc_cost[i,j] * x[i,j] for i in A2, j in A2))
+
+    # self-loop
+    @constraint(model, [i in A2], x[i,i] == 0)
+
+    # conservation
+    @constraint(model, [i in A2], sum(x[i,j] for j in A2) == sum(x[j,i] for j in A2))
+    @constraint(model, [i in satellites], sum(x[i,j] for j in customers)<= nb_vehicle_per_satellite)
+
+    # cov - customer
+    @constraint(model, [i in customers], sum(x[i,j] for j in A2) == 1)
+    # cov - depot
+    @constraint(model, [i in selected_parkings], sum(x[i,j] for j in A2) >= 1)
+    @constraint(model, [i in setdiff(satellites, selected_parkings)], sum(x[i,j] for j in A2) == 0)
+
+    # capacity 2e vehicle
+    @constraint(model, [i in customers], sum(f[j,i] for j in A2) - sum(f[i,j] for j in A2) == demands[i])
+    @constraint(model, [i in A2, j in A2], f[i,j] <= capacity_2e_vehicle * x[i,j])
+
+    optimize!(model)
+
+    #region: print lp result
+    # for i in A2, j in A2
+    #     if value(x[i,j]) != 0 
+    #         println("x[$i,$j] = $(round(value(x[i,j]), digits=2))")
+    #     end
+    # end
+
+    # for i in A2, j in A2
+    #     if value(f[i,j]) != 0 
+    #         println("f[$i,$j] = $(round(value(f[i,j]), digits=2))")
+    #     end
+    # end
+
+    # for customer in selected_parkings ∪ customers
+    #     if customer in customers
+    #         println("t[$(customer-1-length(satellites))] = $(round(value(t[customer]),digits=2))")
+    #     else
+    #         println("t[$customer] = $(round(value(t[customer]),digits=2))")
+    #     end
+    # end
+    #endregion
+    return objective_value(model)
+end
+
+function solve_location_allocation(selected_parkings)
+
+    model = Model(CPLEX.Optimizer)
+    set_silent(model)
+
+    @variable(model, x[selected_parkings, customers], Bin)
+
+    @objective(model, Min, sum(arc_cost[i,j] * x[i,j] for i in selected_parkings, j in customers))
+
+    @constraint(model, [i in customers], sum(x[j,i] for j in selected_parkings)>=1)
+
+    optimize!(model)
+
+    # for i in selected_parkings, j in customers
+    #     if value(x[i,j]) != 0 
+    #         println("x[$i,$j] = $(round(value(x[i,j])))")
+    #     end
+    # end
+
+    return objective_value(model)
+
 end

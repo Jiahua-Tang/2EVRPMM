@@ -27,7 +27,7 @@ function buildModel()
     # Decision variable
     @variable(model, x[A1,A1], Bin) #Arc(x,y) traversed by FEV
     @variable(model, y[A1,A1], Bin) #Arc(x,y) traversed by MM
-    @variable(model,tau[customers]>=0) #Cumulatedd distance
+    @variable(model, tau[customers]>=0) #Cumulatedd distance
     @variable(model, t[A2]>=0, Int) #Arrival time
     @variable(model, w[satellites]>=0, Int) #Amount of freight transported from the depot to parking node
     @variable(model, z[A2,A2], Bin) #Arc(x,y) traversed by SEV
@@ -49,7 +49,7 @@ function buildModel()
     #======================================================================#
     @objective(model, Min,
         sum(arc_cost[i, j] * x[i, j] for i in A1, j in A1 if i != j) +
-        sum(arc_cost[i, j] * z[i, j] for i in A2, j in A2 if i != j))
+        sum(arc_cost[i, j] * z[i, j] for i in A2, j in A2 if i != j) )
     #======================================================================#
     #1 #2
     #Flow conservation at parking for FEV
@@ -110,25 +110,28 @@ function buildModel()
     @constraint(model, [i in A2, j in A2], f[i,j] <= capacity_2e_vehicle * sum(z[i,j]))
     #  #20 #21
     #  #Total working time cannot exceed the length of planning horizon
-    #  @constraint(model, sum(TT1[i,j]*x[i,j] for i in A1 for j in A1) + eta1*sum(PI[p-1]*x[i,p] for p in P for i in A1)<= zeta)
+    #  @constraint(model, sum(arc_cost[i,j]*x[i,j] for i in A1 for j in A1) + eta1*sum(PI[p-1]*x[i,p] for p in P for i in A1)<= zeta)
     #  @constraint(model, [i in C, j in P], t[i]+TT2[i,j]+eta2 <= zeta + M*(1 - z[i,j]))
+    eta1 = 0
+    eta2 = 0
     #22
     #Time constraint for FEV and MTZ
-    @constraint(model, [i in satellites, j in satellites], t[i] + eta1*(1-x[i,j]) + TT1[i,j]*x[i,j] <= t[j] + M*(1 - x[i,j]))
+    @constraint(model, [i in satellites, j in satellites], t[i] + eta1*(1-x[i,j]) + arc_cost[i,j]*x[i,j] <= t[j] + M*(1 - x[i,j]))
     #23
     #Time constraint for SEV and MTZ
-    @constraint(model, [i in customers, j in customers], t[i]+eta2*(1-z[i,j])+TT2[i,j]*z[i,j] <= t[j]+M * (1 - z[i,j]))
-    #  #24
-    #  @constraint(model, [i in C], t[i] >= time_windows[i-1-np][1])
-    #  @constraint(model, [i in C], t[i] <= time_windows[i-1-np][2])
+    @constraint(model, [i in customers, j in customers], t[i]+eta2*(1-z[i,j])+arc_cost[i,j]*z[i,j] <= t[j]+M * (1 - z[i,j]))
+    #24
+    @constraint(model, [i in customers], t[i] >= time_window[i][1])
+    @constraint(model, [i in customers], t[i] <= time_window[i][2])
     #25 26
     #Arrival time initialization
-    @constraint(model, [i in satellites], TT1[1,i] * x[1,i] <= t[i])
-    @constraint(model, [p in satellites, j in customers], t[p] + TT2[p,j] * z[p,j] <= t[j])
+    # @constraint(model, [i in satellites], arc_cost[1,i] * x[1,i] <= t[i])
+    @constraint(model, [i in satellites, j in customers], arc_cost[i,j] * z[i, j] <= t[j])
+    # @constraint(model, [p in satellites, j in customers], t[p] + arc_cost[p,j] * z[p,j] <= t[j])
 
     #27
-    # #Max duration & MTZ
-    @constraint(model, [i in satellites, j in customers], tau[j] + M * (1-z[i,j]) >= arc_cost[i,j]  )
+    # #Max time and duration & MTZ
+    @constraint(model, [i in satellites, j in customers], tau[j] + M * (1-z[i,j]) >= arc_cost[i,j])
     @constraint(model, [i in customers, j in customers], tau[i] + arc_cost[i,j] <= tau[j] + M * (1-z[i,j]) )
     @constraint(model, [i in customers, j in satellites], tau[i] + arc_cost[i,j] <= maximum_duration_2e_vehicle + M * (1-z[i,j]) )
     @constraint(model, [i in customers], tau[i] <= maximum_duration_2e_vehicle)
@@ -142,7 +145,7 @@ function buildModel()
 end
 
 function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
-    # set_silent(model)
+    set_silent(model)
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", execution_time_limit)
     total_time = @elapsed optimize!(model)
     resultStatus = ""
@@ -237,7 +240,7 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
                     dis = dis + arc_cost[i, j]
                     
                     # Format itinerary as "3 -> 24 -> 25 -> 3"
-                    formatted_iti = join([i; iti], " -> ")
+                    formatted_iti = join([i; iti], ", ")
                     
                     # Print the formatted output
                     num_y = printText(plt, num_y,"$formatted_iti : "*string(round(dis, digits=2)))
@@ -248,7 +251,8 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
         
         x_coor = [p[1] for p in coor]
         y_coor = [p[2] for p in coor]
-        time_labels = [string("t= ", round(value(t[i]))) for i in A2] # t
+        time_labels = [string("t[$i]= ", round(value(t[i]))) for i in A2] # t
+        println(time_labels)
         distance_labels = [string("d= ", round(value(tau[i]), digits=2)) for i in customers] # tau
         for i in points
             # Add node number lable
