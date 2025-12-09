@@ -20,5 +20,5 @@ set -e
 # julia /gpfs/users/tangj/2EVRPMM/Code/configure_env.jl
 
 # Run the main Julia code
-julia /gpfs/workdir/tangj/2EVRPMM/Code/2EVRPTWMM/ruche_compact.jl 
+julia /gpfs/workdir/tangj/2EVRPMM/Code/2EVRPTWMM/ruche_compact.jl "$1" "$2"
 
