@@ -19,7 +19,7 @@ num_cust = parse(Int, ARGS[1])
 global random_seed = parse(Int, ARGS[2])
 time_limit = parse(Int, ARGS[3])
 
-file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*"t"*string(time_limit)*"_"*time_stamp*".txt"
+file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*string(time_limit)*"_"*time_stamp*".txt"
 # file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 

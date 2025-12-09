@@ -17,9 +17,8 @@ global root = "$(pwd())/TEST/"
 time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
 num_cust = parse(Int, ARGS[1])
 global random_seed = parse(Int, ARGS[2])
-time_limit = parse(Int, ARGS[3])
 
-file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*"t"*string(time_limit)*"_"*time_stamp*".txt"
+file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*time_stamp*".txt"
 # file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
@@ -30,7 +29,7 @@ open(file_name, "w") do io
 #            # generateData(instance_size, random_seed)
             global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
-            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", time_limit, num_cust)
+            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", parse(Int,ARGS[3]), num_cust)
             println("\n================================================================")
 
             solveCompactModelDisplayResult()

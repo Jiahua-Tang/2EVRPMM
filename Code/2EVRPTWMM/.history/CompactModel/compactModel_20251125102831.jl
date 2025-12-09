@@ -145,7 +145,7 @@ function buildModel()
 end
 
 function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
-    # set_silent(model)
+    set_silent(model)
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", execution_time_limit)
     total_time = @elapsed optimize!(model)
     resultStatus = ""
