@@ -1,0 +1,147 @@
+using Plots, Random, DataStructures, Combinatorics, Printf, 
+    HiGHS, SparseArrays, Test, DataFrames, CPLEX, JuMP, Dates, Base.Threads
+using Logging, LoggingExtras
+
+include("Utiles.jl")
+include("BranchAndPrice/Utiles.jl")
+include("BranchAndPrice/branchAndPrice.jl")
+include("CompactModel/compactModel.jl")
+include("LrpLowerBound/solveLRP.jl")
+
+
+global root = "$(pwd())/TEST/"
+# global root = "/gpfs/workdir/tangj/2EVRPMM/Code/Code/"
+
+
+# instance_size = 70
+global random_seed = 42
+# # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
+# file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
+file_name = "Output/demo.txt"
+mkpath(dirname(file_name))
+
+open(file_name, "w") do io
+    redirect_stdout(io) do
+        # redirect_stderr(io) do
+
+#            # generateData(instance_size, random_seed)
+            global fileName = "R103"
+            # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
+            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 15)
+            println("\n================================================================")
+
+#             #=========================================================#
+
+            solveCompactModelDisplayResult()
+
+#             #=========================================================#
+
+
+            global execution_time_total = @elapsed begin
+                lrp_subproblems = preparation_branch_and_price()
+
+                display(routes_2e_by_start)
+
+                println("\n================================================================")
+                # solve_virtual_root_node()
+                # solve_MILP_model_root()
+
+                #region : create model and initial columns
+                execution_time = @elapsed begin
+                    global model = Model(CPLEX.Optimizer)
+                    set_silent(model)
+                    # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
+                    # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
+
+                    global y_vars = Dict{Int, VariableRef}()
+
+                    @objective(model, Min, 0.0)
+
+                    global sync = Vector{ConstraintRef}(undef, length(satellites))
+                    for (k,_) in enumerate(satellites)
+                        sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
+                    end
+
+                    global custVisit = Vector{ConstraintRef}(undef, length(customers))
+                    for (k,_) in enumerate(customers) 
+                        custVisit[k] = @constraint(model, 1.0 <= 0.0)
+                    end
+
+                    global number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
+                    for (k,_) in enumerate(satellites)
+                        number2evfixe[k] = @constraint(model, 0.0 == 0.0)
+                    end
+
+                    global maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
+                    for (k,_) in enumerate(satellites) 
+                        maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
+                    end
+
+                    global lower_bound_2e_routes = minimum_2e_vehicle_required
+                    global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
+
+                    global globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required) 
+                    global globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
+                end
+                global execution_time_build_model += execution_time
+
+                for (route,_) in enumerate(routes_2e)
+                    add_2eroute!(route)
+                end
+                #endregion
+
+                root_nodes = PriorityQueue()
+
+                i = 1
+                for (subproblem, lb) in lrp_subproblems 
+                    if lb < upperBound # && i < 4
+                        dequeue!(lrp_subproblems)
+                        root_result = solve_root_node(subproblem)
+                        if !isnothing(root_result)
+                            enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
+                        end
+                    else
+                        break
+                    end
+                    i += 1
+                end
+
+                println("\nLeft 2e subproblems :")
+                for (k, v) in root_nodes 
+                    println(k[1].sequence, " : ",v)
+                    # solve_branch_and_price_2e_subproblem(k[1], k[2])
+                end
+
+            end
+
+
+            println("\n================================================================")
+            println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+
+            if !isnothing(optimalSolution)
+                println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+        #         println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")
+        #         println("time spent in branching decision = $(round(execution_time_branching, digits = 2)), takes percentage of $(round(execution_time_branching/execution_time_total, digits =2)*100)%")
+        #         println("time spent in solving child node = $(round(execution_time_child_node, digits = 2)), takes percentage of $(round(execution_time_child_node/execution_time_total, digits =2)*100)%")
+
+        #         println("\ntime spent in filtering = $(round(execution_time_filtering, digits=2)), takes percentage of $(round(execution_time_filtering/execution_time_total, digits =2)*100)%")
+        #         println("time spent in solving column generation = $(round(execution_time_column_generation, digits=2)), takes percentage of $(round(execution_time_column_generation/execution_time_total,digits=2)*100)%")
+        #         println("   - time spent in building model = $(round(execution_time_build_model, digits=2)), takes percentage of $(round(execution_time_build_model/execution_time_column_generation,digits=2)*100)%")
+        #         println("       - time spent in setting bound = $(round(execution_time_set_bound, digits=2)), takes percentage of $(round(execution_time_set_bound/execution_time_column_generation,digits=2)*100)%")
+        #         println("       - time spent in adding columns = $(round(execution_time_add_columns, digits=2)), takes percentage of $(round(execution_time_add_columns/execution_time_column_generation,digits=2)*100)%")
+        #         println("   - time spent in solving pricing = $(round(execution_time_pricing, digits=2)), takes percentage of $(round(execution_time_pricing/execution_time_column_generation,digits=2)*100)%")
+        #         println("   - time spent in solving RMP = $(round(execution_time_rmp, digits = 2)), takes percentage of $(round(execution_time_rmp/execution_time_column_generation, digits =2)*100)%")
+        # #     println("   - time spent in output = $(round(execution_time_output, digits = 2)), takes percentage of $(round(execution_time_output/execution_time_column_generation, digits =2)*100)%")
+
+        #     #     println("\ndeepest node dived to level $deepest_level\n")
+        #         println("Current optimal solution $(round(upperBound, digits=2)) found in interation $optimal_found_iteration in level $optimal_found_in:")
+        #         for route in optimalSolution 
+        #             println(route.sequence, "  ", round(route.cost, digits=2))
+        #         end   
+            end
+            #endregion
+    # end
+    end
+end
+
+run(`open -a "Visual Studio Code" $file_name`)
