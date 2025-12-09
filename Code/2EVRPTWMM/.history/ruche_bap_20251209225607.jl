@@ -16,7 +16,7 @@ time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
 num_cust = parse(Int, ARGS[1])
 global random_seed = parse(Int, ARGS[2])
 
-file_name = "Output/bp_c$(num_cust)"*"s"*string(random_seed)*time_stamp*".txt"
+file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*time_stamp*".txt"
 # file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
@@ -102,11 +102,11 @@ open(file_name, "w") do io
                     i += 1
                 end
 
-                # println("\nLeft 2e subproblems :")
-                # for (k, v) in root_nodes 
-                #     println(k[1].sequence, " : ",v)
-                #     # solve_branch_and_price_2e_subproblem(k[1], k[2])
-                # end
+                println("\nLeft 2e subproblems :")
+                for (k, v) in root_nodes 
+                    println(k[1].sequence, " : ",v)
+                    # solve_branch_and_price_2e_subproblem(k[1], k[2])
+                end
 
             end
 

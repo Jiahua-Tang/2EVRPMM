@@ -396,10 +396,10 @@ end
 function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, π4, branchingInfo::BranchingInfo) 
 
     #region : dual multiplier verification
-    # println("π1=  ", round.(π1, digits=2))
-    # println("π2=  ", round.(π2, digits=2))
-    # println("π3=  ", round.(π3, digits=2))
-    # println("π4=  ", round.(π4, digits=2))
+    println("π1=  ", round.(π1, digits=2))
+    println("π2=  ", round.(π2, digits=2))
+    println("π3=  ", round.(π3, digits=2))
+    println("π4=  ", round.(π4, digits=2))
 
     # for route in routes_2e_pool
     #     rc, dist, cust_v = calculateDualValueRoute(routes_2e[route].sequence, π1, π2, π3, π4)
