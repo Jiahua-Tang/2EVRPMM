@@ -140,7 +140,7 @@ function get_sorted_2e_subproblems(theta)
             route_1e = calculateTSP1e(parking_subset)
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
-            # println("start solving lp")
+            println("start solving lp")
             flush(stdout)
             lower_bound_subproblem = route_1e.cost
             # lower_bound_subproblem += solve_location_allocation(parking_subset)
@@ -165,7 +165,7 @@ end
 
 function solve_LRP_LP(selected_parkings)
     model = Model(CPLEX.Optimizer)
-    set_silent(model)
+    # set_silent(model)
     # set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60)
     # println("solve lrp lp of subproblem $selected_parkings ")
 
@@ -192,9 +192,6 @@ function solve_LRP_LP(selected_parkings)
     @constraint(model, [i in A2, j in A2], f[i,j] <= capacity_2e_vehicle * x[i,j])
 
     optimize!(model)
-
-
-    println("CPLEX solve LP 2e MDVRP time = ", round(solve_time(model),digits=3), " seconds")
 
     #region: print lp result
     # for i in A2, j in A2

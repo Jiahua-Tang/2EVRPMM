@@ -140,7 +140,7 @@ function get_sorted_2e_subproblems(theta)
             route_1e = calculateTSP1e(parking_subset)
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
-            # println("start solving lp")
+            println("start solving lp")
             flush(stdout)
             lower_bound_subproblem = route_1e.cost
             # lower_bound_subproblem += solve_location_allocation(parking_subset)
@@ -165,7 +165,7 @@ end
 
 function solve_LRP_LP(selected_parkings)
     model = Model(CPLEX.Optimizer)
-    set_silent(model)
+    # set_silent(model)
     # set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60)
     # println("solve lrp lp of subproblem $selected_parkings ")
 
