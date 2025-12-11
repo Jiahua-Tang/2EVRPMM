@@ -1,7 +1,7 @@
 include("../BranchAndPrice/columnGeneration.jl")
 
 function calculateTSP1e(selected_parkings)
-    println("Calculate TSP 1e : $selected_parkings\n")
+    # println("Calculate TSP 1e\n")
     model = Model(CPLEX.Optimizer)
     # set_silent(model)
     @variable(model, x[A1, A1], Bin)

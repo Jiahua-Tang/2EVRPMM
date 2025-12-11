@@ -1,7 +1,7 @@
 include("../BranchAndPrice/columnGeneration.jl")
 
 function calculateTSP1e(selected_parkings)
-    println("Calculate TSP 1e : $selected_parkings\n")
+    # println("Calculate TSP 1e\n")
     model = Model(CPLEX.Optimizer)
     # set_silent(model)
     @variable(model, x[A1, A1], Bin)
@@ -137,7 +137,7 @@ function get_sorted_2e_subproblems(theta)
             route_1e = calculateTSP1e(parking_subset)
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
-            println("start solving lp")
+
             lower_bound_subproblem = route_1e.cost
             # lower_bound_subproblem += solve_location_allocation(parking_subset)
             lower_bound_subproblem += solve_LRP_LP(parking_subset)

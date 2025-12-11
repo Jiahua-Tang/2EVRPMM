@@ -1,7 +1,7 @@
 include("../BranchAndPrice/columnGeneration.jl")
 
 function calculateTSP1e(selected_parkings)
-    println("Calculate TSP 1e : $selected_parkings\n")
+    # println("Calculate TSP 1e\n")
     model = Model(CPLEX.Optimizer)
     # set_silent(model)
     @variable(model, x[A1, A1], Bin)
@@ -15,7 +15,7 @@ function calculateTSP1e(selected_parkings)
     @constraint(model, [i in satellites], sum(x[j,i] for j in A1) == sum(x[i,j] for j in A1))
     # @constraint(model, [i in satellites], sum(x[i,j] for j in A1) <= 1)
     @constraint(model, [i in selected_parkings], sum(x[j,i] for j in A1) == 1)
-    @constraint(model, [i in selected_parkings], parking_availability[i] + sum(y[j,i] for j in A1) + sum(y[i,j] for j in A1) == 1)
+    @constraint(model, [i in selected_parkings], parking_availability[i] + sum(y[j,i] for j in A1) + sum(y[i,j] for j in A1) ==1 )
     ## Flow conservation at depot for FEV and microhub
     @constraint(model, sum(x[1,j] for j in A1) == 1)
     @constraint(model, sum(x[j,1] for j in A1) == 1)
@@ -23,8 +23,8 @@ function calculateTSP1e(selected_parkings)
     @constraint(model, [i in A1], y[i,1] ==0)
     ## Microhub moving rule
     @constraint(model, [i in A1, j in A1], y[i,j] <= x[i,j])
-    @constraint(model, [j in satellites], sum(y[i,j] for i in A1) <= 1-parking_availability[j])
     @constraint(model, [i in satellites], sum(y[i,j] for j in A1) <= parking_availability[i])
+    @constraint(model, [j in satellites], sum(y[i,j] for i in A1) <= 1-parking_availability[j])
     ## Subtour elimination
     @constraint(model, [i in satellites, j in satellites], u[i] + 1 <= u[j] + length(A1)*(1-x[i,j]))
 
@@ -137,7 +137,7 @@ function get_sorted_2e_subproblems(theta)
             route_1e = calculateTSP1e(parking_subset)
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
-            println("start solving lp")
+
             lower_bound_subproblem = route_1e.cost
             # lower_bound_subproblem += solve_location_allocation(parking_subset)
             lower_bound_subproblem += solve_LRP_LP(parking_subset)
