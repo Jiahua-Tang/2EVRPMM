@@ -161,7 +161,7 @@ end
 
 function solve_LRP_LP(selected_parkings)
     model = Model(CPLEX.Optimizer)
-    # set_silent(model)
+    set_silent(model)
     # set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60)
     # println("solve lrp lp of subproblem $selected_parkings ")
 

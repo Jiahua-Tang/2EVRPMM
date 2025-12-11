@@ -133,11 +133,15 @@ function get_sorted_2e_subproblems(theta)
 
     for num_parking in minimum_parkings_required:nb_microhub
         for parking_subset in combinations(satellites, num_parking)
-            println("\n================================Parking subset = ", parking_subset,"================================")
+            # Print parking subset info before any CPLEX output
+            println("\nParking subset = ", parking_subset)
+            flush(stdout)
             route_1e = calculateTSP1e(parking_subset)
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
-            println("start solving lp")
+            # Announce start of LP before its CPLEX log
+            println("Start solving LP")
+            flush(stdout)
             lower_bound_subproblem = route_1e.cost
             # lower_bound_subproblem += solve_location_allocation(parking_subset)
             lower_bound_subproblem += solve_LRP_LP(parking_subset)
