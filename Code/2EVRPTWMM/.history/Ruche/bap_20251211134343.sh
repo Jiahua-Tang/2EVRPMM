@@ -6,12 +6,12 @@
 #SBATCH --time=01:00:00 
 #SBATCH --ntasks=1   # Since Julia typically uses multithreading, setting ntasks to 1
 #SBATCH --cpus-per-task=10                      # Ensure you're using all 10 CPUs
-#SBATCH --partition=cpu_short
+#SBATCH --partition=cpu_med
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
 
 # Load Julia module (uncomment this if the environment requires it)
-module load julia/1.11.5/gcc-13.2.0
+module load julia/1.4.0/gcc-9.2.0
 
 # Error handling: If any command fails, exit the script
 set -e
