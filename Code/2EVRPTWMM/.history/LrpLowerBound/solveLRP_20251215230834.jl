@@ -93,7 +93,7 @@ function solve_1e_tsp_labelling(selected_parkings)
 
     end
     route_1e = generate1eRoute(dequeue!(result_labels).visitedSequence)
-    # println(route_1e.sequence)
+    println(route_1e.sequence)
     return route_1e
 end
 

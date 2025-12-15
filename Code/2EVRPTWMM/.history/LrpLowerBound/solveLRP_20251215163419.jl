@@ -4,7 +4,6 @@ mutable struct LabelTSP
     current_node::Int
     distance::Float64
     microhubStatus::Int
-    parkingStatus::Vector{Int}
     visitedNodes::Vector{Int}
     visitedSequence::Vector{Int} 
 end
@@ -20,27 +19,29 @@ function solve_1e_tsp_labelling(selected_parkings)
         processedLabels[node] = Vector{LabelTSP}()
         sizehint!(processedLabels[node], 100) 
     end
+    result_labels = Vector{LabelTSP}()
 
     # Use PriorityQueue for O(log n) label selection
     label_queue = PriorityQueue{LabelTSP, Float64}()
 
     num_iter_labelling = 0
     visit_nodes = zeros(Int, length(A1))
-    new_label = LabelTSP(1, 0, 0, parking_availability, visit_nodes, [1])
+    new_label = LabelTSP(1, 0, 0, visit_nodes, [1])
     enqueue!(label_queue, new_label, 0)
 
-    while !isempty(label_queue) #&& num_iter_labelling < 16
+    while !isempty(label_queue) && num_iter_labelling < 16
 
-        # println("\niter labelling tsp $num_iter_labelling, contains $(length(label_queue)) labels: ")
-        # for (label, _) in label_queue
-        #     println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.microhubStatus)
-        # end
+        println("\niter labelling tsp $num_iter_labelling, contains $(length(label_queue)) labels: ")
+        for (label, _) in label_queue
+            # println(label)
+            println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.microhubStatus)
+        end
 
         num_iter_labelling += 1
 
         # * choose a minimal travel distance label and set as processed
         min_label = dequeue!(label_queue)
-        # println("Selected label : $(min_label.visitedSequence)")
+        println("Selected label : $(min_label.visitedSequence)")
         current_node = min_label.current_node
         push!(processedLabels[current_node], min_label)
 
@@ -68,22 +69,8 @@ function solve_1e_tsp_labelling(selected_parkings)
 
                 # * in stack for destination node and parking nodes
                 if node == 1
-                    valide = true
-                    for n in satellites
-                        if n in selected_parkings && new_label.parkingStatus[n] == 0
-                            valide = false
-                            # println("destination label $n: $(new_label.visitedSequence), $(new_label.parkingStatus)")
-                            break
-                        # elseif !(n in selected_parkings) && new_label.parkingStatus[n] == 1
-                        #     valide = false
-                        #     println("destination label 2: $(new_label.visitedSequence), $(new_label.parkingStatus)")
-                        #     break
-                        end
-                    end
-                    if valide
-                        # println("destination label : $(new_label.visitedSequence), $(new_label.parkingStatus)")
-                        enqueue!(result_labels, new_label, new_label.distance)
-                    end
+                    println("destination label : $(new_label.visitedSequence)")
+                    enqueue!(result_labels, new_label, new_label.distance)
                 else
                     enqueue!(label_queue, new_label, new_label.distance)
                 end
@@ -92,9 +79,7 @@ function solve_1e_tsp_labelling(selected_parkings)
         end
 
     end
-    route_1e = generate1eRoute(dequeue!(result_labels).visitedSequence)
-    # println(route_1e.sequence)
-    return route_1e
+    return generate1eRoute(dequeue!(result_labels))
 end
 
 function dominance_check_tsp(label1, label2)
@@ -140,7 +125,6 @@ function extend_tsp_label(label, next_node, selected_parkings)
     # *     1 : process
     # *     2 : both possible, depends on next visiting node
     distance = label.distance + arc_cost[label.current_node, next_node]
-    parking_avail = deepcopy(label.parkingStatus)
     if next_node != 1
         if label.microhubStatus == 0
             if parking_availability[next_node] == 0
@@ -153,8 +137,6 @@ function extend_tsp_label(label, next_node, selected_parkings)
                 if !(next_node in selected_parkings)
                     return nothing
                 end
-                parking_avail[label.current_node] = 0
-                parking_avail[next_node] = 1
                 microhubStatus = 0
             elseif parking_availability[next_node] == 1
                 if !(label.current_node in selected_parkings)
@@ -179,7 +161,6 @@ function extend_tsp_label(label, next_node, selected_parkings)
     new_label = LabelTSP(current_node, 
                          distance,
                          microhubStatus,
-                         parking_avail,
                          visitedNodes,
                          visitedSequence)
     # println("new label generated")
@@ -328,12 +309,9 @@ function get_sorted_2e_subproblems(theta)
     for num_parking in minimum_parkings_required:nb_microhub
         for parking_subset in combinations(satellites, num_parking)
             println("\n================================Parking subset = ", parking_subset,"================================")
-            # flush(stdout)
+            flush(stdout)
             # route_1e = calculateTSP1e(parking_subset)
-            execution_time_1e_tsp = @elapsed begin
-                route_1e = solve_1e_tsp_labelling(parking_subset)
-            end
-            println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
+            route_1e = solve_1e_tsp_labelling(parking_subset)
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
             # println("start solving lp")

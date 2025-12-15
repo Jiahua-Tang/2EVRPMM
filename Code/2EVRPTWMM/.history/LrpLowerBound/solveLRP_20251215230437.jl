@@ -93,7 +93,7 @@ function solve_1e_tsp_labelling(selected_parkings)
 
     end
     route_1e = generate1eRoute(dequeue!(result_labels).visitedSequence)
-    # println(route_1e.sequence)
+    println(route_1e.sequence)
     return route_1e
 end
 
@@ -333,7 +333,7 @@ function get_sorted_2e_subproblems(theta)
             execution_time_1e_tsp = @elapsed begin
                 route_1e = solve_1e_tsp_labelling(parking_subset)
             end
-            println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
+            println("Labelling solve 1e TSP ti,e = ", round(execution_time_1e_tsp, digits=3), " seconds")
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
             # println("start solving lp")

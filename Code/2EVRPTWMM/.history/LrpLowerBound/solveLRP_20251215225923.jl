@@ -40,7 +40,7 @@ function solve_1e_tsp_labelling(selected_parkings)
 
         # * choose a minimal travel distance label and set as processed
         min_label = dequeue!(label_queue)
-        # println("Selected label : $(min_label.visitedSequence)")
+        println("Selected label : $(min_label.visitedSequence)")
         current_node = min_label.current_node
         push!(processedLabels[current_node], min_label)
 
@@ -72,7 +72,7 @@ function solve_1e_tsp_labelling(selected_parkings)
                     for n in satellites
                         if n in selected_parkings && new_label.parkingStatus[n] == 0
                             valide = false
-                            # println("destination label $n: $(new_label.visitedSequence), $(new_label.parkingStatus)")
+                            println("destination label $n: $(new_label.visitedSequence), $(new_label.parkingStatus)")
                             break
                         # elseif !(n in selected_parkings) && new_label.parkingStatus[n] == 1
                         #     valide = false
@@ -81,7 +81,7 @@ function solve_1e_tsp_labelling(selected_parkings)
                         end
                     end
                     if valide
-                        # println("destination label : $(new_label.visitedSequence), $(new_label.parkingStatus)")
+                        println("destination label : $(new_label.visitedSequence), $(new_label.parkingStatus)")
                         enqueue!(result_labels, new_label, new_label.distance)
                     end
                 else
@@ -92,9 +92,7 @@ function solve_1e_tsp_labelling(selected_parkings)
         end
 
     end
-    route_1e = generate1eRoute(dequeue!(result_labels).visitedSequence)
-    # println(route_1e.sequence)
-    return route_1e
+    return generate1eRoute(dequeue!(result_labels).visitedSequence)
 end
 
 function dominance_check_tsp(label1, label2)
@@ -328,12 +326,9 @@ function get_sorted_2e_subproblems(theta)
     for num_parking in minimum_parkings_required:nb_microhub
         for parking_subset in combinations(satellites, num_parking)
             println("\n================================Parking subset = ", parking_subset,"================================")
-            # flush(stdout)
+            flush(stdout)
             # route_1e = calculateTSP1e(parking_subset)
-            execution_time_1e_tsp = @elapsed begin
-                route_1e = solve_1e_tsp_labelling(parking_subset)
-            end
-            println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
+            route_1e = solve_1e_tsp_labelling(parking_subset)
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
             # println("start solving lp")
