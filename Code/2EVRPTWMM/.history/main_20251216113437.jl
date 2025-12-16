@@ -44,7 +44,7 @@ mkpath(dirname(file_name))
                 # solve_virtual_root_node()
                 # solve_MILP_model_root()
 
-                #region : create model and initial columns
+                region : create model and initial columns
                 execution_time = @elapsed begin
                     global model = Model(CPLEX.Optimizer)
                     set_silent(model)
@@ -88,7 +88,7 @@ mkpath(dirname(file_name))
                 end
                 #endregion
 
-                root_nodes = PriorityQueue()
+                # root_nodes = PriorityQueue()
 
                 # i = 1
                 for (subproblem, lb) in lrp_subproblems 

@@ -45,52 +45,52 @@ mkpath(dirname(file_name))
                 # solve_MILP_model_root()
 
                 #region : create model and initial columns
-                execution_time = @elapsed begin
-                    global model = Model(CPLEX.Optimizer)
-                    set_silent(model)
-                    # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
-                    # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
+                # execution_time = @elapsed begin
+                #     global model = Model(CPLEX.Optimizer)
+                #     set_silent(model)
+                #     # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
+                #     # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
 
-                    global y_vars = Dict{Int, VariableRef}()
+                #     global y_vars = Dict{Int, VariableRef}()
 
-                    @objective(model, Min, 0.0)
+                #     @objective(model, Min, 0.0)
 
-                    global sync = Vector{ConstraintRef}(undef, length(satellites))
-                    for (k,_) in enumerate(satellites)
-                        sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
-                    end
+                #     global sync = Vector{ConstraintRef}(undef, length(satellites))
+                #     for (k,_) in enumerate(satellites)
+                #         sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
+                #     end
 
-                    global custVisit = Vector{ConstraintRef}(undef, length(customers))
-                    for (k,_) in enumerate(customers) 
-                        custVisit[k] = @constraint(model, 1.0 <= 0.0)
-                    end
+                #     global custVisit = Vector{ConstraintRef}(undef, length(customers))
+                #     for (k,_) in enumerate(customers) 
+                #         custVisit[k] = @constraint(model, 1.0 <= 0.0)
+                #     end
 
-                    global number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
-                    for (k,_) in enumerate(satellites)
-                        number2evfixe[k] = @constraint(model, 0.0 == 0.0)
-                    end
+                #     global number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
+                #     for (k,_) in enumerate(satellites)
+                #         number2evfixe[k] = @constraint(model, 0.0 == 0.0)
+                #     end
 
-                    global maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
-                    for (k,_) in enumerate(satellites) 
-                        maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
-                    end
+                #     global maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
+                #     for (k,_) in enumerate(satellites) 
+                #         maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
+                #     end
 
-                    global lower_bound_2e_routes = minimum_2e_vehicle_required
-                    global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
+                #     global lower_bound_2e_routes = minimum_2e_vehicle_required
+                #     global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
 
-                    global globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required) 
-                    global globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
-                end
-                global execution_time_build_model += execution_time
+                #     global globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required) 
+                #     global globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
+                # end
+                # global execution_time_build_model += execution_time
 
-                for (route,_) in enumerate(routes_2e)
-                    add_2eroute!(route)
-                end
-                #endregion
+                # for (route,_) in enumerate(routes_2e)
+                #     add_2eroute!(route)
+                # end
+                # #endregion
 
-                root_nodes = PriorityQueue()
+                # root_nodes = PriorityQueue()
 
-                # i = 1
+                i = 1
                 for (subproblem, lb) in lrp_subproblems 
                     if lb < upperBound # && i < 4
                         dequeue!(lrp_subproblems)
@@ -101,7 +101,7 @@ mkpath(dirname(file_name))
                     else
                         break
                     end
-                    # i += 1
+                    i += 1
                 end
 
                 println("\nLeft 2e subproblems :")

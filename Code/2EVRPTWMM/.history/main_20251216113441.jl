@@ -88,7 +88,7 @@ mkpath(dirname(file_name))
                 end
                 #endregion
 
-                root_nodes = PriorityQueue()
+                # root_nodes = PriorityQueue()
 
                 # i = 1
                 for (subproblem, lb) in lrp_subproblems 
