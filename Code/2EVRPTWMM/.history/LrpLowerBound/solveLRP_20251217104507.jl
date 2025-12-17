@@ -25,7 +25,6 @@ function solve_1e_tsp_labelling(selected_parkings)
                     end
                 end
             end
-            route_1e = generate1eRoute(solution)
         end
     else
         satellites_set = BitSet(satellites)

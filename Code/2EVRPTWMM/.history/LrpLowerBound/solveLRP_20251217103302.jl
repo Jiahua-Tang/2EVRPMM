@@ -10,111 +10,90 @@ mutable struct LabelTSP
 end
 
 function solve_1e_tsp_labelling(selected_parkings)
-    if length(selected_parkings) == 1
-        selected_parking = selected_parkings[1]
-        if parking_availability[selected_parking] == 1
-            route_1e = generate1eRoute([1, selected_parking, 1])
-        else
-            min_distance = Inf
-            solution = []
-            for parking in satellites 
-                if parking_availability[parking] == 1
-                    distance = arc_cost[1, parking] + arc_cost[parking, selected_parking] + arc_cost[selected_parking, 1]
-                    if distance < min_distance
-                        solution = [1, parking, selected_parking, 1]
-                    end
-                end
-            end
-            route_1e = generate1eRoute(solution)
-        end
-    else
-        satellites_set = BitSet(satellites)
-        active_nodes_set = BitSet(vcat(1, collect(satellites)))
+    satellites_set = BitSet(satellites)
+    active_nodes_set = BitSet(vcat(1, collect(satellites)))
 
-        processedLabels = Dict{Int, Vector{LabelTSP}}()
-        result_labels = PriorityQueue{LabelTSP, Float64}()
+    processedLabels = Dict{Int, Vector{LabelTSP}}()
+    result_labels = PriorityQueue{LabelTSP, Float64}()
 
-        for node in active_nodes_set 
-            processedLabels[node] = Vector{LabelTSP}()
-            sizehint!(processedLabels[node], 100) 
-        end
-
-        # Use PriorityQueue for O(log n) label selection
-        label_queue = PriorityQueue{LabelTSP, Float64}()
-
-        num_iter_labelling = 0
-        visit_nodes = zeros(Int, length(A1))
-        parking_avail = zeros(Int, length(A1))
-        new_label = LabelTSP(1, 0, 0, parking_avail, visit_nodes, [1])
-        enqueue!(label_queue, new_label, 0)
-
-        while !isempty(label_queue) #&& num_iter_labelling < 16
-
-            # println("\niter labelling tsp $num_iter_labelling, contains $(length(label_queue)) labels: ")
-            # for (label, _) in label_queue
-            #     println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.parkingStatus)
-            # end
-
-            num_iter_labelling += 1
-
-            # * choose a minimal travel distance label and set as processed
-            min_label = dequeue!(label_queue)
-            # println("Selected label : $(min_label.visitedSequence)")
-            current_node = min_label.current_node
-            push!(processedLabels[current_node], min_label)
-
-            for node in active_nodes_set
-                if node == current_node
-                    continue
-                end
-                # * propagate new label to node
-                new_label = extend_tsp_label(min_label, node, selected_parkings)
-
-                if !isnothing(new_label)
-                    # * check dominance relation between new label and existing labels
-                    new_label_is_dominated = false
-                    # for (idx, label) in enumerate(processedLabels[node])
-                    #     dominance_check_result = dominance_check_tsp(label, new_label)
-                    #     if dominance_check_result == 1
-                    #     # if new label dominates existing one
-                    #         deleteat!(processedLabels[node], idx)
-                    #     elseif dominance_check_result == 2
-                    #     # if existing label dominates new one
-                    #         new_label_is_dominated = true
-                    #         break
-                    #     end
-                    # end
-
-                    # * in stack for destination node and parking nodes
-                    if node == 1
-                        valide = true
-                        for n in satellites
-                            if n in selected_parkings && new_label.parkingStatus[n] == 0
-                                valide = false
-                                # println("destination label $n: $(new_label.visitedSequence), $(new_label.parkingStatus)")
-                                break
-                            # elseif !(n in selected_parkings) && new_label.parkingStatus[n] == 1
-                            #     valide = false
-                            #     println("destination label 2: $(new_label.visitedSequence), $(new_label.parkingStatus)")
-                            #     break
-                            end
-                        end
-                        if valide
-                            # println("destination label : $(new_label.visitedSequence), $(new_label.parkingStatus)")
-                            enqueue!(result_labels, new_label, new_label.distance)
-                        end
-                    else
-                        enqueue!(label_queue, new_label, new_label.distance)
-                    end
-
-                end
-            end
-
-        end
-        route_1e = generate1eRoute(dequeue!(result_labels).visitedSequence)
-        
+    for node in active_nodes_set 
+        processedLabels[node] = Vector{LabelTSP}()
+        sizehint!(processedLabels[node], 100) 
     end
 
+    # Use PriorityQueue for O(log n) label selection
+    label_queue = PriorityQueue{LabelTSP, Float64}()
+
+    num_iter_labelling = 0
+    visit_nodes = zeros(Int, length(A1))
+    parking_avail = zeros(Int, length(A1))
+    new_label = LabelTSP(1, 0, 0, parking_avail, visit_nodes, [1])
+    enqueue!(label_queue, new_label, 0)
+
+    while !isempty(label_queue) #&& num_iter_labelling < 16
+
+        # println("\niter labelling tsp $num_iter_labelling, contains $(length(label_queue)) labels: ")
+        # for (label, _) in label_queue
+        #     println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.parkingStatus)
+        # end
+
+        num_iter_labelling += 1
+
+        # * choose a minimal travel distance label and set as processed
+        min_label = dequeue!(label_queue)
+        # println("Selected label : $(min_label.visitedSequence)")
+        current_node = min_label.current_node
+        push!(processedLabels[current_node], min_label)
+
+        for node in active_nodes_set
+            if node == current_node
+                continue
+            end
+            # * propagate new label to node
+            new_label = extend_tsp_label(min_label, node, selected_parkings)
+
+            if !isnothing(new_label)
+                # * check dominance relation between new label and existing labels
+                new_label_is_dominated = false
+                # for (idx, label) in enumerate(processedLabels[node])
+                #     dominance_check_result = dominance_check_tsp(label, new_label)
+                #     if dominance_check_result == 1
+                #     # if new label dominates existing one
+                #         deleteat!(processedLabels[node], idx)
+                #     elseif dominance_check_result == 2
+                #     # if existing label dominates new one
+                #         new_label_is_dominated = true
+                #         break
+                #     end
+                # end
+
+                # * in stack for destination node and parking nodes
+                if node == 1
+                    valide = true
+                    for n in satellites
+                        if n in selected_parkings && new_label.parkingStatus[n] == 0
+                            valide = false
+                            # println("destination label $n: $(new_label.visitedSequence), $(new_label.parkingStatus)")
+                            break
+                        # elseif !(n in selected_parkings) && new_label.parkingStatus[n] == 1
+                        #     valide = false
+                        #     println("destination label 2: $(new_label.visitedSequence), $(new_label.parkingStatus)")
+                        #     break
+                        end
+                    end
+                    if valide
+                        # println("destination label : $(new_label.visitedSequence), $(new_label.parkingStatus)")
+                        enqueue!(result_labels, new_label, new_label.distance)
+                    end
+                else
+                    enqueue!(label_queue, new_label, new_label.distance)
+                end
+
+            end
+        end
+
+    end
+    route_1e = generate1eRoute(dequeue!(result_labels).visitedSequence)
     # println(route_1e.sequence)
     return route_1e
 end
@@ -353,8 +332,8 @@ function get_sorted_2e_subproblems(theta)
             execution_time_1e_tsp = @elapsed begin
                 route_1e = solve_1e_tsp_labelling(parking_subset)
             end
-            # println("route 1e solve by labeling: $(route_1e.sequence)")
-            println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
+            println("route 1e solve by labeling: $(route_1e.sequence)")
+            # println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
             # println("start solving lp")

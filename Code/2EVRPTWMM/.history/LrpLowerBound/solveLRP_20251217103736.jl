@@ -11,22 +11,7 @@ end
 
 function solve_1e_tsp_labelling(selected_parkings)
     if length(selected_parkings) == 1
-        selected_parking = selected_parkings[1]
-        if parking_availability[selected_parking] == 1
-            route_1e = generate1eRoute([1, selected_parking, 1])
-        else
-            min_distance = Inf
-            solution = []
-            for parking in satellites 
-                if parking_availability[parking] == 1
-                    distance = arc_cost[1, parking] + arc_cost[parking, selected_parking] + arc_cost[selected_parking, 1]
-                    if distance < min_distance
-                        solution = [1, parking, selected_parking, 1]
-                    end
-                end
-            end
-            route_1e = generate1eRoute(solution)
-        end
+        
     else
         satellites_set = BitSet(satellites)
         active_nodes_set = BitSet(vcat(1, collect(satellites)))
@@ -114,7 +99,7 @@ function solve_1e_tsp_labelling(selected_parkings)
         route_1e = generate1eRoute(dequeue!(result_labels).visitedSequence)
         
     end
-
+    
     # println(route_1e.sequence)
     return route_1e
 end

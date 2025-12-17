@@ -95,14 +95,18 @@ open(file_name, "w") do io
                 end
 
 
-                for (subproblem, lb) in lrp_subproblems
-                        # println()
-                    dequeue!(lrp_subproblems)
-                    root_result = solve_root_node(subproblem)
-                    if !isnothing(root_result)
-                        enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
-                    end
-                end
+                # for (subproblem, lb) in lrp_subproblems
+                #     if lb < upperBound # && i < 4
+                #         # println()
+                #         dequeue!(lrp_subproblems)
+                #         root_result = solve_root_node(subproblem)
+                #         if !isnothing(root_result)
+                #             enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
+                #         end
+                #     else
+                #         break
+                #     end
+                # end
 
                 println("\nLeft 2e subproblems :")
                 for (k, v) in root_nodes 

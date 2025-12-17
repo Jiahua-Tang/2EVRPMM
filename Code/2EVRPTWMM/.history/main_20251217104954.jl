@@ -98,10 +98,10 @@ open(file_name, "w") do io
                 for (subproblem, lb) in lrp_subproblems
                         # println()
                     dequeue!(lrp_subproblems)
-                    root_result = solve_root_node(subproblem)
-                    if !isnothing(root_result)
-                        enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
-                    end
+                        root_result = solve_root_node(subproblem)
+                        if !isnothing(root_result)
+                            enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
+                        end
                 end
 
                 println("\nLeft 2e subproblems :")
