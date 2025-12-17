@@ -32,10 +32,10 @@ function solve_1e_tsp_labelling(selected_parkings)
 
     while !isempty(label_queue) #&& num_iter_labelling < 16
 
-        # println("\niter labelling tsp $num_iter_labelling, contains $(length(label_queue)) labels: ")
-        # for (label, _) in label_queue
-        #     println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.parkingStatus)
-        # end
+        println("\niter labelling tsp $num_iter_labelling, contains $(length(label_queue)) labels: ")
+        for (label, _) in label_queue
+            println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.parkingStatus)
+        end
 
         num_iter_labelling += 1
 

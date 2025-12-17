@@ -88,7 +88,7 @@ open(file_name, "w") do io
 
                 root_nodes = PriorityQueue()
 
-                # i = 1
+                i = 1
                 for (subproblem, lb) in lrp_subproblems 
                     if lb < upperBound
                         dequeue!(lrp_subproblems)
@@ -99,7 +99,7 @@ open(file_name, "w") do io
                     else
                         break
                     end
-                    # i += 1
+                    i += 1
                 end
 
                 # println("\nLeft 2e subproblems :")

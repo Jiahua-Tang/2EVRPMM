@@ -26,15 +26,14 @@ function solve_1e_tsp_labelling(selected_parkings)
 
     num_iter_labelling = 0
     visit_nodes = zeros(Int, length(A1))
-    parking_avail = zeros(Int, length(A1))
-    new_label = LabelTSP(1, 0, 0, parking_avail, visit_nodes, [1])
+    new_label = LabelTSP(1, 0, 0, parking_availability, visit_nodes, [1])
     enqueue!(label_queue, new_label, 0)
 
     while !isempty(label_queue) #&& num_iter_labelling < 16
 
         # println("\niter labelling tsp $num_iter_labelling, contains $(length(label_queue)) labels: ")
         # for (label, _) in label_queue
-        #     println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.parkingStatus)
+        #     println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.microhubStatus)
         # end
 
         num_iter_labelling += 1
@@ -136,16 +135,17 @@ function extend_tsp_label(label, next_node, selected_parkings)
 
     # println("extend label to $next_node")
     current_node = next_node
-
+    # * microhubStatus :
+    # *     0 : do not process
+    # *     1 : process
+    # *     2 : both possible, depends on next visiting node
     distance = label.distance + arc_cost[label.current_node, next_node]
     parking_avail = deepcopy(label.parkingStatus)
     if next_node != 1
         if label.microhubStatus == 0
             if parking_availability[next_node] == 0
-                # move from empty parking to another empty parking : forbidden
                 return nothing
             elseif parking_availability[next_node] == 1
-                # move from empty parking to an occupied parking
                 microhubStatus = 1
             end
         elseif label.microhubStatus == 1
@@ -153,7 +153,6 @@ function extend_tsp_label(label, next_node, selected_parkings)
                 if !(next_node in selected_parkings)
                     return nothing
                 end
-                # move from an occupied parking to a selected empty parking : replenish next
                 parking_avail[label.current_node] = 0
                 parking_avail[next_node] = 1
                 microhubStatus = 0
@@ -161,9 +160,7 @@ function extend_tsp_label(label, next_node, selected_parkings)
                 if !(label.current_node in selected_parkings)
                     return nothing
                 end
-                # move from an occupied parking to another selected occupied parking : replenish previous
                 microhubStatus = 1
-                parking_avail[label.current_node] = 1
             end 
         end
     else
@@ -171,8 +168,6 @@ function extend_tsp_label(label, next_node, selected_parkings)
             if !(label.current_node in selected_parkings)
                 return nothing
             end
-            # move from an occupied parking to depot: replenish
-            parking_avail[label.current_node] = 1
         end
         microhubStatus = 0
     end
@@ -190,6 +185,12 @@ function extend_tsp_label(label, next_node, selected_parkings)
     # println("new label generated")
     return new_label
 end
+
+
+function solve_1e_tsp_enumeration(selected_parkings)
+
+end
+
 
 function calculateTSP1e(selected_parkings)
     # println("Calculate TSP 1e : $selected_parkings\n")
@@ -343,7 +344,6 @@ function get_sorted_2e_subproblems(theta)
             lower_bound_subproblem += solve_LRP_LP(parking_subset)
 
             enqueue!(lrp_subproblems, route_1e, lower_bound_subproblem)
-            # print(test)
         end
     end 
 

@@ -12,20 +12,22 @@ include("LrpLowerBound/solveLRP.jl")
 global root = "$(pwd())/TEST/"
 # global root = "/gpfs/workdir/tangj/2EVRPMM/Code/Code/"
 
-time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
-num_cust = parse(Int, ARGS[1])
-global random_seed = parse(Int, ARGS[2])
 
-file_name = "Output/bp_c$(num_cust)"*"s"*string(random_seed)*time_stamp*".txt"
-# file_name = "Output/demo.txt"
+# instance_size = 70
+global random_seed = 42
+# # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
+# file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
+file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
-open(file_name, "w") do io
-    redirect_stdout(io) do
+# open(file_name, "w") do io
+#     redirect_stdout(io) do
+        # redirect_stderr(io) do
+
 #            # generateData(instance_size, random_seed)
             global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
-            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
+            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 20)
             println("\n================================================================")
 
 #             #=========================================================#
@@ -89,24 +91,28 @@ open(file_name, "w") do io
                 root_nodes = PriorityQueue()
 
                 # i = 1
-                for (subproblem, lb) in lrp_subproblems 
-                    if lb < upperBound
-                        dequeue!(lrp_subproblems)
-                        root_result = solve_root_node(subproblem)
-                        if !isnothing(root_result)
-                            enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
-                        end
-                    else
-                        break
-                    end
-                    # i += 1
+                for (subproblem, lb) in lrp_subproblems
+                    println(subproblem)
                 end
-
-                # println("\nLeft 2e subproblems :")
-                # for (k, v) in root_nodes 
-                #     println(k[1].sequence, " : ",v)
-                #     # solve_branch_and_price_2e_subproblem(k[1], k[2])
+                # for (subproblem, lb) in lrp_subproblems
+                #     if lb < upperBound # && i < 4
+                #         # println()
+                #         dequeue!(lrp_subproblems)
+                #         root_result = solve_root_node(subproblem)
+                #         if !isnothing(root_result)
+                #             enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
+                #         end
+                #     else
+                #         break
+                #     end
+                #     # i += 1
                 # end
+
+                println("\nLeft 2e subproblems :")
+                for (k, v) in root_nodes 
+                    println(k[1].sequence, " : ",v)
+                    # solve_branch_and_price_2e_subproblem(k[1], k[2])
+                end
 
             end
 
@@ -137,7 +143,7 @@ open(file_name, "w") do io
             end
             #endregion
     # end
-    end
-end
+#     end
+# end
 
 # run(`open -a "Visual Studio Code" $file_name`)

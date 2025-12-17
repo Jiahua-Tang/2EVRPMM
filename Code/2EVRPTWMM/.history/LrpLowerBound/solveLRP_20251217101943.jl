@@ -34,7 +34,7 @@ function solve_1e_tsp_labelling(selected_parkings)
 
         # println("\niter labelling tsp $num_iter_labelling, contains $(length(label_queue)) labels: ")
         # for (label, _) in label_queue
-        #     println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.parkingStatus)
+        #     println(label.visitedSequence, "  ", round(label.distance,digits=2), "  ", label.microhubStatus)
         # end
 
         num_iter_labelling += 1
@@ -153,7 +153,7 @@ function extend_tsp_label(label, next_node, selected_parkings)
                 if !(next_node in selected_parkings)
                     return nothing
                 end
-                # move from an occupied parking to a selected empty parking : replenish next
+                # move from an occupied parking to a selected empty parking : replenish
                 parking_avail[label.current_node] = 0
                 parking_avail[next_node] = 1
                 microhubStatus = 0
@@ -161,9 +161,8 @@ function extend_tsp_label(label, next_node, selected_parkings)
                 if !(label.current_node in selected_parkings)
                     return nothing
                 end
-                # move from an occupied parking to another selected occupied parking : replenish previous
+                # move from an occupied parking to another selected occupied parking
                 microhubStatus = 1
-                parking_avail[label.current_node] = 1
             end 
         end
     else
@@ -171,8 +170,6 @@ function extend_tsp_label(label, next_node, selected_parkings)
             if !(label.current_node in selected_parkings)
                 return nothing
             end
-            # move from an occupied parking to depot: replenish
-            parking_avail[label.current_node] = 1
         end
         microhubStatus = 0
     end
@@ -343,7 +340,6 @@ function get_sorted_2e_subproblems(theta)
             lower_bound_subproblem += solve_LRP_LP(parking_subset)
 
             enqueue!(lrp_subproblems, route_1e, lower_bound_subproblem)
-            # print(test)
         end
     end 
 
