@@ -116,7 +116,7 @@ open(file_name, "w") do io
                 println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
                 for (k, v) in root_nodes
                     if v < upperBound
-                        println(k[1].sequence, " : ",v, "\n")
+                        println("\n",k[1].sequence, " : ",v)
                         solve_branch_and_price_2e_subproblem(k[1], k[2])
                     else
                         println("\nSubproblem lower bound exceeds global optimal solution")
