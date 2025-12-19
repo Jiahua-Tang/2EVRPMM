@@ -1123,12 +1123,12 @@ function ng_labelling_optimized(π1, π2, π3, π4, selected_parkings, branching
                 continue
             end
 
-            # * branching rule : forbidden combination of parking-customer
-            if any(
-                forbidden -> (min_label.visitedSequence[1], node) == forbidden,
-                branchingInfo.forbidden_combinations)
-                continue
-            end
+            # # * branching rule : forbidden combination of parking-customer
+            # if any(
+            #     forbidden -> (min_label.visitedSequence[1], node) == forbidden,
+            #     branchingInfo.forbidden_combinations)
+            #     continue
+            # end
 
             # # * branching rule : forbidden combination of customer-customer
             # in_union(x) = (x == node) || (x in visited)
@@ -1136,18 +1136,15 @@ function ng_labelling_optimized(π1, π2, π3, π4, selected_parkings, branching
             #     branchingInfo.forbidden_served_together)
             #     continue
             # end
-
-
-            # * check branching rule : obligatory combination parking-customer
-            if any(comb ->
-                min_label.visitedSequence[1] != comb[1] &&
-                node == comb[2],
-                branchingInfo.must_include_combinations)
-                continue
-            end
             
             new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours)  
             if !isnothing(new_label)
+                # * check branching rule : obligatory combination parking-customer
+                if any(
+                    forbidden -> (min_label.visitedSequence[1], node) == forbidden,
+                    branchingInfo.forbidden_combinations)
+                    continue
+                end
                 # * check branching rule : obligatory combination customer-customer
 
                 # println(new_label.visitedSequence, "   ", round(new_label.reduced_cost, digits=2))

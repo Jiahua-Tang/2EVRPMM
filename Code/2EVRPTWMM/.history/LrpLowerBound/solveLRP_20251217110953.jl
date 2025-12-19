@@ -161,10 +161,39 @@ function extend_tsp_label(label, next_node, selected_parkings)
     distance = label.distance + arc_cost[label.current_node, next_node]
     parking_avail = deepcopy(label.parkingStatus)
     if next_node != 1
+        # if label.microhubStatus == 0
+        #     if parking_availability[next_node] == 0
+        #         # move from empty parking to another empty parking : forbidden
+        #         return nothing
+        #     elseif parking_availability[next_node] == 1
+        #         # move from empty parking to an occupied parking
+        #         microhubStatus = 1
+        #     end
+        # elseif label.microhubStatus == 1
+        #     if parking_availability[next_node] == 0
+        #         if !(next_node in selected_parkings)
+        #             return nothing
+        #         end
+        #         # move from an occupied parking to a selected empty parking : replenish next
+        #         parking_avail[label.current_node] = 0
+        #         parking_avail[next_node] = 1
+        #         microhubStatus = 0
+        #     elseif parking_availability[next_node] == 1
+        #         if !(label.current_node in selected_parkings)
+        #             return nothing
+        #         end
+        #         # move from an occupied parking to another selected occupied parking : replenish previous
+        #         microhubStatus = 1
+        #         parking_avail[label.current_node] = 1
+        #     end 
+        # end
         if parking_availability[label.current_node] == 0
             if parking_availability[next_node] == 0
                 # move from empty parking to another empty parking : forbidden
                 return nothing
+            # elseif parking_availability[next_node] == 1
+            #     # move from empty parking to an occupied parking
+            #     microhubStatus = 1
             end
         elseif parking_availability[label.current_node] == 1
             if parking_availability[next_node] == 0
@@ -174,11 +203,13 @@ function extend_tsp_label(label, next_node, selected_parkings)
                 # move from an occupied parking to a selected empty parking : replenish next
                 parking_avail[label.current_node] = 0
                 parking_avail[next_node] = 1
+                # microhubStatus = 0
             elseif parking_availability[next_node] == 1
                 if !(label.current_node in selected_parkings)
                     return nothing
                 end
                 # move from an occupied parking to another selected occupied parking : replenish previous
+                # microhubStatus = 1
                 parking_avail[label.current_node] = 1
             end 
         end
@@ -190,6 +221,7 @@ function extend_tsp_label(label, next_node, selected_parkings)
             # move from an occupied parking to depot: replenish
             parking_avail[label.current_node] = 1
         end
+        # microhubStatus = 0
     end
 
     visitedNodes = deepcopy(label.visitedNodes)
@@ -198,6 +230,7 @@ function extend_tsp_label(label, next_node, selected_parkings)
 
     new_label = LabelTSP(current_node, 
                          distance,
+                        #  microhubStatus,
                          parking_avail,
                          visitedNodes,
                          visitedSequence)
@@ -339,7 +372,7 @@ function get_sorted_2e_subproblems(theta)
 
     for num_parking in minimum_parkings_required:nb_microhub
         for parking_subset in combinations(satellites, num_parking)
-            # println("\n================================Parking subset = ", parking_subset,"================================")
+            println("\n================================Parking subset = ", parking_subset,"================================")
             # flush(stdout)
             # route_1e = calculateTSP1e(parking_subset)
             # println("route 1e solve by milp: ", route_1e.sequence)
@@ -347,7 +380,7 @@ function get_sorted_2e_subproblems(theta)
                 route_1e = solve_1e_tsp_labelling(parking_subset)
             end
             # println("route 1e solve by labeling: $(route_1e.sequence)")
-            # println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
+            println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
             # println("start solving lp")
@@ -390,13 +423,14 @@ function solve_LRP_LP(selected_parkings)
 
     # conservation
     @constraint(model, [i in A2], sum(x[i,j] for j in A2) == sum(x[j,i] for j in A2))
-    @constraint(model, [i in selected_parkings], sum(x[i,j] for j in customers)<= nb_vehicle_per_satellite)
-    @constraint(model, [i in selected_parkings], sum(x[i,j] for j in A2) >= 1)
-    @constraint(model, [i in setdiff(satellites, selected_parkings)], sum(x[i,j] for j in A2) == 0)
+    @constraint(model, [i in satellites], sum(x[i,j] for j in customers)<= nb_vehicle_per_satellite)
 
     # cov - customer
     @constraint(model, [i in customers], sum(x[i,j] for j in A2) == 1)
     # cov - depot
+    @constraint(model, [i in selected_parkings], sum(x[i,j] for j in A2) >= 1)
+    @constraint(model, [i in setdiff(satellites, selected_parkings)], sum(x[i,j] for j in A2) == 0)
+
     # capacity 2e vehicle
     @constraint(model, [i in customers], sum(f[j,i] for j in A2) - sum(f[i,j] for j in A2) == demands[i])
     @constraint(model, [i in A2, j in A2], f[i,j] <= capacity_2e_vehicle * x[i,j])

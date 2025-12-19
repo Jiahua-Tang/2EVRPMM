@@ -1122,34 +1122,18 @@ function ng_labelling_optimized(π1, π2, π3, π4, selected_parkings, branching
             if node == current_node || node in min_label.M
                 continue
             end
-
-            # * branching rule : forbidden combination of parking-customer
-            if any(
-                forbidden -> (min_label.visitedSequence[1], node) == forbidden,
-                branchingInfo.forbidden_combinations)
+            
+            # Check feasibility inline - O(1) with BitSet
+            if node == current_node || node in min_label.M
                 continue
             end
 
-            # # * branching rule : forbidden combination of customer-customer
-            # in_union(x) = (x == node) || (x in visited)
-            # if any(pair -> in_union(pair[1]) && in_union(pair[2]),
-            #     branchingInfo.forbidden_served_together)
-            #     continue
-            # end
-
-
-            # * check branching rule : obligatory combination parking-customer
-            if any(comb ->
-                min_label.visitedSequence[1] != comb[1] &&
-                node == comb[2],
-                branchingInfo.must_include_combinations)
-                continue
+            for forbidden_combination_customer_customer in branchingInfo.forbidden_served_together
+                
             end
             
             new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours)  
             if !isnothing(new_label)
-                # * check branching rule : obligatory combination customer-customer
-
                 # println(new_label.visitedSequence, "   ", round(new_label.reduced_cost, digits=2))
                 # * Handle depot (satellite) labels - O(1) membership check with BitSet
                 if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2

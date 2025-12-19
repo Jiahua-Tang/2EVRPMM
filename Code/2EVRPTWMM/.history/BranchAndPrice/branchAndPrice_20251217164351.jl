@@ -224,6 +224,10 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     else
         selected_parkings = getServedParking1eRoute(route_1e)
     end
+
+    # println("TEST in solving column generation : $(route_1e.sequence),  $(getServedParking1eRoute(route_1e))")
+    # @info "Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)"
+    # println("Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)")
     
     num_iter_cg = 1
     is_virtual_root = (route_1e.sequence == [1])  # Check if called from virtual root node
@@ -280,7 +284,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             #endregion
 
             #region : stabilization
-            phi = 0
+            phi = 0.8
             if num_iter_cg <= 2
                 π1_stabilized = π1
                 π2_stabilized = π2
@@ -351,9 +355,6 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     sorted_keys = sort!(collect(keys(y_vars)))
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
-        if y_values[idx] !=  0
-            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-        end
     end
     
     # Check for integer solution and compute fractional score
@@ -596,7 +597,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
                 end
                 global execution_time_branching += execution_time
 
-                # execution_time = @elapsed begin
+                execution_time = @elapsed begin
                     left_child_node  = solve_child_node(route_1e, node, branching_decisions[1], current_node_id + 1)
                     right_child_node = solve_child_node(route_1e, node, branching_decisions[2], current_node_id + 2)
                     current_node_id += 2
@@ -606,8 +607,8 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
                     if !isnothing(right_child_node)
                         push!(node_stack, right_child_node)
                     end
-                # end
-                # global execution_time_child_node += execution_time
+                end
+                global execution_time_child_node += execution_time
             end
             num_iter_sp += 1
         end
@@ -700,6 +701,21 @@ function solve_MILP_model_root()
         end
     end
 
+    # if objective_value(milpModel) < upperBound
+    #     global upperBound= objective_value(milpModel)+route_1e.cost
+    #     global optimalSolution = Vector{Route}()
+
+    #     # @info "Update upper bound"
+    #     # println("Update upper bound")
+
+    #     push!(optimalSolution, route_1e)
+    #     for (idx,r) in enumerate(routes_2e_pool) 
+    #         if value(y[idx]) != 0
+    #     #         println(r.sequence, "   $(round(route_1e.cost, digits=2))")
+    #             push!(optimalSolution, r)
+    #         end
+    #     end
+    # end
 end
 
 function branchingStrategy(y, route_1e, routes_pool, branchingInfo::BranchingInfo)

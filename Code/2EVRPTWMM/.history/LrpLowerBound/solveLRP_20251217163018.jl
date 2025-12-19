@@ -339,7 +339,7 @@ function get_sorted_2e_subproblems(theta)
 
     for num_parking in minimum_parkings_required:nb_microhub
         for parking_subset in combinations(satellites, num_parking)
-            # println("\n================================Parking subset = ", parking_subset,"================================")
+            println("\n================================Parking subset = ", parking_subset,"================================")
             # flush(stdout)
             # route_1e = calculateTSP1e(parking_subset)
             # println("route 1e solve by milp: ", route_1e.sequence)
@@ -347,7 +347,7 @@ function get_sorted_2e_subproblems(theta)
                 route_1e = solve_1e_tsp_labelling(parking_subset)
             end
             # println("route 1e solve by labeling: $(route_1e.sequence)")
-            # println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
+            println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
             push!(routes_1e_complete, route_1e)
             # println(route_1e.sequence)
             # println("start solving lp")

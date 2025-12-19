@@ -352,7 +352,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
         if y_values[idx] !=  0
-            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+            println(routes_2e[idx], "  ", round(y_values[idx],digits=2))
         end
     end
     

@@ -224,6 +224,10 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     else
         selected_parkings = getServedParking1eRoute(route_1e)
     end
+
+    # println("TEST in solving column generation : $(route_1e.sequence),  $(getServedParking1eRoute(route_1e))")
+    # @info "Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)"
+    # println("Start column generation for node N_$id, parent node N_$parent_id, depth $(branchingInfo.depth)")
     
     num_iter_cg = 1
     is_virtual_root = (route_1e.sequence == [1])  # Check if called from virtual root node
@@ -352,7 +356,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
         if y_values[idx] !=  0
-            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+            println(round(y_values[idx],digits=2))
         end
     end
     
@@ -700,6 +704,21 @@ function solve_MILP_model_root()
         end
     end
 
+    # if objective_value(milpModel) < upperBound
+    #     global upperBound= objective_value(milpModel)+route_1e.cost
+    #     global optimalSolution = Vector{Route}()
+
+    #     # @info "Update upper bound"
+    #     # println("Update upper bound")
+
+    #     push!(optimalSolution, route_1e)
+    #     for (idx,r) in enumerate(routes_2e_pool) 
+    #         if value(y[idx]) != 0
+    #     #         println(r.sequence, "   $(round(route_1e.cost, digits=2))")
+    #             push!(optimalSolution, r)
+    #         end
+    #     end
+    # end
 end
 
 function branchingStrategy(y, route_1e, routes_pool, branchingInfo::BranchingInfo)

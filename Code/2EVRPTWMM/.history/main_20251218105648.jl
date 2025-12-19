@@ -98,7 +98,7 @@ open(file_name, "w") do io
 
                 for (subproblem, lb) in lrp_subproblems
                     if lb < upperBound
-                        # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
+                        println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
                         dequeue!(lrp_subproblems)
                         execution_time_subproblem_root_node = @elapsed begin
                             root_result = solve_root_node(subproblem)
@@ -117,7 +117,7 @@ open(file_name, "w") do io
                 for (k, v) in root_nodes
                     if v < upperBound
                         println("\n",k[1].sequence, " : ",v)
-                        solve_branch_and_price_2e_subproblem(k[1], k[2])
+                        # solve_branch_and_price_2e_subproblem(k[1], k[2])
                     else
                         println("\nSubproblem lower bound exceeds global optimal solution")
                         break

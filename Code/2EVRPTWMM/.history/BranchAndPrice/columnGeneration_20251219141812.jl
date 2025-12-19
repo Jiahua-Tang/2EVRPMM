@@ -1123,12 +1123,12 @@ function ng_labelling_optimized(π1, π2, π3, π4, selected_parkings, branching
                 continue
             end
 
-            # * branching rule : forbidden combination of parking-customer
-            if any(
-                forbidden -> (min_label.visitedSequence[1], node) == forbidden,
-                branchingInfo.forbidden_combinations)
-                continue
-            end
+            # # * branching rule : forbidden combination of parking-customer
+            # if any(
+            #     forbidden -> (min_label.visitedSequence[1], node) == forbidden,
+            #     branchingInfo.forbidden_combinations)
+            #     continue
+            # end
 
             # # * branching rule : forbidden combination of customer-customer
             # in_union(x) = (x == node) || (x in visited)
