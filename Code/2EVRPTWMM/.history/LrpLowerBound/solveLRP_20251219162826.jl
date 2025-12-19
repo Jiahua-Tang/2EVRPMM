@@ -404,7 +404,7 @@ function solve_LRP_LP(selected_parkings)
     optimize!(model)
 
 
-    println("CPLEX solve LP 2e MDVRP time = ", round(solve_time(model),digits=3), " seconds")
+    # println("CPLEX solve LP 2e MDVRP time = ", round(solve_time(model),digits=3), " seconds")
 
     #region: print lp result
     # for i in A2, j in A2
