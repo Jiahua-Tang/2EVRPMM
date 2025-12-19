@@ -242,7 +242,6 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     π4_stabilized = Vector{Float64}(undef, n_satellites + 1)
     
     while true # num_iter_cg < 2 # && true
-        # * PRINT
         # println("-------------Iter CG $num_iter_cg-------------")
         # * 1. solve formulation
         execution_time_lp = @elapsed begin
@@ -358,7 +357,6 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     sorted_keys = sort!(collect(keys(y_vars)))
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
-        # * PRINT
         # if y_values[idx] !=  0
         #     println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
         # end

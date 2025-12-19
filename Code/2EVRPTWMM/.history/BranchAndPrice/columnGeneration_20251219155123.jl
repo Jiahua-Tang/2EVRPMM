@@ -1128,7 +1128,7 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
                 continue
             end
 
-            # * branching rule : forbidden combination of customer-customer
+            # # * branching rule : forbidden combination of customer-customer
             branching_rule_legal = true
             for combination in branchingInfo.forbidden_served_together 
                 to_check_sequence = vcat(min_label.visitedSequence, node)
@@ -1232,8 +1232,8 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
             end
         end
     end
-    # * PRINT
-    # println("Completed: $num_iter_labelling iterations, $num_new_columns routes with negative reduced cost")
+    
+    println("Completed: $num_iter_labelling iterations, $num_new_columns routes with negative reduced cost")
     
     return new_columns_found
 end

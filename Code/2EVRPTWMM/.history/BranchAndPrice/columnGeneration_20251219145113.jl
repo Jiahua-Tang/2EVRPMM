@@ -393,7 +393,7 @@ end
 #     visitedNodes::Vector{Int}
 # end
 #endregion
-function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, π4, π5, π6, branchingInfo::BranchingInfo) 
+function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, π4, branchingInfo::BranchingInfo) 
 
     #region : dual multiplier verification
     # println("π1=  ", round.(π1, digits=2))
@@ -411,7 +411,7 @@ function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, 
 
     # execution_time = @elapsed begin
         execution_time_sp = @elapsed begin
-            new_columns_found = ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings, branchingInfo)
+            new_columns_found = ng_labelling_optimized(π1, π2, π3, π4, selected_parkings, branchingInfo)
         end
         global execution_time_subproblem += execution_time_sp
         # println("execution time of labelling: $(round(execution_time_sp, digits=2))s")
@@ -1062,7 +1062,7 @@ Optimized ng-route labeling algorithm with major performance improvements:
 - Fixed dominance checking logic
 - Pre-filtering of feasible nodes
 """
-function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings, branchingInfo)
+function ng_labelling_optimized(π1, π2, π3, π4, selected_parkings, branchingInfo)
     # println("Starting OPTIMIZED ng-path labelling algorithm")
 
     # println("π1=  ", round.(π1, digits=2))
@@ -1070,6 +1070,8 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
     # println("π3=  ", round.(π3, digits=2))
     # println("π4=  ", round.(π4, digits=2))
     
+    # * branching info could have satellite - customer
+    # *                           customer - customer
 
     # Initialization - Pre-compute sets for O(1) membership checks
     satellites_set = BitSet(satellites)
@@ -1093,7 +1095,7 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
     
     # Initialize with starting labels at each parking
     for parking in selected_parkings
-        rc = π1[parking] + π3[parking] +  π5 + π6
+        rc = π1[parking] + π3[parking] 
         l = LabelOptimized(parking, rc, 0, 0, 0, BitSet([parking]), [parking])
         enqueue!(label_queue, l, rc)
     end
@@ -1128,18 +1130,12 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
                 continue
             end
 
-            # * branching rule : forbidden combination of customer-customer
-            branching_rule_legal = true
-            for combination in branchingInfo.forbidden_served_together 
-                to_check_sequence = vcat(min_label.visitedSequence, node)
-                if Int(combination[1] in to_check_sequence) + Int(combination[2] in to_check_sequence) == 1
-                    branching_rule_legal = false
-                    break
-                end
-            end
-            if !branching_rule_legal
-                continue
-            end
+            # # * branching rule : forbidden combination of customer-customer
+            # in_union(x) = (x == node) || (x in visited)
+            # if any(pair -> in_union(pair[1]) && in_union(pair[2]),
+            #     branchingInfo.forbidden_served_together)
+            #     continue
+            # end
 
 
             # * check branching rule : obligatory combination parking-customer
@@ -1152,22 +1148,11 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
             
             new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours)  
             if !isnothing(new_label)
-                # println(new_label.visitedSequence, "   ", round(new_label.reduced_cost, digits=2))
-                
-                # * Handle depot (satellite) labels
-                if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
-                    # * branching rule : obligatory combination of customer-customer
-                    branching_rule_legal = true
-                    for combination in branchingInfo.must_served_together 
-                        if Int(combination[1] in new_label.visitedSequence) + Int(combination[2] in new_label.visitedSequence) == 1
-                            branching_rule_legal = false
-                            break
-                        end
-                    end
-                    if !branching_rule_legal
-                        continue
-                    end
+                # * check branching rule : obligatory combination customer-customer
 
+                # println(new_label.visitedSequence, "   ", round(new_label.reduced_cost, digits=2))
+                # * Handle depot (satellite) labels - O(1) membership check with BitSet
+                if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
                     # * check existence in routes pool
                     found_in_pool = false
                     for route in routes_2e_by_start[new_label.visitedSequence[1]] 
@@ -1211,7 +1196,6 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
                         end
                     end
                     
-                
                 # * Handle customer labels - O(1) membership check with BitSet
                 elseif node in customers_set
                     is_dominated = false
@@ -1232,8 +1216,8 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
             end
         end
     end
-    # * PRINT
-    # println("Completed: $num_iter_labelling iterations, $num_new_columns routes with negative reduced cost")
+    
+    println("Completed: $num_iter_labelling iterations, $num_new_columns routes with negative reduced cost")
     
     return new_columns_found
 end

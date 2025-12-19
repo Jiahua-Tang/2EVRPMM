@@ -20,8 +20,8 @@ global random_seed = 42
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
-open(file_name, "w") do io
-    redirect_stdout(io) do
+# open(file_name, "w") do io
+#     redirect_stdout(io) do
 
         # redirect_stderr(io) do
 
@@ -128,10 +128,10 @@ open(file_name, "w") do io
 
 
             println("\n================================================================")
-            # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+            println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
             if !isnothing(optimalSolution)
-                println("\nTotal Execution time = $(round(execution_time_total, digits=2)) seconds")
+                println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
         #         println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")
         #         println("time spent in branching decision = $(round(execution_time_branching, digits = 2)), takes percentage of $(round(execution_time_branching/execution_time_total, digits =2)*100)%")
         #         println("time spent in solving child node = $(round(execution_time_child_node, digits = 2)), takes percentage of $(round(execution_time_child_node/execution_time_total, digits =2)*100)%")
@@ -153,7 +153,7 @@ open(file_name, "w") do io
             end
             #endregion
     # end
-    end
-end
+#     end
+# end
 
-run(`open -a "Visual Studio Code" $file_name`)
+# run(`open -a "Visual Studio Code" $file_name`)

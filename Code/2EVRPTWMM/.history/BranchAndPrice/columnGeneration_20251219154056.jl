@@ -1128,18 +1128,12 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
                 continue
             end
 
-            # * branching rule : forbidden combination of customer-customer
-            branching_rule_legal = true
-            for combination in branchingInfo.forbidden_served_together 
-                to_check_sequence = vcat(min_label.visitedSequence, node)
-                if Int(combination[1] in to_check_sequence) + Int(combination[2] in to_check_sequence) == 1
-                    branching_rule_legal = false
-                    break
-                end
-            end
-            if !branching_rule_legal
-                continue
-            end
+            # # * branching rule : forbidden combination of customer-customer
+            # in_union(x) = (x == node) || (x in visited)
+            # if any(pair -> in_union(pair[1]) && in_union(pair[2]),
+            #     branchingInfo.forbidden_served_together)
+            #     continue
+            # end
 
 
             # * check branching rule : obligatory combination parking-customer
@@ -1212,7 +1206,7 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
                     end
                     
                 
-                # * Handle customer labels - O(1) membership check with BitSet
+                    # * Handle customer labels - O(1) membership check with BitSet
                 elseif node in customers_set
                     is_dominated = false
                     
@@ -1232,8 +1226,8 @@ function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6,selected_parkings,
             end
         end
     end
-    # * PRINT
-    # println("Completed: $num_iter_labelling iterations, $num_new_columns routes with negative reduced cost")
+    
+    println("Completed: $num_iter_labelling iterations, $num_new_columns routes with negative reduced cost")
     
     return new_columns_found
 end

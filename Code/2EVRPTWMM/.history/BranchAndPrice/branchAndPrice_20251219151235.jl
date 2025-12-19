@@ -242,8 +242,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     π4_stabilized = Vector{Float64}(undef, n_satellites + 1)
     
     while true # num_iter_cg < 2 # && true
-        # * PRINT
-        # println("-------------Iter CG $num_iter_cg-------------")
+        println("-------------Iter CG $num_iter_cg-------------")
         # * 1. solve formulation
         execution_time_lp = @elapsed begin
             optimize!(model)
@@ -279,11 +278,8 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
                 π4[i+1] = abs(shadow_price(maxVolumnMM[i]))
             end
 
-            π5 = abs(shadow_price(globalLowerBound))
-            π6 = abs(shadow_price(globalUpperBound))
-
-            # println("π5 = ", round(π5, digits=2))
-            # println("π6 = ", round(π6, digits=2))
+            π5 = abs(shadow_price(globalUpperBound))
+            π6 = abs(shadow_price(globalLowerBound))
             #endregion
 
             #region : stabilization
@@ -304,7 +300,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
                 # routes_2e_pool, new_routes_from = 
-                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1_stabilized, π2_stabilized, π3_stabilized, π4_stabilized, π5, π6, branchingInfo)
+                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1_stabilized, π2_stabilized, π3_stabilized, π4_stabilized, branchingInfo)
             # end
             # global execution_time_pricing += execution_time_p
 
@@ -358,10 +354,9 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     sorted_keys = sort!(collect(keys(y_vars)))
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
-        # * PRINT
-        # if y_values[idx] !=  0
-        #     println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-        # end
+        if y_values[idx] !=  0
+            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+        end
     end
     
     # Check for integer solution and compute fractional score
