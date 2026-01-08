@@ -14,7 +14,7 @@ global root = "$(pwd())/TEST/"
 
 
 # instance_size = 70
-global random_seed = 42
+global random_seed = 500
 # # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
@@ -22,17 +22,18 @@ mkpath(dirname(file_name))
 
 open(file_name, "w") do io
     redirect_stdout(io) do
+
         # redirect_stderr(io) do
 
 #            # generateData(instance_size, random_seed)
             global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
-            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 15)
+            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 30)
             println("\n================================================================")
 
 #             #=========================================================#
 
-            solveCompactModelDisplayResult()
+            # solveCompactModelDisplayResult()
 
 #             #=========================================================#
 
@@ -89,35 +90,45 @@ open(file_name, "w") do io
                 #endregion
 
                 root_nodes = PriorityQueue()
+                for (subproblem, lb) in lrp_subproblems
+                    println(subproblem.sequence, "   ", round(lb, digits=2))
+                end
 
-                i = 1
-                for (subproblem, lb) in lrp_subproblems 
-                    if lb < upperBound # && i < 4
+                for (subproblem, lb) in lrp_subproblems
+                    if lb < upperBound
+                        # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
                         dequeue!(lrp_subproblems)
-                        root_result = solve_root_node(subproblem)
+                        execution_time_subproblem_root_node = @elapsed begin
+                            root_result = solve_root_node(subproblem)
+                        end
+                        println("execution time solving subproblem : $(round(execution_time_subproblem_root_node, digits=2)) seconds")
                         if !isnothing(root_result)
                             enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
                         end
                     else
+                        println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling")
                         break
                     end
-                    i += 1
                 end
 
-                # println("\nLeft 2e subproblems :")
-                # for (k, v) in root_nodes 
-                #     println(k[1].sequence, " : ",v)
-                #     solve_branch_and_price_2e_subproblem(k[1], k[2])
-                # end
-
+                println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
+                for (k, v) in root_nodes
+                    if v < upperBound
+                        println(k[1].sequence, " : ",v, "\n")
+                        solve_branch_and_price_2e_subproblem(k[1], k[2])
+                    else
+                        println("\nSubproblem lower bound exceeds global optimal solution")
+                        break
+                    end
+                end
             end
 
 
             println("\n================================================================")
-            println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+            # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
             if !isnothing(optimalSolution)
-                println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+                println("\nTotal Execution time = $(round(execution_time_total, digits=2)) seconds")
         #         println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")
         #         println("time spent in branching decision = $(round(execution_time_branching, digits = 2)), takes percentage of $(round(execution_time_branching/execution_time_total, digits =2)*100)%")
         #         println("time spent in solving child node = $(round(execution_time_child_node, digits = 2)), takes percentage of $(round(execution_time_child_node/execution_time_total, digits =2)*100)%")
