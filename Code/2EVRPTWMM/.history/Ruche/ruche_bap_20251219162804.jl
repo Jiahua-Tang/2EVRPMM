@@ -2,11 +2,11 @@ using Plots, Random, DataStructures, Combinatorics, Printf,
     HiGHS, SparseArrays, Test, DataFrames, CPLEX, JuMP, Dates, Base.Threads
 using Logging, LoggingExtras
 
-include("./Utiles.jl")
-include("./BranchAndPrice/Utiles.jl")
-include("./BranchAndPrice/branchAndPrice.jl")
-include("./CompactModel/compactModel.jl")
-include("./LrpLowerBound/solveLRP.jl")
+include("Utiles.jl")
+include("BranchAndPrice/Utiles.jl")
+include("BranchAndPrice/branchAndPrice.jl")
+include("CompactModel/compactModel.jl")
+include("LrpLowerBound/solveLRP.jl")
 
 
 global root = "$(pwd())/TEST/"
