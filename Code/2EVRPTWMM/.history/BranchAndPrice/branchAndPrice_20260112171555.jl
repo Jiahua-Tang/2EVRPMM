@@ -141,6 +141,76 @@ function preparation_branch_and_price()
     return lrp_subproblems
 end
 
+function solve_virtual_root_node()
+    println("\nSolve virtual root node")
+    root_node_branching_info = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(), 0)
+    
+    #region : create model
+    execution_time = @elapsed begin
+        global model = Model(CPLEX.Optimizer)
+        set_silent(model)
+        # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
+        # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
+
+        global y_vars = Dict{Int, VariableRef}()
+
+        @objective(model, Min, 0.0)
+
+        global sync = Vector{ConstraintRef}(undef, length(satellites))
+        for (k,_) in enumerate(satellites)
+            # println("$k $s")
+            sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
+        end
+
+        global custVisit = Vector{ConstraintRef}(undef, length(customers))
+        for (k,_) in enumerate(customers) 
+            custVisit[k] = @constraint(model, 1.0 <= 0.0)
+        end
+
+        global number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
+        for (k,_) in enumerate(satellites)
+            number2evfixe[k] = @constraint(model, 0.0 == 0.0)
+        end
+
+        global maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
+        for (k,_) in enumerate(satellites) 
+            maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
+        end
+
+        global lower_bound_2e_routes = minimum_2e_vehicle_required
+        global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
+
+        global globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required) 
+        global globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
+    end
+    global execution_time_build_model += execution_time
+    #endregion
+
+    #region : initial columns
+    execution_time = @elapsed begin
+        _, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
+    end
+    global execution_time_filtering += execution_time
+
+    execution_time = @elapsed begin
+        for (route,_) in enumerate(routes_2e)
+            add_2eroute!(route)
+        end
+
+        for idx in columns_to_be_deleted
+            if haskey(y_vars, idx)
+                y = y_vars[idx]
+                JuMP.set_upper_bound(y, 0.0)
+                JuMP.set_lower_bound(y, 0.0)
+            end
+        end
+    end
+    global execution_time_build_model += execution_time
+    #endregion
+
+    root_node = solve_column_generation(generate1eRoute([1]), root_node_branching_info, 0,0,0,0)
+end
+
 #region : column generation
 function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, fs, id, parent_id)
     # * Column generation process:
@@ -156,6 +226,8 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     end
     
     num_iter_cg = 1
+    is_virtual_root = (route_1e.sequence == [1])  # Check if called from virtual root node
+    
     # Pre-allocate dual multiplier arrays to avoid reallocation each iteration
     n_satellites = length(satellites)
     n_customers = length(customers)
@@ -209,6 +281,45 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # println("π6 = ", round(π6, digits=2))
             #endregion
 
+
+            # TODO : clustering
+            # # 在这里对列做“聚类”：计算所有 upper bound = 1 的列的 rc，
+            # # 只保留 rc 最小的 100 条（upper bound 仍为 1），其他列 upper bound 设为 0。
+            # rc_list = Vector{Tuple{Float64, Int}}()
+            # for k in sort(collect(keys(y_vars)))  # k 是 routes_2e 的索引
+            #     y = y_vars[k]
+            #     if JuMP.upper_bound(y) == 1.0
+            #         rc, _, _ = calculateDualValueRoute(
+            #             routes_2e[k].sequence, π1, π2, π3, π4, π5, π6
+            #         )
+            #         push!(rc_list, (rc, k))
+            #     end
+            # end
+
+            # # 按 rc 从小到大排序，保留前 100 条（如果不足 100 条则全保留）
+            # sort!(rc_list, by = x -> x[1])
+            # max_keep = min(50, length(rc_list))
+
+            # kept_indices = Set{Int}()
+            # for i in 1:max_keep
+            #     rc, k = rc_list[i]
+            #     push!(kept_indices, k)
+            #  #   println(k, "  ", routes_2e[k].sequence, "  ", round(rc, digits = 2))
+            # end
+
+            # # 根据 rc 结果更新所有列的 upper bound：保留的设为 1，其余设为 0
+            # for k in keys(y_vars)
+            #     y = y_vars[k]
+            #     if k in kept_indices
+            #         JuMP.set_upper_bound(y, 1.0)
+            #         JuMP.set_lower_bound(y, 0.0)
+            #     else
+            #         JuMP.set_upper_bound(y, 0.0)
+            #         JuMP.set_lower_bound(y, 0.0)
+            #     end
+            # end
+
+
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
                 # routes_2e_pool, new_routes_from = 
@@ -226,7 +337,20 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
         num_iter_cg += 1
     end
 
+    # Virtual root node: just for generating routes, no need for final result
+    if is_virtual_root
+        println("Virtual root node: routes generated, returning without final result")
+        for route in routes_2e
+            println(route.sequence)
+        end
+        return nothing
+    end
+
     # Cache objective value (used multiple times below)
+    if !has_values(model)
+        println("No feasible solution for LMP after column generation")
+        return nothing
+    end
     obj_val = objective_value(model)
     total_obj = obj_val + route_1e.cost
 

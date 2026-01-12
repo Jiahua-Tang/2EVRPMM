@@ -156,6 +156,8 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     end
     
     num_iter_cg = 1
+    is_virtual_root = (route_1e.sequence == [1])  # Check if called from virtual root node
+    
     # Pre-allocate dual multiplier arrays to avoid reallocation each iteration
     n_satellites = length(satellites)
     n_customers = length(customers)
@@ -224,6 +226,15 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             return nothing
         end
         num_iter_cg += 1
+    end
+
+    # Virtual root node: just for generating routes, no need for final result
+    if is_virtual_root
+        println("Virtual root node: routes generated, returning without final result")
+        for route in routes_2e
+            println(route.sequence)
+        end
+        return nothing
     end
 
     # Cache objective value (used multiple times below)

@@ -141,6 +141,76 @@ function preparation_branch_and_price()
     return lrp_subproblems
 end
 
+function solve_virtual_root_node()
+    println("\nSolve virtual root node")
+    root_node_branching_info = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(), 0)
+    
+    #region : create model
+    execution_time = @elapsed begin
+        global model = Model(CPLEX.Optimizer)
+        set_silent(model)
+        # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
+        # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
+
+        global y_vars = Dict{Int, VariableRef}()
+
+        @objective(model, Min, 0.0)
+
+        global sync = Vector{ConstraintRef}(undef, length(satellites))
+        for (k,_) in enumerate(satellites)
+            # println("$k $s")
+            sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
+        end
+
+        global custVisit = Vector{ConstraintRef}(undef, length(customers))
+        for (k,_) in enumerate(customers) 
+            custVisit[k] = @constraint(model, 1.0 <= 0.0)
+        end
+
+        global number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
+        for (k,_) in enumerate(satellites)
+            number2evfixe[k] = @constraint(model, 0.0 == 0.0)
+        end
+
+        global maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
+        for (k,_) in enumerate(satellites) 
+            maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
+        end
+
+        global lower_bound_2e_routes = minimum_2e_vehicle_required
+        global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
+
+        global globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required) 
+        global globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
+    end
+    global execution_time_build_model += execution_time
+    #endregion
+
+    #region : initial columns
+    execution_time = @elapsed begin
+        _, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
+    end
+    global execution_time_filtering += execution_time
+
+    execution_time = @elapsed begin
+        for (route,_) in enumerate(routes_2e)
+            add_2eroute!(route)
+        end
+
+        for idx in columns_to_be_deleted
+            if haskey(y_vars, idx)
+                y = y_vars[idx]
+                JuMP.set_upper_bound(y, 0.0)
+                JuMP.set_lower_bound(y, 0.0)
+            end
+        end
+    end
+    global execution_time_build_model += execution_time
+    #endregion
+
+    root_node = solve_column_generation(generate1eRoute([1]), root_node_branching_info, 0,0,0,0)
+end
+
 #region : column generation
 function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, fs, id, parent_id)
     # * Column generation process:
@@ -156,6 +226,8 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     end
     
     num_iter_cg = 1
+    is_virtual_root = (route_1e.sequence == [1])  # Check if called from virtual root node
+    
     # Pre-allocate dual multiplier arrays to avoid reallocation each iteration
     n_satellites = length(satellites)
     n_customers = length(customers)
@@ -224,6 +296,15 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             return nothing
         end
         num_iter_cg += 1
+    end
+
+    # Virtual root node: just for generating routes, no need for final result
+    if is_virtual_root
+        println("Virtual root node: routes generated, returning without final result")
+        for route in routes_2e
+            println(route.sequence)
+        end
+        return nothing
     end
 
     # Cache objective value (used multiple times below)
