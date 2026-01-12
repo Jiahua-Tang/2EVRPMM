@@ -26,7 +26,7 @@ open(file_name, "w") do io
             global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
             # include("../../../Data/Demo/100/R103.txt")
-            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
+            retrieve_solomon_random_data("../../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
             println("\n================================================================")
 
 #             #=========================================================#
