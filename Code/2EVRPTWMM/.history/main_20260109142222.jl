@@ -14,7 +14,7 @@ global root = "$(pwd())/TEST/"
 
 
 # instance_size = 70
-global random_seed = 49
+global random_seed = 42
 # # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
@@ -42,6 +42,9 @@ open(file_name, "w") do io
                 lrp_subproblems = preparation_branch_and_price()
 
                 println("\n================================================================")
+                # solve_virtual_root_node()
+                # solve_MILP_model_root()
+
                 #region : create model and initial columns
                 execution_time = @elapsed begin
                     global model = Model(CPLEX.Optimizer)
@@ -103,28 +106,25 @@ open(file_name, "w") do io
                                 enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
                             end
                         else
-                            println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling\n")
+                            println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling")
                             break
                         end
                     end
                 end
-                println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem,digits=2)," seconds")
-                
-                
-                # println("\n================================================================")
-                # println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
-                # execution_time_bap = @elapsed begin
-                #     for (k, v) in root_nodes
-                #         if v < upperBound
-                #             println(k[1].sequence, " : ",v, "\n")
-                #             # solve_branch_and_price_2e_subproblem(k[1], k[2])
-                #         else
-                #             println("\nSubproblem lower bound exceeds global optimal solution")
-                #             break
-                #         end
-                #     end
-                # end
-                # println("total execution time solving branch and price : ", round(execution_time_bap,digits=2)," seconds")
+                println("total execution time solving subproblems : ", round(execution_time_cg_subproblem,digits=2)," seconds")
+                println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
+                    execution_time_bap = @elapsed begin
+                    for (k, v) in root_nodes
+                        if v < upperBound
+                            println(k[1].sequence, " : ",v, "\n")
+                            solve_branch_and_price_2e_subproblem(k[1], k[2])
+                        else
+                            println("\nSubproblem lower bound exceeds global optimal solution")
+                            break
+                        end
+                    end
+                end
+                println("total execution time solving branch and price : ", round(execution_time_bap,digits=2)," seconds")
             end
 
 

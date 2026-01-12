@@ -134,9 +134,9 @@ function preparation_branch_and_price()
     global neighbours = get_neighbours_optimized(10)
 
     execution_time = @elapsed begin
-        lrp_subproblems = get_sorted_2e_subproblems()
+        lrp_subproblems = get_sorted_2e_subproblems(5)
     end
-    # println("time to get sorted 2e subproblem = $(/round(execution_time, digits=2))s")
+    println("time to get sorted 2e subproblem = $(round(execution_time, digits=2))s")
 
     return lrp_subproblems
 end
@@ -235,8 +235,14 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     π2 = Vector{Float64}(undef, n_satellites + n_customers + 1)
     π3 = Vector{Float64}(undef, n_satellites + 1)
     π4 = Vector{Float64}(undef, n_satellites + 1)
+
+    π1_stabilized = Vector{Float64}(undef, n_satellites + 1)
+    π2_stabilized = Vector{Float64}(undef, n_satellites + n_customers + 1)
+    π3_stabilized = Vector{Float64}(undef, n_satellites + 1)
+    π4_stabilized = Vector{Float64}(undef, n_satellites + 1)
     
     while true # num_iter_cg < 2 # && true
+        # * PRINT
         # println("-------------Iter CG $num_iter_cg-------------")
         # * 1. solve formulation
         execution_time_lp = @elapsed begin
@@ -247,8 +253,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # Cache objective value (used multiple times)
             obj_val = objective_value(model)
             lpObjValue = obj_val + route_1e.cost
-            println("result of column generation : $(round(lpObjValue, digits=2))")
-
+            
             # * 2. get dual multiplier - optimized to avoid allocations
             #region : retrieve dual multiplier
             π1[1] = 0.0
@@ -281,10 +286,25 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # println("π6 = ", round(π6, digits=2))
             #endregion
 
+            #region : stabilization
+            phi = 0
+            if num_iter_cg <= 2
+                π1_stabilized = π1
+                π2_stabilized = π2
+                π3_stabilized = π3
+                π4_stabilized = π4
+            else
+                π1_stabilized = π1_stabilized * phi + π1 * (1-phi)
+                π2_stabilized = π2_stabilized * phi + π2 * (1-phi)
+                π3_stabilized = π3_stabilized * phi + π3 * (1-phi)
+                π4_stabilized = π4_stabilized * phi + π4 * (1-phi)
+            end
+            #endregion
+
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
                 # routes_2e_pool, new_routes_from = 
-                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo)
+                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1_stabilized, π2_stabilized, π3_stabilized, π4_stabilized, π5, π6, branchingInfo)
             # end
             # global execution_time_pricing += execution_time_p
 
@@ -325,7 +345,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     # Cache objective value (used multiple times below)
     obj_val = objective_value(model)
     total_obj = obj_val + route_1e.cost
-
+    
     if total_obj > upperBound
         @info "Exceed Upper Bound, prune"
         println("Exceed Upper Bound, prune")
@@ -337,15 +357,13 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     y_values = Vector{Float64}(undef, n_vars)
     sorted_keys = sort!(collect(keys(y_vars)))
     #region: PRINT cg y value
-    # sum_y_value = 0
-    # @inbounds for (idx, k) in enumerate(sorted_keys)
-    #     y_values[idx] = value(y_vars[k])
-    #     if y_values[idx] !=  0
-    #         sum_y_value += y_values[idx]
-    #         println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-    #     end
-    # end
-    # println("sum of y value is : $(round(sum_y_value,digits=2))")
+    println("sum of y value is : $(round(sum(y_values),digits=2))")
+    @inbounds for (idx, k) in enumerate(sorted_keys)
+        y_values[idx] = value(y_vars[k])
+        if y_values[idx] !=  0
+            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+        end
+    end
     #endregion
 
     # Check for integer solution and compute fractional score
@@ -433,6 +451,11 @@ function solve_root_node(route_1e::Route)
     global execution_time_filtering += execution_time
 
     execution_time = @elapsed begin
+        # for (route,_) in enumerate(routes_2e)
+        #     add_2eroute!(model, route, sync, custVisit, number2evfixe, 
+        #                 maxVolumnMM, globalLowerBound, globalUpperBound, y_vars)
+        # end
+
         for idx in columns_to_be_deleted
             if haskey(y_vars, idx)
                 y = y_vars[idx]
@@ -482,6 +505,8 @@ function solve_root_node(route_1e::Route)
     else
         return nothing 
     end
+
+
 end
 
 #endregion

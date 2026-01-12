@@ -419,9 +419,38 @@ function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, 
         # println("TEST return result from labelling")
         # new_routes_from = length(routes_2e_pool) + 1
 
+        # execution_time_sous_pricing = @elapsed begin
+        #     new_routes_generated = false
+        #     for label in subproblem_2e_result
+        #         route_existed = false
+        #         for route in routes_2e[routes_2e_pool]
+        #             if route.sequence == label.visitedSequence
+        #                 route_existed = true
+        #                 break
+        #             end
+        #         end
+
+        #         if !route_existed
+        #             new_route = generate2eRoute(label.visitedSequence)
+        #             if !(new_route in routes_2e[routes_2e_pool])
+        #                 # println(label.visitedNodes, "  ", round(label.reduced_cost, digits=2))
+        #                 global routes_2e
+        #                 push!(routes_2e, new_route)
+        #                 push!(routes_2e_pool, length(routes_2e))
+        #                 new_routes_generated = true
+        #             end
+        #         end
+        #     end
+        # end
+        # println("execution time of sub pricing: $(round(execution_time_sous_pricing, digits=2))s")
     # end
     # println(new_routes_generated, "  ", length(routes_2e_pool[new_routes_from:end]))
 
+    # if new_routes_generated
+    #     return routes_2e_pool, new_routes_from
+    # else
+    #     return routes_2e_pool, false
+    # end
     return new_columns_found
 end
 
@@ -515,6 +544,216 @@ function extendLabel_v2(π2, π3, π4, label::Label, next_node::Int)
     # displayLabel(new_label)
     return new_label
 end
+
+#region
+# function labelling(π1, π2, π3, π4, selected_parkings, branchingInfo)
+
+#     ## Branching strategies include: 
+#     ## Case A : total number of 2e routes (constraint added in master problem)
+#     ## Case C : combination of parking - customer
+#     ## Case D : combination of customer - customer
+
+#     # * Initialization containers
+#     unprocessedLabels = Dict{Int, Vector{Label}}()
+#     processedLabels = Dict{Int, Vector{Label}}()
+#     depotLabels = Vector{Label}()
+    
+#     active_nodes = vcat(collect(selected_parkings), customers)
+
+#     calculateDualValueRoute([2,19,10,9,16,12,8,14,7,11], π1, π2, π3, π4)
+#     for route in routes_2e
+#         if route.sequence == [2,19,10,9,16,12,8,14,7,11] || route.sequence == reverse([2,19,10,9,16,12,8,14,7,11])
+#             println("target route [2,19,10,9,16,12,8,14,7,11] found in routes 2e")
+#             break
+#         end
+#     end
+
+#     # println(active_nodes)
+#     for node in active_nodes
+#         unprocessedLabels[node] = Vector{Label}()
+#         processedLabels[node] = Vector{Label}()
+#     end
+
+#     for parking in selected_parkings
+#         rc = π1[parking] - π3[parking] 
+#         l = Label(parking, parking, rc, 0, 0, [parking])
+#         push!(unprocessedLabels[parking], l)
+#     end
+
+#     result = []
+
+#     num_iter_labelling = 1 #  num_iter_labelling < 21 &&
+#     while !isempty(collect(Iterators.flatten(values(unprocessedLabels))))
+#         #region : Display labels
+#         # println("\n===================Iter $num_iter_labelling===================")
+#         # println("Display $(length(collect(Iterators.flatten(values(unprocessedLabels))))) Unprocessed Labels")
+#         # for node in active_nodes
+#         #     if !isempty(unprocessedLabels[node])
+#         #         print("-")
+#         #     end
+#         #     for (idx, ele) in enumerate(unprocessedLabels[node])
+#         #         if idx > 1
+#         #             print(" ")
+#         #         else
+#         #             print("")
+#         #         end
+#         #        displayLabel(ele)
+#         #     end
+#         # end
+
+#         # println("Display $(length(depotLabels)) Depot Labels")
+#         # for label in depotLabels
+#         #    displayLabel(label) 
+#         # end
+        
+#         # println("")
+#         #endregion
+
+#         # * Line 3 ： Select a min reduced cost label
+#         all_labels = collect(Iterators.flatten(values(unprocessedLabels)))
+#         min_label = all_labels[findmin(l -> l.reduced_cost, all_labels)[2]]
+#         min_idx = findfirst(==(min_label), unprocessedLabels[min_label.visitedNodes[end]])
+#         deleteat!(unprocessedLabels[min_label.visitedNodes[end]], min_idx)
+
+#         # * target sequence check
+#         # target_sequence = [2,11,7,14]
+#         # for label in all_labels
+#         #     if label.visitedNodes == target_sequence
+#         #         println("target sequence $target_sequence found in unprocecssed labels")
+#         #         break
+#         #     end
+#         # end
+#         # if min_label.visitedNodes == target_sequence && selected_parkings == Set([4,3])
+#         #     println("target sequence is selected as min label")
+#         # end
+
+#         ## Line 9
+#         push!(processedLabels[min_label.visitedNodes[end]], min_label)
+
+#         # *  Line 4 : Propagation to new node
+#         ## Line 5
+#         # @info "Propagate labels:"
+#         current_node = min_label.visitedNodes[end]
+#         for node in active_nodes
+#             #region
+#             ## Combination parking - customer
+#             ## must include : customer cannot be served by other parking
+#             for combination in branchingInfo.must_include_combinations 
+#                 if combination[1] != min_label.visitedNodes[1]
+#                     filter!(x -> x!= combination[2], active_nodes)
+#                 end
+#             end
+#             ## mustn't include : customer cannot be served by selected parking
+#             for combination in branchingInfo.forbidden_combinations 
+#                 if combination[1] == min_label.visitedNodes[1]
+#                     filter!(x -> x!= combination[2], active_nodes)
+#                 end
+#             end
+
+#             ## mustn't include : two customers cannot exist together
+#             for combination in branchingInfo.forbidden_served_together
+#                 if combination[1] in min_label.visitedNodes
+#                     filter!(x -> x != combination[2], active_nodes)
+#                 end
+#                 if combination[2] in min_label.visitedNodes
+#                     filter!(x -> x != combination[1], active_nodes)
+#                 end
+#             end
+
+#             #endregion
+
+#             # println(active_nodes)
+#             # Set node in visiting sequence as unreachable
+#             if node in selected_parkings || (!(node in min_label.visitedNodes) && !(node in selected_parkings))
+#                 # println("Propagate from $(min_label.visitedNodes[end]) to $node")
+#                 new_label = extendLabel_v2(π2, π3, π4, min_label, node)
+#                 # if min_label.visitedNodes == target_sequence && selected_parkings == Set([4,3])
+#                 #     println(new_label)
+#                 # end
+
+#                 if !isnothing(new_label)
+#                     ## Combination customer - customer
+#                     ## must include : two customers both exist or not exist
+#                     for combination in branchingInfo.must_served_together
+#                         if Int(combination[1] in new_label.visitedNodes) + 
+#                            Int(combination[2] in new_label.visitedNodes) == 1
+#                             new_label = nothing
+#                             break
+#                         end
+#                     end         
+#                 end       
+#                 # * Line 6
+#                 if !isnothing(new_label)
+#                     # *  Line 7 : return result
+#                     if node in selected_parkings
+#                         push!(depotLabels, new_label)
+#                         if new_label.reduced_cost < -1e-8 && length(new_label.visitedNodes)>2
+#                             push!(result, new_label)
+#                         end
+#                     else                            
+#                         # * Line 8 : dominance check
+#                         new_label_is_dominated = false
+#                         ## Check if new label is dominated, if yes, do not add it in
+#                         for label in processedLabels[node]
+#                             if length(new_label.visitedNodes)>2 && length(label.visitedNodes)>2
+#                                 if isempty(intersect(new_label.visitedNodes[2:end-1], label.visitedNodes[2:end-1]))
+#                                     # * if two labels have same start and end point but without common point, connect
+#                                     if new_label.accumulated_capacity + label.accumulated_capacity <= capacity_2e_vehicle && min_label.accumulated_duration + label.accumulated_duration <=maximum_duration_2e_vehicle
+#                                         push!(depotLabels, Label(new_label.origin_node, label.origin_node, 0, new_label.accumulated_capacity+label.accumulated_capacity, new_label.accumulated_duration+label.accumulated_duration, vcat(new_label.visitedNodes[1:end-1], reverse(label.visitedNodes))))
+#                                     else
+#                                         # * otherwise check dominance
+#                                         if dominanceCheckSingle(new_label, label) == 1
+#                                             new_label_is_dominated = true
+#                                             break
+#                                         end
+#                                     end
+#                                 else
+#                                     # * otherwise check dominance
+#                                     if dominanceCheckSingle(new_label, label) == 1
+#                                         new_label_is_dominated = true
+#                                         break
+#                                     end
+#                                 end
+#                             else
+#                                 # * otherwise check dominance
+#                                 if dominanceCheckSingle(new_label, label) == 1
+#                                     new_label_is_dominated = true
+#                                     break
+#                                 end
+#                             end
+
+#                         end
+                    
+#                         ## Check if new label is dominated by or dominates a unprocessed label
+#                         if !new_label_is_dominated
+#                             for label in unprocessedLabels[node]
+#                                 # if label.visitedNodes[1] == new_label.visitedNodes[1]
+#                                 if dominanceCheckSingle(new_label, label) == 1
+#                                     ## new label is dominated by a unprocessed label
+#                                     new_label_is_dominated = true
+#                                     break
+#                                 elseif dominanceCheckSingle(new_label,label) == 2
+#                                     # println("a unprocessed label is dominated")
+#                                     min_idx = findfirst(==(label), unprocessedLabels[node])
+#                                     deleteat!(unprocessedLabels[node], min_idx)
+#                                 end
+#                                 # end
+#                             end
+#                         end
+#                         # println(new_label_is_dominated)
+#                         if !new_label_is_dominated 
+#                             push!(unprocessedLabels[node], new_label)
+#                         end
+#                     end
+#                 end    
+#             end
+#         end
+#         num_iter_labelling += 1
+#     end
+
+#     return result
+# end
+#endregion
 
 function dominanceRule(label1, label2)
     # ? dominance relation exist between routes start from different depot ?
@@ -823,7 +1062,7 @@ Optimized ng-route labeling algorithm with major performance improvements:
 - Fixed dominance checking logic
 - Pre-filtering of feasible nodes
 """
-function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo)
+function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6, selected_parkings, branchingInfo)
     # println("Starting OPTIMIZED ng-path labelling algorithm")
 
     # println("π1=  ", round.(π1, digits=2))
@@ -854,7 +1093,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
     # Initialize with starting labels at each parking
     for parking in selected_parkings
-        rc = π1[parking] + π3[parking] - π5 + π6
+        rc = π1[parking] + π3[parking] + π5 + π6
         l = LabelOptimized(parking, rc, 0, 0, 0, BitSet([parking]), [parking])
         enqueue!(label_queue, l, rc)
     end
@@ -961,12 +1200,8 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                             end
 
                             push!(depotLabels, new_label)
-                            # if 4 in selected_parkings && 6 in selected_parkings && length(selected_parkings) == 2
-                            #     println(new_label.visitedSequence, "  ", 
-                            #             round(new_label.reduced_cost, digits=2), "   +", 
-                            #             round(generate2eRoute(new_label.visitedSequence).cost, digits=2), "   -", 
-                            #             round(sum(π2[new_label.visitedSequence]), digits=2))
-                            # end
+                            # println(new_label.visitedSequence, "  ", round(new_label.reduced_cost, digits=2), "   +", round(generate2eRoute(new_label.visitedSequence).cost, digits=2), "   -", round(sum(π2[new_label.visitedSequence]), digits=2))
+                            #, "  ", round(calculateDualValueRoute(new_label.visitedSequence, π1, π2, π3, π4),digits=2))
                             new_route = generate2eRoute(new_label.visitedSequence)
                             new_columns_found = true
                             push!(routes_2e, new_route)

@@ -328,12 +328,12 @@ function displayLRPLowerBound(lb_lrp_per_route)
     end
 end
 
-function get_sorted_2e_subproblems()
+function get_sorted_2e_subproblems(theta)
 
     global sorted_customers = Dict{Int, Vector{Int}}()
 
     for parking in satellites
-        d = arc_cost[parking, customers]
+        d = arc_cost[parking, :]
         idx = collect(1:length(d))
 
         filter!(i -> i != parking, idx)
@@ -357,7 +357,7 @@ function get_sorted_2e_subproblems()
             execution_time_1e_tsp = @elapsed begin
                 route_1e = solve_1e_tsp_labelling(parking_subset)
             end
-            # println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
+            println("Labelling solve 1e TSP time = ", round(execution_time_1e_tsp, digits=3), " seconds")
             push!(routes_1e_complete, route_1e)
             lower_bound_subproblem = route_1e.cost
             lower_bound_subproblem += solve_LRP_LP(parking_subset)
@@ -371,13 +371,12 @@ function get_sorted_2e_subproblems()
 end
 
 function solve_LRP_LP(selected_parkings)
-    
     model = Model(CPLEX.Optimizer)
     set_silent(model)
     # set_optimizer_attribute(model, "CPX_PARAM_TILIM", 60)
     # println("solve lrp lp of subproblem $selected_parkings ")
 
-    @variable(model, 1>=x[A2, A2]>=0)
+    @variable(model, x[A2, A2]>=0)
     @variable(model, capacity_2e_vehicle>=f[A2, A2]>=0)
 
     @objective(model, Min, sum(arc_cost[i,j] * x[i,j] for i in A2, j in A2))
@@ -392,18 +391,33 @@ function solve_LRP_LP(selected_parkings)
     @constraint(model, [i in setdiff(satellites, selected_parkings)], sum(x[i,j] for j in A2) == 0)
 
     # cov - customer
-    @constraint(model, cov[i in customers], sum(x[i,j] for j in A2) == 1)
+    @constraint(model, [i in customers], sum(x[i,j] for j in A2) == 1)
     # cov - depot
     # capacity 2e vehicle
     @constraint(model, [i in customers], sum(f[j,i] for j in A2) - sum(f[i,j] for j in A2) == demands[i])
     @constraint(model, [i in A2, j in A2], f[i,j] <= capacity_2e_vehicle * x[i,j])
 
+    selected_customers = []
+    for parking in selected_parkings
+        pos = 1
+        while true
+            closest_customer = sorted_customers[parking][pos]
+            if !(closest_customer in selected_customers)
+                push!(selected_customers, closest_customer)
+                # println("x[$parking, $closest_customer] = 1")
+                @constraint(model, x[parking, closest_customer] == 1)
+                break
+            else
+                pos += 1
+            end
+            
+        end
+    end
+
     optimize!(model)
 
-    # dual_value = abs.(shadow_price.(cov))
-    # println(round(objective_value(model)), "   ", round(sum(dual_value),digits=2))
 
-    # println("CPLEX solve LP 2e MDVRP time = ", round(solve_time(model),digits=3), " seconds\n")
+    println("CPLEX solve LP 2e MDVRP time = ", round(solve_time(model),digits=3), " seconds\n")
 
     #region: print lp result
     # for i in A2, j in A2
@@ -426,8 +440,6 @@ function solve_LRP_LP(selected_parkings)
     #     end
     # end
     #endregion
-
-    # println(round(objective_value(model), digits=2))
     return objective_value(model)
 end
 

@@ -400,9 +400,9 @@ function solve_LRP_LP(selected_parkings)
 
     optimize!(model)
 
-    # dual_value = abs.(shadow_price.(cov))
-    # println(round(objective_value(model)), "   ", round(sum(dual_value),digits=2))
-
+    # TODO calculate sum of dual value of constraint cov
+    dual_value = abs.(shadow_price.(cov))
+    println(round(objective_value(model)), "   ", round(sum(dual_value),digits=2))
     # println("CPLEX solve LP 2e MDVRP time = ", round(solve_time(model),digits=3), " seconds\n")
 
     #region: print lp result

@@ -392,7 +392,7 @@ function solve_LRP_LP(selected_parkings)
     @constraint(model, [i in setdiff(satellites, selected_parkings)], sum(x[i,j] for j in A2) == 0)
 
     # cov - customer
-    @constraint(model, cov[i in customers], sum(x[i,j] for j in A2) == 1)
+    @constraint(model, [i in customers], sum(x[i,j] for j in A2) == 1)
     # cov - depot
     # capacity 2e vehicle
     @constraint(model, [i in customers], sum(f[j,i] for j in A2) - sum(f[i,j] for j in A2) == demands[i])
@@ -400,8 +400,7 @@ function solve_LRP_LP(selected_parkings)
 
     optimize!(model)
 
-    # dual_value = abs.(shadow_price.(cov))
-    # println(round(objective_value(model)), "   ", round(sum(dual_value),digits=2))
+    # TODO calculate sum of dual value of constraint cov
 
     # println("CPLEX solve LP 2e MDVRP time = ", round(solve_time(model),digits=3), " seconds\n")
 

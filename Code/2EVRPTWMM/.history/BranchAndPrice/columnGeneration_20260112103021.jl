@@ -416,9 +416,6 @@ function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, 
         global execution_time_subproblem += execution_time_sp
         # println("execution time of labelling: $(round(execution_time_sp, digits=2))s")
 
-        # println("TEST return result from labelling")
-        # new_routes_from = length(routes_2e_pool) + 1
-
     # end
     # println(new_routes_generated, "  ", length(routes_2e_pool[new_routes_from:end]))
 
@@ -823,7 +820,7 @@ Optimized ng-route labeling algorithm with major performance improvements:
 - Fixed dominance checking logic
 - Pre-filtering of feasible nodes
 """
-function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo)
+function ng_labelling_optimized(π1, π2, π3, π4,  π5, π6, selected_parkings, branchingInfo)
     # println("Starting OPTIMIZED ng-path labelling algorithm")
 
     # println("π1=  ", round.(π1, digits=2))
@@ -854,7 +851,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
     # Initialize with starting labels at each parking
     for parking in selected_parkings
-        rc = π1[parking] + π3[parking] - π5 + π6
+        rc = π1[parking] + π3[parking] + π5 + π6
         l = LabelOptimized(parking, rc, 0, 0, 0, BitSet([parking]), [parking])
         enqueue!(label_queue, l, rc)
     end
@@ -961,12 +958,8 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                             end
 
                             push!(depotLabels, new_label)
-                            # if 4 in selected_parkings && 6 in selected_parkings && length(selected_parkings) == 2
-                            #     println(new_label.visitedSequence, "  ", 
-                            #             round(new_label.reduced_cost, digits=2), "   +", 
-                            #             round(generate2eRoute(new_label.visitedSequence).cost, digits=2), "   -", 
-                            #             round(sum(π2[new_label.visitedSequence]), digits=2))
-                            # end
+                            # println(new_label.visitedSequence, "  ", round(new_label.reduced_cost, digits=2), "   +", round(generate2eRoute(new_label.visitedSequence).cost, digits=2), "   -", round(sum(π2[new_label.visitedSequence]), digits=2))
+                            #, "  ", round(calculateDualValueRoute(new_label.visitedSequence, π1, π2, π3, π4),digits=2))
                             new_route = generate2eRoute(new_label.visitedSequence)
                             new_columns_found = true
                             push!(routes_2e, new_route)

@@ -328,7 +328,7 @@ function displayLRPLowerBound(lb_lrp_per_route)
     end
 end
 
-function get_sorted_2e_subproblems()
+function get_sorted_2e_subproblems(theta)
 
     global sorted_customers = Dict{Int, Vector{Int}}()
 
@@ -392,7 +392,7 @@ function solve_LRP_LP(selected_parkings)
     @constraint(model, [i in setdiff(satellites, selected_parkings)], sum(x[i,j] for j in A2) == 0)
 
     # cov - customer
-    @constraint(model, cov[i in customers], sum(x[i,j] for j in A2) == 1)
+    @constraint(model, [i in customers], sum(x[i,j] for j in A2) == 1)
     # cov - depot
     # capacity 2e vehicle
     @constraint(model, [i in customers], sum(f[j,i] for j in A2) - sum(f[i,j] for j in A2) == demands[i])
@@ -400,10 +400,8 @@ function solve_LRP_LP(selected_parkings)
 
     optimize!(model)
 
-    # dual_value = abs.(shadow_price.(cov))
-    # println(round(objective_value(model)), "   ", round(sum(dual_value),digits=2))
 
-    # println("CPLEX solve LP 2e MDVRP time = ", round(solve_time(model),digits=3), " seconds\n")
+    println("CPLEX solve LP 2e MDVRP time = ", round(solve_time(model),digits=3), " seconds\n")
 
     #region: print lp result
     # for i in A2, j in A2
@@ -426,8 +424,7 @@ function solve_LRP_LP(selected_parkings)
     #     end
     # end
     #endregion
-
-    # println(round(objective_value(model), digits=2))
+    println(round(objective_value(model), digits=2))
     return objective_value(model)
 end
 

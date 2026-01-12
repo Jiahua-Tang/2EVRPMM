@@ -854,7 +854,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
     # Initialize with starting labels at each parking
     for parking in selected_parkings
-        rc = π1[parking] + π3[parking] - π5 + π6
+        rc = π1[parking] + π3[parking] + π5 + π6
         l = LabelOptimized(parking, rc, 0, 0, 0, BitSet([parking]), [parking])
         enqueue!(label_queue, l, rc)
     end

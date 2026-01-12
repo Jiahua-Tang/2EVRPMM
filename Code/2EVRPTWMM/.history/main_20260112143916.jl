@@ -96,19 +96,19 @@ open(file_name, "w") do io
                             # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
                             dequeue!(lrp_subproblems)
                             execution_time_subproblem_root_node = @elapsed begin
-                                root_result = solve_root_node(subproblem)
-                            end
-                            println("execution time solving subproblem : $(round(execution_time_subproblem_root_node, digits=2)) seconds")
-                            if !isnothing(root_result)
-                                enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
-                            end
-                        else
-                            println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling\n")
-                            break
-                        end
-                    end
-                end
-                println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem,digits=2)," seconds")
+                #                 root_result = solve_root_node(subproblem)
+                #             end
+                #             println("execution time solving subproblem : $(round(execution_time_subproblem_root_node, digits=2)) seconds")
+                #             if !isnothing(root_result)
+                #                 enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
+                #             end
+                #         else
+                #             println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling\n")
+                #             break
+                #         end
+                #     end
+                # end
+                # println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem,digits=2)," seconds")
                 
                 
                 # println("\n================================================================")
