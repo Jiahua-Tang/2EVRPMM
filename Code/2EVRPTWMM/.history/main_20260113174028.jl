@@ -14,7 +14,7 @@ global root = "$(pwd())/TEST/"
 
 
 # instance_size = 70
-global random_seed = 42
+global random_seed = 49
 # # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
@@ -28,7 +28,7 @@ open(file_name, "w") do io
 #            # generateData(instance_size, random_seed)
             global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
-            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 40)
+            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 25)
             println("\n================================================================")
 
 #             #=========================================================#
@@ -91,22 +91,22 @@ open(file_name, "w") do io
                     println(subproblem.sequence, "   ", round(lb, digits=2))
                 end
                 execution_time_cg_subproblem = @elapsed begin
-                    for (subproblem, lb) in lrp_subproblems
-                        if lb < upperBound
-                            # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
-                            dequeue!(lrp_subproblems)
-                            execution_time_subproblem_root_node = @elapsed begin
-                                root_result = solve_root_node(subproblem)
-                            end
-                            println("execution time solving subproblem : $(round(execution_time_subproblem_root_node, digits=2)) seconds")
-                            if !isnothing(root_result)
-                                enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
-                            end
-                        else
-                            println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling\n")
-                            break
-                        end
-                    end
+                    # for (subproblem, lb) in lrp_subproblems
+                    #     if lb < upperBound
+                    #         # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
+                    #         dequeue!(lrp_subproblems)
+                    #         execution_time_subproblem_root_node = @elapsed begin
+                    #             root_result = solve_root_node(subproblem)
+                    #         end
+                    #         println("execution time solving subproblem : $(round(execution_time_subproblem_root_node, digits=2)) seconds")
+                    #         if !isnothing(root_result)
+                    #             enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
+                    #         end
+                    #     else
+                    #         println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling\n")
+                    #         break
+                    #     end
+                    # end
                 end
                 # println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem,digits=2)," seconds")
                 

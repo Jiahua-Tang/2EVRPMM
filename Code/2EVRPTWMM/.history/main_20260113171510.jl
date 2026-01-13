@@ -1,5 +1,5 @@
 using Plots, Random, DataStructures, Combinatorics, Printf, 
-    HiGHS, SparseArrays, Test, DataFrames, CPLEX, JuMP, Dates, Base.Threads, CPUTime
+    HiGHS, SparseArrays, Test, DataFrames, CPLEX, JuMP, Dates, Base.Threads
 using Logging, LoggingExtras
 
 include("Utiles.jl")
@@ -14,7 +14,7 @@ global root = "$(pwd())/TEST/"
 
 
 # instance_size = 70
-global random_seed = 42
+global random_seed = 49
 # # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
@@ -38,76 +38,76 @@ open(file_name, "w") do io
 #             #=========================================================#
 
 
-            global execution_time_total = @time @CPUtime begin
+            global execution_time_total = @elapsed begin
                 lrp_subproblems = preparation_branch_and_price()
 
-                println("\n================================================================")
-                #region : create model and initial columns
-                execution_time = @elapsed begin
-                    global model = Model(CPLEX.Optimizer)
-                    set_silent(model)
-                    # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
-                    # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
+                # println("\n================================================================")
+                # #region : create model and initial columns
+                # execution_time = @elapsed begin
+                #     global model = Model(CPLEX.Optimizer)
+                #     set_silent(model)
+                #     # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
+                #     # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
 
-                    global y_vars = Dict{Int, VariableRef}()
+                #     global y_vars = Dict{Int, VariableRef}()
 
-                    @objective(model, Min, 0.0)
+                #     @objective(model, Min, 0.0)
 
-                    global sync = Vector{ConstraintRef}(undef, length(satellites))
-                    for (k,_) in enumerate(satellites)
-                        sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
-                    end
+                #     global sync = Vector{ConstraintRef}(undef, length(satellites))
+                #     for (k,_) in enumerate(satellites)
+                #         sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
+                #     end
 
-                    global custVisit = Vector{ConstraintRef}(undef, length(customers))
-                    for (k,_) in enumerate(customers) 
-                        custVisit[k] = @constraint(model, 1.0 <= 0.0)
-                    end
+                #     global custVisit = Vector{ConstraintRef}(undef, length(customers))
+                #     for (k,_) in enumerate(customers) 
+                #         custVisit[k] = @constraint(model, 1.0 <= 0.0)
+                #     end
 
-                    global number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
-                    for (k,_) in enumerate(satellites)
-                        number2evfixe[k] = @constraint(model, 0.0 == 0.0)
-                    end
+                #     global number2evfixe = Vector{ConstraintRef}(undef, length(satellites))
+                #     for (k,_) in enumerate(satellites)
+                #         number2evfixe[k] = @constraint(model, 0.0 == 0.0)
+                #     end
 
-                    global maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
-                    for (k,_) in enumerate(satellites) 
-                        maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
-                    end
+                #     global maxVolumnMM = Vector{ConstraintRef}(undef, length(satellites))
+                #     for (k,_) in enumerate(satellites) 
+                #         maxVolumnMM[k] = @constraint(model, -capacity_microhub <= 0.0)
+                #     end
 
-                    global lower_bound_2e_routes = minimum_2e_vehicle_required
-                    global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
+                #     global lower_bound_2e_routes = minimum_2e_vehicle_required
+                #     global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
 
-                    global globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required) 
-                    global globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
-                end
-                global execution_time_build_model += execution_time
+                #     global globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required) 
+                #     global globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
+                # end
+                # global execution_time_build_model += execution_time
 
-                for (route,_) in enumerate(routes_2e)
-                    add_2eroute!(route)
-                end
-                #endregion
+                # for (route,_) in enumerate(routes_2e)
+                #     add_2eroute!(route)
+                # end
+                # #endregion
 
-                root_nodes = PriorityQueue()
-                for (subproblem, lb) in lrp_subproblems
-                    println(subproblem.sequence, "   ", round(lb, digits=2))
-                end
-                execution_time_cg_subproblem = @elapsed begin
-                    for (subproblem, lb) in lrp_subproblems
-                        if lb < upperBound
-                            # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
-                            dequeue!(lrp_subproblems)
-                            execution_time_subproblem_root_node = @elapsed begin
-                                root_result = solve_root_node(subproblem)
-                            end
-                            println("execution time solving subproblem : $(round(execution_time_subproblem_root_node, digits=2)) seconds")
-                            if !isnothing(root_result)
-                                enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
-                            end
-                        else
-                            println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling\n")
-                            break
-                        end
-                    end
-                end
+                # root_nodes = PriorityQueue()
+                # for (subproblem, lb) in lrp_subproblems
+                #     println(subproblem.sequence, "   ", round(lb, digits=2))
+                # end
+                # execution_time_cg_subproblem = @elapsed begin
+                #     for (subproblem, lb) in lrp_subproblems
+                #         if lb < upperBound
+                #             # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
+                #             dequeue!(lrp_subproblems)
+                #             execution_time_subproblem_root_node = @elapsed begin
+                #                 root_result = solve_root_node(subproblem)
+                #             end
+                #             println("execution time solving subproblem : $(round(execution_time_subproblem_root_node, digits=2)) seconds")
+                #             if !isnothing(root_result)
+                #                 enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
+                #             end
+                #         else
+                #             println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling\n")
+                #             break
+                #         end
+                #     end
+                # end
                 # println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem,digits=2)," seconds")
                 
                 

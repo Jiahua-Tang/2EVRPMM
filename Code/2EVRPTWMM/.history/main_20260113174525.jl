@@ -14,7 +14,7 @@ global root = "$(pwd())/TEST/"
 
 
 # instance_size = 70
-global random_seed = 42
+global random_seed = 49
 # # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
@@ -28,7 +28,7 @@ open(file_name, "w") do io
 #            # generateData(instance_size, random_seed)
             global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
-            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 40)
+            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 30)
             println("\n================================================================")
 
 #             #=========================================================#
