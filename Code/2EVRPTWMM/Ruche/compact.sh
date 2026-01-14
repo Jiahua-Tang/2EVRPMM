@@ -11,7 +11,8 @@
 #SBATCH --mail-type=FAIL
 
 # Load Julia module (uncomment this if the environment requires it)
-#module load julia/1.4.0/gcc-9.2.0
+module load julia/1.4.0/gcc-13.2.0
+module load openmpi/3.1.6/gcc-13.2.0 
 
 # Error handling: If any command fails, exit the script
 set -e

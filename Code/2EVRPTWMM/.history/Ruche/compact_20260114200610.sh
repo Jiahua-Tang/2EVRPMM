@@ -11,7 +11,8 @@
 #SBATCH --mail-type=FAIL
 
 # Load Julia module (uncomment this if the environment requires it)
-#module load julia/1.4.0/gcc-9.2.0
+module load julia/1.4.0/gcc-13.2.0
+module load openmpi/3.1.6/gcc-13.2.0 
 
 # Error handling: If any command fails, exit the script
 set -e
@@ -20,5 +21,5 @@ set -e
 # julia /gpfs/users/tangj/2EVRPMM/Code/configure_env.jl
 
 # Run the main Julia code
-julia /gpfs/workdir/tangj/2EVRPMM/Code/2EVRPTWMM/ruche_compact.jl "$1" "$2"
+julia /gpfs/workdir/tangj/2EVRPMM/Code/2EVRPTWMM/ruche_compact.jl "$1" "$2" "$3"
 
