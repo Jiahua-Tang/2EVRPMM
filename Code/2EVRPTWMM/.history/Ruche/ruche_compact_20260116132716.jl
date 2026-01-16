@@ -18,9 +18,8 @@ time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
 num_cust = parse(Int, ARGS[1])
 global random_seed = parse(Int, ARGS[2])
 time_limit = parse(Int, ARGS[3])
-name_diff = parse(Int, ARGS[4])
 
-file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*"t"*string(time_limit)*"_"*time_stamp*"_"*"*name_diff"*".txt"
+file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*"t"*string(time_limit)*"_"*time_stamp*".txt"
 # file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
