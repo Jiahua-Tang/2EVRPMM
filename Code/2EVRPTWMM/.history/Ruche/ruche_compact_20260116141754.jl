@@ -14,7 +14,7 @@ global root = "$(pwd())/TEST/"
 
 
 # instance_size = 70
-time_stamp = Dates.format(now(), "ddmmyy_HHMM")
+time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
 num_cust = parse(Int, ARGS[1])
 global random_seed = parse(Int, ARGS[2])
 time_limit = parse(Int, ARGS[3])

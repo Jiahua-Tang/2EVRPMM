@@ -4,7 +4,7 @@
 #SBATCH --error=/gpfs/workdir/tangj/2EVRPMM/Code/Result/outputSlurm/TW/%j.%x.err  # Capture standard error in a separate file
 #SBATCH --time=04:00:00 
 #SBATCH --ntasks=1   # Since Julia typically uses multithreading, setting ntasks to 1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=10                      # Ensure you're using all 10 CPUs
 #SBATCH --partition=cpu_med
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
@@ -20,5 +20,5 @@ set -e
 # julia /gpfs/users/tangj/2EVRPMM/Code/configure_env.jl
 
 # Run the main Julia code
-julia /gpfs/workdir/tangj/2EVRPMM/Code/2EVRPTWMM/Ruche/ruche_bap.jl "$1" "$2" "$3"
+julia /gpfs/workdir/tangj/2EVRPMM/Code/2EVRPTWMM/Ruche/ruche_bap.jl "$1" "$2"
 

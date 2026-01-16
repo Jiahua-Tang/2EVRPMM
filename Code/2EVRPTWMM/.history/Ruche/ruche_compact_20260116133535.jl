@@ -14,13 +14,13 @@ global root = "$(pwd())/TEST/"
 
 
 # instance_size = 70
-time_stamp = Dates.format(now(), "ddmmyy_HHMM")
+time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
 num_cust = parse(Int, ARGS[1])
 global random_seed = parse(Int, ARGS[2])
 time_limit = parse(Int, ARGS[3])
 name_diff = parse(Int, ARGS[4])
 
-file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*"t"*string(time_limit)*"_"*time_stamp*"_"*string(name_diff)*".txt"
+file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*"t"*string(time_limit)*"_"*time_stamp*"_"*name_diff*".txt"
 # file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
