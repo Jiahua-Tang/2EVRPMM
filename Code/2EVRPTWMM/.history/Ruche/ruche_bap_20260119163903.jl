@@ -38,7 +38,7 @@ open(file_name, "w") do io
 
 
 
-            global execution_time_total = @time @CPUTime begin
+            global execution_time_total = @elapsed begin
                 lrp_subproblems = preparation_branch_and_price()
 
                 println("\n================================================================")
@@ -123,7 +123,7 @@ open(file_name, "w") do io
 
 
             println("\n================================================================")
-            # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+            println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
             if !isnothing(optimalSolution)
                 println("\nTotal Execution time = $(round(execution_time_total, digits=2))")

@@ -123,7 +123,7 @@ open(file_name, "w") do io
 
 
             println("\n================================================================")
-            # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+            println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
             if !isnothing(optimalSolution)
                 println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
