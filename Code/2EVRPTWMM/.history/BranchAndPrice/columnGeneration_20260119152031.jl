@@ -658,6 +658,10 @@ Optimized label extension with BitSet operations and no unnecessary copies.
 function extendLabel_optimized(π2, π3, π4, label::LabelOptimized, next_node::Int, neighbours::Dict{Int, BitSet})
     # Detect forbidden cycle - O(1) with BitSet
 
+    if label.visitedSequence == [5, 11, 25] && next_node == 12
+        println("extend to 12")
+    end
+
     if next_node in label.M
         return nothing
     end
@@ -672,7 +676,10 @@ function extendLabel_optimized(π2, π3, π4, label::LabelOptimized, next_node::
     if next_node in satellites
         reduced_cost -= π3[next_node]       
     end
-    
+
+    # if label.visitedSequence == [5, 11, 25] && next_node == 12
+    #     println("extend label valid")
+    # end
     # Update accumulated capacity
     accumulated_capacity = label.accumulated_capacity + demands[next_node]
     if accumulated_capacity > capacity_2e_vehicle
@@ -828,7 +835,7 @@ Optimized ng-route labeling algorithm with major performance improvements:
 - Pre-filtering of feasible nodes
 """
 function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo)
-    # println("Starting OPTIMIZED ng-path labelling algorithm")
+    println("Starting OPTIMIZED ng-path labelling algorithm")
 
     # println("π1=  ", round.(π1, digits=2))
     # println("π2=  ", round.(π2, digits=2))

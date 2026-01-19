@@ -658,6 +658,10 @@ Optimized label extension with BitSet operations and no unnecessary copies.
 function extendLabel_optimized(π2, π3, π4, label::LabelOptimized, next_node::Int, neighbours::Dict{Int, BitSet})
     # Detect forbidden cycle - O(1) with BitSet
 
+    # if label.visitedSequence == [5, 11, 25] && next_node == 12
+    #     println("extend to 12")
+    # end
+
     if next_node in label.M
         return nothing
     end

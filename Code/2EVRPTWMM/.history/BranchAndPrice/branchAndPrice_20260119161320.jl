@@ -240,17 +240,17 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     n_vars = length(y_vars)
     y_values = Vector{Float64}(undef, n_vars)
     sorted_keys = sort!(collect(keys(y_vars)))
-    sum_y_value = 0
-    @inbounds for (idx, k) in enumerate(sorted_keys)
-        y_values[idx] = value(y_vars[k])
-        #region: PRINT cg y value
-        # if y_values[idx] !=  0
-        #     sum_y_value += y_values[idx]
-        #     println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-        # end
-        #endregion
-    end
+    #region: PRINT cg y value
+    # sum_y_value = 0
+    # @inbounds for (idx, k) in enumerate(sorted_keys)
+    #     y_values[idx] = value(y_vars[k])
+    #     if y_values[idx] !=  0
+    #         sum_y_value += y_values[idx]
+    #         println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+    #     end
+    # end
     # println("sum of y value is : $(round(sum_y_value,digits=2))")
+    #endregion
 
     # Check for integer solution and compute fractional score
     isLeaf = true
@@ -281,7 +281,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             push!(optimalSolution, route_1e)
             println("$(route_1e.sequence)", "   ", round(route_1e.cost, digits=2))
             @inbounds for i in 1:length(y_values)
-                if y_values[i] >= 1-1e-8
+                if round(y_values[i]) == 1.0
                     println(routes_2e[i].sequence, "   ", round(routes_2e[i].cost, digits=2))
                     push!(optimalSolution, routes_2e[i])
                 end

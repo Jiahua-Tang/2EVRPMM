@@ -657,7 +657,6 @@ Optimized label extension with BitSet operations and no unnecessary copies.
 """
 function extendLabel_optimized(π2, π3, π4, label::LabelOptimized, next_node::Int, neighbours::Dict{Int, BitSet})
     # Detect forbidden cycle - O(1) with BitSet
-
     if next_node in label.M
         return nothing
     end
@@ -672,13 +671,16 @@ function extendLabel_optimized(π2, π3, π4, label::LabelOptimized, next_node::
     if next_node in satellites
         reduced_cost -= π3[next_node]       
     end
-    
+
     # Update accumulated capacity
     accumulated_capacity = label.accumulated_capacity + demands[next_node]
     if accumulated_capacity > capacity_2e_vehicle
         return nothing
     end
 
+    if label.visitedSequence == [5, 11, 25] && next_node == 12
+        println("extend label valid")
+    end
 
     # Update accumulated duration
     accumulated_duration = label.accumulated_duration + arc_cost[label.current_node, next_node]
@@ -706,8 +708,6 @@ function extendLabel_optimized(π2, π3, π4, label::LabelOptimized, next_node::
     # if label.visitedSequence == [6, 10, 15] && next_node == 14
     #     println("test::  ", new_label)        
     # end
-
-
     return new_label
 end
 
@@ -828,7 +828,7 @@ Optimized ng-route labeling algorithm with major performance improvements:
 - Pre-filtering of feasible nodes
 """
 function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo)
-    # println("Starting OPTIMIZED ng-path labelling algorithm")
+    println("Starting OPTIMIZED ng-path labelling algorithm")
 
     # println("π1=  ", round.(π1, digits=2))
     # println("π2=  ", round.(π2, digits=2))
@@ -875,9 +875,9 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
         current_node = min_label.current_node
    
         # for ltest in 
-            # if min_label.visitedSequence == [5, 11, 25]
-            #     println("target label found")
-            # end
+            if min_label.visitedSequence == [5, 11, 25]
+                println("target label found")
+            end
         # end
       
         # Mark as processed
@@ -903,7 +903,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
             branching_rule_legal = true
             for combination in branchingInfo.forbidden_served_together 
                 to_check_sequence = vcat(min_label.visitedSequence, node)
-                if Int(combination[1] in to_check_sequence) + Int(combination[2] in to_check_sequence) == 2
+                if Int(combination[1] in to_check_sequence) + Int(combination[2] in to_check_sequence) == 1
                     branching_rule_legal = false
                     break
                 end
@@ -921,17 +921,19 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
             end
             #endregion
             
-            new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours)
+            new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours)  
             if !isnothing(new_label)
-                # if min_label.visitedSequence == [5, 11, 25]
-                #     println(new_label.visitedSequence)
-                # end
+
+                if min_label.visitedSequence == [5, 11, 25, 12]
+                    println("target label 12 found")
+                end
+                # println(new_label.visitedSequence, "   ", round(new_label.reduced_cost, digits=2))
                 
                 # * Handle depot (satellite) labels
                 if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
                     # * branching rule : obligatory combination of customer-customer
                     branching_rule_legal = true
-                    for combination in branchingInfo.must_served_together
+                    for combination in branchingInfo.must_served_together 
                         if Int(combination[1] in new_label.visitedSequence) + Int(combination[2] in new_label.visitedSequence) == 1
                             branching_rule_legal = false
                             break
@@ -940,10 +942,6 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                     if !branching_rule_legal
                         continue
                     end
-
-                    # if new_label.visitedSequence == [5, 11, 25, 12]
-                    #     println("target label branching rule legality: $branching_rule_legal")
-                    # end
 
                     # * check existence in routes pool
                     found_in_pool = false

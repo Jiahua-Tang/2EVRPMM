@@ -244,13 +244,13 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
         #region: PRINT cg y value
-        # if y_values[idx] !=  0
-        #     sum_y_value += y_values[idx]
-        #     println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-        # end
+        if y_values[idx] !=  0
+            sum_y_value += y_values[idx]
+            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+        end
         #endregion
     end
-    # println("sum of y value is : $(round(sum_y_value,digits=2))")
+    println("sum of y value is : $(round(sum_y_value,digits=2))")
 
     # Check for integer solution and compute fractional score
     isLeaf = true

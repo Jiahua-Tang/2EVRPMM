@@ -1,33 +1,34 @@
 using Plots, Random, DataStructures, Combinatorics, Printf, 
-    HiGHS, SparseArrays, Test, DataFrames, CPLEX, JuMP, Dates, Base.Threads
+    HiGHS, SparseArrays, Test, DataFrames, CPLEX, JuMP, Dates, Base.Threads, CPUTime
 using Logging, LoggingExtras
 
-include("../Utiles.jl")
-include("../BranchAndPrice/Utiles.jl")
-include("../BranchAndPrice/branchAndPrice.jl")
-include("../CompactModel/compactModel.jl")
-include("../LrpLowerBound/solveLRP.jl")
+include("Utiles.jl")
+include("BranchAndPrice/Utiles.jl")
+include("BranchAndPrice/branchAndPrice.jl")
+include("CompactModel/compactModel.jl")
+include("LrpLowerBound/solveLRP.jl")
 
 
+global root = "$(pwd())/TEST/"
 # global root = "/gpfs/workdir/tangj/2EVRPMM/Code/Code/"
 
-time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
-global root = "$(pwd())/TEST/"
-num_cust = parse(Int, ARGS[1])
-global random_seed = parse(Int, ARGS[2])
-name_diff = parse(Int, ARGS[3])
 
-file_name = "Output/bp_c$(num_cust)"*"s"*string(random_seed)*time_stamp*"_"*string(name_diff)*".txt"
-# file_name = "Output/demo.txt"
+# instance_size = 70
+global random_seed = 40
+# # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
+# file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
+file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
 open(file_name, "w") do io
     redirect_stdout(io) do
+
+        # redirect_stderr(io) do
+
 #            # generateData(instance_size, random_seed)
             global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
-            # include("../../../Data/Demo/100/R103.txt")
-            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
+            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 25)
             println("\n================================================================")
 
 #             #=========================================================#
@@ -37,12 +38,10 @@ open(file_name, "w") do io
 #             #=========================================================#
 
 
-
-            global execution_time_total = @elapsed begin
+            global execution_time_total = @time @CPUtime begin
                 lrp_subproblems = preparation_branch_and_price()
 
                 println("\n================================================================")
-
                 #region : create model and initial columns
                 execution_time = @elapsed begin
                     global model = Model(CPLEX.Optimizer)
@@ -91,42 +90,49 @@ open(file_name, "w") do io
                 for (subproblem, lb) in lrp_subproblems
                     println(subproblem.sequence, "   ", round(lb, digits=2))
                 end
-
-                for (subproblem, lb) in lrp_subproblems
-                    if lb < upperBound
-                        # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
-                        dequeue!(lrp_subproblems)
-                        execution_time_subproblem_root_node = @elapsed begin
-                            root_result = solve_root_node(subproblem)
+                execution_time_cg_subproblem = @elapsed begin
+                    for (subproblem, lb) in lrp_subproblems
+                        if lb < upperBound
+                            # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
+                            dequeue!(lrp_subproblems)
+                            execution_time_subproblem_root_node = @elapsed begin
+                                root_result = solve_root_node(subproblem)
+                            end
+                            println("execution time solving subproblem : $(round(execution_time_subproblem_root_node, digits=2)) seconds")
+                            if !isnothing(root_result)
+                                enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
+                            end
+                        else
+                            println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling\n")
+                            break
                         end
-                        println("execution time solving subproblem : $(round(execution_time_subproblem_root_node, digits=2)) seconds")
-                        if !isnothing(root_result)
-                            enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
-                        end
-                    else
-                        println("\nSubproblem lower bound exceeds global optimal solution, finish precompiling")
-                        break
                     end
                 end
-
+                # println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem,digits=2)," seconds")
+                
+                
+                println("\n================================================================")
                 println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
-                for (k, v) in root_nodes
-                    if v < upperBound
-                        println(k[1].sequence, " : ",v, "\n")
-                        # solve_branch_and_price_2e_subproblem(k[1], k[2])
-                    else
-                        println("\nSubproblem lower bound exceeds global optimal solution")
-                        break
+                execution_time_bap = @elapsed begin
+                    for (k, v) in root_nodes
+                        if v < upperBound
+                            println(k[1].sequence, " : ",v, "\n")
+                            solve_branch_and_price_2e_subproblem(k[1], k[2])
+                        else
+                            println("\nSubproblem lower bound exceeds global optimal solution")
+                            break
+                        end
                     end
                 end
+                # println("total execution time solving branch and price : ", round(execution_time_bap,digits=2)," seconds")
             end
 
 
             println("\n================================================================")
-            println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+            # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
             if !isnothing(optimalSolution)
-                println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+                println("\nTotal Execution time = $(round(execution_time_total, digits=2)) seconds")
         #         println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")
         #         println("time spent in branching decision = $(round(execution_time_branching, digits = 2)), takes percentage of $(round(execution_time_branching/execution_time_total, digits =2)*100)%")
         #         println("time spent in solving child node = $(round(execution_time_child_node, digits = 2)), takes percentage of $(round(execution_time_child_node/execution_time_total, digits =2)*100)%")
@@ -151,4 +157,4 @@ open(file_name, "w") do io
     end
 end
 
-# run(`open -a "Visual Studio Code" $file_name`)
+run(`open -a "Visual Studio Code" $file_name`)

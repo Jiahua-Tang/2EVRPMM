@@ -9,10 +9,10 @@ include("../CompactModel/compactModel.jl")
 include("../LrpLowerBound/solveLRP.jl")
 
 
+global root = "$(pwd())/TEST/"
 # global root = "/gpfs/workdir/tangj/2EVRPMM/Code/Code/"
 
 time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
-global root = "$(pwd())/TEST/"
 num_cust = parse(Int, ARGS[1])
 global random_seed = parse(Int, ARGS[2])
 name_diff = parse(Int, ARGS[3])

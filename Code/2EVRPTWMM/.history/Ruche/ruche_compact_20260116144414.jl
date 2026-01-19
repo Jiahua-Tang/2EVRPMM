@@ -35,7 +35,5 @@ open(file_name, "w") do io
             println("\n================================================================")
             t0 = Base.cputime()
             solveCompactModelDisplayResult()
-            t1 = Base.cputime()
-            println("CPU time = ", t1 - t0, " seconds")
     end
 end
