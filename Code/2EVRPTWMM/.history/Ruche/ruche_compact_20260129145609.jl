@@ -33,7 +33,7 @@ open(file_name, "w") do io
 
             read_nico_dataset("../../Data/Instances/Data/ce1-2,3,15.txt")
             println("\n================================================================")
-            execution_time = @time @CPUtime solveCompactModelDisplayResult()
+            execution_time = @time @cputime solveCompactModelDisplayResult()
             # println("CPU time = ", t1 - t0, " seconds")
     end
 end
