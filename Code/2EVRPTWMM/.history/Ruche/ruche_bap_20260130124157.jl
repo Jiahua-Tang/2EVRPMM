@@ -24,11 +24,9 @@ mkpath(dirname(file_name))
 
 open(file_name, "w") do io
     redirect_stdout(io) do
-#            # generateData(instance_size, random_seed)
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
-            # retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
 
-            read_nico_dataset("../../Data/Instances/Data/ce1-2,3,15.txt")
+            # retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
             
             println("\n================================================================")
 

@@ -13,7 +13,6 @@ include("../LrpLowerBound/solveLRP.jl")
 
 time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
 global root = "$(pwd())/../../Data/Instances/"
-
 num_cust = parse(Int, ARGS[1])
 global random_seed = parse(Int, ARGS[2])
 name_diff = parse(Int, ARGS[3])
@@ -25,10 +24,10 @@ mkpath(dirname(file_name))
 open(file_name, "w") do io
     redirect_stdout(io) do
 #            # generateData(instance_size, random_seed)
+            global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
-            # retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
-
-            read_nico_dataset("../../Data/Instances/Data/ce1-2,3,15.txt")
+            # include("../../../Data/Demo/100/R103.txt")
+            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
             
             println("\n================================================================")
 
