@@ -534,11 +534,6 @@ function solve_MILP_model(route_1e)
     optimize!(milpModel)
 
     println("MILP Result:\n",round(objective_value(milpModel)+route_1e.cost,digits=2))
-    
-    # solve_time = MOI.get(model, MOI.SolveTime())
-    println("CPLEX solve root MILP time: ", solve_time(model), " seconds")
-    
-
     println(route_1e.sequence, "    $(round(route_1e.cost, digits=2))")
     for (idx,r) in enumerate(routes_2e_pool) 
         if value(y[idx]) != 0
