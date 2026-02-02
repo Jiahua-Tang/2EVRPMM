@@ -547,7 +547,7 @@ function solve_MILP_model(route_1e)
     println("MILP Result:\n",round(objective_value(milpModel)+route_1e.cost,digits=2))
     
     # solve_time = MOI.get(model, MOI.SolveTime())
-    println("execution time CPLEX solve root MILP: ", solve_time(milpModel), " seconds")
+    println("execution time CPLEX solve root MILP: ", solve_time(milpmodel), " seconds")
     
 
     # println(route_1e.sequence, "    $(round(route_1e.cost, digits=2))")
