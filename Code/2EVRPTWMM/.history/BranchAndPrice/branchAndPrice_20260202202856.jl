@@ -556,7 +556,7 @@ function solve_MILP_model(route_1e)
     #         println(r.sequence, "   $(round(r.cost, digits=2))")
     #     end
     # end
-    # execution_time_milp_3 = @elapsed begin
+    execution_time_milp_3 = @elapsed begin
         if objective_value(milpModel)+route_1e.cost < upperBound
             global upperBound= objective_value(milpModel)+route_1e.cost
             global optimalSolution = Vector{Route}()
@@ -572,7 +572,7 @@ function solve_MILP_model(route_1e)
                 end
             end
         end
-    # end
+    end
     # println("execution time solving milp function etape 3: $(round(execution_time_milp_3, digits=3)) seconds")
 
 # end

@@ -547,7 +547,7 @@ function solve_MILP_model(route_1e)
     println("MILP Result:\n",round(objective_value(milpModel)+route_1e.cost,digits=2))
     
     # solve_time = MOI.get(model, MOI.SolveTime())
-    # println("execution time CPLEX solve root MILP: ", solve_time(milpModel), " seconds")
+    println("execution time CPLEX solve root MILP: ", solve_time(milpModel), " seconds")
     
 
     # println(route_1e.sequence, "    $(round(route_1e.cost, digits=2))")
@@ -556,7 +556,7 @@ function solve_MILP_model(route_1e)
     #         println(r.sequence, "   $(round(r.cost, digits=2))")
     #     end
     # end
-    # execution_time_milp_3 = @elapsed begin
+    execution_time_milp_3 = @elapsed begin
         if objective_value(milpModel)+route_1e.cost < upperBound
             global upperBound= objective_value(milpModel)+route_1e.cost
             global optimalSolution = Vector{Route}()
@@ -572,11 +572,11 @@ function solve_MILP_model(route_1e)
                 end
             end
         end
-    # end
-    # println("execution time solving milp function etape 3: $(round(execution_time_milp_3, digits=3)) seconds")
+    end
+    println("execution time solving milp function etape 3: $(round(execution_time_milp_3, digits=3)) seconds")
 
-# end
-# println("verification execution time : $execution_time_milp_function seconds")
+end
+println("verification execution time : $execution_time_milp_function seconds")
 end
 
 # function solve_MILP_model_root()

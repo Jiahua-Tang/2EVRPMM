@@ -332,7 +332,7 @@ function solve_root_node(route_1e::Route)
         root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
 
         #region : initial columns
-        execution_time = @elapsed begin
+        # execution_time = @elapsed begin
             columns_to_be_kept, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
         # end
         # global execution_time_filtering += execution_time
@@ -514,8 +514,8 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
 end
 #endregion
 function solve_MILP_model(route_1e)
-    # execution_time_milp_function = @elapsed begin
-    # execution_time_milp_1 = @elapsed begin
+    execution_time_milp_function = @elapsed begin
+    execution_time_milp_1 = @elapsed begin
 
         selected_parkings = getServedParking1eRoute(route_1e)
 
@@ -539,15 +539,15 @@ function solve_MILP_model(route_1e)
         @constraint(milpModel, [p in selected_parkings], sum(y[idx]*r.load*r.b2out[p] for (idx,r) in enumerate(routes_2e_pool))<= capacity_microhub)
 
         @objective(milpModel, Min, sum(y[idx]*r.cost for (idx,r) in enumerate(routes_2e_pool)))
-    # end
-    # println("execution time solving milp function etape 1: $(round(execution_time_milp_1, digits=3)) seconds")
+    end
+    println("execution time solving milp function etape 1: $(round(execution_time_milp_1, digits=3)) seconds")
     
     optimize!(milpModel)
 
     println("MILP Result:\n",round(objective_value(milpModel)+route_1e.cost,digits=2))
     
     # solve_time = MOI.get(model, MOI.SolveTime())
-    # println("execution time CPLEX solve root MILP: ", solve_time(milpModel), " seconds")
+    println("execution time CPLEX solve root MILP: ", solve_time(milpModel), " seconds")
     
 
     # println(route_1e.sequence, "    $(round(route_1e.cost, digits=2))")
@@ -556,7 +556,7 @@ function solve_MILP_model(route_1e)
     #         println(r.sequence, "   $(round(r.cost, digits=2))")
     #     end
     # end
-    # execution_time_milp_3 = @elapsed begin
+    execution_time_milp_3 = @elapsed begin
         if objective_value(milpModel)+route_1e.cost < upperBound
             global upperBound= objective_value(milpModel)+route_1e.cost
             global optimalSolution = Vector{Route}()
@@ -572,11 +572,11 @@ function solve_MILP_model(route_1e)
                 end
             end
         end
-    # end
-    # println("execution time solving milp function etape 3: $(round(execution_time_milp_3, digits=3)) seconds")
+    end
+    println("execution time solving milp function etape 3: $(round(execution_time_milp_3, digits=3)) seconds")
 
-# end
-# println("verification execution time : $execution_time_milp_function seconds")
+end
+println("verification execution time : $execution_time_milp_function seconds")
 end
 
 # function solve_MILP_model_root()
