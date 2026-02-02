@@ -18,6 +18,8 @@ function buildModel()
 
     model = Model(CPLEX.Optimizer)
 
+    # set_optimizer_attribute(model, "CPX_PARAM_THREADS", 4)
+    # set_optimizer_attribute(model, "CPX_PARAM_SCRIND", 1)
 
     # Decision variable
     @variable(model, x[A1,A1], Bin) #Arc(x,y) traversed by FEV

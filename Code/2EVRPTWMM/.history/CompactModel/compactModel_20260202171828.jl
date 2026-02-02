@@ -18,6 +18,8 @@ function buildModel()
 
     model = Model(CPLEX.Optimizer)
 
+    # set_optimizer_attribute(model, "CPX_PARAM_THREADS", 4)
+    # set_optimizer_attribute(model, "CPX_PARAM_SCRIND", 1)
 
     # Decision variable
     @variable(model, x[A1,A1], Bin) #Arc(x,y) traversed by FEV
@@ -142,7 +144,7 @@ end
 function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
     # set_silent(model)
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", execution_time_limit)
-    set_optimizer_attribute(model, "CPX_PARAM_CLOCKTYPE", 1)
+    set_optimizer_attribute(model, "CPX_PARAM_CLOCKTYPE", 2)
     set_optimizer_attribute(model, "CPX_PARAM_THREADS", 4)
     set_optimizer_attribute(model, "CPX_PARAM_SCRIND", 1)
     total_time = @elapsed optimize!(model)
