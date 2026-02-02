@@ -143,7 +143,7 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
     # set_silent(model)
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", execution_time_limit)
     set_optimizer_attribute(model, "CPX_PARAM_CLOCKTYPE", 1)
-    set_optimizer_attribute(model, "CPX_PARAM_THREADS", 1)
+    set_optimizer_attribute(model, "CPX_PARAM_THREADS", 4)
     set_optimizer_attribute(model, "CPX_PARAM_SCRIND", 1)
     total_time = @elapsed optimize!(model)
     resultStatus = ""
@@ -151,7 +151,6 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
     
     println()
     println("Total execution time: $(MOI.get(model, MOI.SolveTimeSec())) seconds")
-    println("Gap: ",MOI.get(model, MOI.RelativeGap()))
     if primal_status(model) == MOI.FEASIBLE_POINT
         println("Total distance traveled: ", objective_value(model))
     end

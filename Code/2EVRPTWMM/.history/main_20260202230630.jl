@@ -36,8 +36,8 @@ open(file_name, "w") do io
             COMPACT MODEL
             ==========================================================================#
 
-            global execution_time_limit = 3600*3
-            execution_time_cplex = @time @CPUtime solveCompactModelDisplayResult()
+            # global execution_time_limit = 1200
+            # execution_time_cplex = @time @CPUtime solveCompactModelDisplayResult()
     
             #==========================================================================
             BRANCH-AND-PRICE

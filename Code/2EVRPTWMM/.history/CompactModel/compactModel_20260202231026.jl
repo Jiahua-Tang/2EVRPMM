@@ -151,7 +151,8 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
     
     println()
     println("Total execution time: $(MOI.get(model, MOI.SolveTimeSec())) seconds")
-    println("Gap: ",MOI.get(model, MOI.RelativeGap()))
+    best_bound = MOI.get(model, MOI.ObjectiveBound())   # Best lower bound
+    println("Best bound: ", best_bound)
     if primal_status(model) == MOI.FEASIBLE_POINT
         println("Total distance traveled: ", objective_value(model))
     end
