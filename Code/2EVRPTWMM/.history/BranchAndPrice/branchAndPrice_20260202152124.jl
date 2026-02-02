@@ -540,7 +540,7 @@ function solve_MILP_model(route_1e)
 
         @objective(milpModel, Min, sum(y[idx]*r.cost for (idx,r) in enumerate(routes_2e_pool)))
     end
-    println("execution time solving milp function etape 1: $(round(execution_time_milp_1, digits=3)) seconds")
+    println("execution time solving milp function etape 1: $(round(execution_time_milp_1, digits=3))")
     
     optimize!(milpModel)
 

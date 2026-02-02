@@ -538,16 +538,17 @@ function solve_MILP_model(route_1e)
         @constraint(milpModel, [p in selected_parkings], sum(y[idx]*r.b2in[p] for (idx,r) in enumerate(routes_2e_pool))== sum(y[idx]*r.b2out[p] for (idx,r) in enumerate(routes_2e_pool)))
         @constraint(milpModel, [p in selected_parkings], sum(y[idx]*r.load*r.b2out[p] for (idx,r) in enumerate(routes_2e_pool))<= capacity_microhub)
 
-        @objective(milpModel, Min, sum(y[idx]*r.cost for (idx,r) in enumerate(routes_2e_pool)))
     end
-    println("execution time solving milp function etape 1: $(round(execution_time_milp_1, digits=3)) seconds")
-    
+    println("execution time solving milp function etape 1: $(round(execution_time_milp_1, digits=3))")
+
+    @objective(milpModel, Min, sum(y[idx]*r.cost for (idx,r) in enumerate(routes_2e_pool)))
+
     optimize!(milpModel)
 
     println("MILP Result:\n",round(objective_value(milpModel)+route_1e.cost,digits=2))
     
     # solve_time = MOI.get(model, MOI.SolveTime())
-    println("execution time CPLEX solve root MILP: ", solve_time(model), " seconds")
+    println("CPLEX solve root MILP time: ", solve_time(model), " seconds")
     
 
     # println(route_1e.sequence, "    $(round(route_1e.cost, digits=2))")
@@ -556,24 +557,22 @@ function solve_MILP_model(route_1e)
     #         println(r.sequence, "   $(round(r.cost, digits=2))")
     #     end
     # end
-    execution_time_milp_2 = @elapsed begin
-        if objective_value(milpModel)+route_1e.cost < upperBound
-            global upperBound= objective_value(milpModel)+route_1e.cost
-            global optimalSolution = Vector{Route}()
 
-            # @info "Update upper bound"
-            # println("Update upper bound")
+    if objective_value(milpModel)+route_1e.cost < upperBound
+        global upperBound= objective_value(milpModel)+route_1e.cost
+        global optimalSolution = Vector{Route}()
 
-            push!(optimalSolution, route_1e)
-            for (idx,r) in enumerate(routes_2e_pool) 
-                if value(y[idx]) != 0
-            #         println(r.sequence, "   $(round(route_1e.cost, digits=2))")
-                    push!(optimalSolution, r)
-                end
+        # @info "Update upper bound"
+        # println("Update upper bound")
+
+        push!(optimalSolution, route_1e)
+        for (idx,r) in enumerate(routes_2e_pool) 
+            if value(y[idx]) != 0
+        #         println(r.sequence, "   $(round(route_1e.cost, digits=2))")
+                push!(optimalSolution, r)
             end
         end
     end
-    println("execution time solving milp function etape 3: $(round(execution_time_milp_3, digits=3)) seconds")
 end
 
 # function solve_MILP_model_root()

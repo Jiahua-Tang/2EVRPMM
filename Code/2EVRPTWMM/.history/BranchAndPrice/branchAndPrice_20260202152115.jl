@@ -540,14 +540,14 @@ function solve_MILP_model(route_1e)
 
         @objective(milpModel, Min, sum(y[idx]*r.cost for (idx,r) in enumerate(routes_2e_pool)))
     end
-    println("execution time solving milp function etape 1: $(round(execution_time_milp_1, digits=3)) seconds")
+    println("execution time solving milp function etape 1: $(round(execution_time_milp_1, digits=3))")
     
     optimize!(milpModel)
 
     println("MILP Result:\n",round(objective_value(milpModel)+route_1e.cost,digits=2))
     
     # solve_time = MOI.get(model, MOI.SolveTime())
-    println("execution time CPLEX solve root MILP: ", solve_time(model), " seconds")
+    println("execution time CPLEX solve root MILP time: ", solve_time(model), " seconds")
     
 
     # println(route_1e.sequence, "    $(round(route_1e.cost, digits=2))")
@@ -573,7 +573,7 @@ function solve_MILP_model(route_1e)
             end
         end
     end
-    println("execution time solving milp function etape 3: $(round(execution_time_milp_3, digits=3)) seconds")
+    println("execution time solving milp function etape 3: $(round(execution_time_milp_3, digits=3))")
 end
 
 # function solve_MILP_model_root()
