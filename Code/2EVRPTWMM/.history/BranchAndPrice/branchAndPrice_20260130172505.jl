@@ -363,7 +363,7 @@ function solve_root_node(route_1e::Route)
     println("execution time of column generation : $(round(execution_time, digits=2))s")
 
     end
-    println("verification: execution time for root node: ", execution_time_verified_root_node,"")
+    println("verification: execution time for root node: ", execution_time_verified_root_node," seconds")
 
     if !isnothing(root_node)
         if root_node.isLeaf
@@ -543,12 +543,12 @@ function solve_MILP_model(route_1e)
     println("CPLEX solve root MILP time: ", solve_time(model), " seconds")
     
 
-    # println(route_1e.sequence, "    $(round(route_1e.cost, digits=2))")
-    # for (idx,r) in enumerate(routes_2e_pool) 
-    #     if value(y[idx]) != 0
-    #         println(r.sequence, "   $(round(r.cost, digits=2))")
-    #     end
-    # end
+    println(route_1e.sequence, "    $(round(route_1e.cost, digits=2))")
+    for (idx,r) in enumerate(routes_2e_pool) 
+        if value(y[idx]) != 0
+            println(r.sequence, "   $(round(r.cost, digits=2))")
+        end
+    end
 
     if objective_value(milpModel)+route_1e.cost < upperBound
         global upperBound= objective_value(milpModel)+route_1e.cost
