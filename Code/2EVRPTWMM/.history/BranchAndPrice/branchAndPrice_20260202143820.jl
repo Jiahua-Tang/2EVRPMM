@@ -380,14 +380,11 @@ function solve_root_node(route_1e::Route)
             end
             return nothing
         else
-            execution_time = @elapsed begin
             # TODO : if lp result of a root node exceed UB, prune subproblem
             node_stack = [root_node]
             solve_MILP_model(route_1e)
 
             println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")  
-            end
-            println("execution time solving MILP: $(round(execution_time, digits=3)) second")
             return node_stack
         end       
     else

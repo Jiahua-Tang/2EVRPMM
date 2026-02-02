@@ -387,7 +387,7 @@ function solve_root_node(route_1e::Route)
 
             println("Branching stack contains now $(length(node_stack)) nodes, current upper bound is $(round(upperBound,digits=2))")  
             end
-            println("execution time solving MILP: $(round(execution_time, digits=3)) second")
+            println("execution time solving MILP: $(round(execution_time, digits=3)) s")
             return node_stack
         end       
     else
