@@ -35,7 +35,7 @@ open(file_name, "w") do io
             # global fileName = "R103"
             # retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", time_limit, num_cust)
 
-            read_nico_dataset("../../Data/Instances/Data/"*filename".txt")
+            read_nico_dataset("../../Data/Instances/Data/ce1-2,3,15.txt")
             println("\n================================================================")
             execution_time = @time @CPUtime solveCompactModelDisplayResult()
             # println("CPU time = ", t1 - t0, " seconds")

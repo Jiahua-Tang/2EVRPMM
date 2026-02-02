@@ -14,15 +14,14 @@ include("../LrpLowerBound/solveLRP.jl")
 time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
 global root = "$(pwd())/../../Data/Instances/"
 
-filename = parse(String, ARGS[1])
+num_cust = parse(Int, ARGS[1])
+global random_seed = parse(Int, ARGS[2])
 
-# num_cust = parse(Int, ARGS[1])
-# global random_seed = parse(Int, ARGS[2])
 # name_diff = parse(Int, ARGS[3])
 # file_name = "Output/bp_c$(num_cust)"*"s"*string(random_seed)*time_stamp*"_"*string(name_diff)*".txt"
 
 
-file_name = "Output/bp_"*filename*"_"*time_stamp*".txt"
+file_name = "Output/bp_c$(num_cust)"*"s"*string(random_seed)*time_stamp*".txt"
 
 # file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
@@ -33,7 +32,7 @@ open(file_name, "w") do io
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
             # retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
 
-            read_nico_dataset("../../Data/Instances/Data/"*filename*".txt")
+            read_nico_dataset("../../Data/Instances/Data/ce1-2,3,15.txt")
             
             println("\n================================================================")
 

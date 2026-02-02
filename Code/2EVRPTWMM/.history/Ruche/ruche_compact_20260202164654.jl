@@ -17,12 +17,11 @@ time_stamp = Dates.format(now(), "ddmmyy_HHMM")
 # global random_seed = parse(Int, ARGS[2])
 # global execution_time_limit = parse(Int, ARGS[3])
 # name_diff = parse(Int, ARGS[4])
-# file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*"t"*string(execution_time_limit)*"_"*time_stamp*"_"*string(name_diff)*".txt"
+
 
 global execution_time_limit = 3600*3
-filename = parse(String, ARGS[1])
-file_name = "Output/bp_"*filename*"_"*time_stamp*".txt"
 
+file_name = "Output/c$(num_cust)"*"s"*string(random_seed)*"t"*string(execution_time_limit)*"_"*time_stamp*"_"*string(name_diff)*".txt"
 # file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
@@ -35,7 +34,7 @@ open(file_name, "w") do io
             # global fileName = "R103"
             # retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", time_limit, num_cust)
 
-            read_nico_dataset("../../Data/Instances/Data/"*filename".txt")
+            read_nico_dataset("../../Data/Instances/Data/ce1-2,3,15.txt")
             println("\n================================================================")
             execution_time = @time @CPUtime solveCompactModelDisplayResult()
             # println("CPU time = ", t1 - t0, " seconds")

@@ -33,7 +33,7 @@ open(file_name, "w") do io
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
             # retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
 
-            read_nico_dataset("../../Data/Instances/Data/"*filename*".txt")
+            read_nico_dataset("../../Data/Instances/Data/ce1-2,3,15.txt")
             
             println("\n================================================================")
 
