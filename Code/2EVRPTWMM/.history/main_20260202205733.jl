@@ -20,8 +20,8 @@ global random_seed = 42
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
-open(file_name, "w") do io
-    redirect_stdout(io) do
+# open(file_name, "w") do io
+#     redirect_stdout(io) do
 
         # redirect_stderr(io) do
 
@@ -161,7 +161,7 @@ open(file_name, "w") do io
         #     end
             #endregion
     # end
-    end
-end
+#     end
+# end
 
-run(`open -a "Visual Studio Code" $file_name`)
+# run(`open -a "Visual Studio Code" $file_name`)
