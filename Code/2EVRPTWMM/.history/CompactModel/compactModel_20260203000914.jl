@@ -193,7 +193,7 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
         println("No feasible solution found.")
         # # New data to append
         # # Time / Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM / #Robot / Parking generation rule / Limit time / Result 
-        row_data = [currentTime, "c", "\"$instance_name\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, MOI.get(model, MOI.SolveTimeSec()), objective_value(model),"no feasible solution"]
+        row_data = [currentTime, "c", instance_name, MOI.get(model, MOI.SolveTimeSec()), objective_value(model),"no feasible solution"]
         open("./result.csv", "a") do file
             println(file, join(row_data, ",")) 
         end
