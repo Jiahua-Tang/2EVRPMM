@@ -16,12 +16,12 @@ global root = "$(pwd())/../../Data/Instances/"
 # instance_size = 70
 global random_seed = 42
 
-const TIME_LIMIT = 5 #3600*3
+const TIME_LIMIT = 10 #3600*3
 # # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "ci1-6,4,15"
+
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -32,7 +32,7 @@ open(file_name, "w") do io
             # global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
             # retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 1200, 25)
-            read_nico_dataset("../../Data/Instances/Data/"*filename*".txt")
+            read_nico_dataset("../../Data/Instances/Data/ci1-6,4,15.txt")
             println("\n================================================================")
     
             #==========================================================================
@@ -147,14 +147,7 @@ open(file_name, "w") do io
             println("\n================================================================")
             # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
-            if !isnothing(optimalSolution)
-                @info "output"
-                currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
-                row_data = [currentTime, "bp", "\"$filename\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, time() - start_time, upperBound, "/"]
-                open("result.csv", "a") do file
-                    println(file, join(row_data, ",")) 
-                end
-            end
+        #     if !isnothing(optimalSolution)
         #         # println("\nTotal Execution time = $(round(execution_time_total, digits=2)) seconds")
         # #         println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")
         # #         println("time spent in branching decision = $(round(execution_time_branching, digits = 2)), takes percentage of $(round(execution_time_branching/execution_time_total, digits =2)*100)%")

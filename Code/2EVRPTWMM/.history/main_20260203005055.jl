@@ -16,7 +16,7 @@ global root = "$(pwd())/../../Data/Instances/"
 # instance_size = 70
 global random_seed = 42
 
-const TIME_LIMIT = 5 #3600*3
+const TIME_LIMIT = 4 #3600*3
 # # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
@@ -148,10 +148,8 @@ open(file_name, "w") do io
             # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
             if !isnothing(optimalSolution)
-                @info "output"
-                currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
-                row_data = [currentTime, "bp", "\"$filename\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, time() - start_time, upperBound, "/"]
-                open("result.csv", "a") do file
+                row_data = [currentTime, "bp", "\"$instance_name\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, MOI.get(model, MOI.SolveTimeSec()), objective_value(model),MOI.get(model, MOI.RelativeGap())]
+                open("./result.csv", "a") do file
                     println(file, join(row_data, ",")) 
                 end
             end

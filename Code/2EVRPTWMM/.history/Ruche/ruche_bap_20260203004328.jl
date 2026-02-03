@@ -40,8 +40,6 @@ open(file_name, "w") do io
             println("\n================================================================")
 
             global execution_time_total = @time @CPUtime begin
-                start_time = time()
-                time_exceeded() = (time() - start_time) > TIME_LIMIT
                 lrp_subproblems = preparation_branch_and_price()
 
                 println("\n================================================================")
@@ -114,10 +112,6 @@ open(file_name, "w") do io
 
                 println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
                 for (k, v) in root_nodes
-                    if time_exceeded()
-                        println("\n Time limit reached during branch-and-price.")
-                        break
-                    end
                     if v < upperBound
                         println(k[1].sequence, " : ",v, "\n")
                         solve_branch_and_price_2e_subproblem(k[1], k[2])
@@ -125,6 +119,7 @@ open(file_name, "w") do io
                         println("\nSubproblem lower bound exceeds global optimal solution")
                         break
                     end
+                end
             end
 
 
@@ -132,13 +127,6 @@ open(file_name, "w") do io
             # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
             if !isnothing(optimalSolution)
-                # @info "output"
-                currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
-                row_data = [currentTime, "bp", "\"$filename\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, time() - start_time, upperBound, "/"]
-                open("result.csv", "a") do file
-                    println(file, join(row_data, ",")) 
-                end
-            end
                 # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
         #         println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")
         #         println("time spent in branching decision = $(round(execution_time_branching, digits = 2)), takes percentage of $(round(execution_time_branching/execution_time_total, digits =2)*100)%")
@@ -158,9 +146,9 @@ open(file_name, "w") do io
         #         for route in optimalSolution 
         #             println(route.sequence, "  ", round(route.cost, digits=2))
         #         end   
-            # end
+            end
             #endregion
-    end
+    # end
     end
 end
 

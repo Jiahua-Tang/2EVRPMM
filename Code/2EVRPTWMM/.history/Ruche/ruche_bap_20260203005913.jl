@@ -114,17 +114,20 @@ open(file_name, "w") do io
 
                 println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
                 for (k, v) in root_nodes
-                    if time_exceeded()
-                        println("\n Time limit reached during branch-and-price.")
-                        break
+                    for (k, v) in root_nodes
+                        if time_exceeded()
+                            println("\n Time limit reached during branch-and-price.")
+                            break
+                        end
+                        if v < upperBound
+                            println(k[1].sequence, " : ",v, "\n")
+                            solve_branch_and_price_2e_subproblem(k[1], k[2])
+                        else
+                            println("\nSubproblem lower bound exceeds global optimal solution")
+                            break
+                        end
                     end
-                    if v < upperBound
-                        println(k[1].sequence, " : ",v, "\n")
-                        solve_branch_and_price_2e_subproblem(k[1], k[2])
-                    else
-                        println("\nSubproblem lower bound exceeds global optimal solution")
-                        break
-                    end
+                end
             end
 
 
@@ -160,7 +163,7 @@ open(file_name, "w") do io
         #         end   
             # end
             #endregion
-    end
+    # end
     end
 end
 

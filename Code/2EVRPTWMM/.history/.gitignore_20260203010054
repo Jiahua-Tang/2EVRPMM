@@ -1,4 +1,4 @@
 Output/
 TEST/
 .DS_Store
-result.csv
+./result.csv
