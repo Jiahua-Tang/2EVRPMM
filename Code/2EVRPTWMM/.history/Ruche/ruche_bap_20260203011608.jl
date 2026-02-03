@@ -134,7 +134,7 @@ open(file_name, "w") do io
             if !isnothing(optimalSolution)
                 # @info "output"
                 currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
-                row_data = [currentTime, "bp", "\"$filename\"", length(customers), length(satellites), sum(parking_availability), nb_vehicle_per_satellite, time() - start_time, upperBound, "/"]
+                row_data = [currentTime, "bp", "\"$filename\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, time() - start_time, upperBound, "/"]
                 open("result.csv", "a") do file
                     println(file, join(row_data, ",")) 
                 end
