@@ -542,6 +542,7 @@ function read_nico_dataset(filename)
 
     global instance_name = splitext(basename(filename))[1]
 
+    println("minimum_parkings_required = $minimum_parkings_required")
     # plt = displayMap()
 
     # node_labels = ["N.$i" for i in points]

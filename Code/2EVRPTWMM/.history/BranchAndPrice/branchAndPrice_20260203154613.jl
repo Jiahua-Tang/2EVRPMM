@@ -4,7 +4,7 @@ include("columnGeneration.jl")
 
 function select_node_from_tree(node_stack)
     node = node_stack[1]
-    score = (-node.gradientLB + node.gradientFS) / node.branchingInfo.depth
+    score = (node.gradientLB + node.gradientFS) / node.branchingInfo.depth
     for node_iter in node_stack 
         score_iter = (node_iter.gradientLB + node_iter.gradientFS)/(1+log(node_iter.branchingInfo.depth))
         if score_iter < score

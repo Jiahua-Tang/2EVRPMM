@@ -16,12 +16,12 @@ global root = "$(pwd())/../../Data/Instances/"
 # instance_size = 70
 global random_seed = 42
 
-const TIME_LIMIT = 3600*3
+const TIME_LIMIT = 5 #3600*3
 # # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "ce4-2,3,30"
+filename = "ce1-3,5,15"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -45,6 +45,7 @@ open(file_name, "w") do io
             #==========================================================================
             BRANCH-AND-PRICE
             ==========================================================================#
+
 
             global execution_time_total = @time @CPUtime begin
                 start_time = time()
@@ -121,18 +122,9 @@ open(file_name, "w") do io
                 end
                 # println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem,digits=2)," seconds")
                 
-                global num_iter_global = 1
+                
                 println("\n================================================================")
                 println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
-                for (k, v) in root_nodes
-                    if v < upperBound
-                        println(k[1].sequence, " : ",v)
-                    else
-                        println("\nSubproblem lower bound exceeds global optimal solution")
-                        break
-                    end
-                end
-
                 execution_time_bap = @elapsed begin
                     for (k, v) in root_nodes
                         if time_exceeded()
@@ -146,7 +138,6 @@ open(file_name, "w") do io
                             println("\nSubproblem lower bound exceeds global optimal solution")
                             break
                         end
-                        global num_iter_global += 1
                     end
                 end
                 # println("total execution time solving branch and price : ", round(execution_time_bap,digits=2)," seconds")
@@ -160,12 +151,9 @@ open(file_name, "w") do io
                 # @info "output"
                 currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
                 row_data = [currentTime, "bp", "\"$filename\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, time() - start_time, upperBound, "/"]
-                # open("result.csv", "a") do file
-                #     println(file, join(row_data, ",")) 
-                # end
-                for route in optimalSolution 
-                    println(route.sequence, "  ", round(route.cost, digits=2))
-                end   
+                open("result.csv", "a") do file
+                    println(file, join(row_data, ",")) 
+                end
             end
         #         # println("\nTotal Execution time = $(round(execution_time_total, digits=2)) seconds")
         # #         println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")
@@ -183,7 +171,9 @@ open(file_name, "w") do io
 
         # #     #     println("\ndeepest node dived to level $deepest_level\n")
         #         println("Current optimal solution $(round(upperBound, digits=2))")# found in interation $optimal_found_iteration in level $optimal_found_in:")
-
+        #         for route in optimalSolution 
+        #             println(route.sequence, "  ", round(route.cost, digits=2))
+        #         end   
         #     end
             #endregion
     # end

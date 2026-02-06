@@ -352,9 +352,10 @@ function get_sorted_2e_subproblems()
 
     global routes_1e_complete = Vector{Route}()
 
-    println(minimum_parkings_required)
+    
 
     for num_parking in minimum_parkings_required:nb_microhub
+        println("solve subproblem with $num_parking parkings")
         for parking_subset in combinations(satellites, num_parking)
             execution_time_1e_tsp = @elapsed begin
                 route_1e = solve_1e_tsp_labelling(parking_subset)

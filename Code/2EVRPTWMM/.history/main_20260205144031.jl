@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "ce4-2,3,30"
+filename = "ce4-2,3,20"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -126,7 +126,7 @@ open(file_name, "w") do io
                 println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
                 for (k, v) in root_nodes
                     if v < upperBound
-                        println(k[1].sequence, " : ",v)
+                        println("k[1].sequence, " : ",v)
                     else
                         println("\nSubproblem lower bound exceeds global optimal solution")
                         break

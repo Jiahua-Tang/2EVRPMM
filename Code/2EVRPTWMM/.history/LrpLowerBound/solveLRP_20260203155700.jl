@@ -352,7 +352,7 @@ function get_sorted_2e_subproblems()
 
     global routes_1e_complete = Vector{Route}()
 
-    println(minimum_parkings_required)
+    
 
     for num_parking in minimum_parkings_required:nb_microhub
         for parking_subset in combinations(satellites, num_parking)

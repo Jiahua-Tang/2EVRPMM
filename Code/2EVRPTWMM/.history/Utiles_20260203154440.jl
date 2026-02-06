@@ -479,6 +479,7 @@ function read_nico_dataset(filename)
     min_vehicles_needed = Int(ceil(total_demand / CAPACITY_2E))
     min_parkings_by_vehicles = Int(ceil(min_vehicles_needed / NB_VEHICLES_PER_SATELLITE))
     minimum_parkings = max(min_parkings_by_demand, min_parkings_by_vehicles)
+
     max_time = maximum(time_window_b)
     parking_avail = zeros(Int, 1 + nb_parking)
     parking_avail[2:nb_microhub+1] .= 1
@@ -526,7 +527,7 @@ function read_nico_dataset(filename)
     global nb_vehicle_per_satellite = NB_VEHICLES_PER_SATELLITE
     
     # Minimum requirements
-    global minimum_parkings_required = minimum_parkings
+    global minimum_parkings_required = nb_microhub
     global minimum_2e_vehicle_required = Int(ceil(total_demand / CAPACITY_2E))
     
     # Node sets
@@ -541,7 +542,6 @@ function read_nico_dataset(filename)
     ==========================================================================#
 
     global instance_name = splitext(basename(filename))[1]
-
     # plt = displayMap()
 
     # node_labels = ["N.$i" for i in points]
