@@ -352,7 +352,7 @@ function solve_root_node(route_1e::Route)
                 end
             end
         end
-        println("execution time on filtering and bounding initial columns: ",round(execution_time, digits=2),"s")
+        println("execution time on filtering and bounding initial columns: ",round(execution_time, digits=2))
         # global execution_time_build_model += execution_time
         #endregion
 
