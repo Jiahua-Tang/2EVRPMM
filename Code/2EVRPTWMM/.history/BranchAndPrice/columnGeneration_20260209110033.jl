@@ -657,9 +657,11 @@ Optimized label extension with BitSet operations and no unnecessary copies.
 """
 function extendLabel_optimized(π2, π3, π4, label::LabelOptimized, next_node::Int, neighbours::Dict{Int, BitSet})
     # Detect forbidden cycle - O(1) with BitSet
+
     if next_node in label.M
         return nothing
     end
+    
     # Update reduced cost
     reduced_cost = label.reduced_cost + arc_cost[label.current_node, next_node]
     if next_node in customers
@@ -758,7 +760,6 @@ Returns 1 if l2 dominates l1
 @inline function dominanceCheckSingle_optimized(l1::LabelOptimized, l2::LabelOptimized)
     # Use the original two-call approach but with @inline for better performance
     # Check if l1 dominates l2
-
     if l1.reduced_cost <= l2.reduced_cost && 
        l1.accumulated_capacity <= l2.accumulated_capacity &&
        issubset(l1.M, l2.M)
@@ -833,17 +834,13 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     # println("π2=  ", round.(π2, digits=2))
     # println("π3=  ", round.(π3, digits=2))
     # println("π4=  ", round.(π4, digits=2))
-    # println("π5=  ", round.(π5, digits=2))
-    # println("π6=  ", round.(π6, digits=2))
     
 
     # Initialization - Pre-compute sets for O(1) membership checks
     satellites_set = BitSet(satellites)
     customers_set = BitSet(customers)
     active_nodes_set = BitSet(vcat(collect(selected_parkings), customers))
-    # if selected_parkings == Set([5,4]) 
-    #     println("active node: ",active_nodes_set)
-    # end
+    
     processedLabels = Dict{Int, Vector{LabelOptimized}}()
     depotLabels = Vector{LabelOptimized}()
     sizehint!(depotLabels, 1000)  # Pre-allocate space
@@ -871,42 +868,27 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
     # Main labeling loop
     while !isempty(label_queue) && num_new_columns < 50
-        # if selected_parkings == Set([5,4])
-        #     println("===============Iter $num_iter_labelling Labelling")
-        # end
-        num_iter_labelling += 1
+       num_iter_labelling += 1
         
-
-        # for label in label_queue 
-        #     println(label.visitedSequence, "   ", round(label.reduced_cost, digits=2))
-        # end
-
         # Select label with minimum reduced cost - O(log n) with PriorityQueue
         min_label = dequeue!(label_queue)
-
-        # if selected_parkings == Set([5,4])
-            # for label in label_queue 
-            #     if label.visitedSequence == [4,14,9]
-            #         println("label [4,14,9] reduced cost = ",round(label.reduced_cost, digits=2))
-            #         break
-            #     end
-            # end
-            # println(min_label.visitedSequence, "  ",round(min_label.reduced_cost))
-        # 
-        # end
         current_node = min_label.current_node
 
-
-
+        # for ltest in 
+            # if min_label.visitedSequence == [5, 11, 25]
+            #     println("target label found")
+            # end
+        # end
+        # if selected_parkings == [5,4]
+        #     println(min_label.visitedSequence)
+        # end
+      
         # Mark as processed
         push!(processedLabels[current_node], min_label)
         
         # println("selected label:  ",min_label.visitedSequence)
         # Extend label to feasible nodes (iterate directly without creating intermediate array)
         for node in active_nodes_set
-            # if selected_parkings == Set([5,4]) 
-            #     println("active node: ",active_nodes_set)
-            # end
             # Check feasibility inline - O(1) with BitSet
             if node == current_node || node in min_label.M
                 continue
@@ -941,14 +923,11 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                 continue
             end
             #endregion
-
+            println("selected label: ", min_label.visitedSequence)
             new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours)
-            # if selected_parkings == Set([5,4]) 
-            # #    println("selected label: ", min_label.visitedSequence) 
-            #    if !isnothing(new_label)
-            #         println("new label: ",new_label.visitedSequence,"  ",round(new_label.reduced_cost,digits=2),"   ",round(new_label.accumulated_duration, digits=2))
-            #    end
-            # end
+            if !isnothing(new_label)
+                println("new label: ",new_label.visitedSequence)
+            end
             if !isnothing(new_label)
                 # * Handle depot (satellite) labels
                 if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
@@ -978,30 +957,23 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                         labels_to_remove = Int[]
                         
                         for (idx, depot_label) in enumerate(depotLabels)
-                            if depot_label.visitedSequence[1] == new_label.visitedSequence[1]
-                                dom_result = dominanceCheckSingle_optimized(new_label, depot_label)
-                                
-                                if dom_result == 1
-                                    # New label is dominated
-                                    is_dominated = true
-                                    break
-                                elseif dom_result == 2
-                                    # New label dominates existing label
-                                    push!(labels_to_remove, idx)
-                                end
+                            dom_result = dominanceCheckSingle_optimized(new_label, depot_label)
+                            if dom_result == 1
+                                # New label is dominated
+                                is_dominated = true
+                                break
+                            elseif dom_result == 2
+                                # New label dominates existing label
+                                push!(labels_to_remove, idx)
                             end
                         end
-                        # if selected_parkings == Set([5,4]) && new_label.visitedSequence == [4,14,9,20,5]
-                        #     println("route 4,14,9,20,5 is dominated: ",is_dominated)
-                        # end
+                        
                         if !is_dominated
                             # Remove dominated labels (in reverse order to maintain indices)
                             for idx in reverse(labels_to_remove)
                                 deleteat!(depotLabels, idx)
                             end
-                            # if new_label.visitedSequence == [4,14,9,20,5]
-                            #     println("route 4,14,9,20,5 pushed")
-                            # end
+
                             push!(depotLabels, new_label)
                             # if 4 in selected_parkings && 6 in selected_parkings && length(selected_parkings) == 2
                             #     println(new_label.visitedSequence, "  ", 
@@ -1025,11 +997,9 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                     
                     # Check against processed labels
                     for proc_label in processedLabels[node]
-                        if proc_label.visitedSequence[1] == new_label.visitedSequence[1]
-                            if dominanceCheckSingle_optimized(new_label, proc_label) == 1
-                                is_dominated = true
-                                break
-                            end
+                        if dominanceCheckSingle_optimized(new_label, proc_label) == 1
+                            is_dominated = true
+                            break
                         end
                     end
                     

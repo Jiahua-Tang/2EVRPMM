@@ -769,7 +769,9 @@ Returns 1 if l2 dominates l1
             return 2  # l1 dominates l2
         end
     end
-    
+    if l1.visitedSequence == [4,14,9]
+        println("test: ",l2.visitedSequence)
+    end    
     # Check if l2 dominates l1
     if l2.reduced_cost <= l1.reduced_cost && 
        l2.accumulated_capacity <= l1.accumulated_capacity &&
@@ -829,12 +831,12 @@ Optimized ng-route labeling algorithm with major performance improvements:
 function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo)
     # println("Starting ng-path labelling algorithm")
 
-    # println("π1=  ", round.(π1, digits=2))
-    # println("π2=  ", round.(π2, digits=2))
-    # println("π3=  ", round.(π3, digits=2))
-    # println("π4=  ", round.(π4, digits=2))
-    # println("π5=  ", round.(π5, digits=2))
-    # println("π6=  ", round.(π6, digits=2))
+    println("π1=  ", round.(π1, digits=2))
+    println("π2=  ", round.(π2, digits=2))
+    println("π3=  ", round.(π3, digits=2))
+    println("π4=  ", round.(π4, digits=2))
+    println("π5=  ", round.(π5, digits=2))
+    println("π6=  ", round.(π6, digits=2))
     
 
     # Initialization - Pre-compute sets for O(1) membership checks
@@ -871,9 +873,9 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
     # Main labeling loop
     while !isempty(label_queue) && num_new_columns < 50
-        # if selected_parkings == Set([5,4])
-        #     println("===============Iter $num_iter_labelling Labelling")
-        # end
+        if selected_parkings == Set([5,4])
+            println("===============Iter $num_iter_labelling Labelling")
+        end
         num_iter_labelling += 1
         
 
@@ -884,16 +886,16 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
         # Select label with minimum reduced cost - O(log n) with PriorityQueue
         min_label = dequeue!(label_queue)
 
-        # if selected_parkings == Set([5,4])
+        if selected_parkings == Set([5,4])
             # for label in label_queue 
             #     if label.visitedSequence == [4,14,9]
             #         println("label [4,14,9] reduced cost = ",round(label.reduced_cost, digits=2))
             #         break
             #     end
             # end
-            # println(min_label.visitedSequence, "  ",round(min_label.reduced_cost))
-        # 
-        # end
+            println(min_label.visitedSequence, "  ",round(min_label.reduced_cost))
+        
+        end
         current_node = min_label.current_node
 
 

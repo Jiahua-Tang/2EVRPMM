@@ -769,7 +769,9 @@ Returns 1 if l2 dominates l1
             return 2  # l1 dominates l2
         end
     end
-    
+    if l1.visitedSequence == [4,14,9]
+        println("test: ",l2.visitedSequence)
+    end    
     # Check if l2 dominates l1
     if l2.reduced_cost <= l1.reduced_cost && 
        l2.accumulated_capacity <= l1.accumulated_capacity &&
@@ -829,12 +831,12 @@ Optimized ng-route labeling algorithm with major performance improvements:
 function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo)
     # println("Starting ng-path labelling algorithm")
 
-    # println("π1=  ", round.(π1, digits=2))
-    # println("π2=  ", round.(π2, digits=2))
-    # println("π3=  ", round.(π3, digits=2))
-    # println("π4=  ", round.(π4, digits=2))
-    # println("π5=  ", round.(π5, digits=2))
-    # println("π6=  ", round.(π6, digits=2))
+    println("π1=  ", round.(π1, digits=2))
+    println("π2=  ", round.(π2, digits=2))
+    println("π3=  ", round.(π3, digits=2))
+    println("π4=  ", round.(π4, digits=2))
+    println("π5=  ", round.(π5, digits=2))
+    println("π6=  ", round.(π6, digits=2))
     
 
     # Initialization - Pre-compute sets for O(1) membership checks

@@ -165,7 +165,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     π4 = Vector{Float64}(undef, n_satellites + 1)
     
     while true # num_iter_cg < 2 # && true
-        # println("-------------Iter CG $num_iter_cg-------------")
+        println("-------------Iter CG $num_iter_cg-------------")
 
         # * 1. solve formulation
         execution_time_lp = @elapsed begin

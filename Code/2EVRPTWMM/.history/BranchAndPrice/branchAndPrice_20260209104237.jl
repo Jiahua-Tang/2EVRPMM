@@ -195,7 +195,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             
             π3[1] = 0.0
             @inbounds for i in 1:n_satellites
-                π3[i+1] = shadow_price(number2evfixe[i])
+                π3[i+1] = abs(shadow_price(number2evfixe[i]))
             end
             
             π4[1] = 0.0
@@ -215,10 +215,10 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
                 new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo)
             # end
             # global execution_time_pricing += execution_time_p
+
             if !new_columns_found
                 break
             end
-
         else
             println("No feasible solution for LMP")
             return nothing
@@ -357,6 +357,16 @@ function solve_root_node(route_1e::Route)
 
         # execution_time = @elapsed begin
             root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
+            for route in routes_2e 
+                if route.sequence == [5,17,12,4] || route.sequence == [4,12,17,5]
+                    println("route 5,17,12,4 found")
+                    break
+                end
+                if route.sequence == [4,14,9,20,5] || route.sequence == reverse([4,14,9,20,5])
+                    println("route [4,14,9,20,5] found")
+                    break
+                end
+            end
         # end
         # global execution_time_column_generation += execution_time
         # println("execution time of column generation : $(round(execution_time, digits=2))s")

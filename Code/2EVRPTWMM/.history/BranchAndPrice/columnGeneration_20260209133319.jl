@@ -769,7 +769,9 @@ Returns 1 if l2 dominates l1
             return 2  # l1 dominates l2
         end
     end
-    
+    if l1.visitedSequence == [5,17,12]
+        println("test: ",l2.visitedSequence)
+    end    
     # Check if l2 dominates l1
     if l2.reduced_cost <= l1.reduced_cost && 
        l2.accumulated_capacity <= l1.accumulated_capacity &&
@@ -833,8 +835,6 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     # println("π2=  ", round.(π2, digits=2))
     # println("π3=  ", round.(π3, digits=2))
     # println("π4=  ", round.(π4, digits=2))
-    # println("π5=  ", round.(π5, digits=2))
-    # println("π6=  ", round.(π6, digits=2))
     
 
     # Initialization - Pre-compute sets for O(1) membership checks
@@ -871,9 +871,9 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
     # Main labeling loop
     while !isempty(label_queue) && num_new_columns < 50
-        # if selected_parkings == Set([5,4])
-        #     println("===============Iter $num_iter_labelling Labelling")
-        # end
+        if selected_parkings == Set([5,4])
+            println("===============Iter $num_iter_labelling Labelling")
+        end
         num_iter_labelling += 1
         
 
@@ -884,16 +884,16 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
         # Select label with minimum reduced cost - O(log n) with PriorityQueue
         min_label = dequeue!(label_queue)
 
-        # if selected_parkings == Set([5,4])
+        if selected_parkings == Set([5,4])
             # for label in label_queue 
             #     if label.visitedSequence == [4,14,9]
             #         println("label [4,14,9] reduced cost = ",round(label.reduced_cost, digits=2))
             #         break
             #     end
             # end
-            # println(min_label.visitedSequence, "  ",round(min_label.reduced_cost))
-        # 
-        # end
+            println(min_label.visitedSequence, "  ",round(min_label.reduced_cost))
+        
+        end
         current_node = min_label.current_node
 
 
@@ -944,9 +944,9 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
 
             new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours)
             # if selected_parkings == Set([5,4]) 
-            # #    println("selected label: ", min_label.visitedSequence) 
+            #    println("selected label: ", min_label.visitedSequence) 
             #    if !isnothing(new_label)
-            #         println("new label: ",new_label.visitedSequence,"  ",round(new_label.reduced_cost,digits=2),"   ",round(new_label.accumulated_duration, digits=2))
+            #         println("new label: ",new_label.visitedSequence)
             #    end
             # end
             if !isnothing(new_label)
@@ -980,7 +980,6 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                         for (idx, depot_label) in enumerate(depotLabels)
                             if depot_label.visitedSequence[1] == new_label.visitedSequence[1]
                                 dom_result = dominanceCheckSingle_optimized(new_label, depot_label)
-                                
                                 if dom_result == 1
                                     # New label is dominated
                                     is_dominated = true
@@ -991,17 +990,13 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                                 end
                             end
                         end
-                        # if selected_parkings == Set([5,4]) && new_label.visitedSequence == [4,14,9,20,5]
-                        #     println("route 4,14,9,20,5 is dominated: ",is_dominated)
-                        # end
+                        
                         if !is_dominated
                             # Remove dominated labels (in reverse order to maintain indices)
                             for idx in reverse(labels_to_remove)
                                 deleteat!(depotLabels, idx)
                             end
-                            # if new_label.visitedSequence == [4,14,9,20,5]
-                            #     println("route 4,14,9,20,5 pushed")
-                            # end
+
                             push!(depotLabels, new_label)
                             # if 4 in selected_parkings && 6 in selected_parkings && length(selected_parkings) == 2
                             #     println(new_label.visitedSequence, "  ", 

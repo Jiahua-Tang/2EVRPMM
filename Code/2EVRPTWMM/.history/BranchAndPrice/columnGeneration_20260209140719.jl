@@ -769,7 +769,9 @@ Returns 1 if l2 dominates l1
             return 2  # l1 dominates l2
         end
     end
-    
+    if l1.visitedSequence == [4,14,9]
+        println("test: ",l2.visitedSequence)
+    end    
     # Check if l2 dominates l1
     if l2.reduced_cost <= l1.reduced_cost && 
        l2.accumulated_capacity <= l1.accumulated_capacity &&
