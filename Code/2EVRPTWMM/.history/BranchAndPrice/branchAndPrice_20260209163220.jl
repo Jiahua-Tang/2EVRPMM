@@ -213,8 +213,6 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
                 new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo)
-
-                println("now there are $(length(routes_2e)) 2e routes in total")
             # end
             # global execution_time_pricing += execution_time_p
             if !new_columns_found

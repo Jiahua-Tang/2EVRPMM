@@ -213,8 +213,6 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
                 new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo)
-
-                println("now there are $(length(routes_2e)) 2e routes in total")
             # end
             # global execution_time_pricing += execution_time_p
             if !new_columns_found
@@ -334,7 +332,7 @@ function solve_root_node(route_1e::Route)
         root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
 
         #region : initial columns
-        # execution_time = @elapsed begin
+        execution_time = @elapsed begin
             columns_to_be_kept, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
         # end
         # global execution_time_filtering += execution_time
@@ -355,6 +353,8 @@ function solve_root_node(route_1e::Route)
             end
         # end
         # println("execution time on filtering and bounding initial columns: ",round(execution_time, digits=2),"s")
+        # global execution_time_build_model += execution_time
+        #endregion
 
         # execution_time = @elapsed begin
             root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)

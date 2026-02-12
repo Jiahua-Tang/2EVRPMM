@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "cf3-6,4,15"
+filename = "cf4-2,3,15"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
