@@ -14,14 +14,14 @@ global root = "$(pwd())/../../Data/Instances/"
 
 
 # instance_size = 70
-global random_seed = 42
+# global random_seed = 42
 
 const TIME_LIMIT = 3600*3
 # # time_stamp = "_"*Dates.format(now(), "ddmmyyHHMM")
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "cf3-6,4,15"
+filename = "cf1-3,5,15"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -50,7 +50,6 @@ open(file_name, "w") do io
                 start_time = time()
                 time_exceeded() = (time() - start_time) > TIME_LIMIT
                 lrp_subproblems = preparation_branch_and_price()
-
 
                 println("\n================================================================")
                 #region : create model and initial columns
@@ -156,17 +155,79 @@ open(file_name, "w") do io
 
             println("\n================================================================")
             # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
-
+            
             if !isnothing(optimalSolution)
                 # @info "output"
                 currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
-                row_data = [currentTime, "bp", "\"$filename\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, time() - start_time, upperBound, "/"]
+                total_bp_time = time() - start_time
+                row_data = [currentTime, "bp", "\"$filename\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, upperBound, total_bp_time, "/"]
                 # open("result.csv", "a") do file
                 #     println(file, join(row_data, ",")) 
                 # end
+
+                # 打印最优解的路径和费用
                 for route in optimalSolution 
-                    println(route.sequence, "  ", round(route.cost, digits=2))
-                end   
+                    println("\n",route.sequence, "  ", round(route.cost, digits=2))
+                    for c in route.sequence 
+                        print(round(route.arrival_time[c],digits=2),"  ")
+                    end
+                end
+
+                # ---------------- Branch-and-Price figure output ----------------
+                #  绘制并保存 Branch-and-Price 的图像
+                if @isdefined(instance_name)
+                    # 基础底图
+                    plt = displayMap()
+                    num_y = maximum([p[2] for p in coor])
+
+                    num_y = printText(plt, num_y, "File name: " * instance_name)
+                    num_y = printText(plt, num_y, "Branch-and-Price solution")
+                    num_y = printText(plt, num_y, "Objective: " * string(round(upperBound, digits = 2)))
+                    num_y = printText(plt, num_y, "Execution time: " * string(total_bp_time))
+                    num_y = printText(plt, num_y, "")
+                    title!(plt, instance_name)
+
+                    x_coor = [p[1] for p in coor]
+                    y_coor = [p[2] for p in coor]
+
+                    # 画 1e 路线（第一条 route）
+                    if length(optimalSolution) >= 1
+                        fev_route = optimalSolution[1].sequence
+                        for k in 1:(length(fev_route) - 1)
+                            i = fev_route[k]
+                            j = fev_route[k + 1]
+                            plot!(plt, [x_coor[i], x_coor[j]], [y_coor[i], y_coor[j]],
+                                  line = :arrow, color = :black, lw = 1.8)
+                        end
+                    end
+
+                    # 画 2e 路线（后面的 routes），每条用不同颜色
+                    if length(optimalSolution) > 1
+                        for route in optimalSolution[2:end]
+                            colorR = RGBA(rand(), rand(), rand(), 1.0)
+                            seq = route.sequence
+                            for k in 1:(length(seq) - 1)
+                                i = seq[k]
+                                j = seq[k + 1]
+                                plot!(plt, [x_coor[i], x_coor[j]], [y_coor[i], y_coor[j]],
+                                      line = :arrow, color = colorR, lw = 2.2)
+                            end
+                        end
+                    end
+
+                    # 与 ResultCPLEX 并排的 ResultBP 输出路径
+                    resultStatusBP = "-BP-" * currentTime * "-"
+                    result_path_svg_bp = root * "ResultBP/svg/" * instance_name * resultStatusBP * "result.svg"
+                    result_path_png_bp = root * "ResultBP/png/" * instance_name * resultStatusBP * "result.png"
+
+                    # 确保目录存在
+                    mkpath(dirname(result_path_svg_bp))
+                    mkpath(dirname(result_path_png_bp))
+
+                    println(result_path_svg_bp)
+                    savefig(plt, result_path_svg_bp)
+                    savefig(plt, result_path_png_bp)
+                end
             end
         #         # println("\nTotal Execution time = $(round(execution_time_total, digits=2)) seconds")
         # #         println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")

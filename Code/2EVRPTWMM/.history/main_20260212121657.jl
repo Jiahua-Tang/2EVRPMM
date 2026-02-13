@@ -40,7 +40,7 @@ open(file_name, "w") do io
             ==========================================================================#
 
             global execution_time_limit = 3600*3
-            execution_time_cplex = @time @CPUtime solveCompactModelDisplayResult()
+            # execution_time_cplex = @time @CPUtime solveCompactModelDisplayResult()
     
             #==========================================================================
             BRANCH-AND-PRICE
@@ -50,7 +50,6 @@ open(file_name, "w") do io
                 start_time = time()
                 time_exceeded() = (time() - start_time) > TIME_LIMIT
                 lrp_subproblems = preparation_branch_and_price()
-
 
                 println("\n================================================================")
                 #region : create model and initial columns

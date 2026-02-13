@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "cf3-6,4,15"
+filename = "ce1-6,4,30"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -51,6 +51,16 @@ open(file_name, "w") do io
                 time_exceeded() = (time() - start_time) > TIME_LIMIT
                 lrp_subproblems = preparation_branch_and_price()
 
+                # push!(routes_2e, generate2eRoute([5,21,11,15,5]))
+                # push!(routes_2e, generate2eRoute([3,29,33,17,3]))
+                # push!(routes_2e, generate2eRoute([3,31,23,19,5]))
+                # push!(routes_2e, generate2eRoute([3,8,7,25,3]))
+                # push!(routes_2e, generate2eRoute([3,20,30,24,5]))
+                # push!(routes_2e, generate2eRoute([5,9,10,14,5]))
+                # push!(routes_2e, generate2eRoute([5,35,32,12,5]))
+                # push!(routes_2e, generate2eRoute([5,27,22,13,3]))
+                # push!(routes_2e, generate2eRoute([3,26,6,28,3]))
+                # push!(routes_2e, generate2eRoute([5,18,34,16,3]))
 
                 println("\n================================================================")
                 #region : create model and initial columns

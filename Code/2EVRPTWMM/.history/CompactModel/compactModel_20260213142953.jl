@@ -23,7 +23,7 @@ function buildModel()
     @variable(model, x[A1,A1], Bin) #Arc(x,y) traversed by FEV
     @variable(model, y[A1,A1], Bin) #Arc(x,y) traversed by MM
     @variable(model, tau[customers]>=0) #Cumulatedd distance
-    @variable(model, t[A2]>=0) #Arrival time
+    @variable(model, t[A2]>=0, Int) #Arrival time
     @variable(model, w[satellites]>=0, Int) #Amount of freight transported from the depot to parking node
     @variable(model, z[A2,A2], Bin) #Arc(x,y) traversed by SEV
     @variable(model, f[A2,A2]>=0,Int) #Load of SEV
@@ -111,7 +111,7 @@ function buildModel()
     eta2 = 0
     #22
     #Time constraint for FEV and MTZ
-    @constraint(model, [i in satellites, j in satellites], t[i] + eta1*(1-x[i,j]) + arc_cost[i,j]*x[i,j] <= t[j] + M*(1 - x[i,j]))
+    # @constraint(model, [i in satellites, j in satellites], t[i] + eta1*(1-x[i,j]) + arc_cost[i,j]*x[i,j] <= t[j] + M*(1 - x[i,j]))
     #23
     #Time constraint for SEV and MTZ
     @constraint(model, [i in customers, j in customers], t[i]+eta2*(1-z[i,j])+arc_cost[i,j]*z[i,j] <= t[j]+M * (1 - z[i,j]))
@@ -122,7 +122,7 @@ function buildModel()
     #Arrival time initialization
     # @constraint(model, [i in satellites], arc_cost[1,i] * x[1,i] <= t[i])
     @constraint(model, [i in satellites, j in customers], arc_cost[i,j] * z[i, j] <= t[j])
-    # @constraint(model, [p in satellites, j in customers], t[p] + arc_cost[p,j] * z[p,j] <= t[j])
+    @constraint(model, [p in satellites, j in customers], t[j] + arc_cost[j,p] * z[j,p] <= t[p])
 
     #27
     # #Max time and duration & MTZ

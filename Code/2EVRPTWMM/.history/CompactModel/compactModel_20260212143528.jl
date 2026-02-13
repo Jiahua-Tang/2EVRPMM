@@ -23,7 +23,7 @@ function buildModel()
     @variable(model, x[A1,A1], Bin) #Arc(x,y) traversed by FEV
     @variable(model, y[A1,A1], Bin) #Arc(x,y) traversed by MM
     @variable(model, tau[customers]>=0) #Cumulatedd distance
-    @variable(model, t[A2]>=0) #Arrival time
+    @variable(model, t[A2]>=0, Int) #Arrival time
     @variable(model, w[satellites]>=0, Int) #Amount of freight transported from the depot to parking node
     @variable(model, z[A2,A2], Bin) #Arc(x,y) traversed by SEV
     @variable(model, f[A2,A2]>=0,Int) #Load of SEV
@@ -90,10 +90,6 @@ function buildModel()
     #15
     #Flow consercvation at parking node for SEV
     @constraint(model, [p in satellites], sum(z[p,j] for j in A2) <= nb_vehicle_per_satellite)
-    #16
-    #Each SEV departs from parking node at most once
-    #  @constraint(model, [p in P], sum(z[p,j] for j in A2) <= 1)
-
     #17
     #Flow conservation at customer node for SEV
     @constraint(model, [i in customers], sum(z[i,j] for j in A2) == 1)
@@ -103,12 +99,13 @@ function buildModel()
     #19
     #Connection and capacity limit for SEV
     @constraint(model, [i in A2, j in A2], f[i,j] <= capacity_2e_vehicle * sum(z[i,j]))
-    #  #20 #21
-    #  #Total working time cannot exceed the length of planning horizon
-    #  @constraint(model, sum(arc_cost[i,j]*x[i,j] for i in A1 for j in A1) + eta1*sum(PI[p-1]*x[i,p] for p in P for i in A1)<= zeta)
-    #  @constraint(model, [i in C, j in P], t[i]+TT2[i,j]+eta2 <= zeta + M*(1 - z[i,j]))
     eta1 = 0
     eta2 = 0
+     #  #20 #21
+    #  #Total working time cannot exceed the length of planning horizon
+     @constraint(model, sum(arc_cost[i,j]*x[i,j] for i in A1 for j in A1) + eta1*sum(parking_availability[p]*x[i,p] for p in satellites for i in A1)<= planning_horizon)
+    #  @constraint(model, [i in C, j in P], t[i]+TT2[i,j]+eta2 <= zeta + M*(1 - z[i,j]))
+
     #22
     #Time constraint for FEV and MTZ
     @constraint(model, [i in satellites, j in satellites], t[i] + eta1*(1-x[i,j]) + arc_cost[i,j]*x[i,j] <= t[j] + M*(1 - x[i,j]))

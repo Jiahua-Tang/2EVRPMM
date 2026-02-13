@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "cf3-6,4,15"
+filename = "cf1-3,5,15"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -50,7 +50,6 @@ open(file_name, "w") do io
                 start_time = time()
                 time_exceeded() = (time() - start_time) > TIME_LIMIT
                 lrp_subproblems = preparation_branch_and_price()
-
 
                 println("\n================================================================")
                 #region : create model and initial columns
@@ -160,7 +159,7 @@ open(file_name, "w") do io
             if !isnothing(optimalSolution)
                 # @info "output"
                 currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
-                row_data = [currentTime, "bp", "\"$filename\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, time() - start_time, upperBound, "/"]
+                row_data = [currentTime, "bp", "\"$filename\"", length(satellites), sum(parking_availability), nb_vehicle_per_satellite, upperBound, time() - start_time, "/"]
                 # open("result.csv", "a") do file
                 #     println(file, join(row_data, ",")) 
                 # end
