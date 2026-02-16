@@ -50,7 +50,7 @@ open(file_name, "w") do io
                 execution_time = @elapsed begin
                     global model = Model(CPLEX.Optimizer)
                     set_silent(model)
-                    # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
+                    set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
                     # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
 
                     global y_vars = Dict{Int, VariableRef}()
