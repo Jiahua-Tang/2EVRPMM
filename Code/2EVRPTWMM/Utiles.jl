@@ -39,6 +39,10 @@ end
 mutable struct BranchingInfo
     must_include_combinations::Set{Tuple{Int, Int}}  # combination of parking-customer that must be in a path
     forbidden_combinations::Set{Tuple{Int, Int}}   # combination of parking-customer that cannot be in a path
+
+    # New: combination of (end parking, customer)
+    must_include_end_combinations::Set{Tuple{Int, Int}}  # end parking-customer that must be in a path
+    forbidden_end_combinations::Set{Tuple{Int, Int}}     # end parking-customer that cannot be in a path
     
     must_served_together::Set{Tuple{Int, Int}}   # combination of customers that must be in a path
     forbidden_served_together::Set{Tuple{Int, Int}}   # combination of customers that cannot be in a path

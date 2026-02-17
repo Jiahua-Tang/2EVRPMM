@@ -939,7 +939,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
             #    end
             # end
             if !isnothing(new_label)
-                # execution_time_labelling = @elapsed begin
+                execution_time_labelling = @elapsed begin
                 # * Handle depot (satellite) labels
                 if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
                     # * branching rule : obligatory combination of customer-customer
@@ -1028,8 +1028,8 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                         enqueue!(label_queue, new_label, new_label.reduced_cost)
                     end
                 end
-                # end
-                # println("---execution time labelling: ",round(execution_time_labelling, digits=3))
+                end
+                println("---execution time labelling: ",round(execution_time_labelling, digits=3))
             end
         end
     end

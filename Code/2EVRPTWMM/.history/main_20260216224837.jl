@@ -153,11 +153,11 @@ open(file_name, "w") do io
                 # println("total execution time solving branch and price : ", round(execution_time_bap,digits=2)," seconds")
             end
 
-            # for route in routes_2e 
-            #     if (route.sequence[1] == 7 && route.sequence[end] == 8)||(route.sequence[1] == 8 && route.sequence[end] == 7)
-            #         println(route.sequence,"  ",sort(route.sequence[2:end-1]))
-            #     end
-            # end
+            for route in routes_2e 
+                if (route.sequence[1] == 7 && route.sequence[end] == 8)||(route.sequence[1] == 8 && route.sequence[end] == 7)
+                    println(route.sequence,"  ",sort(route.sequence[2:end-1]))
+                end
+            end
 
 
             println("\n================================================================")

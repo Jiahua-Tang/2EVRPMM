@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "ce3-6,4,30"
+filename = "cf3-6,4,15"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -153,11 +153,11 @@ open(file_name, "w") do io
                 # println("total execution time solving branch and price : ", round(execution_time_bap,digits=2)," seconds")
             end
 
-            # for route in routes_2e 
-            #     if (route.sequence[1] == 7 && route.sequence[end] == 8)||(route.sequence[1] == 8 && route.sequence[end] == 7)
-            #         println(route.sequence,"  ",sort(route.sequence[2:end-1]))
-            #     end
-            # end
+            for route in routes_2e 
+                if (route.sequence[1] == 7 && route.sequence[end] == 9)||(route.sequence[1] == 9 && route.sequence[end] == 7)
+                    
+                end
+            end
 
 
             println("\n================================================================")

@@ -54,35 +54,21 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
         # end
         #endregion
 
-        # Start-parking – customer rules
         for must_include in branchingInfo.must_include_combinations 
-            # if a route includes the target customer, its START parking must be the given one
+        ## a route include a must-combination on the branch can be added into 
+        ## target parking and target customer must be in same route 
             if must_include[2] in route.sequence && !(must_include[1] == route.sequence[1])
+                # println("TEST1  ")
                 valide = false
                 break            
             end
         end    
 
         for forbidden in branchingInfo.forbidden_combinations 
-            # a route starting from forbidden[1] cannot serve customer forbidden[2]
+        # a route include a forbidden-combination on the branch cannot be added into result
+        ## target parking and target customer cannnot be in same route
             if Int(forbidden[1] == route.sequence[1]) + Int(forbidden[2] in route.sequence) == 2
-                valide = false
-                break
-            end
-        end
-
-        # End-parking – customer rules (new)
-        for must_include_end in branchingInfo.must_include_end_combinations
-            # if a route includes the target customer, its END parking must be the given one
-            if must_include_end[2] in route.sequence && !(must_include_end[1] == route.sequence[end])
-                valide = false
-                break
-            end
-        end
-
-        for forbidden_end in branchingInfo.forbidden_end_combinations
-            # a route ending at forbidden_end[1] cannot serve customer forbidden_end[2]
-            if Int(forbidden_end[1] == route.sequence[end]) + Int(forbidden_end[2] in route.sequence) == 2
+                # println("TEST2  ")
                 valide = false
                 break
             end
@@ -263,10 +249,10 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
         #region: PRINT cg y value
-        # if y_values[idx] !=  0
-        #     sum_y_value += y_values[idx]
-        #     println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-        # end
+        if y_values[idx] !=  0
+            sum_y_value += y_values[idx]
+            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+        end
         #endregion
     end
     # println("sum of y value is : $(round(sum_y_value,digits=2))")
@@ -347,19 +333,7 @@ end
 function solve_root_node(route_1e::Route)
     # execution_time_verified_root_node = @elapsed begin
         println("\nSolve root node of $(route_1e.sequence),   $(getServedParking1eRoute(route_1e))")
-        root_node_branching_info = BranchingInfo(
-            Set{Tuple{Int, Int}}(),  # must_include_combinations (start parking, customer)
-            Set{Tuple{Int, Int}}(),  # forbidden_combinations (start parking, customer)
-            Set{Tuple{Int, Int}}(),  # must_include_end_combinations (end parking, customer)
-            Set{Tuple{Int, Int}}(),  # forbidden_end_combinations (end parking, customer)
-            Set{Tuple{Int, Int}}(),  # must_served_together
-            Set{Tuple{Int, Int}}(),  # forbidden_served_together
-            Set{Int}(),              # must_include_parkings
-            Set{Int}(),              # forbidden_parkings
-            Set{Int}(),              # upper_bound_number_2e_routes
-            Set{Int}(),              # lower_bound_number_2e_routes
-            0                        # depth
-        )
+        root_node_branching_info = BranchingInfo(Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Tuple{Int, Int}}(), Set{Int}(), Set{Int}(), Set{Int}(), Set{Int}(), 0)
         root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
 
         #region : initial columns
@@ -662,17 +636,12 @@ function branchingStrategy(y, route_1e, routes_pool, branchingInfo::BranchingInf
     end
 
     ## Case B: reversed routes exist
-    reversed_route = checkExistanceReversedRoute(
-        sort([r for r in 1:length(y) if 0 < y[r] < 1],
-             by = r -> y[r] * (1 - y[r]),
-             rev = true),
-        routes_pool
-    )
+    reversed_route = checkExistanceReversedRoute(sort([r for r in 1:length(y) if 0 < y[r] < 1], by = r -> y[r] * (1 - y[r]), rev = true), routes_pool)
     if !isnothing(reversed_route)
         return branchOnReverseRoute(branchingInfo, reversed_route)
     end
 
-    # Case C: combination rules (start parking–customer, end parking–customer, then customer–customer)
+    # Case C: combination of customers
     result = branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_pool)
     if !isnothing(result)
         return result

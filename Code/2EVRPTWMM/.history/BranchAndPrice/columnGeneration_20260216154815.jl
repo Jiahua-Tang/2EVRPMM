@@ -405,7 +405,6 @@ function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, 
         new_columns_found = ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo)
     end
     global execution_time_subproblem += execution_time_sp
-    # println("execution time pricing function: ", round(execution_time_sp, digits=3))
 
     return new_columns_found
 end
@@ -823,7 +822,6 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
 
     # Initialization - Pre-compute sets for O(1) membership checks
-    # execution_time_setup_labelling = @elapsed begin
     satellites_set = BitSet(satellites)
     customers_set = BitSet(customers)
     active_nodes_set = BitSet(vcat(collect(selected_parkings), customers))
@@ -854,10 +852,8 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
     num_iter_labelling = 0
     num_new_columns = 0
-    # end
-    # println("---execution time setup labelling: ", round(execution_time_setup_labelling, digits=3))
+    
     # Main labeling loop
-    # execution_time_loop_labelling = @elapsed begin
     while !isempty(label_queue) && num_new_columns < 50
         # if selected_parkings == Set([5,4])
         #     println("===============Iter $num_iter_labelling Labelling")
@@ -939,7 +935,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
             #    end
             # end
             if !isnothing(new_label)
-                # execution_time_labelling = @elapsed begin
+                execution_time_labelling = @elapsed begin
                 # * Handle depot (satellite) labels
                 if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
                     # * branching rule : obligatory combination of customer-customer
@@ -1028,15 +1024,113 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                         enqueue!(label_queue, new_label, new_label.reduced_cost)
                     end
                 end
-                # end
-                # println("---execution time labelling: ",round(execution_time_labelling, digits=3))
+                end
+                println("---execution time labelling: ",round(execution_time_labelling, digits=3))
             end
         end
     end
-    # end
-    # println("---execution time loop labelling: ", round(execution_time_loop_labelling, digits=3))
     # * PRINT
     # println("Completed: $num_iter_labelling iterations, $num_new_columns routes with negative reduced cost")
     
     return new_columns_found
+end
+
+"""
+    ng_labelling_optimized_v2(π1, π2, π3, π4, selected_parkings, branchingInfo; rho=5)
+
+Alternative optimized version that keeps LabelOptimized format in output.
+Use this if you want to avoid conversion overhead.
+"""
+function ng_labelling_optimized_v2(π1, π2, π3, π4, selected_parkings, branchingInfo; rho=5)
+    println("Starting OPTIMIZED ng-path labelling algorithm v2 (rho=$rho)")
+    
+    neighbours = get_neighbours_optimized(rho)
+    processedLabels = Dict{Int, Vector{LabelOptimized}}()
+    depotLabels = Vector{LabelOptimized}()
+    active_nodes = vcat(collect(selected_parkings), customers)
+    result = Vector{LabelOptimized}()
+    
+    for node in active_nodes
+        processedLabels[node] = Vector{LabelOptimized}()
+    end
+    
+    label_queue = PriorityQueue{LabelOptimized, Float64}()
+    
+    for parking in selected_parkings
+        rc = π1[parking] - π3[parking] 
+        l = LabelOptimized(parking, rc, 0, 0, 0, BitSet([parking]), [parking])
+        enqueue!(label_queue, l, rc)
+    end
+    
+    num_iter_labelling = 0
+    max_queue_size = 0
+    
+    while !isempty(label_queue)
+        num_iter_labelling += 1
+        max_queue_size = max(max_queue_size, length(label_queue))
+        
+        min_label = dequeue!(label_queue)
+        current_node = min_label.current_node
+        push!(processedLabels[current_node], min_label)
+        
+        # More aggressive pruning: use neighbours directly
+        feasible_nodes = Int[]
+        for n in active_nodes
+            if n ∉ min_label.M && n != current_node
+                push!(feasible_nodes, n)
+            end
+        end
+        
+        for node in feasible_nodes
+            new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours)
+            
+            if !isnothing(new_label)
+                if node in satellites && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
+                    is_dominated = false
+                    labels_to_remove = Int[]
+                    
+                    for (idx, depot_label) in enumerate(depotLabels)
+                        dom_result = dominanceCheckSingle_optimized(new_label, depot_label)
+                        if dom_result == 1
+                            is_dominated = true
+                            break
+                        elseif dom_result == 2
+                            push!(labels_to_remove, idx)
+                        end
+                    end
+                    
+                    if !is_dominated
+                        for idx in reverse(labels_to_remove)
+                            deleteat!(depotLabels, idx)
+                        end
+                        push!(depotLabels, new_label)
+                        push!(result, new_label)
+                    end
+                    
+                elseif node in customers
+                    is_dominated = false
+                    
+                    for proc_label in processedLabels[node]
+                        if dominanceCheckSingle_optimized(new_label, proc_label) == 1
+                            is_dominated = true
+                            break
+                        end
+                    end
+                    
+                    if !is_dominated
+                        enqueue!(label_queue, new_label, new_label.reduced_cost)
+                    end
+                end
+            end
+        end
+        
+        if num_iter_labelling % 1000 == 0
+            println("  Iteration $num_iter_labelling, queue: $(length(label_queue)), results: $(length(result))")
+        end
+    end
+    
+    println("Completed: $num_iter_labelling iterations, max queue size: $max_queue_size")
+    println("Generated $(length(result)) routes with negative reduced cost")
+    
+    return result  # Returns LabelOptimized directly
 end

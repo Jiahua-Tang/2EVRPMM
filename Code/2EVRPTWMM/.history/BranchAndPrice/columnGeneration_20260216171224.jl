@@ -405,7 +405,6 @@ function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, 
         new_columns_found = ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo)
     end
     global execution_time_subproblem += execution_time_sp
-    # println("execution time pricing function: ", round(execution_time_sp, digits=3))
 
     return new_columns_found
 end
@@ -823,7 +822,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
 
     # Initialization - Pre-compute sets for O(1) membership checks
-    # execution_time_setup_labelling = @elapsed begin
+    execution_time_setup_labelling = @elapsed begin
     satellites_set = BitSet(satellites)
     customers_set = BitSet(customers)
     active_nodes_set = BitSet(vcat(collect(selected_parkings), customers))
@@ -854,10 +853,10 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
     num_iter_labelling = 0
     num_new_columns = 0
-    # end
-    # println("---execution time setup labelling: ", round(execution_time_setup_labelling, digits=3))
+    end
+    println("---execution time setup labelling: ", round(execution_time_setup_labelling, digits=3))
     # Main labeling loop
-    # execution_time_loop_labelling = @elapsed begin
+    execution_time_loop_labelling = @elapsed begin
     while !isempty(label_queue) && num_new_columns < 50
         # if selected_parkings == Set([5,4])
         #     println("===============Iter $num_iter_labelling Labelling")
@@ -939,7 +938,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
             #    end
             # end
             if !isnothing(new_label)
-                # execution_time_labelling = @elapsed begin
+                execution_time_labelling = @elapsed begin
                 # * Handle depot (satellite) labels
                 if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
                     # * branching rule : obligatory combination of customer-customer
@@ -1028,13 +1027,13 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                         enqueue!(label_queue, new_label, new_label.reduced_cost)
                     end
                 end
-                # end
-                # println("---execution time labelling: ",round(execution_time_labelling, digits=3))
+                end
+                println("---execution time labelling: ",round(execution_time_labelling, digits=3))
             end
         end
     end
-    # end
-    # println("---execution time loop labelling: ", round(execution_time_loop_labelling, digits=3))
+    end
+    println("---execution time loop labelling: ", round(execution_time_loop_labelling, digits=3))
     # * PRINT
     # println("Completed: $num_iter_labelling iterations, $num_new_columns routes with negative reduced cost")
     

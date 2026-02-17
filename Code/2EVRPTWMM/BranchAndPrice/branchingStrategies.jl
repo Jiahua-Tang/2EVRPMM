@@ -1,7 +1,7 @@
 function displayBranchingRule(branchingInfo::BranchingInfo)
 
     if !isempty(branchingInfo.must_include_combinations)
-        print("   - MUST      combination:  ")
+        print("   - MUST      combination (start parking, customer):  ")
         for value in branchingInfo.must_include_combinations 
             print(value, "  ")
         end        
@@ -9,10 +9,26 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
     end
 
     if !isempty(branchingInfo.forbidden_combinations)
-        print("   - FORBIDDEN combination:  ")
+        print("   - FORBIDDEN combination (start parking, customer):  ")
         for value in branchingInfo.forbidden_combinations 
             print(value, "  ")
         end     
+        print("\n")
+    end
+
+    if !isempty(branchingInfo.must_include_end_combinations)
+        print("   - MUST      combination (end   parking, customer):  ")
+        for value in branchingInfo.must_include_end_combinations
+            print(value, "  ")
+        end
+        print("\n")
+    end
+
+    if !isempty(branchingInfo.forbidden_end_combinations)
+        print("   - FORBIDDEN combination (end   parking, customer):  ")
+        for value in branchingInfo.forbidden_end_combinations
+            print(value, "  ")
+        end
         print("\n")
     end
 
@@ -102,6 +118,7 @@ end
 
 function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_pool)
     routes = deepcopy(routes_pool)
+    selected_parkings = getServedParking1eRoute(route_1e)
     # @info "Start to branch on most fractional route's most visited customer"
     left_branch = deepcopy(branchingInfo)
     right_branch = deepcopy(branchingInfo)
@@ -136,14 +153,12 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
     sorted_customers = [k for (k, v) in sort(collect(customers_selected_times), by = x -> x[2], rev = true)]
     #endregion
 
-    # 本地 helper：尝试在 parking–customer 上分支
-    function try_parking_customer!()
-        # 只有当 1e 路线服务多个卫星时，parking–customer 分支才有意义
-        if length(getServedParking1eRoute(route_1e)) > 1
+    # 本地 helper：起点停车场 – 顾客（起点必须是 selected_parkings 之一）
+    function try_start_parking_customer!()
+        if length(selected_parkings) > 1
             for cust in sorted_customers 
                 for route in selected_routes 
-                    if cust in route
-                        # 选择：该路线上起点停车场 + 出现次数多的顾客
+                    if cust in route && (route[1] in selected_parkings)
                         branchingDecision = (route[1], cust)
 
                         existance1 = branchingDecision in branchingInfo.must_include_combinations
@@ -161,8 +176,42 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
                             if valide                       
                                 push!(left_branch.must_include_combinations, branchingDecision)
                                 push!(right_branch.forbidden_combinations, branchingDecision)
-                                @info "Branch on combination parking-customer: $branchingDecision"
+                                @info "Branch on combination start-parking-customer: $branchingDecision"
                                 return left_branch, right_branch 
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        return nothing
+    end
+
+    # 本地 helper：终点停车场 – 顾客（终点必须是 selected_parkings 之一）
+    function try_end_parking_customer!()
+        if length(selected_parkings) > 1
+            for cust in sorted_customers
+                for route in selected_routes
+                    if cust in route && (route[end] in selected_parkings)
+                        branchingDecision = (route[end], cust)
+
+                        existance1 = branchingDecision in branchingInfo.must_include_end_combinations
+                        existance2 = branchingDecision in branchingInfo.forbidden_end_combinations
+
+                        if !existance1 && !existance2
+                            valide = false
+                            for route_2 in selected_routes
+                                if route_2[end] != route[end] && cust in route_2
+                                    valide = true
+                                    break
+                                end
+                            end
+
+                            if valide
+                                push!(left_branch.must_include_end_combinations, branchingDecision)
+                                push!(right_branch.forbidden_end_combinations, branchingDecision)
+                                @info "Branch on combination end-parking-customer: $branchingDecision"
+                                return left_branch, right_branch
                             end
                         end
                     end
@@ -172,7 +221,7 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
         return nothing
     end
 
-    # 本地 helper：尝试在 customer–customer 上分支
+    # 本地 helper：顾客 – 顾客
     function try_customer_customer!()
         for (idx1, cust1) in enumerate(sorted_customers)
             for (_, cust2) in enumerate(sorted_customers[idx1+1:end])
@@ -214,43 +263,28 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
         return nothing
     end
 
-    # 统计当前节点已有的两类 branching rule 数量
-    count_parking_customer = length(branchingInfo.must_include_combinations) +
-                             length(branchingInfo.forbidden_combinations)
-    count_customer_customer = length(branchingInfo.must_served_together) +
-                              length(branchingInfo.forbidden_served_together)
+    # 选择顺序（组合分支的 Case C）：
+    # 1) 先在顾客–顾客上分支
+    # 2) 如果不行，再试起点停车场–顾客
+    # 3) 再尝试一次顾客–顾客（理论上不会再找到新的，但保持顺序一致）
+    # 4) 最后尝试终点停车场–顾客
 
-    # 选择顺序：
-    # 1) 如果还没有任何 branching rule：优先 parking–customer，其次 customer–customer
-    # 2) 否则，如果 parking–customer 规则多：先 customer–customer，后 parking–customer
-    # 3) 否则，如果 customer–customer 规则多：先 parking–customer，后 customer–customer
-    # 4) 数量相等：保持原先偏好（先 parking–customer）
-    if count_parking_customer == 0 && count_customer_customer == 0
-        result = try_parking_customer!()
-        if !isnothing(result)
-            return result
-        end
-        return try_customer_customer!()
-    elseif count_parking_customer > count_customer_customer
-        result = try_customer_customer!()
-        if !isnothing(result)
-            return result
-        end
-        return try_parking_customer!()
-    elseif count_customer_customer > count_parking_customer
-        result = try_parking_customer!()
-        if !isnothing(result)
-            return result
-        end
-        return try_customer_customer!()
-    else
-        # 数量相等时，沿用原先的优先级：先 parking–customer，再 customer–customer
-        result = try_parking_customer!()
-        if !isnothing(result)
-            return result
-        end
-        return try_customer_customer!()
+    result = try_customer_customer!()
+    if !isnothing(result)
+        return result
     end
+
+    result = try_start_parking_customer!()
+    if !isnothing(result)
+        return result
+    end
+
+    result = try_customer_customer!()
+    if !isnothing(result)
+        return result
+    end
+
+    return try_end_parking_customer!()
     
     # # # * branch on arc
     # sorted_arc = Dict{Tuple{Int,Int}, Int}()
