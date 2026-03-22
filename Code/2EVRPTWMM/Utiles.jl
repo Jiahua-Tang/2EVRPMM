@@ -37,21 +37,21 @@ mutable struct Route
 end
 
 mutable struct BranchingInfo
-    must_include_combinations::Set{Tuple{Int, Int}}  # combination of parking-customer that must be in a path
-    forbidden_combinations::Set{Tuple{Int, Int}}   # combination of parking-customer that cannot be in a path
+    must_include_combinations::Set{Tuple{Int, Int}}       # (start parking, customer) must be in a path
+    forbidden_combinations::Set{Tuple{Int, Int}}          # (start parking, customer) cannot be in a path
 
-    # New: combination of (end parking, customer)
-    must_include_end_combinations::Set{Tuple{Int, Int}}  # end parking-customer that must be in a path
-    forbidden_end_combinations::Set{Tuple{Int, Int}}     # end parking-customer that cannot be in a path
+    # NEW: constraints on END parking – customer pairs
+    must_include_end_combinations::Set{Tuple{Int, Int}}   # (end parking, customer) must be in a path
+    forbidden_end_combinations::Set{Tuple{Int, Int}}      # (end parking, customer) cannot be in a path
     
-    must_served_together::Set{Tuple{Int, Int}}   # combination of customers that must be in a path
-    forbidden_served_together::Set{Tuple{Int, Int}}   # combination of customers that cannot be in a path
+    must_served_together::Set{Tuple{Int, Int}}            # customers that must be in a same route
+    forbidden_served_together::Set{Tuple{Int, Int}}       # customers that cannot be in a same route
     
-    must_include_parkings::Set{Int}   # parking that must be used in solution
-    forbidden_parkings::Set{Int}   # parking that cannot be used in solution
+    must_include_parkings::Set{Int}                       # parking that must be used in solution
+    forbidden_parkings::Set{Int}                          # parking that cannot be used in solution
     
-    upper_bound_number_2e_routes::Set{Int} # upper bound of number of total 2e routes
-    lower_bound_number_2e_routes::Set{Int} # lower bound of number of total 2e routes
+    upper_bound_number_2e_routes::Set{Int}                # upper bound of number of total 2e routes
+    lower_bound_number_2e_routes::Set{Int}                # lower bound of number of total 2e routes
 
     depth::Int
 end
