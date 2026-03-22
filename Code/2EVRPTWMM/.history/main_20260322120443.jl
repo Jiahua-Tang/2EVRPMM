@@ -111,7 +111,7 @@ open(file_name, "w") do io
                 execution_time_cg_subproblem = @elapsed begin
                     global num_iter = 1
                     for (subproblem, lb) in lrp_subproblems
-                        if lb < upperBound # && num_iter == 1
+                        if lb < upperBound && num_iter == 1
                             # println(subproblem.sequence,"   ",round(lb,digits=2),"   ",round(upperBound,digits=2))
                             dequeue!(lrp_subproblems)
                             execution_time_subproblem_root_node = @elapsed begin
@@ -133,15 +133,15 @@ open(file_name, "w") do io
                 global num_iter_global = 1
                 println("\n $(repeat("=", 70))")
                 println("\nCurrent optimal value $upperBound")
-                println("Left 2e subproblems")
-                for (k, v) in root_nodes
-                    if v < upperBound
-                        println(k[1].sequence, " : ",v)
-                    else
-                        println("\nSubproblem lower bound exceeds global optimal solution")
-                        break
-                    end
-                end
+                # println("Left 2e subproblems")
+                # for (k, v) in root_nodes
+                #     if v < upperBound
+                #         println(k[1].sequence, " : ",v)
+                #     else
+                #         println("\nSubproblem lower bound exceeds global optimal solution")
+                #         break
+                #     end
+                # end
 
                 execution_time_bap = @elapsed begin
                     # for (k, v) in root_nodes

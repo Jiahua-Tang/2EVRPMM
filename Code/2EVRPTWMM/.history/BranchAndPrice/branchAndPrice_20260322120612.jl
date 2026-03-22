@@ -192,17 +192,17 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # execution_time_dual = @elapsed begin
             # * 2. get dual multiplier - optimized to avoid allocations
             #region : retrieve dual multiplier
-            # n_vars = length(y_vars)
-            # y_values = Vector{Float64}(undef, n_vars)
-            # sorted_keys = sort!(collect(keys(y_vars)))
-            #     @inbounds for (idx, k) in enumerate(sorted_keys)
-            #         y_values[idx] = value(y_vars[k])
-            #         #region: PRINT cg y value
-            #         if y_values[idx] !=  0
-            #             # sum_y_value += y_values[idx]
-            #             println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-            #         end
-            #     end
+            n_vars = length(y_vars)
+            y_values = Vector{Float64}(undef, n_vars)
+            sorted_keys = sort!(collect(keys(y_vars)))
+                @inbounds for (idx, k) in enumerate(sorted_keys)
+                    y_values[idx] = value(y_vars[k])
+                    #region: PRINT cg y value
+                    if y_values[idx] !=  0
+                        # sum_y_value += y_values[idx]
+                        println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+                    end
+                end
             π1[1] = 0.0
             @inbounds for i in 1:n_satellites
                 π1[i+1] = abs(shadow_price(sync[i]))
@@ -383,7 +383,7 @@ function solve_root_node(route_1e::Route)
                 end
             end
             for idx in columns_to_be_kept
-                # println(routes_2e[idx].sequence)
+                println(routes_2e[idx].sequence)
                 if haskey(y_vars, idx)
                     y = y_vars[idx]
                     JuMP.set_upper_bound(y, 1.0)

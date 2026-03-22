@@ -383,7 +383,7 @@ function solve_root_node(route_1e::Route)
                 end
             end
             for idx in columns_to_be_kept
-                # println(routes_2e[idx].sequence)
+                println(routes_2e[idx].sequence)
                 if haskey(y_vars, idx)
                     y = y_vars[idx]
                     JuMP.set_upper_bound(y, 1.0)
