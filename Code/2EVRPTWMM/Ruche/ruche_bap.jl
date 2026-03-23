@@ -131,12 +131,28 @@ open(file_name, "w") do io
             println("\n================================================================")
             # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
+
             if !isnothing(optimalSolution)
-                # @info "output"
-                currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
-                row_data = [currentTime, "bp", "\"$filename\"", length(customers), length(satellites), sum(parking_availability), nb_vehicle_per_satellite, time() - start_time, upperBound, "/"]
-                open("result.csv", "a") do file
-                    println(file, join(row_data, ",")) 
+                currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM-SS-s")
+
+                jobid = get(ENV, "SLURM_JOB_ID", "nojob")
+                outfile = "result_$jobid.csv"
+
+                row_data = [
+                    currentTime,
+                    "bp",
+                    "\"$filename\"",
+                    length(customers),
+                    length(satellites),
+                    sum(parking_availability),
+                    nb_vehicle_per_satellite,
+                    time() - start_time,
+                    upperBound,
+                    "/"
+                ]
+
+                open(outfile, "a") do file
+                    println(file, join(row_data, ","))
                 end
             end
                 # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")

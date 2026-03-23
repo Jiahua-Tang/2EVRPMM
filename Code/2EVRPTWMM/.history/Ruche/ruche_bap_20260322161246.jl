@@ -14,25 +14,34 @@ include("../LrpLowerBound/solveLRP.jl")
 time_stamp = "_"*Dates.format(now(), "ddmmyy_HHMM")
 global root = "$(pwd())/../../Data/Instances/"
 
-num_cust = parse(Int, ARGS[1])
-global random_seed = parse(Int, ARGS[2])
-name_diff = parse(Int, ARGS[3])
+filename = ARGS[1]
 
-file_name = "Output/bp_c$(num_cust)"*"s"*string(random_seed)*time_stamp*"_"*string(name_diff)*".txt"
+# num_cust = parse(Int, ARGS[1])
+# global random_seed = parse(Int, ARGS[2])
+# name_diff = parse(Int, ARGS[3])
+# file_name = "Output/bp_c$(num_cust)"*"s"*string(random_seed)*time_stamp*"_"*string(name_diff)*".txt"
+
+
+file_name = "Output/bp_"*filename*"_"*time_stamp*".txt"
+
+const TIME_LIMIT = 3600*3
+
 # file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
 
 open(file_name, "w") do io
     redirect_stdout(io) do
 #            # generateData(instance_size, random_seed)
-            global fileName = "R103"
             # read_Solomon_Dataset_TW("../../Data/Demo/100/" * fileName * ".txt", 1200)
-            # include("../../../Data/Demo/100/R103.txt")
-            retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
+            # retrieve_solomon_random_data("../../Data/Demo/100/" * fileName * ".txt", 3600, num_cust)
+
+            read_nico_dataset("../../Data/Instances/Data/"*filename*".txt")
             
             println("\n================================================================")
 
             global execution_time_total = @time @CPUtime begin
+                start_time = time()
+                time_exceeded() = (time() - start_time) > TIME_LIMIT
                 lrp_subproblems = preparation_branch_and_price()
 
                 println("\n================================================================")
@@ -41,7 +50,7 @@ open(file_name, "w") do io
                 execution_time = @elapsed begin
                     global model = Model(CPLEX.Optimizer)
                     set_silent(model)
-                    # set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
+                    set_optimizer_attribute(model, "CPXPARAM_Threads", 1)
                     # set_optimizer_attribute(model, "CPXPARAM_MIP_Display", 0)
 
                     global y_vars = Dict{Int, VariableRef}()
@@ -105,22 +114,48 @@ open(file_name, "w") do io
 
                 println("\nCurrent optimal value $upperBound\nLeft 2e subproblems :")
                 for (k, v) in root_nodes
+                    if time_exceeded()
+                        println("\n Time limit reached during branch-and-price.")
+                        break
+                    end
                     if v < upperBound
                         println(k[1].sequence, " : ",v, "\n")
-                        # solve_branch_and_price_2e_subproblem(k[1], k[2])
+                        solve_branch_and_price_2e_subproblem(k[1], k[2])
                     else
                         println("\nSubproblem lower bound exceeds global optimal solution")
                         break
                     end
-                end
             end
 
 
             println("\n================================================================")
             # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
 
+
             if !isnothing(optimalSolution)
-                println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
+                currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM-SS-s")
+
+                jobid = get(ENV, "SLURM_JOB_ID", "nojob")
+                outfile = "result_$jobid.csv"
+
+                row_data = [
+                    currentTime,
+                    "bp",
+                    "\"$filename\"",
+                    length(customers),
+                    length(satellites),
+                    sum(parking_availability),
+                    nb_vehicle_per_satellite,
+                    time() - start_time,
+                    upperBound,
+                    "/"
+                ]
+
+                open(outfile, "a") do file
+                    println(file, join(row_data, ","))
+                end
+            end
+                # println("\nTotal Execution time = $(round(execution_time_total, digits=2))")
         #         println("\ntime spent in soving root node = $(round(execution_time_root_node, digits = 2)), takes percentage of $(round(execution_time_root_node/execution_time_total, digits =2)*100)%")
         #         println("time spent in branching decision = $(round(execution_time_branching, digits = 2)), takes percentage of $(round(execution_time_branching/execution_time_total, digits =2)*100)%")
         #         println("time spent in solving child node = $(round(execution_time_child_node, digits = 2)), takes percentage of $(round(execution_time_child_node/execution_time_total, digits =2)*100)%")
@@ -139,9 +174,9 @@ open(file_name, "w") do io
         #         for route in optimalSolution 
         #             println(route.sequence, "  ", round(route.cost, digits=2))
         #         end   
-            end
+            # end
             #endregion
-    # end
+    end
     end
 end
 
