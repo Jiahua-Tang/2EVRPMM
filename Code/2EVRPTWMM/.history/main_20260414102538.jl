@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "cf5-3,5,15"
+filename = "ce2-2,3,15"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -145,26 +145,26 @@ open(file_name, "w") do io
                     end
                 end
 
-                execution_time_bap = @elapsed begin
-                        open("NodeMatrix/NodeMatrix_$(filename).csv", "w") do file
-                            row_data = ["id", "parent", "cgLowerBound", "FS", "rdtCG", "rdtFS","Child","Child"]
-                            println(file, join(row_data, ",")) 
-                        end
-                    for (k, v) in root_nodes
-                        if time_exceeded()
-                            println("\n Time limit reached during branch-and-price.")
-                            break
-                        end
-                        if v < upperBound
-                            println("\n", k[1].sequence, " : ",v)
-                            solve_branch_and_price_2e_subproblem(k[1], k[2])
-                        else
-                            println("\nSubproblem lower bound exceeds global optimal solution")
-                            break
-                        end
-                        global num_iter_global += 1
-                    end
-                end
+                # execution_time_bap = @elapsed begin
+                #         open("NodeMatrix_$(filename).csv", "w") do file
+                #             row_data = ["id", "parent", "cgLowerBound", "FS", "rdtCG", "rdtFS","Child","Child"]
+                #             println(file, join(row_data, ",")) 
+                #         end
+                #     for (k, v) in root_nodes
+                #         if time_exceeded()
+                #             println("\n Time limit reached during branch-and-price.")
+                #             break
+                #         end
+                #         if v < upperBound
+                #             println("\n", k[1].sequence, " : ",v)
+                #             solve_branch_and_price_2e_subproblem(k[1], k[2])
+                #         else
+                #             println("\nSubproblem lower bound exceeds global optimal solution")
+                #             break
+                #         end
+                #         global num_iter_global += 1
+                #     end
+                # end
 
                 # println("total execution time solving branch and price : ", round(execution_time_bap,digits=2)," seconds")
             end

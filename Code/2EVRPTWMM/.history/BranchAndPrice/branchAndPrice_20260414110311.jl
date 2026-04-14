@@ -572,7 +572,7 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
     global execution_time_build_model += execution_time
     
     execution_time = @elapsed begin
-        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id) 
+        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id, node.precessors) 
 
     end
     global execution_time_column_generation += execution_time

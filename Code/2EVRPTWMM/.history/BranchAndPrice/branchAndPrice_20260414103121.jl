@@ -192,7 +192,7 @@ function preparation_branch_and_price()
 end
 
 #region : column generation
-function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, fs, id, parent_id)
+function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, fs, id, parent_id, precessors::Vector{Int})
     # * Column generation process:
     # *     - 1. solve formulation
     # *     - 2. get dual multiplier
@@ -417,7 +417,8 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
                         gradientLB,
                         gradientFS,
                         id,
-                        parent_id)
+                        parent_id,
+                        push!(precessors, parent_id))
     return result
 end
 
@@ -482,7 +483,7 @@ function solve_root_node(route_1e::Route)
 
         # execution_time = @elapsed begin
             # println("number of 2e routes before column generation: ", length(columns_to_be_kept))
-            root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
+            root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0,Vector{Int}())
         # end
         # println("-execution time of column generation : $(round(execution_time, digits=2))s")
 
@@ -572,7 +573,7 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
     global execution_time_build_model += execution_time
     
     execution_time = @elapsed begin
-        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id) 
+        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id, node.precessors) 
 
     end
     global execution_time_column_generation += execution_time

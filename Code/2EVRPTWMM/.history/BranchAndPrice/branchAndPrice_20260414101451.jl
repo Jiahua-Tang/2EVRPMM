@@ -25,7 +25,7 @@ function appendNodeMatrix(y_value, id, parent_id, cgLowerBound, fractionalScore,
         status2,
         routes_str
     ]
-    open("NodeMatrix/NodeMatrix_$(filename).csv", "a") do file
+    open("NodeMatrix_$(filename).csv", "a") do file
         println(file, join(row_data, ",")) 
     end                    
 end
@@ -192,7 +192,7 @@ function preparation_branch_and_price()
 end
 
 #region : column generation
-function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, fs, id, parent_id)
+function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, fs, id, parent_id, precessors::Vector{Int})
     # * Column generation process:
     # *     - 1. solve formulation
     # *     - 2. get dual multiplier
@@ -347,7 +347,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     end
     if total_obj > upperBound
         #region: write node matrix
-        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")        
+        # appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")        
         #endregion
         @info "Exceed Upper Bound, prune"
         println("Exceed Upper Bound, prune")
@@ -376,7 +376,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
         println("Integer solution found")
 
         #region: write node matrix
-        appendNodeMatrix(y_values, id, parent_id, total_obj, fractionalScore, total_obj-cgLB, fractionalScore-fs, "Integer","")
+        # appendNodeMatrix(y_values, id, parent_id, total_obj, fractionalScore, total_obj-cgLB, fractionalScore-fs, "Integer","")
         #endregion
 
         if total_obj < upperBound
@@ -417,7 +417,8 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
                         gradientLB,
                         gradientFS,
                         id,
-                        parent_id)
+                        parent_id,
+                        push!(precessors, parent_id))
     return result
 end
 
@@ -482,7 +483,7 @@ function solve_root_node(route_1e::Route)
 
         # execution_time = @elapsed begin
             # println("number of 2e routes before column generation: ", length(columns_to_be_kept))
-            root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
+            root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0,Vector{Int}())
         # end
         # println("-execution time of column generation : $(round(execution_time, digits=2))s")
 
@@ -572,7 +573,8 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
     global execution_time_build_model += execution_time
     
     execution_time = @elapsed begin
-        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id) 
+        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, 
+                                             node.fractionalScore, id, node.id) 
 
     end
     global execution_time_column_generation += execution_time
@@ -614,7 +616,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
                 println("$(round(node.cgLowerBound, digits=2)), Exceed Upper Bound, prune")
 
                 #region: write node matrix
-                appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS, "Prune by UB","")
+                # appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS, "Prune by UB","")
                 #endregion
             else
                 # * 2.2 Obtain branching strategy
@@ -629,7 +631,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
                     # display(branching_decisions[2])
 
                     #region: write node matrix
-                    appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS,current_node_id+1, current_node_id+2)
+                    # appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS,current_node_id+1, current_node_id+2)
                     #endregion
 
                     left_child_node  = solve_child_node(route_1e, node, branching_decisions[1], current_node_id + 1)

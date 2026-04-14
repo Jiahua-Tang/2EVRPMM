@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "cf5-3,5,15"
+filename = "ce3-6,4,30"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -165,7 +165,6 @@ open(file_name, "w") do io
                         global num_iter_global += 1
                     end
                 end
-
                 # println("total execution time solving branch and price : ", round(execution_time_bap,digits=2)," seconds")
             end
 

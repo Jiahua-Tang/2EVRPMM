@@ -192,7 +192,7 @@ function preparation_branch_and_price()
 end
 
 #region : column generation
-function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, fs, id, parent_id)
+function solve_column_generation(route_1e, columns_to_be_kept, branchingInfo::BranchingInfo, cgLB, fs, id, parent_id)
     # * Column generation process:
     # *     - 1. solve formulation
     # *     - 2. get dual multiplier
@@ -212,50 +212,30 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     
     solution_contains_dummy_route = true
     
-
+    kept_columns = deepcopy(columns_to_be_kept)
     # execution_time_loop = @elapsed begin
     while true # num_iter_cg < 2 # && true
-        # println("-------------Iter CG $num_iter_cg-------------")
-        # if !solution_contains_dummy_route
-        # # if num_iter_cg > 5
-        #     for route in dummyRoutes
-        #         if haskey(y_vars, route.id)
-        #             y = y_vars[route.id]
-        #             JuMP.set_upper_bound(y, 0.0)
-        #             JuMP.set_lower_bound(y, 0.0)
-        #         end
-        #         # println(route.id, "  ", route.sequence)
-        #     end
+        println("-------------Iter CG $num_iter_cg-------------")
+        println("number of active columns : $(length(kept_columns))")
+        # TODO clustering
+        # for route_idx in columns_to_be_kept
+        #     if num_iter_cg - routes_2e[route_idx].selectionTime > 5
+        #         y = y_vars[route_idx]
+        #         JuMP.set_upper_bound(y, 0.0)
+        #         JuMP.set_lower_bound(y, 0.0)
+        #     end 
+            
         # end
-
-
         # * 1. solve formulation
         # execution_time_lp = @elapsed begin
-            optimize!(model)
+        optimize!(model)
         # end
         # println("--execution time solving lp: ", round(execution_time_lp, digits=3))
-
-        # if solution_contains_dummy_route
-        #     ndummy = length(dummyRoutes)
-        #     dummy_route_found_in_solution = false
-
-        #     for (k, var) in y_vars
-        #         v = value(var)
-        #         if v != 0 && routes_2e[k].id <= ndummy
-        #             dummy_route_found_in_solution = true
-        #             break
-        #         end
-        #     end
-
-        #     if !dummy_route_found_in_solution
-        #         solution_contains_dummy_route = false
-        #     end
-        # end
 
 
         if has_values(model)
 
-            # Cache objective value (used multiple times)
+            # Cache objective value (used mainly for logging here)
             obj_val = objective_value(model)
             lpObjValue = obj_val + route_1e.cost
             # println("result of column generation : $(round(lpObjValue, digits=2))")
@@ -307,11 +287,22 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
 
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
-                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo)
-                # println("now there are $(length(routes_2e)) 2e routes in total")
+            new_columns_found = pricing(num_iter_cg, selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo)
+
+            kept_columns = vcat(kept_columns, new_columns_found)
+            # TODO clustering
+            # n_vars = length(y_vars)
+            # y_values = Vector{Float64}(undef, n_vars)
+            # sorted_keys = sort!(collect(keys(y_vars)))
+            # @inbounds for (idx, k) in enumerate(sorted_keys)
+            #     y_values[idx] = value(y_vars[k])
+            #     if y_values[idx] !=  0
+            #         routes_2e[idx].selectionTime = num_iter_cg
+            #     end
             # end
+
             # println("--execution time solving pricing: ", round(execution_time_p, digits=3),"\n")
-            if !new_columns_found
+            if length(new_columns_found) == 0
                 break
             end
 
@@ -323,7 +314,12 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     end
     # end
     # println("--execution time loop: ", round(execution_time_loop,digits=2))
-    # Cache objective value (used multiple times below)
+    # Re-solve once to have a consistent final solution before reading values
+    # optimize!(model)
+    if !has_values(model)
+        println("No feasible solution for LMP at finalization")
+        return nothing
+    end
     obj_val = objective_value(model)
     total_obj = obj_val + route_1e.cost
 
@@ -337,17 +333,14 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
         y_values[idx] = value(y_vars[k])
         # #region: PRINT cg y value
         # if y_values[idx] !=  0
+        #     routes_2e[idx].selectionTime = num_iter_cg
         #     sum_y_value += y_values[idx]
         #     println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
         # end
-
-        #region: block some used columns
-
-        #endregion
     end
     if total_obj > upperBound
         #region: write node matrix
-        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")        
+        # appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")        
         #endregion
         @info "Exceed Upper Bound, prune"
         println("Exceed Upper Bound, prune")
@@ -376,7 +369,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
         println("Integer solution found")
 
         #region: write node matrix
-        appendNodeMatrix(y_values, id, parent_id, total_obj, fractionalScore, total_obj-cgLB, fractionalScore-fs, "Integer","")
+        # appendNodeMatrix(y_values, id, parent_id, total_obj, fractionalScore, total_obj-cgLB, fractionalScore-fs, "Integer","")
         #endregion
 
         if total_obj < upperBound
@@ -417,7 +410,8 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
                         gradientLB,
                         gradientFS,
                         id,
-                        parent_id)
+                        parent_id,
+                        kept_columns)
     return result
 end
 
@@ -482,7 +476,7 @@ function solve_root_node(route_1e::Route)
 
         # execution_time = @elapsed begin
             # println("number of 2e routes before column generation: ", length(columns_to_be_kept))
-            root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
+            root_node = solve_column_generation(route_1e, columns_to_be_kept, root_node_branching_info, 0,0,0,0)
         # end
         # println("-execution time of column generation : $(round(execution_time, digits=2))s")
 
@@ -531,25 +525,24 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
 
     # * Instead of copying the model, just filter out routes and set bounds to 0
     execution_time = @elapsed begin
-        routes_2e_to_keep, columns_to_be_deleted = filter_2e_routes(branching_decision, collect(1:length(routes_2e)))
+        columns_to_be_kept, _ = filter_2e_routes(branching_decision, node.active_routes)
     end
     global execution_time_filtering += execution_time
 
     execution_time = @elapsed begin
         # * Set bounds instead of actually deleting them
-        for route_idx in columns_to_be_deleted
-            if haskey(y_vars, route_idx)
+        for route_idx in 1:length(routes_2e)
+            if haskey(y_vars, route_idx) && !(route_idx in columns_to_be_kept)
                 y = y_vars[route_idx]
                 JuMP.set_upper_bound(y, 0.0)
                 JuMP.set_lower_bound(y, 0.0)
             end
-        end
-        for route_idx in routes_2e_to_keep
-            if haskey(y_vars, route_idx)
+            if haskey(y_vars, route_idx) && (route_idx in columns_to_be_kept)
                 y = y_vars[route_idx]
                 JuMP.set_upper_bound(y, 1.0)
                 JuMP.set_lower_bound(y, 0.0)
             end
+            
         end
 
         # * Global Lower bound
@@ -572,21 +565,10 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
     global execution_time_build_model += execution_time
     
     execution_time = @elapsed begin
-        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id) 
+        child_node = solve_column_generation(route_1e, columns_to_be_kept, branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id) 
 
     end
     global execution_time_column_generation += execution_time
-
-    execution_time = @elapsed begin
-        # *  Reset bounds after solving
-        for route_idx in columns_to_be_deleted
-            if haskey(y_vars, route_idx)
-                y = y_vars[route_idx]
-                JuMP.set_upper_bound(y, 1.0)
-                JuMP.set_lower_bound(y, 0.0)
-            end
-        end
-    end
     global execution_time_set_bound += execution_time
     global execution_time_build_model += execution_time
 
@@ -614,7 +596,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
                 println("$(round(node.cgLowerBound, digits=2)), Exceed Upper Bound, prune")
 
                 #region: write node matrix
-                appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS, "Prune by UB","")
+                # appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS, "Prune by UB","")
                 #endregion
             else
                 # * 2.2 Obtain branching strategy
@@ -629,7 +611,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
                     # display(branching_decisions[2])
 
                     #region: write node matrix
-                    appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS,current_node_id+1, current_node_id+2)
+                    # appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS,current_node_id+1, current_node_id+2)
                     #endregion
 
                     left_child_node  = solve_child_node(route_1e, node, branching_decisions[1], current_node_id + 1)
