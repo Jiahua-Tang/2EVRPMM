@@ -3,8 +3,10 @@ include("Utiles.jl")
 
 
 function solveCompactModelDisplayResult()
+    t_start = time()
     model, x, y, t, w, z, f, tau = buildModel()
-    displayResult(model, x, y, t, w, z, f, execution_time_limit, tau)
+    build_time = time() - t_start
+    displayResult(model, x, y, t, w, z, f, execution_time_limit, tau, t_start, build_time)
 end
    
 function buildModel() 
@@ -141,18 +143,21 @@ function buildModel()
     return model, x, y, t, w, z, f, tau
 end
 
-function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
+function displayResult(model, x, y, t, w, z, f, execution_time_limit, tau, t_start=time(), build_time=0.0)
     # set_silent(model)
     set_optimizer_attribute(model, "CPX_PARAM_TILIM", execution_time_limit)
     set_optimizer_attribute(model, "CPX_PARAM_CLOCKTYPE", 1)
     set_optimizer_attribute(model, "CPX_PARAM_THREADS", 1)
     set_optimizer_attribute(model, "CPX_PARAM_SCRIND", 1)
     total_time = @elapsed optimize!(model)
+    total_time_with_build = time() - t_start  # build + optimize, wall-clock
     resultStatus = ""
     currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM")
-    
+
     println()
-    println("Total execution time: $(MOI.get(model, MOI.SolveTimeSec())) seconds")
+    println("Model build time             : $(round(build_time, digits=3)) seconds")
+    println("CPLEX solver time            : $(MOI.get(model, MOI.SolveTimeSec())) seconds")
+    println("Total execution time (build+solve): $(round(total_time_with_build, digits=3)) seconds")
     println("Gap: ",MOI.get(model, MOI.RelativeGap()))
     if primal_status(model) == MOI.FEASIBLE_POINT
         println("Total distance traveled: ", objective_value(model))
@@ -223,7 +228,9 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
         length(satellites),
         sum(parking_availability),
         nb_vehicle_per_satellite,
-        solve_time,
+        total_time_with_build,   # total wall-clock: model build + CPLEX solve
+        build_time,              # JuMP model construction time only
+        solve_time,               # CPLEX solver internal time only
         obj_val,
         status_text
     ]
@@ -235,6 +242,115 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit,tau)
     if !(termination_status(model) == MOI.OPTIMAL || primal_status(model) == MOI.FEASIBLE_POINT)
         return
     end
+
+    #============================================================
+    Print solution routes
+    ============================================================#
+    println("\n", repeat("-", 70))
+    println("Solution Routes")
+    println(repeat("-", 70))
+
+    # 1st-echelon FEV route (depot = 1)
+    println("\n[1st-echelon FEV route]")
+    fev_route = [1]
+    current = 1
+    fev_cost = 0.0
+    for step in 1:length(A1)+1
+        next_node = nothing
+        for j in A1
+            if j != current && round(value(x[current, j])) > 0.5
+                next_node = j
+                break
+            end
+        end
+        if next_node === nothing
+            break
+        end
+        fev_cost += arc_cost[current, next_node]
+        push!(fev_route, next_node)
+        if next_node == 1
+            break
+        end
+        current = next_node
+    end
+    println("  Route: ", join(fev_route, " -> "))
+    println("  Cost : ", round(fev_cost, digits=2))
+
+    # Freight w[p] delivered to each parking
+    println("\n[Freight w[p] delivered to each parking]")
+    any_w = false
+    for p in satellites
+        wp = value(w[p])
+        if wp > 1e-6
+            println("  w[$p] = ", round(wp, digits=2))
+            any_w = true
+        end
+    end
+    if !any_w
+        println("  (no freight delivered)")
+    end
+
+    # MM towed arcs
+    println("\n[MM towed arcs (y[i,j] == 1)]")
+    mm_count = 0
+    for i in A1, j in A1
+        if i != j && round(value(y[i, j])) > 0.5
+            println("  $i -> $j")
+            mm_count += 1
+        end
+    end
+    if mm_count == 0
+        println("  (no MM towed)")
+    end
+
+    # 2nd-echelon SEV routes per satellite
+    println("\n[2nd-echelon SEV routes]")
+    total_sev_cost = 0.0
+    for p in satellites
+        departures = Int[]
+        for j in A2
+            if j != p && round(value(z[p, j])) > 0.5
+                push!(departures, j)
+            end
+        end
+        if isempty(departures)
+            continue
+        end
+        println("  Satellite $p (#routes = $(length(departures))):")
+        for start_cust in departures
+            sev_route = [p, start_cust]
+            current = start_cust
+            sev_load = value(f[p, start_cust])
+            sev_cost = arc_cost[p, start_cust]
+            for step in 1:length(A2)+1
+                next_node = nothing
+                for j in A2
+                    if j != current && round(value(z[current, j])) > 0.5
+                        next_node = j
+                        break
+                    end
+                end
+                if next_node === nothing
+                    break
+                end
+                sev_cost += arc_cost[current, next_node]
+                push!(sev_route, next_node)
+                if next_node in satellites
+                    break
+                end
+                current = next_node
+            end
+            total_sev_cost += sev_cost
+            println("    ", join(sev_route, " -> "),
+                    "  | load = ", round(sev_load, digits=2),
+                    "  | cost = ", round(sev_cost, digits=2))
+        end
+    end
+    println("\n  Total FEV cost = ", round(fev_cost, digits=2),
+            " | Total SEV cost = ", round(total_sev_cost, digits=2),
+            " | Sum = ", round(fev_cost + total_sev_cost, digits=2))
+    println(repeat("-", 70))
+
     # New data to append
     # Time / Filename / Cap V1 / Cap MM / Cap V2 / #Parking / #MM / #Robot / Parking generation rule / Limit time / Total Distance / Execution time 
     # row_data = [currentTime, fileName, Q0, Q1, Q2, np, sum(PI), length(V2), case, resultStatus * string(minutes), objective_value(model), total_time]
