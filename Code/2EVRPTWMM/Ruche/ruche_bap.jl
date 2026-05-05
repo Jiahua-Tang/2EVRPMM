@@ -78,8 +78,15 @@ open(file_name, "w") do io
                     global lower_bound_2e_routes = minimum_2e_vehicle_required
                     global upper_bound_2e_routes = nb_parking * nb_vehicle_per_satellite
 
-                    global globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required) 
+                    global globalLowerBound = @constraint(model, 0 <= -minimum_2e_vehicle_required)
                     global globalUpperBound = @constraint(model, 0 <= upper_bound_2e_routes)
+
+                    global satelliteRouteLB = Dict{Int, ConstraintRef}()
+                    global satelliteRouteUB = Dict{Int, ConstraintRef}()
+                    for s in satellites
+                        satelliteRouteLB[s] = @constraint(model, 0 <= 0)
+                        satelliteRouteUB[s] = @constraint(model, 0 <= nb_vehicle_per_satellite)
+                    end
                 end
                 global execution_time_build_model += execution_time
 

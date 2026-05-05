@@ -64,6 +64,22 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
         print("\n")
     end
 
+    if !isempty(branchingInfo.upper_bound_per_satellite)
+        print("   # Routes from satellite UPPER bound:  ")
+        for (s, ub) in sort(collect(branchingInfo.upper_bound_per_satellite))
+            print("sat $s <= $ub  ")
+        end
+        print("\n")
+    end
+
+    if !isempty(branchingInfo.lower_bound_per_satellite)
+        print("   # Routes from satellite LOWER bound:  ")
+        for (s, lb) in sort(collect(branchingInfo.lower_bound_per_satellite))
+            print("sat $s >= $lb  ")
+        end
+        print("\n")
+    end
+
     println("")
 end
 
@@ -233,8 +249,10 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
                     if !existance1 && !existance2
                         push!(left_branch.must_served_together, local_decision)
                         push!(right_branch.forbidden_served_together, local_decision)
+                        @info "Branch on combination customer-customer: $local_decision"
+                        println("Branch on combination customer-customer: $local_decision")
                         return (left_branch, right_branch)
-                    end                
+                    end
                 end
             end
     end

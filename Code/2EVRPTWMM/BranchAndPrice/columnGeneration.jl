@@ -99,9 +99,14 @@ function add_2eroute!(route::Route)
         global globalLowerBound
         JuMP.set_normalized_coefficient(globalLowerBound, y, -1)  # For sum(y) ≥ bound: sum(-y) ≤ -lowerbound
         JuMP.set_normalized_coefficient(globalUpperBound, y, 1)   # For sum(y) ≤ bound: sum(y) ≤ upperbound
+
+        global satelliteRouteLB, satelliteRouteUB
+        s = route.sequence[1]
+        JuMP.set_normalized_coefficient(satelliteRouteLB[s], y, -1)
+        JuMP.set_normalized_coefficient(satelliteRouteUB[s], y, 1)
     end
     global execution_time_add_columns += execution_time_ac
-    return y    
+    return y
 end
 
 
@@ -393,12 +398,12 @@ end
 #     visitedNodes::Vector{Int}
 # end
 #endregion
-function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, π4, π5, π6, branchingInfo::BranchingInfo; max_cols::Int = 100)
+function pricing(selected_parkings, routes_2e_pool::Vector{Int}, π1, π2, π3, π4, π5, π6, branchingInfo::BranchingInfo, π_sat_lb::Vector{Float64}, π_sat_ub::Vector{Float64}; max_cols::Int = 100)
 
 
 
     execution_time_sp = @elapsed begin
-        new_columns_found = ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo; max_cols = max_cols)
+        new_columns_found = ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo, π_sat_lb, π_sat_ub; max_cols = max_cols)
     end
     global execution_time_subproblem += execution_time_sp
     # println("execution time pricing function: ", round(execution_time_sp, digits=3))
@@ -807,7 +812,7 @@ Optimized ng-route labeling algorithm with major performance improvements:
 - Fixed dominance checking logic
 - Pre-filtering of feasible nodes
 """
-function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo; max_cols::Int = 100)
+function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo, π_sat_lb::Vector{Float64}, π_sat_ub::Vector{Float64}; max_cols::Int = 100)
     # println("Starting ng-path labelling algorithm")
     # max_cols : maximum number of new columns to add per pricing call.
     #            Larger values reduce the number of outer CG iterations (fewer
@@ -844,7 +849,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
     
     # Initialize with starting labels at each parking
     for parking in selected_parkings
-        rc = π1[parking] + π3[parking] - π5 + π6
+        rc = π1[parking] + π3[parking] - π5 + π6 - π_sat_lb[parking] + π_sat_ub[parking]
         l = LabelOptimized(parking, rc, 0, 0, 0, BitSet([parking]), [parking])
         enqueue!(label_queue, l, rc)
     end

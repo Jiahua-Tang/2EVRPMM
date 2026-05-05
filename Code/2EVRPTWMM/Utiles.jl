@@ -53,6 +53,9 @@ mutable struct BranchingInfo
     upper_bound_number_2e_routes::Set{Int}                # upper bound of number of total 2e routes
     lower_bound_number_2e_routes::Set{Int}                # lower bound of number of total 2e routes
 
+    upper_bound_per_satellite::Dict{Int,Int}              # per-satellite upper bound on routes departing from s
+    lower_bound_per_satellite::Dict{Int,Int}              # per-satellite lower bound on routes departing from s
+
     depth::Int
 end
 
