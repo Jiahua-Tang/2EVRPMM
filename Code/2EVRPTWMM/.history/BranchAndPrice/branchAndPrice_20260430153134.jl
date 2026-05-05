@@ -50,7 +50,7 @@ function select_node_from_tree(node_stack)
 
     @info "Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes"
     println("Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes, current upper bound = $(round(upperBound, digits=2))")
-    # displayBranchingNode(node)
+    displayBranchingNode(node)
 
     deleteat!(node_stack, findfirst(==(node), node_stack))
     return node
@@ -284,7 +284,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # println("--execution time dual: ", round(execution_time_dual, digits=3))
 
 
-            #region: PRINT cg y value
+            #region: PRINT cg y value loop
             # dummy_route_selected = Vector{Int}()
             for (k,v) in y_vars
                 # if k > length(dummyRoutes_numeration)
@@ -331,31 +331,26 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     n_vars = length(y_vars)
     y_values = Vector{Float64}(undef, n_vars)
     sorted_keys = sort!(collect(keys(y_vars)))
-    sum_y_value = 0.0
-    sum_per_satellite = Dict{Int, Float64}()
+    sum_y_value = 0
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
-        #region: PRINT cg y value
-        if y_values[idx] != 0
-            sum_y_value += y_values[idx]
-            start_parking = routes_2e[value(k)].sequence[1]
-            sum_per_satellite[start_parking] = get(sum_per_satellite, start_parking, 0.0) + y_values[idx]
+        #region: PRINT cg y value result
+        if y_values[idx] !=  0
+        #     sum_y_value += y_values[idx]
             println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
         end
         #endregion
     end
-    println("sum of y values (total)            = $(round(sum_y_value, digits=3))")
-    for s in sort!(collect(keys(sum_per_satellite)))
-        println("sum of y values starting at depot $s = $(round(sum_per_satellite[s], digits=3))")
-    end
     if total_obj > upperBound
         #region: write node matrix
-        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")
+        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")        
         #endregion
         @info "Exceed Upper Bound, prune"
         println("Exceed Upper Bound, prune")
         return nothing
     end
+    # println("number of 2e routes: ",length(routes_2e))
+    # println("sum of y value is : $(round(sum_y_value,digits=2))")
     #endregion
 
     # Check for integer solution and compute fractional score
@@ -596,7 +591,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
         num_iter_sp = 1
         current_node_id = 0
 
-        while !isempty(node_stack) # && num_iter_sp < 51
+        while !isempty(node_stack)  && num_iter_sp < 6
             println("================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e.sequence) parkings$([r for r in getServedParking1eRoute(route_1e)])================")
             
             # * 2.1 Select a node from search tree

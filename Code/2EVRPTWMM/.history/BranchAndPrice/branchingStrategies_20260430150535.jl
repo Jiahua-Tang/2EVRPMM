@@ -58,7 +58,7 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
 
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
         print("   # Total number of 2e routes cannot UNDER:   ")
-        for value in branchingInfo.lower_bound_number_2e_routes
+        for value in branchingInfo.lower_bound_number_2e_routes 
             print(value, "  ")
         end
         print("\n")

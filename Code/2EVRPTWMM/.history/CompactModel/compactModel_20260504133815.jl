@@ -276,20 +276,6 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit, tau, t_sta
     println("  Route: ", join(fev_route, " -> "))
     println("  Cost : ", round(fev_cost, digits=2))
 
-    # 1e arrival times at satellites only (cumulative arc cost from depot; depot omitted).
-    fev_arrival = Dict{Int, Float64}()
-    cum = 0.0
-    for i in 1:(length(fev_route) - 1)
-        cum += arc_cost[fev_route[i], fev_route[i+1]]
-        if fev_route[i+1] in satellites
-            fev_arrival[fev_route[i+1]] = cum
-        end
-    end
-    if !isempty(fev_arrival)
-        ordered = [(n, round(fev_arrival[n], digits=2)) for n in fev_route if haskey(fev_arrival, n)]
-        println("  Arrival (satellites only): ", ordered)
-    end
-
     # Freight w[p] delivered to each parking
     println("\n[Freight w[p] delivered to each parking]")
     any_w = false

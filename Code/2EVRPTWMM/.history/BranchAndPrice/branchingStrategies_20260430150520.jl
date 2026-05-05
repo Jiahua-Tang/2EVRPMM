@@ -58,7 +58,7 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
 
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
         print("   # Total number of 2e routes cannot UNDER:   ")
-        for value in branchingInfo.lower_bound_number_2e_routes
+        for value in branchingInfo.lower_bound_number_2e_routes 
             print(value, "  ")
         end
         print("\n")
@@ -278,7 +278,6 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
                                 push!(left_branch.must_include_end_combinations, local_decision)
                                 push!(right_branch.forbidden_end_combinations, local_decision)
                                 @info "Branch on combination end-parking-customer: $local_decision"
-                                println("Branch on combination end-parking-customer: $local_decision")
                                 return (left_branch, right_branch)
                             end
                         end

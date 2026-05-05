@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "ce4-3,5,30"
+filename = "ce5-2,3,30"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -162,7 +162,7 @@ open(file_name, "w") do io
 
                     # ---------- 2) Run branch-and-price on each root node in the batch ----------
                     bap_batch_time = @elapsed begin
-                        while !isempty(root_nodes) &&  num_iter_global == 1
+                        while !isempty(root_nodes) # &&  num_iter_global == 1
                             if time_exceeded()
                                 println("\n Time limit reached during branch-and-price.")
                                 stop_processing = true

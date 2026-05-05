@@ -50,7 +50,7 @@ function select_node_from_tree(node_stack)
 
     @info "Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes"
     println("Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes, current upper bound = $(round(upperBound, digits=2))")
-    # displayBranchingNode(node)
+    displayBranchingNode(node)
 
     deleteat!(node_stack, findfirst(==(node), node_stack))
     return node
@@ -284,7 +284,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # println("--execution time dual: ", round(execution_time_dual, digits=3))
 
 
-            #region: PRINT cg y value
+            #region: PRINT cg y value loop
             # dummy_route_selected = Vector{Int}()
             for (k,v) in y_vars
                 # if k > length(dummyRoutes_numeration)
@@ -332,11 +332,11 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     y_values = Vector{Float64}(undef, n_vars)
     sorted_keys = sort!(collect(keys(y_vars)))
     sum_y_value = 0.0
-    sum_per_satellite = Dict{Int, Float64}()
+    sum_per_satellite = Dict{Int, Float64}()   # start-parking -> sum of y for routes departing from it
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
-        #region: PRINT cg y value
-        if y_values[idx] != 0
+        #region: PRINT cg y value result
+        if y_values[idx] !=  0
             sum_y_value += y_values[idx]
             start_parking = routes_2e[value(k)].sequence[1]
             sum_per_satellite[start_parking] = get(sum_per_satellite, start_parking, 0.0) + y_values[idx]
@@ -344,18 +344,22 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
         end
         #endregion
     end
+
+    # Per-satellite fleet-size summary (used by the depot-level branching rule)
     println("sum of y values (total)            = $(round(sum_y_value, digits=3))")
     for s in sort!(collect(keys(sum_per_satellite)))
         println("sum of y values starting at depot $s = $(round(sum_per_satellite[s], digits=3))")
     end
     if total_obj > upperBound
         #region: write node matrix
-        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")
+        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")        
         #endregion
         @info "Exceed Upper Bound, prune"
         println("Exceed Upper Bound, prune")
         return nothing
     end
+    # println("number of 2e routes: ",length(routes_2e))
+    # println("sum of y value is : $(round(sum_y_value,digits=2))")
     #endregion
 
     # Check for integer solution and compute fractional score
@@ -453,6 +457,8 @@ function solve_root_node(route_1e::Route)
             Set{Int}(),              # forbidden_parkings
             Set{Int}(),              # upper_bound_number_2e_routes
             Set{Int}(),              # lower_bound_number_2e_routes
+            Dict{Int, Set{Int}}(),   # upper_bound_number_2e_routes_per_satellite
+            Dict{Int, Set{Int}}(),   # lower_bound_number_2e_routes_per_satellite
             0                        # depth
         )
         root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
@@ -545,6 +551,42 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
         else
             set_normalized_rhs(globalUpperBound, upper_bound_2e_routes)
         end
+
+        # * Per-satellite (per-depot) bounds.
+        # We iterate over every satellite and reset the RHS so that bounds applied at a previous
+        # node don't leak into this one (the master model is reused across all nodes).
+        #
+        # sync[k] was created as `@constraint(model, -nb_vehicle_per_satellite <= 0.0)`.
+        # JuMP canonicalises this by moving the LHS constant to the RHS, giving normalized form
+        #     Σ b2out·y ≤ nb_vehicle_per_satellite
+        # so the *normalized* RHS of sync[k] is `nb_vehicle_per_satellite`, not 0.
+        #   default RHS = nb_vehicle_per_satellite   (no per-sat branching)
+        #   per-sat UB U_k                            →  RHS = U_k
+        #
+        # syncLB[k] was created as `@constraint(model, 0 <= 0)` ⇒ normalized RHS = 0.
+        # After columns add coefficient -b2out·y to the LHS, the constraint reads
+        #     Σ (-b2out)·y ≤ RHS         ⇔  Σ b2out·y ≥ -RHS
+        #   default RHS = 0   (vacuous, since y ≥ 0)
+        #   per-sat LB L_k    →  RHS = -L_k
+        for (k, sat_id) in enumerate(satellites)
+            # per-satellite upper bound  →  tighten sync[k]
+            if haskey(branching_decision.upper_bound_number_2e_routes_per_satellite, sat_id) &&
+               !isempty(branching_decision.upper_bound_number_2e_routes_per_satellite[sat_id])
+                U_k = minimum(branching_decision.upper_bound_number_2e_routes_per_satellite[sat_id])
+                set_normalized_rhs(sync[k], U_k)
+            else
+                set_normalized_rhs(sync[k], nb_vehicle_per_satellite)
+            end
+
+            # per-satellite lower bound  →  tighten syncLB[k]
+            if haskey(branching_decision.lower_bound_number_2e_routes_per_satellite, sat_id) &&
+               !isempty(branching_decision.lower_bound_number_2e_routes_per_satellite[sat_id])
+                L_k = maximum(branching_decision.lower_bound_number_2e_routes_per_satellite[sat_id])
+                set_normalized_rhs(syncLB[k], -L_k)
+            else
+                set_normalized_rhs(syncLB[k], 0.0)
+            end
+        end
     end
     global execution_time_set_bound += execution_time
     global execution_time_build_model += execution_time
@@ -596,7 +638,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
         num_iter_sp = 1
         current_node_id = 0
 
-        while !isempty(node_stack) # && num_iter_sp < 51
+        while !isempty(node_stack) #&& num_iter_sp < 6
             println("================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e.sequence) parkings$([r for r in getServedParking1eRoute(route_1e)])================")
             
             # * 2.1 Select a node from search tree
@@ -725,6 +767,52 @@ function branchingStrategy(y, route_1e, routes_pool, branchingInfo::BranchingInf
         left_branch.depth += 1
         right_branch.depth += 1
 
+        return left_branch, right_branch
+    end
+
+    ## Case A.5: total is integer, but per-depot (per-satellite) sum is fractional.
+    # Aggregate y by start-satellite and pick the satellite whose sum is most fractional
+    # (closest to a half-integer). Branch:  Σ_{r at sat s} y_r ≥ ceil(val)  vs.  ≤ floor(val).
+    sum_per_sat = Dict{Int, Float64}()
+    for r in eachindex(y)
+        if y[r] > 1e-8
+            s = routes_pool[r].sequence[1]
+            sum_per_sat[s] = get(sum_per_sat, s, 0.0) + y[r]
+        end
+    end
+
+    best_sat = nothing
+    best_frac = -1.0
+    for (s, val) in sum_per_sat
+        # how far is this sum from being an integer?
+        frac_dist = min(val - floor(val), ceil(val) - val)
+        if frac_dist > 1e-8 && frac_dist > best_frac
+            best_frac = frac_dist
+            best_sat = s
+        end
+    end
+
+    if best_sat !== nothing
+        val = sum_per_sat[best_sat]
+        lb_val = Int(ceil(val))
+        ub_val = Int(floor(val))
+        @info "Branch on per-depot sum at satellite $best_sat:  $ub_val, $lb_val  (sum = $(round(val, digits=3)))"
+        println("Branch on per-depot sum at satellite $best_sat:  $ub_val, $lb_val  (sum = $(round(val, digits=3)))")
+
+        # left child: per-sat lower bound  ⇒  Σ y ≥ ceil(val)
+        if !haskey(left_branch.lower_bound_number_2e_routes_per_satellite, best_sat)
+            left_branch.lower_bound_number_2e_routes_per_satellite[best_sat] = Set{Int}()
+        end
+        push!(left_branch.lower_bound_number_2e_routes_per_satellite[best_sat], lb_val)
+
+        # right child: per-sat upper bound  ⇒  Σ y ≤ floor(val)
+        if !haskey(right_branch.upper_bound_number_2e_routes_per_satellite, best_sat)
+            right_branch.upper_bound_number_2e_routes_per_satellite[best_sat] = Set{Int}()
+        end
+        push!(right_branch.upper_bound_number_2e_routes_per_satellite[best_sat], ub_val)
+
+        left_branch.depth += 1
+        right_branch.depth += 1
         return left_branch, right_branch
     end
 

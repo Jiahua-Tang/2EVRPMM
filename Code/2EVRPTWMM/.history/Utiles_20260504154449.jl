@@ -547,7 +547,7 @@ function read_nico_dataset(filename)
     global instance_name = splitext(basename(filename))[1]
 
     for n in points
-        println("Point $(n):  q=$(rpad(demands[n], 2)), tw= [$(rpad(time_window[n][1], 3)), $(rpad(time_window[n][2], 3))]")
+        println("Customer $(c):  q=$(rpad(demands[c], 2)), tw= [$(rpad(time_window[c][1], 3)), $(rpad(time_window[c][2], 3))]")
     end
 
     # plt = displayMap()

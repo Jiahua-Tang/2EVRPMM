@@ -146,55 +146,47 @@ open(file_name, "w") do io
                 end
             end
 
+            total_time          = time() - start_time
+            build_model_time    = execution_time_build_model               # master + all subproblem JuMP construction
+            time_excluding_build = total_time - build_model_time            # algorithm/solver work without model building
+
             println("total execution time of preparation for sorting subproblems   : $(round(execution_time_prep, digits=2)) seconds")
             println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem, digits=2), " seconds")
             println("total execution time solving branch and price                 : ", round(execution_time_bap, digits=2), " seconds")
+            println("total model construction time (all JuMP builds)               : $(round(build_model_time, digits=2)) seconds")
+            println("total execution time (build + algo)                           : $(round(total_time, digits=2)) seconds")
+            println("total execution time excluding model building                 : $(round(time_excluding_build, digits=2)) seconds")
 
             println("\n================================================================")
 
 
-            if !isnothing(optimalSolution)
-                currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM-SS-s")
+            currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM-SS-s")
+            jobid = get(ENV, "SLURM_JOB_ID", "nojob")
+            outfile = "bp_$(filename)_result_$jobid.csv"
 
-                jobid = get(ENV, "SLURM_JOB_ID", "nojob")
-                outfile = "bp_$(filename)_result_$jobid.csv"
+            obj_val   = !isnothing(optimalSolution) ? upperBound : "/"
+            status_tx = "/"
 
-                row_data = [
-                    currentTime,
-                    "bp",
-                    "\"$filename\"",
-                    length(customers),
-                    length(satellites),
-                    sum(parking_availability),
-                    nb_vehicle_per_satellite,
-                    time() - start_time,
-                    upperBound,
-                    "/"
-                ]
+            row_data = [
+                currentTime,
+                "bp",
+                "\"$filename\"",
+                length(customers),
+                length(satellites),
+                sum(parking_availability),
+                nb_vehicle_per_satellite,
+                total_time,             # full wall-clock time: build + algo (compare with compact's total_time_with_build)
+                build_model_time,       # JuMP model construction time only (compare with compact's build_time)
+                time_excluding_build,   # algorithm + CPLEX solver time, no JuMP build
+                execution_time_prep,    # LRP preparation (subproblem sorting)
+                execution_time_cg_subproblem,  # column generation at root nodes
+                execution_time_bap,     # branch-and-price
+                obj_val,
+                status_tx
+            ]
 
-                open(outfile, "a") do file
-                    println(file, join(row_data, ","))
-                end
-            else
-                currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM-SS-s")
-                jobid = get(ENV, "SLURM_JOB_ID", "nojob")
-                outfile = "bp_$(filename)_result_$jobid.csv"
-
-                row_data = [
-                    currentTime,
-                    "bp",
-                    "\"$filename\"",
-                    length(customers),
-                    length(satellites),
-                    sum(parking_availability),
-                    nb_vehicle_per_satellite,
-                    time() - start_time,
-                    "/"
-                ]
-
-                open(outfile, "a") do file
-                    println(file, join(row_data, ","))
-                end
+            open(outfile, "a") do file
+                println(file, join(row_data, ","))
             end
     end
 end

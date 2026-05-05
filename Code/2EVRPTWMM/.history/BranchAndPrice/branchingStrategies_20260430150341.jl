@@ -58,7 +58,7 @@ function displayBranchingRule(branchingInfo::BranchingInfo)
 
     if !isempty(branchingInfo.lower_bound_number_2e_routes)
         print("   # Total number of 2e routes cannot UNDER:   ")
-        for value in branchingInfo.lower_bound_number_2e_routes
+        for value in branchingInfo.lower_bound_number_2e_routes 
             print(value, "  ")
         end
         print("\n")
@@ -92,13 +92,13 @@ function branchOnReverseRoute(branchingInfo, reverse_route)
     left_branch.depth += 1
     right_branch.depth += 1
     @info "Start to branch on reverse route $reverse_route"
+    println("Start to branch on reverse route $reverse_route")
     
     n = Int(ceil(length(reverse_route)/2))
     routeExistanceMust = Tuple(sort([reverse_route[1], reverse_route[n]])) in branchingInfo.must_include_combinations
     routeExistanceForbidden = Tuple(sort([reverse_route[1], reverse_route[n]])) in branchingInfo.forbidden_combinations
     if !routeExistanceMust && !routeExistanceForbidden
         @info "Branching decision : combination of parking-customer: $(Tuple(sort([reverse_route[1], reverse_route[n]])))"
-        println("Branch on reverse route $reverse_route: $(Tuple(sort([reverse_route[1], reverse_route[n]])))")
         push!(left_branch.must_include_combinations, Tuple(sort([reverse_route[1], reverse_route[n]])))
         push!(right_branch.forbidden_combinations, Tuple(sort([reverse_route[1], reverse_route[n]])))
         return left_branch, right_branch
@@ -108,7 +108,6 @@ function branchOnReverseRoute(branchingInfo, reverse_route)
     routeExistanceForbidden = Tuple(sort([reverse_route[n], reverse_route[end]])) in branchingInfo.forbidden_combinations
     if !routeExistanceMust && !routeExistanceForbidden
         @info "Branching decision : combination of parking-customer: $(Tuple(sort([reverse_route[n], reverse_route[end]])))"
-        println("Branch on reverse route $reverse_route: $(Tuple(sort([reverse_route[n], reverse_route[end]])))")
         push!(left_branch.must_include_combinations, Tuple(sort([reverse_route[n], reverse_route[end]])))
         push!(right_branch.forbidden_combinations, Tuple(sort([reverse_route[n], reverse_route[end]])))
         return left_branch, right_branch
@@ -187,7 +186,6 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
                                 push!(left_branch.must_include_combinations, local_decision)
                                 push!(right_branch.forbidden_combinations, local_decision)
                                 @info "Branch on combination parking-customer: $local_decision"
-                                println("Branch on combination parking-customer: $local_decision")
                                 return (left_branch, right_branch)
                             end
                         end
@@ -278,7 +276,6 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
                                 push!(left_branch.must_include_end_combinations, local_decision)
                                 push!(right_branch.forbidden_end_combinations, local_decision)
                                 @info "Branch on combination end-parking-customer: $local_decision"
-                                println("Branch on combination end-parking-customer: $local_decision")
                                 return (left_branch, right_branch)
                             end
                         end

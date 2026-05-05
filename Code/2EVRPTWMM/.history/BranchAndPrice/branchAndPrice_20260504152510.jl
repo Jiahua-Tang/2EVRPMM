@@ -50,17 +50,17 @@ function select_node_from_tree(node_stack)
 
     @info "Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes"
     println("Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes, current upper bound = $(round(upperBound, digits=2))")
-    # displayBranchingNode(node)
+    displayBranchingNode(node)
 
     deleteat!(node_stack, findfirst(==(node), node_stack))
     return node
 end
 
-function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
+function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int}, route_1e::Route)
     result = Vector{Int}()
     routes_to_delete = Vector{Int}()
     # displayBranchingRule(branchingInfo)
-    
+
     for (idx, route_id) in enumerate(routes)
         valide = true
         route = routes_2e[route_id]
@@ -68,17 +68,17 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
             valide = false
         end
         #region
-        # for must_include in branchingInfo.must_include_combinations 
-        # ## a route include a must-combination on the branch can be added into 
-        # ## target parking and target customer must be in same route 
+        # for must_include in branchingInfo.must_include_combinations
+        # ## a route include a must-combination on the branch can be added into
+        # ## target parking and target customer must be in same route
         #     if must_include[2] in route.sequence && !(must_include[1] in route.sequence)
         #         # println("TEST1  ")
         #         valide = false
-        #         break            
+        #         break
         #     end
-        # end    
+        # end
 
-        # for forbidden in branchingInfo.forbidden_combinations 
+        # for forbidden in branchingInfo.forbidden_combinations
         # # a route include a forbidden-combination on the branch cannot be added into result
         # ## target parking and target customer cannnot be in same route
         #     if Int(forbidden[1] in route.sequence) + Int(forbidden[2] in route.sequence) == 2
@@ -90,15 +90,15 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
         #endregion
 
         # Start-parking – customer rules
-        for must_include in branchingInfo.must_include_combinations 
+        for must_include in branchingInfo.must_include_combinations
             # if a route includes the target customer, its START parking must be the given one
             if must_include[2] in route.sequence && !(must_include[1] == route.sequence[1])
                 valide = false
-                break            
+                break
             end
-        end    
+        end
 
-        for forbidden in branchingInfo.forbidden_combinations 
+        for forbidden in branchingInfo.forbidden_combinations
             # a route starting from forbidden[1] cannot serve customer forbidden[2]
             if Int(forbidden[1] == route.sequence[1]) + Int(forbidden[2] in route.sequence) == 2
                 valide = false
@@ -139,6 +139,16 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
                 # println("TEST4  ")
                 valide = false
                 break
+            end
+        end
+
+        if valide
+            recompute_2e_arrival_time!(route, route_1e.arrival_time[route.sequence[1]])
+            for node in route.sequence
+                if node in customers && route.arrival_time[node] > time_window[node][2]
+                    valide = false
+                    break
+                end
             end
         end
 
@@ -203,7 +213,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     # *     - 4. check existence new routes
 
     selected_parkings = getServedParking1eRoute(route_1e)
-    
+
     num_iter_cg = 1
     # Pre-allocate dual multiplier arrays to avoid reallocation each iteration
     n_satellites = length(satellites)
@@ -221,18 +231,18 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     dummy_route_in_solution = true
     dummy_route_selected = Vector{Int}()
     while true # num_iter_cg < 2 # && true
-        # println("-------------Iter CG $num_iter_cg-------------")
-        if length(dummy_route_selected) == 0 && num_iter_cg > 1 && dummy_route_in_solution
-            dummy_route_in_solution = false
-            for route in dummyRoutes_numeration
-                # if haskey(y_vars, route.id)
-                    y = y_vars[route]
-                    JuMP.set_upper_bound(y, 0.0)
-                    JuMP.set_lower_bound(y, 0.0)
-                # end
-                # println(route.id, "  ", route.sequence)
-            end
-        end      
+        println("-------------Iter CG $num_iter_cg-------------")
+        # if length(dummy_route_selected) == 0 && num_iter_cg > 1 && dummy_route_in_solution
+        #     dummy_route_in_solution = false
+        #     for route in dummyRoutes_numeration
+        #         # if haskey(y_vars, route.id)
+        #             y = y_vars[route]
+        #             JuMP.set_upper_bound(y, 0.0)
+        #             JuMP.set_lower_bound(y, 0.0)
+        #         # end
+        #         # println(route.id, "  ", route.sequence)
+        #     end
+        # end      
         
 
         # * 1. solve formulation
@@ -284,7 +294,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # println("--execution time dual: ", round(execution_time_dual, digits=3))
 
 
-            #region: PRINT cg y value
+            #region: PRINT cg y value loop
             # dummy_route_selected = Vector{Int}()
             for (k,v) in y_vars
                 # if k > length(dummyRoutes_numeration)
@@ -303,7 +313,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
 
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
-                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo)
+                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo, route_1e.arrival_time)
                 # println("now there are $(length(routes_2e)) 2e routes in total")
             # end
             # println("--execution time solving pricing: ", round(execution_time_p, digits=3),"\n")
@@ -332,11 +342,11 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     y_values = Vector{Float64}(undef, n_vars)
     sorted_keys = sort!(collect(keys(y_vars)))
     sum_y_value = 0.0
-    sum_per_satellite = Dict{Int, Float64}()
+    sum_per_satellite = Dict{Int, Float64}()   # start-parking -> sum of y for routes departing from it
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
-        #region: PRINT cg y value
-        if y_values[idx] != 0
+        #region: PRINT cg y value result
+        if y_values[idx] !=  0
             sum_y_value += y_values[idx]
             start_parking = routes_2e[value(k)].sequence[1]
             sum_per_satellite[start_parking] = get(sum_per_satellite, start_parking, 0.0) + y_values[idx]
@@ -344,18 +354,22 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
         end
         #endregion
     end
+
+    # Per-satellite fleet-size summary (used by the depot-level branching rule)
     println("sum of y values (total)            = $(round(sum_y_value, digits=3))")
     for s in sort!(collect(keys(sum_per_satellite)))
         println("sum of y values starting at depot $s = $(round(sum_per_satellite[s], digits=3))")
     end
     if total_obj > upperBound
         #region: write node matrix
-        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")
+        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")        
         #endregion
         @info "Exceed Upper Bound, prune"
         println("Exceed Upper Bound, prune")
         return nothing
     end
+    # println("number of 2e routes: ",length(routes_2e))
+    # println("sum of y value is : $(round(sum_y_value,digits=2))")
     #endregion
 
     # Check for integer solution and compute fractional score
@@ -389,11 +403,15 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             global optimalSolution = Vector{Route}()
             sizehint!(optimalSolution, n_vars + 1)
             push!(optimalSolution, route_1e)
-            println("$(route_1e.sequence)", "   ", round(route_1e.cost, digits=2))
+            println("$(route_1e.sequence)", "   ", round(route_1e.cost, digits=2),
+                    "   arrival (satellites only): ",
+                    [(n, round(route_1e.arrival_time[n], digits=2)) for n in route_1e.sequence if n in satellites])
             @inbounds for i in 1:length(y_values)
                 if y_values[i] >= 1-1e-8
-                    println(routes_2e[i].sequence, "   ", round(routes_2e[i].cost, digits=2))
-                    push!(optimalSolution, routes_2e[i])
+                    r = routes_2e[i]
+                    println(r.sequence, "   ", round(r.cost, digits=2),
+                            "   arrival: ", [(n, round(r.arrival_time[n], digits=2)) for n in r.sequence])
+                    push!(optimalSolution, r)
                 end
             end
         end
@@ -457,9 +475,9 @@ function solve_root_node(route_1e::Route)
         )
         root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
 
-        columns_to_be_kept, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
+        columns_to_be_kept, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)), route_1e)
+        println("number of 2e routes before column generation: ", length(columns_to_be_kept))
 
-        # println("number of 2e routes before column generation: ", length(columns_to_be_kept))
         root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
         # end
         # println("-execution time of column generation : $(round(execution_time, digits=2))s")
@@ -509,7 +527,7 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
 
     # * Instead of copying the model, just filter out routes and set bounds to 0
     execution_time = @elapsed begin
-        routes_2e_to_keep, columns_to_be_deleted = filter_2e_routes(branching_decision, collect(1:length(routes_2e)))
+        routes_2e_to_keep, columns_to_be_deleted = filter_2e_routes(branching_decision, collect(1:length(routes_2e)), route_1e)
     end
     global execution_time_filtering += execution_time
 
@@ -596,7 +614,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
         num_iter_sp = 1
         current_node_id = 0
 
-        while !isempty(node_stack) # && num_iter_sp < 51
+        while !isempty(node_stack) #&& num_iter_sp < 6
             println("================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e.sequence) parkings$([r for r in getServedParking1eRoute(route_1e)])================")
             
             # * 2.1 Select a node from search tree

@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "ce4-3,5,30"
+filename = "cf1-2,3,30"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -79,6 +79,14 @@ open(file_name, "w") do io
                     global sync = Vector{ConstraintRef}(undef, length(satellites))
                     for (k,_) in enumerate(satellites)
                         sync[k] = @constraint(model, -nb_vehicle_per_satellite <= 0.0)
+                    end
+
+                    # Per-satellite lower-bound constraints (initially inactive: 0 <= 0).
+                    # Mirror of globalLowerBound, one per satellite. When per-depot branching
+                    # imposes  Σ_{r at sat k} y_r >= L_k , we set normalized RHS = -L_k.
+                    global syncLB = Vector{ConstraintRef}(undef, length(satellites))
+                    for (k,_) in enumerate(satellites)
+                        syncLB[k] = @constraint(model, 0 <= 0)
                     end
 
                     global custVisit = Vector{ConstraintRef}(undef, length(customers))
@@ -162,7 +170,7 @@ open(file_name, "w") do io
 
                     # ---------- 2) Run branch-and-price on each root node in the batch ----------
                     bap_batch_time = @elapsed begin
-                        while !isempty(root_nodes) &&  num_iter_global == 1
+                        while !isempty(root_nodes) # &&  num_iter_global == 1
                             if time_exceeded()
                                 println("\n Time limit reached during branch-and-price.")
                                 stop_processing = true
@@ -188,7 +196,6 @@ open(file_name, "w") do io
                 println("total execution time of preparation for sorting subproblems   : $(round(execution_time_prep, digits=2)) seconds")
                 println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem, digits=2), " seconds")
                 println("total execution time solving branch and price                 : ", round(execution_time_bap, digits=2), " seconds")
-
             end
             #endregion
 
@@ -215,19 +222,9 @@ open(file_name, "w") do io
                 # open("result.csv", "a") do file
                 #     println(file, join(row_data, ",")) 
                 # end
-                println("\nOptimal solution found with cost = ", round(upperBound, digits=2), " and sequence: ")
-                for (idx, route) in enumerate(optimalSolution)
-                    println(route.sequence, "  ", "load =$(route.load)  cost =", round(route.cost, digits=2))
-                    # if idx == 1
-                    #     # 1e (FEV) route: print arrival only at satellites (skip the depot).
-                    #     println("        arrival (satellites only): ",
-                    #             [(n, round(route.arrival_time[n], digits=2)) for n in route.sequence if n in satellites])
-                    # else
-                    #     # 2e (SEV) route: print arrival at every node in the sequence.
-                    #     println("        arrival: ",
-                    #             [(n, round(route.arrival_time[n], digits=2)) for n in route.sequence])
-                    # end
-                end
+                for route in optimalSolution 
+                    println(route.sequence, "  ", round(route.cost, digits=2))
+                end   
             end
             #endregion
     end
