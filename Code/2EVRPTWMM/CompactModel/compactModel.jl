@@ -158,7 +158,8 @@ function displayResult(model, x, y, t, w, z, f, execution_time_limit, tau, t_sta
     println("Model build time             : $(round(build_time, digits=3)) seconds")
     println("CPLEX solver time            : $(MOI.get(model, MOI.SolveTimeSec())) seconds")
     println("Total execution time (build+solve): $(round(total_time_with_build, digits=3)) seconds")
-    println("Gap: ",MOI.get(model, MOI.RelativeGap()))
+    gap_print = try MOI.get(model, MOI.RelativeGap()) catch; "N/A" end
+    println("Gap: ", gap_print)
     if primal_status(model) == MOI.FEASIBLE_POINT
         println("Total distance traveled: ", objective_value(model))
     end

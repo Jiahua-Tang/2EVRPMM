@@ -586,7 +586,7 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
         end
     end
     global execution_time_set_bound += execution_time
-    # global execution_time_build_model += execution_time
+    global execution_time_build_model += execution_time
 
     return child_node
 end

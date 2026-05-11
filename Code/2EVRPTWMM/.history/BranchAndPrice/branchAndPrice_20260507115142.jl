@@ -7,27 +7,27 @@ function blockColumn()
 end
 
 function appendNodeMatrix(y_value, id, parent_id, cgLowerBound, fractionalScore, gradientLB,gradientFS,status1, status2)
-    active_routes = [
-        string(join(routes_2e[idx].sequence, "-"), " = ", round(y, digits=3))
-        for (idx, y) in enumerate(y_value) if y != 0
-    ]
+    # active_routes = [
+    #     string(join(routes_2e[idx].sequence, "-"), " = ", round(y, digits=3))
+    #     for (idx, y) in enumerate(y_value) if y != 0
+    # ]
 
-    routes_str = join(active_routes, ",")
+    # routes_str = join(active_routes, ",")
 
-    row_data = [
-        Int(round(id)),
-        Int(round(parent_id)),
-        round(cgLowerBound, digits=3),
-        round(fractionalScore, digits=3),
-        round(gradientLB, digits=3),
-        round(gradientFS, digits=3),
-        status1,
-        status2,
-        routes_str
-    ]
-    open("NodeMatrix_$(filename).csv", "a") do file
-        println(file, join(row_data, ",")) 
-    end                    
+    # row_data = [
+    #     Int(round(id)),
+    #     Int(round(parent_id)),
+    #     round(cgLowerBound, digits=3),
+    #     round(fractionalScore, digits=3),
+    #     round(gradientLB, digits=3),
+    #     round(gradientFS, digits=3),
+    #     status1,
+    #     status2,
+    #     routes_str
+    # ]
+    # open("NodeMatrix/NodeMatrix_$(filename).csv", "a") do file
+    #     println(file, join(row_data, ",")) 
+    # end                    
 end
 
 function select_node_from_tree(node_stack)
@@ -40,12 +40,12 @@ function select_node_from_tree(node_stack)
             node = node_iter
             score = score_iter
         end
-        println("node $(node_iter.id) : 
-                LB = $(round(node_iter.cgLowerBound, digits=2)),
-                baselb = $(round(base_lb, digits=2)), 
-                rdt fs = $(round(node_iter.gradientFS, digits=3)), 
-                node depth = $(node_iter.branchingInfo.depth),
-                score = $(round(score_iter, digits=3))")
+        # println("node $(node_iter.id) : 
+        #         LB = $(round(node_iter.cgLowerBound, digits=2)),
+        #         baselb = $(round(base_lb, digits=2)), 
+        #         rdt fs = $(round(node_iter.gradientFS, digits=3)), 
+        #         node depth = $(node_iter.branchingInfo.depth),
+        #         score = $(round(score_iter, digits=3))")
     end
 
     @info "Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes"
@@ -144,14 +144,20 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
 
         if valide
             push!(result, route_id)
+            y = y_vars[idx]
+            JuMP.set_upper_bound(y, 1.0)
+            JuMP.set_lower_bound(y, 0.0)
         else
             push!(routes_to_delete, route_id)
+            y = y_vars[idx]
+            JuMP.set_upper_bound(y, 0.0)
+            JuMP.set_lower_bound(y, 0.0)
         end
         # print("$(route.sequence)   $valide")
     end
-
     return result, routes_to_delete
 end
+
 
 function preparation_branch_and_price()
     #region B&P: Prep
@@ -183,10 +189,7 @@ function preparation_branch_and_price()
 
     global neighbours = get_neighbours_optimized(10)
 
-    execution_time = @elapsed begin
-        lrp_subproblems = get_sorted_2e_subproblems()
-    end
-    # println("time to get sorted 2e subproblem = $(/round(execution_time, digits=2))s")
+    lrp_subproblems = get_sorted_2e_subproblems()
 
     return lrp_subproblems
 end
@@ -209,48 +212,34 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     π2 = Vector{Float64}(undef, n_satellites + n_customers + 1)
     π3 = Vector{Float64}(undef, n_satellites + 1)
     π4 = Vector{Float64}(undef, n_satellites + 1)
-    
+
     solution_contains_dummy_route = true
     
 
     # execution_time_loop = @elapsed begin
+
+    dummy_route_in_solution = true
+    dummy_route_selected = Vector{Int}()
     while true # num_iter_cg < 2 # && true
         # println("-------------Iter CG $num_iter_cg-------------")
-        # if !solution_contains_dummy_route
-        # # if num_iter_cg > 5
-        #     for route in dummyRoutes
-        #         if haskey(y_vars, route.id)
-        #             y = y_vars[route.id]
-        #             JuMP.set_upper_bound(y, 0.0)
-        #             JuMP.set_lower_bound(y, 0.0)
-        #         end
-        #         # println(route.id, "  ", route.sequence)
-        #     end
-        # end
-
+        if length(dummy_route_selected) == 0 && num_iter_cg > 1 && dummy_route_in_solution
+            dummy_route_in_solution = false
+            for route in dummyRoutes_numeration
+                # if haskey(y_vars, route.id)
+                    y = y_vars[route]
+                    JuMP.set_upper_bound(y, 0.0)
+                    JuMP.set_lower_bound(y, 0.0)
+                # end
+                # println(route.id, "  ", route.sequence)
+            end
+        end      
+        
 
         # * 1. solve formulation
         # execution_time_lp = @elapsed begin
-            optimize!(model)
+        optimize!(model)
         # end
         # println("--execution time solving lp: ", round(execution_time_lp, digits=3))
-
-        # if solution_contains_dummy_route
-        #     ndummy = length(dummyRoutes)
-        #     dummy_route_found_in_solution = false
-
-        #     for (k, var) in y_vars
-        #         v = value(var)
-        #         if v != 0 && routes_2e[k].id <= ndummy
-        #             dummy_route_found_in_solution = true
-        #             break
-        #         end
-        #     end
-
-        #     if !dummy_route_found_in_solution
-        #         solution_contains_dummy_route = false
-        #     end
-        # end
 
 
         if has_values(model)
@@ -258,21 +247,10 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # Cache objective value (used multiple times)
             obj_val = objective_value(model)
             lpObjValue = obj_val + route_1e.cost
-            # println("result of column generation : $(round(lpObjValue, digits=2))")
+            # println("result of column generation : $(round(lpObjValue, digits=3))")
             # execution_time_dual = @elapsed begin
             # * 2. get dual multiplier - optimized to avoid allocations
             #region : retrieve dual multiplier
-            # n_vars = length(y_vars)
-            # y_values = Vector{Float64}(undef, n_vars)
-            # sorted_keys = sort!(collect(keys(y_vars)))
-            #     @inbounds for (idx, k) in enumerate(sorted_keys)
-            #         y_values[idx] = value(y_vars[k])
-            #         #region: PRINT cg y value
-            #         if y_values[idx] !=  0
-            #             # sum_y_value += y_values[idx]
-            #             println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-            #         end
-            #     end
             π1[1] = 0.0
             @inbounds for i in 1:n_satellites
                 π1[i+1] = abs(shadow_price(sync[i]))
@@ -299,18 +277,46 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             π5 = abs(shadow_price(globalLowerBound))
             π6 = abs(shadow_price(globalUpperBound))
 
+            π_sat_lb = zeros(Float64, length(points))
+            π_sat_ub = zeros(Float64, length(points))
+            @inbounds for s in satellites
+                π_sat_lb[s] = abs(shadow_price(satelliteRouteLB[s]))
+                π_sat_ub[s] = abs(shadow_price(satelliteRouteUB[s]))
+            end
+
             # println("π5 = ", round(π5, digits=2))
             # println("π6 = ", round(π6, digits=2))
             #endregion
-            # end
+            #end
             # println("--execution time dual: ", round(execution_time_dual, digits=3))
+
+
+            #region: PRINT cg y value
+            # dummy_route_selected = Vector{Int}()
+            for (k,v) in y_vars
+                # if k > length(dummyRoutes_numeration)
+                #     break
+                # end
+                if value(v) != 0
+                    if k in dummyRoutes_numeration
+                        push!(dummy_route_selected, k)
+                    #     # println("Dummy route in solution: ", routes_2e[k].sequence)
+                    end
+                    # println("y$(routes_2e[k].sequence) = $(round(value(v), digits=2))")
+                end 
+            end
+            # println("Dummy route in solution: ", length(dummy_route_selected))
+            #endregion
 
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
-                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo)
+                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo, π_sat_lb, π_sat_ub)
                 # println("now there are $(length(routes_2e)) 2e routes in total")
             # end
             # println("--execution time solving pricing: ", round(execution_time_p, digits=3),"\n")
+
+
+
             if !new_columns_found
                 break
             end
@@ -332,29 +338,31 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     n_vars = length(y_vars)
     y_values = Vector{Float64}(undef, n_vars)
     sorted_keys = sort!(collect(keys(y_vars)))
-    sum_y_value = 0
+    sum_y_value = 0.0
+    sum_per_satellite = Dict{Int, Float64}()
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
-        # #region: PRINT cg y value
-        # if y_values[idx] !=  0
-        #     sum_y_value += y_values[idx]
-        #     println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-        # end
-
-        #region: block some used columns
-
+        #region: PRINT cg y value
+        if y_values[idx] != 0
+            sum_y_value += y_values[idx]
+            start_parking = routes_2e[value(k)].sequence[1]
+            sum_per_satellite[start_parking] = get(sum_per_satellite, start_parking, 0.0) + y_values[idx]
+            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+        end
         #endregion
+    end
+    println("sum of y values (total)            = $(round(sum_y_value, digits=3))")
+    for s in sort!(collect(keys(sum_per_satellite)))
+        println("sum of y values starting at depot $s = $(round(sum_per_satellite[s], digits=3))")
     end
     if total_obj > upperBound
         #region: write node matrix
-        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")        
+        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")
         #endregion
         @info "Exceed Upper Bound, prune"
         println("Exceed Upper Bound, prune")
         return nothing
     end
-    # println("number of 2e routes: ",length(routes_2e))
-    # println("sum of y value is : $(round(sum_y_value,digits=2))")
     #endregion
 
     # Check for integer solution and compute fractional score
@@ -452,37 +460,16 @@ function solve_root_node(route_1e::Route)
             Set{Int}(),              # forbidden_parkings
             Set{Int}(),              # upper_bound_number_2e_routes
             Set{Int}(),              # lower_bound_number_2e_routes
+            Dict{Int,Int}(),         # upper_bound_per_satellite
+            Dict{Int,Int}(),         # lower_bound_per_satellite
             0                        # depth
         )
         root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
 
-        #region : initial columns
-        # execution_time = @elapsed begin
-            columns_to_be_kept, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
-        # end
-        # global execution_time_filtering += execution_time
-        # execution_time = @elapsed begin
-            for idx in columns_to_be_deleted
-                if haskey(y_vars, idx)
-                    y = y_vars[idx]
-                    JuMP.set_upper_bound(y, 0.0)
-                    JuMP.set_lower_bound(y, 0.0)
-                end
-            end
-            for idx in columns_to_be_kept
-                # println(routes_2e[idx].sequence)
-                if haskey(y_vars, idx)
-                    y = y_vars[idx]
-                    JuMP.set_upper_bound(y, 1.0)
-                    JuMP.set_lower_bound(y, 0.0)
-                end
-            end
-        # end
-        # println("execution time on filtering and bounding initial columns: ",round(execution_time, digits=2),"s")
+        columns_to_be_kept, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
 
-        # execution_time = @elapsed begin
-            # println("number of 2e routes before column generation: ", length(columns_to_be_kept))
-            root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
+        # println("number of 2e routes before column generation: ", length(columns_to_be_kept))
+        root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
         # end
         # println("-execution time of column generation : $(round(execution_time, digits=2))s")
 
@@ -559,7 +546,7 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
         else
             set_normalized_rhs(globalLowerBound, -lower_bound_2e_routes)
         end
-        
+
         # * Global Upper Bound
         if !isempty(branching_decision.upper_bound_number_2e_routes)
             upper_bound_number_2e_routes = minimum(branching_decision.upper_bound_number_2e_routes)
@@ -567,14 +554,20 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
         else
             set_normalized_rhs(globalUpperBound, upper_bound_2e_routes)
         end
+
+        # * Per-satellite fleet bounds
+        for s in satellites
+            lb = get(branching_decision.lower_bound_per_satellite, s, 0)
+            ub = get(branching_decision.upper_bound_per_satellite, s, nb_vehicle_per_satellite)
+            set_normalized_rhs(satelliteRouteLB[s], -lb)
+            set_normalized_rhs(satelliteRouteUB[s], ub)
+        end
     end
     global execution_time_set_bound += execution_time
-    global execution_time_build_model += execution_time
-    
-    execution_time = @elapsed begin
-        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, 
-                                             node.fractionalScore, id, node.id) 
+    # global execution_time_build_model += execution_time
 
+    execution_time = @elapsed begin
+        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id)
     end
     global execution_time_column_generation += execution_time
 
@@ -587,14 +580,33 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
                 JuMP.set_lower_bound(y, 0.0)
             end
         end
+        for s in satellites
+            set_normalized_rhs(satelliteRouteLB[s], 0)
+            set_normalized_rhs(satelliteRouteUB[s], nb_vehicle_per_satellite)
+        end
     end
     global execution_time_set_bound += execution_time
-    global execution_time_build_model += execution_time
+    # global execution_time_build_model += execution_time
 
     return child_node
 end
 #endregion
 #region : branch and price 2e subproblem
+function new_branch_and_price(route_1e::Route, node_stack)
+    if isnothing(node_stack)
+        return
+    end
+
+    num_iter_sp = 1
+    current_node_id = 0
+
+    while !isempty(node_stack)
+        println("================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e.sequence)parkings$([r for r in getServedParking1eRoute(route_1e)])================")
+
+        
+        
+    end
+end
 function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
 
     if isnothing(node_stack)
@@ -732,8 +744,27 @@ function branchingStrategy(y, route_1e, routes_pool, branchingInfo::BranchingInf
         push!(right_branch.upper_bound_number_2e_routes, floor(sum(y)))
         left_branch.depth += 1
         right_branch.depth += 1
-
         return left_branch, right_branch
+    end
+
+    ## Case A2: per-satellite fleet sum is fractional
+    sum_per_satellite = Dict{Int, Float64}()
+    for (r_idx, y_val) in enumerate(y)
+        if y_val > 1e-8
+            s = routes_pool[r_idx].sequence[1]
+            sum_per_satellite[s] = get(sum_per_satellite, s, 0.0) + y_val
+        end
+    end
+    for s in sort(collect(keys(sum_per_satellite)))
+        val = sum_per_satellite[s]
+        if !(abs(val - round(val)) < 1e-8)
+            println("Branch on satellite $s fleet: $(Int(floor(val))) / $(Int(ceil(val)))")
+            left_branch.lower_bound_per_satellite[s] = Int(ceil(val))
+            right_branch.upper_bound_per_satellite[s] = Int(floor(val))
+            left_branch.depth += 1
+            right_branch.depth += 1
+            return left_branch, right_branch
+        end
     end
 
     ## Case B: reversed routes exist

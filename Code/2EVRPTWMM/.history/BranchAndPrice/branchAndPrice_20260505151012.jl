@@ -25,7 +25,7 @@ function appendNodeMatrix(y_value, id, parent_id, cgLowerBound, fractionalScore,
         status2,
         routes_str
     ]
-    open("NodeMatrix_$(filename).csv", "a") do file
+    open("NodeMatrix/NodeMatrix_$(filename).csv", "a") do file
         println(file, join(row_data, ",")) 
     end                    
 end
@@ -50,7 +50,7 @@ function select_node_from_tree(node_stack)
 
     @info "Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes"
     println("Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes, current upper bound = $(round(upperBound, digits=2))")
-    # displayBranchingNode(node)
+    displayBranchingNode(node)
 
     deleteat!(node_stack, findfirst(==(node), node_stack))
     return node
@@ -144,14 +144,20 @@ function filter_2e_routes(branchingInfo::BranchingInfo, routes::Vector{Int})
 
         if valide
             push!(result, route_id)
+            y = y_vars[idx]
+            JuMP.set_upper_bound(y, 1.0)
+            JuMP.set_lower_bound(y, 0.0)
         else
             push!(routes_to_delete, route_id)
+            y = y_vars[idx]
+            JuMP.set_upper_bound(y, 0.0)
+            JuMP.set_lower_bound(y, 0.0)
         end
         # print("$(route.sequence)   $valide")
     end
-
     return result, routes_to_delete
 end
+
 
 function preparation_branch_and_price()
     #region B&P: Prep
@@ -183,10 +189,7 @@ function preparation_branch_and_price()
 
     global neighbours = get_neighbours_optimized(10)
 
-    execution_time = @elapsed begin
-        lrp_subproblems = get_sorted_2e_subproblems()
-    end
-    # println("time to get sorted 2e subproblem = $(/round(execution_time, digits=2))s")
+    lrp_subproblems = get_sorted_2e_subproblems()
 
     return lrp_subproblems
 end
@@ -209,48 +212,34 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     π2 = Vector{Float64}(undef, n_satellites + n_customers + 1)
     π3 = Vector{Float64}(undef, n_satellites + 1)
     π4 = Vector{Float64}(undef, n_satellites + 1)
-    
+
     solution_contains_dummy_route = true
     
 
     # execution_time_loop = @elapsed begin
+
+    dummy_route_in_solution = true
+    dummy_route_selected = Vector{Int}()
     while true # num_iter_cg < 2 # && true
         # println("-------------Iter CG $num_iter_cg-------------")
-        # if !solution_contains_dummy_route
-        # # if num_iter_cg > 5
-        #     for route in dummyRoutes
-        #         if haskey(y_vars, route.id)
-        #             y = y_vars[route.id]
-        #             JuMP.set_upper_bound(y, 0.0)
-        #             JuMP.set_lower_bound(y, 0.0)
-        #         end
-        #         # println(route.id, "  ", route.sequence)
-        #     end
-        # end
-
+        if length(dummy_route_selected) == 0 && num_iter_cg > 1 && dummy_route_in_solution
+            dummy_route_in_solution = false
+            for route in dummyRoutes_numeration
+                # if haskey(y_vars, route.id)
+                    y = y_vars[route]
+                    JuMP.set_upper_bound(y, 0.0)
+                    JuMP.set_lower_bound(y, 0.0)
+                # end
+                # println(route.id, "  ", route.sequence)
+            end
+        end      
+        
 
         # * 1. solve formulation
         # execution_time_lp = @elapsed begin
-            optimize!(model)
+        optimize!(model)
         # end
         # println("--execution time solving lp: ", round(execution_time_lp, digits=3))
-
-        # if solution_contains_dummy_route
-        #     ndummy = length(dummyRoutes)
-        #     dummy_route_found_in_solution = false
-
-        #     for (k, var) in y_vars
-        #         v = value(var)
-        #         if v != 0 && routes_2e[k].id <= ndummy
-        #             dummy_route_found_in_solution = true
-        #             break
-        #         end
-        #     end
-
-        #     if !dummy_route_found_in_solution
-        #         solution_contains_dummy_route = false
-        #     end
-        # end
 
 
         if has_values(model)
@@ -258,21 +247,10 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # Cache objective value (used multiple times)
             obj_val = objective_value(model)
             lpObjValue = obj_val + route_1e.cost
-            # println("result of column generation : $(round(lpObjValue, digits=2))")
+            # println("result of column generation : $(round(lpObjValue, digits=3))")
             # execution_time_dual = @elapsed begin
             # * 2. get dual multiplier - optimized to avoid allocations
             #region : retrieve dual multiplier
-            # n_vars = length(y_vars)
-            # y_values = Vector{Float64}(undef, n_vars)
-            # sorted_keys = sort!(collect(keys(y_vars)))
-            #     @inbounds for (idx, k) in enumerate(sorted_keys)
-            #         y_values[idx] = value(y_vars[k])
-            #         #region: PRINT cg y value
-            #         if y_values[idx] !=  0
-            #             # sum_y_value += y_values[idx]
-            #             println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-            #         end
-            #     end
             π1[1] = 0.0
             @inbounds for i in 1:n_satellites
                 π1[i+1] = abs(shadow_price(sync[i]))
@@ -302,8 +280,26 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             # println("π5 = ", round(π5, digits=2))
             # println("π6 = ", round(π6, digits=2))
             #endregion
-            # end
+            #end
             # println("--execution time dual: ", round(execution_time_dual, digits=3))
+
+
+            #region: PRINT cg y value
+            # dummy_route_selected = Vector{Int}()
+            for (k,v) in y_vars
+                # if k > length(dummyRoutes_numeration)
+                #     break
+                # end
+                if value(v) != 0
+                    if k in dummyRoutes_numeration
+                        push!(dummy_route_selected, k)
+                    #     # println("Dummy route in solution: ", routes_2e[k].sequence)
+                    end
+                    # println("y$(routes_2e[k].sequence) = $(round(value(v), digits=2))")
+                end 
+            end
+            # println("Dummy route in solution: ", length(dummy_route_selected))
+            #endregion
 
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
@@ -311,6 +307,9 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
                 # println("now there are $(length(routes_2e)) 2e routes in total")
             # end
             # println("--execution time solving pricing: ", round(execution_time_p, digits=3),"\n")
+
+
+
             if !new_columns_found
                 break
             end
@@ -335,11 +334,11 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     sum_y_value = 0
     @inbounds for (idx, k) in enumerate(sorted_keys)
         y_values[idx] = value(y_vars[k])
-        # #region: PRINT cg y value
-        # if y_values[idx] !=  0
-        #     sum_y_value += y_values[idx]
-        #     println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
-        # end
+        #region: PRINT cg y value
+        if y_values[idx] !=  0
+            sum_y_value += y_values[idx]
+            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
+        end
 
         #region: block some used columns
 
@@ -456,33 +455,10 @@ function solve_root_node(route_1e::Route)
         )
         root_node_branching_info.forbidden_parkings = setdiff(Set(satellites), getServedParking1eRoute(route_1e))
 
-        #region : initial columns
-        # execution_time = @elapsed begin
-            columns_to_be_kept, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
-        # end
-        # global execution_time_filtering += execution_time
-        # execution_time = @elapsed begin
-            for idx in columns_to_be_deleted
-                if haskey(y_vars, idx)
-                    y = y_vars[idx]
-                    JuMP.set_upper_bound(y, 0.0)
-                    JuMP.set_lower_bound(y, 0.0)
-                end
-            end
-            for idx in columns_to_be_kept
-                # println(routes_2e[idx].sequence)
-                if haskey(y_vars, idx)
-                    y = y_vars[idx]
-                    JuMP.set_upper_bound(y, 1.0)
-                    JuMP.set_lower_bound(y, 0.0)
-                end
-            end
-        # end
-        # println("execution time on filtering and bounding initial columns: ",round(execution_time, digits=2),"s")
+        columns_to_be_kept, columns_to_be_deleted = filter_2e_routes(root_node_branching_info, collect(1:length(routes_2e)))
 
-        # execution_time = @elapsed begin
-            # println("number of 2e routes before column generation: ", length(columns_to_be_kept))
-            root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
+        # println("number of 2e routes before column generation: ", length(columns_to_be_kept))
+        root_node = solve_column_generation(route_1e, root_node_branching_info, 0,0,0,0)
         # end
         # println("-execution time of column generation : $(round(execution_time, digits=2))s")
 
@@ -572,8 +548,7 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
     global execution_time_build_model += execution_time
     
     execution_time = @elapsed begin
-        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, 
-                                             node.fractionalScore, id, node.id) 
+        child_node = solve_column_generation(route_1e, branching_decision, node.cgLowerBound, node.fractionalScore, id, node.id) 
 
     end
     global execution_time_column_generation += execution_time
@@ -595,6 +570,21 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
 end
 #endregion
 #region : branch and price 2e subproblem
+function new_branch_and_price(route_1e::Route, node_stack)
+    if isnothing(node_stack)
+        return
+    end
+
+    num_iter_sp = 1
+    current_node_id = 0
+
+    while !isempty(node_stack)
+        println("================Iteration $num_iter_sp of B&P for SP$num_iter_global $(route_1e.sequence)parkings$([r for r in getServedParking1eRoute(route_1e)])================")
+
+        
+        
+    end
+end
 function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
 
     if isnothing(node_stack)
