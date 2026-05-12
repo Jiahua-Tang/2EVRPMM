@@ -6,6 +6,30 @@ function blockColumn()
     
 end
 
+function appendNodeMatrix(y_value, id, parent_id, cgLowerBound, fractionalScore, gradientLB,gradientFS,status1, status2)
+    active_routes = [
+        string(join(routes_2e[idx].sequence, "-"), " = ", round(y, digits=3))
+        for (idx, y) in enumerate(y_value) if y != 0
+    ]
+
+    routes_str = join(active_routes, ",")
+
+    row_data = [
+        Int(round(id)),
+        Int(round(parent_id)),
+        round(cgLowerBound, digits=3),
+        round(fractionalScore, digits=3),
+        round(gradientLB, digits=3),
+        round(gradientFS, digits=3),
+        status1,
+        status2,
+        routes_str
+    ]
+    open("NodeMatrix/NodeMatrix_$(filename).csv", "a") do file
+        println(file, join(row_data, ",")) 
+    end                    
+end
+
 function select_node_from_tree(node_stack)
     node = node_stack[1]
     base_lb = node.cgLowerBound
@@ -323,7 +347,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             sum_y_value += y_values[idx]
             start_parking = routes_2e[value(k)].sequence[1]
             sum_per_satellite[start_parking] = get(sum_per_satellite, start_parking, 0.0) + y_values[idx]
-            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2)), $(round(routes_2e[value(k)].cost, digits=2))")
+            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
         end
         #endregion
     end

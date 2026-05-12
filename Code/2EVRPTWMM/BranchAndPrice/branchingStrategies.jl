@@ -151,13 +151,13 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
     #region : sort fractional routes
     sorted_fractional_y = sort([r for r in 1:length(y) if 0 < y[r]], by = r -> y[r] * (1 - y[r]), rev = true)
     selected_routes = Set{Vector{Int}}()
-    for y_value in sorted_fractional_y 
+    for y_value in sorted_fractional_y
         push!(selected_routes, routes_pool[y_value].sequence)
     end
-    # println("selected routes: ")
-    # for route in selected_routes 
-    #     println(route)
-    # end
+    for rank in 1:min(2, length(sorted_fractional_y))
+        idx = sorted_fractional_y[rank]
+        println("Most fractional route #$rank: $(routes_pool[idx].sequence)  y = $(round(y[idx], digits=3))")
+    end
     #endregion
 
     #region : calculate and sort customers selecte times
@@ -171,6 +171,13 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
         end
     end
     sorted_customers = [k for (k, v) in sort(collect(customers_selected_times), by = x -> x[2], rev = true)]
+    println("Sorted customers by fractional route appearances: ", [(c, customers_selected_times[c]) for c in sorted_customers if customers_selected_times[c] > 0])
+
+    # Prioritise customers that appear in the most fractional route
+    if !isempty(sorted_fractional_y)
+        most_frac_customers = routes_pool[sorted_fractional_y[1]].sequence[2:end-1]
+        sorted_customers = vcat(most_frac_customers, [c for c in sorted_customers if !(c in most_frac_customers)])
+    end
     #endregion
 
     ###################################################################

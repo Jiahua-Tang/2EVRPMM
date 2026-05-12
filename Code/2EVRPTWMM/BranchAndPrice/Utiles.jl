@@ -41,7 +41,7 @@ function generate2eRoute(route::Vector{Int})
     # println(route)
     for node in 2:length(route)
         # println(route[node],"   ",time_window[route[node]][2])
-        time = time_window[route[node]][1] > arrival_time[route[node-1]]+arc_cost[route[node-1], route[node]] ? time_window[route[node]][2] : arrival_time[route[node-1]] + arc_cost[route[node-1], route[node]]
+        time = time_window[route[node]][1] > arrival_time[route[node-1]]+arc_cost[route[node-1], route[node]] ? time_window[route[node]][1] : arrival_time[route[node-1]] + arc_cost[route[node-1], route[node]]
         arrival_time[route[node]] = time
         # println("arc cost between $(route[node-1]) and $(route[node]) is ",arc_cost[route[node-1], route[node]])
         # println("arrival_time of $node is $time")
@@ -200,6 +200,22 @@ function generate2eInitialRoutes()
     global dummyRoutes_numeration = Vector{Int}()
     global routes_2e_by_start = Dict{Int, Vector{Route}}()
 
+    function is_dummy_route_feasible(sequence)
+        if sum(demands[c] for c in sequence[2:end-1]) > capacity_2e_vehicle
+            return false
+        end
+        t = 0.0
+        for i in 2:length(sequence)-1
+            t += arc_cost[sequence[i-1], sequence[i]]
+            t = max(t, Float64(time_window[sequence[i]][1]))
+            if t > time_window[sequence[i]][2]
+                return false
+            end
+        end
+        t += arc_cost[sequence[end-1], sequence[end]]
+        return t <= maximum_duration_2e_vehicle
+    end
+
     function generate_dummy_routes_by_chunks!()
         chunk_size = 10
         for startParking in satellites
@@ -213,10 +229,9 @@ function generate2eInitialRoutes()
                     push!(sequence, endParking)
 
                     route = generate2eRoute(sequence)
-                    # println(route.sequence, "  with cost ", route.cost, "\narrival time ", route.arrival_time,  " and time window ", [time_window[node] for node in route.sequence],"\n")
-                    route.cost += 1e4
-
-                    #TODO Check feasibility
+                    if !is_dummy_route_feasible(sequence)
+                        route.cost += 1e4
+                    end
 
                     push!(routes_2e, route)
                     push!(get!(routes_2e_by_start, startParking, Route[]), route)

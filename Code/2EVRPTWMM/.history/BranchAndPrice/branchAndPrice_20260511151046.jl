@@ -323,7 +323,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
             sum_y_value += y_values[idx]
             start_parking = routes_2e[value(k)].sequence[1]
             sum_per_satellite[start_parking] = get(sum_per_satellite, start_parking, 0.0) + y_values[idx]
-            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2)), $(round(routes_2e[value(k)].cost, digits=2))")
+            println("y$(routes_2e[value(k)].sequence) = $(round(y_values[idx],digits=2))")
         end
         #endregion
     end
