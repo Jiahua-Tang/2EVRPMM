@@ -7,26 +7,30 @@ function blockColumn()
 end
 
 function select_node_from_tree(node_stack)
-    node = node_stack[1]
-    base_lb = node.cgLowerBound
-    score = 0.5*node.gradientFS / (1+log(node.branchingInfo.depth))
-    for node_iter in node_stack
-        score_iter = node_iter.cgLowerBound - base_lb + 0.5*node_iter.gradientFS/(1+log(node_iter.branchingInfo.depth))
-        if score_iter < score
-            node = node_iter
-            score = score_iter
+    if upperBound == Inf
+        # No integer solution yet: select node with highest CG lower bound
+        node = node_stack[1]
+        for node_iter in node_stack
+            if node_iter.cgLowerBound > node.cgLowerBound
+                node = node_iter
+            end
         end
-        # println("node $(node_iter.id) : 
-        #         LB = $(round(node_iter.cgLowerBound, digits=2)),
-        #         baselb = $(round(base_lb, digits=2)), 
-        #         rdt fs = $(round(node_iter.gradientFS, digits=3)), 
-        #         node depth = $(node_iter.branchingInfo.depth),
-        #         score = $(round(score_iter, digits=3))")
+    else
+        # Integer solution exists: use original rule
+        node = node_stack[1]
+        base_lb = node.cgLowerBound
+        score = 0.5*node.gradientFS / (1+log(node.branchingInfo.depth))
+        for node_iter in node_stack
+            score_iter = node_iter.cgLowerBound - base_lb + 0.5*node_iter.gradientFS/(1+log(node_iter.branchingInfo.depth))
+            if score_iter < score
+                node = node_iter
+                score = score_iter
+            end
+        end
     end
 
     @info "Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes"
     println("Display selected node $(node.id) in level $(node.branchingInfo.depth), parent node $(node.parent_id): from $(length(node_stack)) nodes, current upper bound = $(round(upperBound, digits=2))")
-    # displayBranchingNode(node)
 
     deleteat!(node_stack, findfirst(==(node), node_stack))
     return node
