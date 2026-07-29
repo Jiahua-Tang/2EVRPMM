@@ -326,12 +326,11 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
     pc_label  = isnothing(pc_result)  ? "N/A" : string(pc_result[1])
     cc_label  = isnothing(cc_result)  ? "N/A" : string(cc_result[1])
     epc_label = isnothing(epc_result) ? "N/A" : string(epc_result[1])
-    if status_debug
-        println("Influence scores:")
-        println("   start-sat-cust : $(round(pc_score,  digits=3))  $pc_label")
-        println("   cust-cust      : $(round(cc_score,  digits=3))  $cc_label")
-        println("   end-sat-cust   : $(round(epc_score, digits=3))  $epc_label")
-    end
+    println("Influence scores:")
+    println("   start-sat-cust : $(round(pc_score,  digits=3))  $pc_label")
+    println("   cust-cust      : $(round(cc_score,  digits=3))  $cc_label")
+    println("   end-sat-cust   : $(round(epc_score, digits=3))  $epc_label")
+
     best_score = max(pc_score, cc_score, epc_score)
     if best_score == -Inf
         return nothing

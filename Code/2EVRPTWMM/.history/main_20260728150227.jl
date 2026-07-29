@@ -198,7 +198,6 @@ open(file_name, "w") do io
                 println("total execution time of preparation for sorting subproblems   : $(round(execution_time_prep, digits=2)) seconds")
                 println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem, digits=2), " seconds")
                 println("total execution time solving branch and price                 : ", round(execution_time_bap, digits=2), " seconds")
-                println("total number of branch-and-price nodes explored               : ", total_bap_nodes)
 
             end
             #endregion

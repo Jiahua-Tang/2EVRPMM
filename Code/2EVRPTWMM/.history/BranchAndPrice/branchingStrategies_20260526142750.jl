@@ -156,12 +156,9 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
     if !isempty(sorted_fractional_y)
         max_frac_val = y[sorted_fractional_y[1]] * (1 - y[sorted_fractional_y[1]])
         tied_top = [r for r in sorted_fractional_y if abs(y[r] * (1 - y[r]) - max_frac_val) < 1e-8]
-        if status_debug
-            for (rank, idx) in enumerate(tied_top)
-                println("Most fractional route #$rank: $(routes_pool[idx].sequence)  y = $(round(y[idx], digits=3))")
-            end            
-        end
-
+        # for (rank, idx) in enumerate(tied_top)
+        #     println("Most fractional route #$rank: $(routes_pool[idx].sequence)  y = $(round(y[idx], digits=3))")
+        # end
     end
     #endregion
 
@@ -176,9 +173,7 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
         end
     end
     sorted_customers = [k for (k, _) in sort(collect(customers_selected_times), by = x -> x[2], rev = true)]
-    if status_debug
-        println("Sorted customers by fractional route appearances: ", [(c, customers_selected_times[c]) for c in sorted_customers if customers_selected_times[c] > 0])
-    end
+    # println("Sorted customers by fractional route appearances: ", [(c, customers_selected_times[c]) for c in sorted_customers if customers_selected_times[c] > 0])
 
     if !isempty(sorted_fractional_y)
         most_frac_customers = routes_pool[sorted_fractional_y[1]].sequence[2:end-1]
@@ -326,12 +321,11 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
     pc_label  = isnothing(pc_result)  ? "N/A" : string(pc_result[1])
     cc_label  = isnothing(cc_result)  ? "N/A" : string(cc_result[1])
     epc_label = isnothing(epc_result) ? "N/A" : string(epc_result[1])
-    if status_debug
-        println("Influence scores:")
-        println("   start-sat-cust : $(round(pc_score,  digits=3))  $pc_label")
-        println("   cust-cust      : $(round(cc_score,  digits=3))  $cc_label")
-        println("   end-sat-cust   : $(round(epc_score, digits=3))  $epc_label")
-    end
+    println("Influence scores:")
+    println("   start-sat-cust : $(round(pc_score,  digits=3))  $pc_label")
+    println("   cust-cust      : $(round(cc_score,  digits=3))  $cc_label")
+    println("   end-sat-cust   : $(round(epc_score, digits=3))  $epc_label")
+
     best_score = max(pc_score, cc_score, epc_score)
     if best_score == -Inf
         return nothing

@@ -7,7 +7,7 @@ include("Utiles.jl")
 global root = "$(pwd())/../../Data/Instances/"
 
 time_stamp = Dates.format(now(), "ddmmyy_HHMM")
-filename = ARGS[1]
+filename = ""# ARGS[1]
 file_name = "Output/bl_"*filename*"_"*time_stamp*".txt"
 mkpath(dirname(file_name))
 global status_debug = true

@@ -256,17 +256,11 @@ function get_sorted_2e_subproblems()
     
     for num_parking in minimum_parkings_required:nb_microhub
         for parking_subset in combinations(satellites, num_parking)
-            @info "Solving LRP subproblem with parking subset: $parking_subset"
             route_1e = solve_1e_tsp_labelling(parking_subset)
-
-            @info "1e route cost: $(round(route_1e.cost, digits=2)) for parking subset: $parking_subset"
-
             push!(routes_1e_complete, route_1e)
             lower_bound_subproblem = route_1e.cost
             execution_time_lp = @elapsed lower_bound_subproblem += solve_MDVRP_LP!(data, parking_subset)
-
-            @info "parking subset: $parking_subset 1e route cost: $(round(route_1e.cost, digits=2)) LP MDVRP cost: $(round(lower_bound_subproblem, digits=2)) execution time LP: $(round(execution_time_lp, digits=2)) seconds"
-            
+            println("parking subset: ", parking_subset, " 1e route cost: ", round(route_1e.cost, digits=2), " LP MDVRP cost: ", round(lower_bound_subproblem, digits=2), " execution time LP: ", round(execution_time_lp, digits=2), " seconds")
             enqueue!(lrp_subproblems, route_1e, lower_bound_subproblem)
         end
     end

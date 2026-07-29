@@ -163,7 +163,6 @@ function preparation_branch_and_price()
     global execution_time_filtering = 0
     global deepest_level = 0
     global optimal_found_in = 0
-    global total_bap_nodes = 0
     #endregion
 
     generate2eInitialRoutes()
@@ -182,8 +181,6 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     # *     - 2. get dual multiplier
     # *     - 3. execute labelling algorithm
     # *     - 4. check existence new routes
-
-    global total_bap_nodes += 1
 
     selected_parkings = getServedParking1eRoute(route_1e)
     
@@ -382,7 +379,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
 
             global upperBound = total_obj
             println("Upper bound = $upperBound")
-            if length(customers) >= 75
+            if length(customers) >= 50
                 _elapsed = time() - start_time
                 _row = [
                     Dates.format(now(), "dd-mm-yyyy-HH-MM-SS-s"),

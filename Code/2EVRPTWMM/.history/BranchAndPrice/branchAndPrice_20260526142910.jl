@@ -163,7 +163,6 @@ function preparation_branch_and_price()
     global execution_time_filtering = 0
     global deepest_level = 0
     global optimal_found_in = 0
-    global total_bap_nodes = 0
     #endregion
 
     generate2eInitialRoutes()
@@ -182,8 +181,6 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     # *     - 2. get dual multiplier
     # *     - 3. execute labelling algorithm
     # *     - 4. check existence new routes
-
-    global total_bap_nodes += 1
 
     selected_parkings = getServedParking1eRoute(route_1e)
     
@@ -293,8 +290,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
 
             # * 3. execute labelling algorithm
             # execution_time_p = @elapsed begin
-                _max_cols = length(customers) >= 75 ? 200 : 100
-                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo, π_sat_lb, π_sat_ub; max_cols = _max_cols)
+                new_columns_found = pricing(selected_parkings, collect(1:length(routes_2e)), π1, π2, π3, π4, π5, π6, branchingInfo, π_sat_lb, π_sat_ub)
                 # println("now there are $(length(routes_2e)) 2e routes in total")
             # end
             # println("--execution time solving pricing: ", round(execution_time_p, digits=3),"\n")
@@ -344,9 +340,7 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
     # end
     if total_obj > upperBound
         #region: write node matrix
-        if status_debug
-            appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")
-        end
+        appendNodeMatrix(y_values, id, parent_id, total_obj, 0, total_obj-cgLB, 0, "Prune by CG","")
         #endregion
         @info "Exceed Upper Bound, prune"
         println("Exceed Upper Bound, prune")
@@ -382,23 +376,6 @@ function solve_column_generation(route_1e, branchingInfo::BranchingInfo, cgLB, f
 
             global upperBound = total_obj
             println("Upper bound = $upperBound")
-            if length(customers) >= 75
-                _elapsed = time() - start_time
-                _row = [
-                    Dates.format(now(), "dd-mm-yyyy-HH-MM-SS-s"),
-                    "bp", "\"$filename\"",
-                    length(customers), length(satellites), sum(parking_availability),
-                    nb_vehicle_per_satellite,
-                    round(_elapsed, digits=2),
-                    round(execution_time_build_model, digits=2),
-                    round(_elapsed - execution_time_build_model, digits=2),
-                    "/", "/", "/",
-                    upperBound, "incumbent"
-                ]
-                open(outfile, "w") do _f
-                    println(_f, join(_row, ","))
-                end
-            end
             global optimalSolution = Vector{Route}()
             sizehint!(optimalSolution, n_vars + 1)
             push!(optimalSolution, route_1e)
@@ -520,9 +497,7 @@ function solve_child_node(route_1e, node::BranchingNode, branching_decision::Bra
     @info "Solve child node $id"
     println("Solve child node $id")
     
-    if status_debug
-        displayBranchingRule(branching_decision)
-    end
+    displayBranchingRule(branching_decision)
 
     # * Instead of copying the model, just filter out routes and set bounds to 0
     execution_time = @elapsed begin

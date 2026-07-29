@@ -41,10 +41,8 @@ open(file_name, "w") do io
             println("\n================================================================")
 
             global execution_time_total = @time @CPUtime begin
-                global start_time = time()
+                start_time = time()
                 time_exceeded() = (time() - start_time) > TIME_LIMIT
-                global jobid  = get(ENV, "SLURM_JOB_ID", "nojob")
-                global outfile = "bp_$(filename)_result_$jobid.csv"
                 execution_time_prep = @elapsed lrp_subproblems = preparation_branch_and_price()
 
                 #region : create model and initial columns
@@ -105,7 +103,6 @@ open(file_name, "w") do io
                 global num_iter_global = 1
                 batch_size = 3
                 stop_processing = false
-                time_limit_reached = false
 
                 root_nodes = PriorityQueue()
 
@@ -136,7 +133,6 @@ open(file_name, "w") do io
                             if time_exceeded()
                                 println("\n Time limit reached during branch-and-price.")
                                 stop_processing = true
-                                time_limit_reached = true
                                 break
                             end
                             top = peek(root_nodes)
@@ -165,7 +161,6 @@ open(file_name, "w") do io
             println("total execution time of preparation for sorting subproblems   : $(round(execution_time_prep, digits=2)) seconds")
             println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem, digits=2), " seconds")
             println("total execution time solving branch and price                 : ", round(execution_time_bap, digits=2), " seconds")
-            println("total number of branch-and-price nodes explored               : ", total_bap_nodes)
             println("total model construction time (all JuMP builds)               : $(round(build_model_time, digits=2)) seconds")
             println("total execution time (build + algo)                           : $(round(total_time, digits=2)) seconds")
             println("total execution time excluding model building                 : $(round(time_excluding_build, digits=2)) seconds")
@@ -174,6 +169,8 @@ open(file_name, "w") do io
 
 
             currentTime = Dates.format(now(), "dd-mm-yyyy-HH-MM-SS-s")
+            jobid = get(ENV, "SLURM_JOB_ID", "nojob")
+            outfile = "bp_$(filename)_result_$jobid.csv"
 
             obj_val   = !isnothing(optimalSolution) ? upperBound : "/"
             status_tx = "/"
@@ -193,14 +190,10 @@ open(file_name, "w") do io
                 execution_time_cg_subproblem,  # column generation at root nodes
                 execution_time_bap,     # branch-and-price
                 obj_val,
-                status_tx,
-                total_bap_nodes         # total number of B&P nodes explored
+                status_tx
             ]
-            if length(customers) >= 75 && !time_limit_reached
-                push!(row_data, "Opt.")
-            end
 
-            open(outfile, "w") do file
+            open(outfile, "a") do file
                 println(file, join(row_data, ","))
             end
     end

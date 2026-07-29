@@ -21,8 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "cf2-2,3,20"
-global status_debug = true
+filename = "ce1-3,5,30"
 
 open(file_name, "w") do io
     redirect_stdout(io) do
@@ -60,8 +59,6 @@ open(file_name, "w") do io
             #region : branch-and-price
             start_time = time()
             time_exceeded() = (time() - start_time) > TIME_LIMIT
-
-            global cc_only_branching = true  # TEST: customer-customer branching only, from most fractional route
 
             global execution_time_total = @time @CPUtime begin
                 execution_time_prep = @elapsed lrp_subproblems = preparation_branch_and_price()
