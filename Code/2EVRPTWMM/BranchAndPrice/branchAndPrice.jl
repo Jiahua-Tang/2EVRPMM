@@ -2,6 +2,12 @@ include("branchingStrategies.jl")
 include("Utiles.jl")
 include("columnGeneration.jl")
 
+# Test flag: when true, branchingStrategy skips every other rule (route-count,
+# per-satellite, reversed-route) and only ever branches on a customer-customer
+# pair taken from the most fractional route. Set `global cc_only_branching = true`
+# before running the branch-and-price to enable this test mode.
+global cc_only_branching = false
+
 function blockColumn()
     
 end
@@ -644,11 +650,10 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
                 end
                 global execution_time_branching += execution_time
 
-                # execution_time = @elapsed begin
-                    # display(branching_decisions)
-                    # display(branching_decisions[1])
-                    # display(branching_decisions[2])
-
+                if isnothing(branching_decisions)
+                    @warn "No branching decision found for node $(node.id); dropping node without children"
+                    println("No branching decision found for node $(node.id); dropping node without children")
+                else
                     #region: write node matrix
                     appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS,current_node_id+1, current_node_id+2)
                     #endregion
@@ -663,8 +668,7 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
                     if !isnothing(right_child_node)
                         push!(node_stack, right_child_node)
                     end
-                # end
-                # global execution_time_child_node += execution_time
+                end
             end
             num_iter_sp += 1
         end
@@ -743,6 +747,15 @@ function branchingStrategy(y, route_1e, routes_pool, branchingInfo::BranchingInf
 
     left_branch = deepcopy(branchingInfo)
     right_branch = deepcopy(branchingInfo)
+
+    if cc_only_branching
+        result = branchOnCustomerCustomerMostFractionalRoute(branchingInfo, y, routes_pool)
+        if isnothing(result)
+            @warn "cc_only_branching: no valid customer-customer pair found in any fractional route; node cannot be branched further"
+            println("cc_only_branching: no valid customer-customer pair found in any fractional route; node cannot be branched further")
+        end
+        return result
+    end
 
     ## Case A: total number of 2e route is fractional
     if !(abs(sum(y)-round(sum(y)))<1e-8)

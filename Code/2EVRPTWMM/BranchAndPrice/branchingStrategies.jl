@@ -134,6 +134,63 @@ function branchOnReverseRoute(branchingInfo, reverse_route)
     return left_branch, right_branch
 end
 
+function branchOnCustomerCustomerMostFractionalRoute(branchingInfo, y, routes_pool)
+    left_branch = deepcopy(branchingInfo)
+    right_branch = deepcopy(branchingInfo)
+    left_branch.depth += 1
+    right_branch.depth += 1
+
+    sorted_fractional_y = sort([r for r in 1:length(y) if 1e-8 < y[r] < 1-1e-8], by = r -> y[r] * (1 - y[r]), rev = true)
+    if isempty(sorted_fractional_y)
+        return nothing
+    end
+
+    selected_routes = Set{Vector{Int}}()
+    for r in sorted_fractional_y
+        push!(selected_routes, routes_pool[r].sequence)
+    end
+
+    # Walk fractional routes from most fractional (y*(1-y) closest to 0.25) to least,
+    # and take the first valid customer-customer pair found within that route.
+    for r_idx in sorted_fractional_y
+        route_customers = routes_pool[r_idx].sequence[2:end-1]
+        n = length(route_customers)
+        for i in 1:n, j in i+1:n
+            local_decision = Tuple(sort([route_customers[i], route_customers[j]]))
+            cust1, cust2 = local_decision
+
+            if local_decision in branchingInfo.must_served_together || local_decision in branchingInfo.forbidden_served_together
+                continue
+            end
+
+            existance_together = false
+            existance_cust_1 = false
+            existance_cust_2 = false
+            for route in selected_routes
+                if cust1 in route && cust2 in route
+                    existance_together = true
+                end
+                if cust1 in route && !(cust2 in route)
+                    existance_cust_1 = true
+                end
+                if cust2 in route && !(cust1 in route)
+                    existance_cust_2 = true
+                end
+            end
+
+            if existance_together && existance_cust_1 && existance_cust_2
+                push!(left_branch.must_served_together, local_decision)
+                push!(right_branch.forbidden_served_together, local_decision)
+                @info "Branch on customer-customer from most fractional route $(routes_pool[r_idx].sequence): $local_decision"
+                println("Branch on customer-customer from most fractional route $(routes_pool[r_idx].sequence): $local_decision")
+                return left_branch, right_branch
+            end
+        end
+    end
+
+    return nothing
+end
+
 function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_pool)
     routes = deepcopy(routes_pool)
     left_branch = deepcopy(branchingInfo)
