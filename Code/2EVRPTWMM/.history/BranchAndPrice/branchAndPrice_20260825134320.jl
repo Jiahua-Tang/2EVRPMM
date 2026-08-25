@@ -8,14 +8,13 @@ include("columnGeneration.jl")
 # before running the branch-and-price to enable this test mode.
 global cc_only_branching = false
 
-# Test flag: when true, branchingStrategy skips route-count and per-satellite
-# rules and only ever branches using Case B (reversed-route, checked first to
-# resolve ng-route relaxation degeneracy) then Case C (the combination rule:
-# start-parking-customer / customer-customer / end-parking-customer, picked by
-# influence score). Set `global case_c_only_branching = true` before running
-# the branch-and-price to enable this test mode. Takes priority over
+# Test flag: when true, branchingStrategy skips route-count, per-satellite and
+# reversed-route rules and only ever branches using Case C (the combination
+# rule: start-parking-customer / customer-customer / end-parking-customer,
+# picked by influence score). Set `global case_c_only_branching = true` before
+# running the branch-and-price to enable this test mode. Takes priority over
 # `cc_only_branching` if both are true.
-global case_c_only_branching = false
+global case_c_only_branching = true
 
 function blockColumn()
     
@@ -771,19 +770,6 @@ function branchingStrategy(y, route_1e, routes_pool, branchingInfo::BranchingInf
     end
 
     if case_c_only_branching
-        # Case B first: resolve reversed-route degeneracy (a known symptom of the
-        # ng-route relaxation used in pricing) directly, same as the cascade does,
-        # before falling back to the Case C combination rule.
-        reversed_route = checkExistanceReversedRoute(
-            sort([r for r in 1:length(y) if 0 < y[r] < 1],
-                 by = r -> y[r] * (1 - y[r]),
-                 rev = true),
-            routes_pool
-        )
-        if !isnothing(reversed_route)
-            return branchOnReverseRoute(branchingInfo, reversed_route)
-        end
-
         result = branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_pool)
         if isnothing(result)
             @warn "case_c_only_branching: no valid combination candidate found; node cannot be branched further"

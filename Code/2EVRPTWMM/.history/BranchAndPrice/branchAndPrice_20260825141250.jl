@@ -2,11 +2,6 @@ include("branchingStrategies.jl")
 include("Utiles.jl")
 include("columnGeneration.jl")
 
-# Test flag: when true, branchingStrategy skips every other rule (route-count,
-# per-satellite, reversed-route) and only ever branches on a customer-customer
-# pair taken from the most fractional route. Set `global cc_only_branching = true`
-# before running the branch-and-price to enable this test mode.
-global cc_only_branching = false
 
 # Test flag: when true, branchingStrategy skips route-count and per-satellite
 # rules and only ever branches using Case B (reversed-route, checked first to
@@ -15,7 +10,7 @@ global cc_only_branching = false
 # influence score). Set `global case_c_only_branching = true` before running
 # the branch-and-price to enable this test mode. Takes priority over
 # `cc_only_branching` if both are true.
-global case_c_only_branching = false
+global case_c_only_branching = true
 
 function blockColumn()
     
