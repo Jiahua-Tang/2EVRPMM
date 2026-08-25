@@ -14,7 +14,7 @@ global cc_only_branching = false
 # picked by influence score). Set `global case_c_only_branching = true` before
 # running the branch-and-price to enable this test mode. Takes priority over
 # `cc_only_branching` if both are true.
-global case_c_only_branching = false
+global case_c_only_branching = true
 
 function blockColumn()
     

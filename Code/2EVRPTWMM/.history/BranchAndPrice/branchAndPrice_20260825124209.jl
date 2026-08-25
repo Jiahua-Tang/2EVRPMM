@@ -6,7 +6,7 @@ include("columnGeneration.jl")
 # per-satellite, reversed-route) and only ever branches on a customer-customer
 # pair taken from the most fractional route. Set `global cc_only_branching = true`
 # before running the branch-and-price to enable this test mode.
-global cc_only_branching = false
+global cc_only_branching = true
 
 # Test flag: when true, branchingStrategy skips route-count, per-satellite and
 # reversed-route rules and only ever branches using Case C (the combination

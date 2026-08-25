@@ -14,7 +14,7 @@ global cc_only_branching = false
 # picked by influence score). Set `global case_c_only_branching = true` before
 # running the branch-and-price to enable this test mode. Takes priority over
 # `cc_only_branching` if both are true.
-global case_c_only_branching = false
+global case_c_only_branching = true
 
 function blockColumn()
     
@@ -659,7 +659,8 @@ function solve_branch_and_price_2e_subproblem(route_1e::Route, node_stack)
                 global execution_time_branching += execution_time
 
                 if isnothing(branching_decisions)
-                    error("No branching decision found for node $(node.id); stopping the programme.")
+                    @warn "No branching decision found for node $(node.id); dropping node without children"
+                    println("No branching decision found for node $(node.id); dropping node without children")
                 else
                     #region: write node matrix
                     appendNodeMatrix(node.y_value, node.id, node.parent_id, node.cgLowerBound, node.fractionalScore, node.gradientLB, node.gradientFS,current_node_id+1, current_node_id+2)
@@ -758,13 +759,8 @@ function branchingStrategy(y, route_1e, routes_pool, branchingInfo::BranchingInf
     if cc_only_branching
         result = branchOnCustomerCustomerMostFractionalRoute(branchingInfo, y, routes_pool)
         if isnothing(result)
-            @info "cc_only_branching: no valid customer-customer pair found; falling back to satellite-customer branching"
-            println("cc_only_branching: no valid customer-customer pair found; falling back to satellite-customer branching")
-            result = branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_pool)
-            if isnothing(result)
-                @warn "cc_only_branching: no valid satellite-customer branching found either; node cannot be branched further"
-                println("cc_only_branching: no valid satellite-customer branching found either; node cannot be branched further")
-            end
+            @warn "cc_only_branching: no valid customer-customer pair found in any fractional route; node cannot be branched further"
+            println("cc_only_branching: no valid customer-customer pair found in any fractional route; node cannot be branched further")
         end
         return result
     end

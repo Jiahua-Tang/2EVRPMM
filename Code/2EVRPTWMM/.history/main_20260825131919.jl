@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "ci5-6,4,30"
+filename = "cg1-3,5,30"
 global status_debug = true
 
 open(file_name, "w") do io

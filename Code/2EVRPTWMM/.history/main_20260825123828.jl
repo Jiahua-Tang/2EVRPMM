@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "ci5-6,4,30"
+filename = "ce5-6,4,30"
 global status_debug = true
 
 open(file_name, "w") do io
@@ -199,7 +199,6 @@ open(file_name, "w") do io
                 println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem, digits=2), " seconds")
                 println("total execution time solving branch and price                 : ", round(execution_time_bap, digits=2), " seconds")
                 println("total number of branch-and-price nodes explored               : ", total_bap_nodes)
-                @info "total number of branch-and-price nodes explored : ", total_bap_nodes
 
             end
             #endregion
