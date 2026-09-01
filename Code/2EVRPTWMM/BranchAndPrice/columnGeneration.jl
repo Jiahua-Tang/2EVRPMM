@@ -744,30 +744,42 @@ Returns 1 if l2 dominates l1
 @inline function dominanceCheckSingle_optimized(l1::LabelOptimized, l2::LabelOptimized)
     # Use the original two-call approach but with @inline for better performance
     # Check if l1 dominates l2
+    #
+    # Matches the dominance rule as specified in the paper (Section 5.2.3): a
+    # label may only dominate another if it is no worse on cost, load, AND
+    # arrival time (accumulated_duration is not part of the paper's rule).
+    # earliest_time (arrival time / τ) was previously missing from this
+    # comparison, so a cheaper-but-later label could wrongly eliminate an
+    # earlier-but-costlier one that a downstream time window would have
+    # required.
 
-    if l1.reduced_cost <= l2.reduced_cost && 
+    if l1.reduced_cost <= l2.reduced_cost &&
        l1.accumulated_capacity <= l2.accumulated_capacity &&
+       l1.earliest_time <= l2.earliest_time &&
        issubset(l1.M, l2.M)
         # Ensure not identical (at least one strict inequality)
-        if l1.reduced_cost < l2.reduced_cost || 
+        if l1.reduced_cost < l2.reduced_cost ||
            l1.accumulated_capacity < l2.accumulated_capacity ||
+           l1.earliest_time < l2.earliest_time ||
            l1.M != l2.M
             return 2  # l1 dominates l2
         end
     end
-    
+
     # Check if l2 dominates l1
-    if l2.reduced_cost <= l1.reduced_cost && 
+    if l2.reduced_cost <= l1.reduced_cost &&
        l2.accumulated_capacity <= l1.accumulated_capacity &&
+       l2.earliest_time <= l1.earliest_time &&
        issubset(l2.M, l1.M)
         # Ensure not identical (at least one strict inequality)
-        if l2.reduced_cost < l1.reduced_cost || 
+        if l2.reduced_cost < l1.reduced_cost ||
            l2.accumulated_capacity < l1.accumulated_capacity ||
+           l2.earliest_time < l1.earliest_time ||
            l2.M != l1.M
             return 1  # l2 dominates l1
         end
     end
-    
+
     return nothing  # no dominance
 end
 
@@ -923,6 +935,17 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
             if !isnothing(new_label)
                 # execution_time_labelling = @elapsed begin
                 # * Handle depot (satellite) labels
+                #
+                # NOTE: this was briefly changed to admit every feasible
+                # closing move regardless of reduced-cost sign, to work around
+                # a degenerate-tie case where a genuinely-needed column never
+                # looked improving under any dual vector pricing actually
+                # visited. That fixed the specific case but grows the column
+                # pool substantially (every feasible route becomes a column,
+                # not just improving ones), which meaningfully slows down
+                # larger instances. Reverted back to requiring a genuinely
+                # negative reduced cost here; revisit with a more targeted
+                # (e.g. degeneracy-triggered) version if this recurs.
                 if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
                     # * branching rule : obligatory combination of customer-customer
                     branching_rule_legal = true
@@ -1000,7 +1023,8 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                             push!(depotLabels, new_label)
                             new_route = generate2eRoute(new_label.visitedSequence)
                             new_columns_found = true
-                            # println("New route found with negative reduced cost: ", new_route.sequence, "  RC: ", round(new_label.reduced_cost, digits=2))
+                            # * PRINT
+                            println("New route found with negative reduced cost: ", new_route.sequence, "  RC: ", round(new_label.reduced_cost, digits=2))
                             push!(routes_2e, new_route)
                             push!(routes_2e_by_start[new_label.visitedSequence[1]], new_route)
                             add_2eroute!(new_route)
