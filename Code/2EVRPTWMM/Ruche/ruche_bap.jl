@@ -16,13 +16,26 @@ global root = "$(pwd())/../../Data/Instances/"
 
 filename = ARGS[1]
 
+# Branching mode, optional 2nd argument:
+#   "full"       (default) full branching cascade + best-bound/gradient node selection
+#   "random_dfs" random customer pair from the most fractional route + depth-first search
+#   "baseline"   fixed microhubs (no relocation), arc-based 1e TSP; 2e routes,
+#                branching and node selection as in "full"
+run_mode = length(ARGS) >= 2 ? ARGS[2] : "full"
+run_mode in ("full", "random_dfs", "baseline") || error("unknown mode '$run_mode' (use full, random_dfs or baseline)")
+global random_pair_branching = run_mode == "random_dfs"
+global dfs_node_selection = run_mode == "random_dfs"
+global fixed_microhub_baseline = run_mode == "baseline"
+branching_mode = random_pair_branching ? "random_pair" : "full"
+search_mode = dfs_node_selection ? "dfs" : "best_bound"
+
 # num_cust = parse(Int, ARGS[1])
 # global random_seed = parse(Int, ARGS[2])
 # name_diff = parse(Int, ARGS[3])
 # file_name = "Output/bp_c$(num_cust)"*"s"*string(random_seed)*time_stamp*"_"*string(name_diff)*".txt"
 
 
-file_name = "Output/bp_"*filename*"_"*time_stamp*".txt"
+file_name = "Output/bp_"*filename*"_"*run_mode*"_"*time_stamp*".txt"
 global status_debug = false
 
 const TIME_LIMIT = 3600*3
@@ -42,9 +55,12 @@ open(file_name, "w") do io
 
             global execution_time_total = @time @CPUtime begin
                 global start_time = time()
-                time_exceeded() = (time() - start_time) > TIME_LIMIT
+                # Same clock and limit for the checks inside the B&P tree and CG.
+                global bap_start_time = start_time
+                global bap_time_limit = TIME_LIMIT
+                time_exceeded() = time_limit_exceeded()
                 global jobid  = get(ENV, "SLURM_JOB_ID", "nojob")
-                global outfile = "bp_$(filename)_result_$jobid.csv"
+                global outfile = "bp_$(filename)_$(run_mode)_result_$jobid.csv"
                 execution_time_prep = @elapsed lrp_subproblems = preparation_branch_and_price()
 
                 #region : create model and initial columns
@@ -107,55 +123,77 @@ open(file_name, "w") do io
                 stop_processing = false
                 time_limit_reached = false
 
-                root_nodes = PriorityQueue()
-
-                while length(root_nodes) < batch_size && !isempty(lrp_subproblems)
-                    top = peek(lrp_subproblems)
-                    subproblem = top.first
-                    lb = top.second
-                    if lb >= upperBound
-                        println("\nSubproblem $num_iter lower bound exceeds global optimal solution, finish precompiling\n")
-                        stop_processing = true
+                # Loop over all LRP subproblems, batch by batch: pull up to
+                # `batch_size` subproblems, solve their root nodes, then run
+                # branch-and-price on each before pulling the next batch.
+                # Subproblems are sorted by LRP lower bound, so the whole run
+                # stops once the next one's bound reaches the incumbent.
+                while !isempty(lrp_subproblems) && !stop_processing
+                    if time_exceeded()
+                        println("\n Time limit reached before next batch.")
+                        time_limit_reached = true
                         break
                     end
-                    dequeue!(lrp_subproblems)
-                    execution_time_root_node = @elapsed root_result = solve_root_node(subproblem)
-                    execution_time_cg_subproblem += execution_time_root_node
-                    println("execution time solving subproblem $num_iter : $(round(execution_time_root_node, digits=2)) seconds")
-                    if !isnothing(root_result)
-                        enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
-                    end
-                    num_iter += 1
-                end
 
-                if !isempty(root_nodes)
-                    println("\n--- Branch-and-price batch (size = $(length(root_nodes))) ---")
-                    # ---------- 2) Run branch-and-price on each root node in the batch ----------
-                    bap_batch_time = @elapsed begin
-                        while !isempty(root_nodes)
-                            if time_exceeded()
-                                println("\n Time limit reached during branch-and-price.")
-                                stop_processing = true
-                                time_limit_reached = true
-                                break
-                            end
-                            top = peek(root_nodes)
-                            k = top.first
-                            v = top.second
-                            dequeue!(root_nodes)
-                            if v < upperBound
-                                println("\n[BAP $num_iter_global] ", k[1].sequence, " : ", v)
-                                solve_branch_and_price_2e_subproblem(k[1], k[2])
-                            else
-                                println("\nSubproblem lower bound exceeds global optimal solution")
-                                stop_processing = true
-                                break
-                            end
-                            global num_iter_global += 1
+                    root_nodes = PriorityQueue()
+
+                    while length(root_nodes) < batch_size && !isempty(lrp_subproblems)
+                        if time_exceeded()
+                            println("\n Time limit reached while solving root nodes.")
+                            stop_processing = true
+                            time_limit_reached = true
+                            break
                         end
+                        top = peek(lrp_subproblems)
+                        subproblem = top.first
+                        lb = top.second
+                        if lb >= upperBound
+                            println("\nSubproblem $num_iter lower bound exceeds global optimal solution, finish precompiling\n")
+                            stop_processing = true
+                            break
+                        end
+                        dequeue!(lrp_subproblems)
+                        execution_time_root_node = @elapsed root_result = solve_root_node(subproblem)
+                        execution_time_cg_subproblem += execution_time_root_node
+                        println("execution time solving subproblem $num_iter : $(round(execution_time_root_node, digits=2)) seconds")
+                        if !isnothing(root_result)
+                            enqueue!(root_nodes, Pair(subproblem, root_result), root_result[1].cgLowerBound)
+                        end
+                        num_iter += 1
                     end
-                    execution_time_bap += bap_batch_time
-                end
+
+                    if !isempty(root_nodes)
+                        println("\n--- Branch-and-price batch (size = $(length(root_nodes))) ---")
+                        # ---------- 2) Run branch-and-price on each root node in the batch ----------
+                        bap_batch_time = @elapsed begin
+                            while !isempty(root_nodes)
+                                if time_exceeded()
+                                    println("\n Time limit reached during branch-and-price.")
+                                    stop_processing = true
+                                    time_limit_reached = true
+                                    break
+                                end
+                                top = peek(root_nodes)
+                                k = top.first
+                                v = top.second
+                                dequeue!(root_nodes)
+                                if v < upperBound
+                                    println("\n[BAP $num_iter_global] ", k[1].sequence, " : ", v)
+                                    solve_branch_and_price_2e_subproblem(k[1], k[2])
+                                else
+                                    # Skip only this subproblem: later subproblems
+                                    # can still have a lower root bound.
+                                    println("\nSubproblem lower bound exceeds global optimal solution, skip it")
+                                end
+                                global num_iter_global += 1
+                            end
+                        end
+                        execution_time_bap += bap_batch_time
+                    end
+                end # while: next batch of subproblems
+                # The limit may have been hit inside a tree or CG loop of the
+                # last subproblem, which the checks above never see.
+                time_limit_reached = time_limit_reached || time_limit_hit
             end
 
             total_time          = time() - start_time
@@ -180,7 +218,7 @@ open(file_name, "w") do io
 
             row_data = [
                 currentTime,
-                "bp",
+                fixed_microhub_baseline ? "bl_bp" : "bp",
                 "\"$filename\"",
                 length(customers),
                 length(satellites),
@@ -194,7 +232,9 @@ open(file_name, "w") do io
                 execution_time_bap,     # branch-and-price
                 obj_val,
                 status_tx,
-                total_bap_nodes         # total number of B&P nodes explored
+                total_bap_nodes,        # total number of B&P nodes explored
+                branching_mode,         # "full" or "random_pair"
+                search_mode             # "best_bound" or "dfs"
             ]
             if length(customers) >= 75 && !time_limit_reached
                 push!(row_data, "Opt.")

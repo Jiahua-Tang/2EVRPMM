@@ -191,8 +191,78 @@ function branchOnCustomerCustomerMostFractionalRoute(branchingInfo, y, routes_po
     return nothing
 end
 
+# Baseline rule: from the most fractional route, draw customer pairs in random
+# order (instead of the deterministic nested-loop scan above) and take the
+# first one that is genuinely fractionally split across the current route
+# pool. The entanglement check (together in some route, apart in some other)
+# is kept because it's what guarantees the branch actually changes the LP
+# solution -- without it a randomly-drawn pair could be a no-op (always
+# together or always apart already) and the tree would stall.
+function branchOnRandomPairMostFractionalRoute(branchingInfo, y, routes_pool)
+    left_branch = deepcopy(branchingInfo)
+    right_branch = deepcopy(branchingInfo)
+    left_branch.depth += 1
+    right_branch.depth += 1
+
+    sorted_fractional_y = sort([r for r in 1:length(y) if 1e-8 < y[r] < 1-1e-8], by = r -> y[r] * (1 - y[r]), rev = true)
+    if isempty(sorted_fractional_y)
+        return nothing
+    end
+
+    selected_routes = Set{Vector{Int}}()
+    for r in sorted_fractional_y
+        push!(selected_routes, routes_pool[r].sequence)
+    end
+
+    for r_idx in sorted_fractional_y
+        route_customers = routes_pool[r_idx].sequence[2:end-1]
+        n = length(route_customers)
+        if n < 2
+            continue
+        end
+
+        candidate_pairs = [(route_customers[i], route_customers[j]) for i in 1:n for j in i+1:n]
+        # Seeded generator (see random_branching_seed in branchAndPrice.jl)
+        # so runs are reproducible.
+        shuffle!(random_branching_rng, candidate_pairs)
+
+        for (cust1_raw, cust2_raw) in candidate_pairs
+            local_decision = Tuple(sort([cust1_raw, cust2_raw]))
+            cust1, cust2 = local_decision
+
+            if local_decision in branchingInfo.must_served_together || local_decision in branchingInfo.forbidden_served_together
+                continue
+            end
+
+            existance_together = false
+            existance_cust_1 = false
+            existance_cust_2 = false
+            for route in selected_routes
+                if cust1 in route && cust2 in route
+                    existance_together = true
+                end
+                if cust1 in route && !(cust2 in route)
+                    existance_cust_1 = true
+                end
+                if cust2 in route && !(cust1 in route)
+                    existance_cust_2 = true
+                end
+            end
+
+            if existance_together && existance_cust_1 && existance_cust_2
+                push!(left_branch.must_served_together, local_decision)
+                push!(right_branch.forbidden_served_together, local_decision)
+                @info "Branch on random customer pair from most fractional route $(routes_pool[r_idx].sequence): $local_decision"
+                println("Branch on random customer pair from most fractional route $(routes_pool[r_idx].sequence): $local_decision")
+                return left_branch, right_branch
+            end
+        end
+    end
+
+    return nothing
+end
+
 function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_pool)
-    routes = deepcopy(routes_pool)
     left_branch = deepcopy(branchingInfo)
     right_branch = deepcopy(branchingInfo)
     left_branch.depth += 1
@@ -253,9 +323,9 @@ function branchOnCombinationParkingCustomer(route_1e, branchingInfo, y, routes_p
                    init = 0.0)
     end
 
-    function score_end_parking_customer(_, cust)
+    function score_end_parking_customer(parking, cust)
         return sum(y[r] for r in sorted_fractional_y
-                   if cust in routes_pool[r].sequence;
+                   if routes_pool[r].sequence[end] == parking && cust in routes_pool[r].sequence;
                    init = 0.0)
     end
 

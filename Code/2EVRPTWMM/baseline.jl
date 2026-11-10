@@ -43,20 +43,14 @@ function solveBaseline()
             @constraint(model, z[i,i,s] == 0)
         end
     end
+    # z[i,j,s]: arc (i,j) of a 2e route that starts at satellite s. A route
+    # leaves only from its own satellite s but may end at any active satellite
+    # (as in the B&P baseline mode), so arcs into a satellite are free.
     for i in active_satellites
         for j in active_A2
             for s in active_satellites
                 if i != s
                     @constraint(model, z[i,j,s]==0)
-                end
-            end
-        end
-    end
-    for i in active_satellites
-        for j in active_A2
-            for s in active_satellites
-                if i != s
-                    @constraint(model, z[j,i,s]==0)
                 end
             end
         end
@@ -78,11 +72,18 @@ function solveBaseline()
 
     @constraint(model, [s in active_satellites], w[s] == sum(f[s, j, s] for j in active_A2))
 
-    @constraint(model, [i in active_A2, s in active_satellites], sum(z[j,i,s] for j in active_A2 if i!= j) == 
+    # Route continuity at customers, per start satellite
+    @constraint(model, [i in customers, s in active_satellites], sum(z[j,i,s] for j in active_A2 if i!= j) ==
                                                                  sum(z[i,j,s] for j in active_A2 if i!= j))
+    # Vehicle balance at each satellite: routes ending here == routes leaving here
+    @constraint(model, [i in active_satellites], sum(z[j,i,s] for j in customers, s in active_satellites) ==
+                                                 sum(z[i,j,i] for j in customers))
     @constraint(model, [i in active_satellites, j in active_satellites, s in active_satellites], z[i,j,s] == 0)
-    
+
     @constraint(model, [s in active_satellites], sum(z[s,j,s] for j in active_A2)<=nb_vehicle_per_satellite)
+
+    # Microhub capacity: load of the routes leaving s (as maxVolumnMM in the B&P master)
+    @constraint(model, [s in active_satellites], w[s] <= capacity_microhub)
 
     @constraint(model, [j in customers], sum(z[i,j,s] for i in active_A2, s in active_satellites) == 1)
 
@@ -168,6 +169,11 @@ function solveBaseline()
 
     open(outfile, "a") do file
         println(file, join(row_data, ","))
+    end
+
+    if !has_values(model)
+        println("\nNo feasible solution found: no routes to print.")
+        return
     end
 
     println("\n--- 1e routes (x) ---")

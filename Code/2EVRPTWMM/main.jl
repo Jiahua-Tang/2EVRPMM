@@ -21,7 +21,7 @@ const TIME_LIMIT = 3600*3
 # file_name = "Output/S$(random_seed)/v2.2"*"_s"*string(random_seed)*time_stamp*".txt"
 file_name = "Output/demo.txt"
 mkpath(dirname(file_name))
-filename = "ce1-3,5,20"
+filename = "cf2-2,3,20"
 global status_debug = true
 
 open(file_name, "w") do io
@@ -59,9 +59,13 @@ open(file_name, "w") do io
 
             #region : branch-and-price
             start_time = time()
-            time_exceeded() = (time() - start_time) > TIME_LIMIT
+            # Same clock and limit for the checks inside the B&P tree and CG.
+            global bap_start_time = start_time
+            global bap_time_limit = TIME_LIMIT
+            time_exceeded() = time_limit_exceeded()
 
-            # global cc_only_branching = true  # TEST: customer-customer branching only, from most fractional route
+            global cc_only_branching = true  # TEST: customer-customer branching only, from most fractional route
+            global fixed_microhub_baseline = false  # true: baseline with fixed microhubs (arc-based 1e TSP)
 
             global execution_time_total = @time @CPUtime begin
                 execution_time_prep = @elapsed lrp_subproblems = preparation_branch_and_price()
@@ -124,17 +128,13 @@ open(file_name, "w") do io
                 # Loop: pull up to 3 LRP subproblems, solve their root nodes,
                 # then run branch-and-price on each before pulling the next 3.
                 # ============================================================
-                # open("NodeMatrix/NodeMatrix_$(filename).csv", "w") do file
-                #     row_data = ["id", "parent", "cgLowerBound", "FS", "rdtCG", "rdtFS","Child","Child"]
-                #     println(file, join(row_data, ","))
-                # end
 
                 execution_time_cg_subproblem = 0.0
                 execution_time_bap = 0.0
 
                 global num_iter = 1
                 global num_iter_global = 1
-                batch_size = 1 # 3
+                batch_size = 3
                 stop_processing = false
 
                 while !isempty(lrp_subproblems) && !stop_processing
@@ -186,9 +186,9 @@ open(file_name, "w") do io
                                 println("\n[BAP $num_iter_global] ", k[1].sequence, " : ", v)
                                 solve_branch_and_price_2e_subproblem(k[1], k[2])
                             else
-                                println("\nSubproblem lower bound exceeds global optimal solution")
-                                stop_processing = true
-                                break
+                                # Skip only this subproblem: later subproblems
+                                # can still have a lower root bound.
+                                println("\nSubproblem lower bound exceeds global optimal solution, skip it")
                             end
                             global num_iter_global += 1
                         end
@@ -199,7 +199,6 @@ open(file_name, "w") do io
                 println("total execution time of column generation solving subproblems : ", round(execution_time_cg_subproblem, digits=2), " seconds")
                 println("total execution time solving branch and price                 : ", round(execution_time_bap, digits=2), " seconds")
                 println("total number of branch-and-price nodes explored               : ", total_bap_nodes)
-                @info "total number of branch-and-price nodes explored : ", total_bap_nodes
 
             end
             #endregion

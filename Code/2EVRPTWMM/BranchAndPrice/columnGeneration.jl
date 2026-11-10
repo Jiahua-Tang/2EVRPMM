@@ -641,58 +641,53 @@ end
 
 Optimized label extension with BitSet operations and no unnecessary copies.
 """
-function extendLabel_optimized(π2, π3, π4, label::LabelOptimized, next_node::Int, neighbours::Dict{Int, BitSet})
+function extendLabel_optimized(π2, π3, π4, label::LabelOptimized, next_node::Int, neighbours::Dict{Int, BitSet}, d)
+    # `d` bundles the instance data (arc_cost, demands, time_window, ...).
+    # It is passed in rather than read from the untyped globals so this hot
+    # function is compiled for concrete types.
     # Detect forbidden cycle - O(1) with BitSet
     if next_node in label.M
         return nothing
     end
+    arc = d.arc_cost[label.current_node, next_node]
     # Update reduced cost
-    reduced_cost = label.reduced_cost + arc_cost[label.current_node, next_node]
-    if next_node in customers
+    reduced_cost = label.reduced_cost + arc
+    if next_node in d.customers
         reduced_cost = reduced_cost - π2[next_node] +
-                         π4[label.visitedSequence[1]] * demands[next_node]
+                         π4[label.visitedSequence[1]] * d.demands[next_node]
     end
 
-    if next_node in satellites
-        reduced_cost -= π3[next_node]       
+    if next_node in d.satellites
+        reduced_cost -= π3[next_node]
     end
-    
+
     # Update accumulated capacity
-    accumulated_capacity = label.accumulated_capacity + demands[next_node]
-    if accumulated_capacity > capacity_2e_vehicle
+    accumulated_capacity = label.accumulated_capacity + d.demands[next_node]
+    if accumulated_capacity > d.capacity_2e_vehicle
         return nothing
     end
 
-
     # Update accumulated duration
-    accumulated_duration = label.accumulated_duration + arc_cost[label.current_node, next_node]
-    if accumulated_duration > maximum_duration_2e_vehicle
+    accumulated_duration = label.accumulated_duration + arc
+    if accumulated_duration > d.maximum_duration_2e_vehicle
         return nothing
     end
 
     # Update earliest feasible time
-    earliest_feasible_time = time_window[next_node][1] > label.earliest_time + arc_cost[label.current_node, next_node] ? 
-                            time_window[next_node][1] : label.earliest_time + arc_cost[label.current_node, next_node]
-    if earliest_feasible_time > time_window[next_node][2]
+    tw = d.time_window[next_node]
+    earliest_feasible_time = max(tw[1], label.earliest_time + arc)
+    if earliest_feasible_time > tw[2]
         return nothing
     end
 
-    # Update set of M - optimized with BitSet operations (O(n) but with BitSet it's much faster)
-    # new_M = (M ∪ next_node) ∩ neighbours[next_node]
+    # Update set of M: new_M = (M ∪ next_node) ∩ neighbours[next_node]
     new_M = intersect(union(label.M, next_node), neighbours[next_node])
 
-    # Update visited sequence - use vcat to avoid explicit deepcopy
     visitedSequence = vcat(label.visitedSequence, next_node)
-    
-    new_label = LabelOptimized(next_node, reduced_cost, 
-                      accumulated_capacity, accumulated_duration, 
+
+    return LabelOptimized(next_node, reduced_cost,
+                      accumulated_capacity, accumulated_duration,
                       earliest_feasible_time, new_M, visitedSequence)
-    # if label.visitedSequence == [6, 10, 15] && next_node == 14
-    #     println("test::  ", new_label)        
-    # end
-
-
-    return new_label
 end
 
 """
@@ -745,22 +740,25 @@ Returns 1 if l2 dominates l1
     # Use the original two-call approach but with @inline for better performance
     # Check if l1 dominates l2
     #
-    # Matches the dominance rule as specified in the paper (Section 5.2.3): a
-    # label may only dominate another if it is no worse on cost, load, AND
-    # arrival time (accumulated_duration is not part of the paper's rule).
-    # earliest_time (arrival time / τ) was previously missing from this
-    # comparison, so a cheaper-but-later label could wrongly eliminate an
-    # earlier-but-costlier one that a downstream time window would have
-    # required.
+    # A label may only dominate another if it is no worse on every resource
+    # that can make a later extension infeasible: cost, load, arrival time
+    # (time windows) AND accumulated travel duration (the maximum route
+    # duration limit checked in extendLabel_optimized). Without arrival time a
+    # cheaper-but-later label could eliminate one a downstream time window
+    # needed; without duration a label could be eliminated by one that later
+    # exceeds the duration limit. Either way pricing missed improving routes
+    # and B&P returned a worse objective than CPLEX (e.g. ci3-3,5,30).
 
     if l1.reduced_cost <= l2.reduced_cost &&
        l1.accumulated_capacity <= l2.accumulated_capacity &&
        l1.earliest_time <= l2.earliest_time &&
+       l1.accumulated_duration <= l2.accumulated_duration &&
        issubset(l1.M, l2.M)
         # Ensure not identical (at least one strict inequality)
         if l1.reduced_cost < l2.reduced_cost ||
            l1.accumulated_capacity < l2.accumulated_capacity ||
            l1.earliest_time < l2.earliest_time ||
+           l1.accumulated_duration < l2.accumulated_duration ||
            l1.M != l2.M
             return 2  # l1 dominates l2
         end
@@ -770,16 +768,18 @@ Returns 1 if l2 dominates l1
     if l2.reduced_cost <= l1.reduced_cost &&
        l2.accumulated_capacity <= l1.accumulated_capacity &&
        l2.earliest_time <= l1.earliest_time &&
+       l2.accumulated_duration <= l1.accumulated_duration &&
        issubset(l2.M, l1.M)
         # Ensure not identical (at least one strict inequality)
         if l2.reduced_cost < l1.reduced_cost ||
            l2.accumulated_capacity < l1.accumulated_capacity ||
            l2.earliest_time < l1.earliest_time ||
+           l2.accumulated_duration < l1.accumulated_duration ||
            l2.M != l1.M
             return 1  # l2 dominates l1
         end
     end
-
+    
     return nothing  # no dominance
 end
 
@@ -825,6 +825,18 @@ Optimized ng-route labeling algorithm with major performance improvements:
 - Pre-filtering of feasible nodes
 """
 function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo, π_sat_lb::Vector{Float64}, π_sat_ub::Vector{Float64}; max_cols::Int = 100)
+    # Function barrier: read the untyped globals once here, then run the
+    # labelling loop in _ng_labelling_core, which Julia compiles for their
+    # concrete types (the hot extendLabel_optimized calls are then static).
+    pricing_data = (arc_cost = arc_cost, demands = demands, time_window = time_window,
+                    customers = customers, satellites = satellites,
+                    capacity_2e_vehicle = capacity_2e_vehicle,
+                    maximum_duration_2e_vehicle = maximum_duration_2e_vehicle)
+    return _ng_labelling_core(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo,
+                              π_sat_lb, π_sat_ub, max_cols, pricing_data, neighbours)
+end
+
+function _ng_labelling_core(π1, π2, π3, π4, π5, π6, selected_parkings, branchingInfo, π_sat_lb::Vector{Float64}, π_sat_ub::Vector{Float64}, max_cols::Int, pricing_data, neighbours)
     # println("Starting ng-path labelling algorithm")
     # max_cols : maximum number of new columns to add per pricing call.
     #            Larger values reduce the number of outer CG iterations (fewer
@@ -840,20 +852,32 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
 
     # Initialization - Pre-compute sets for O(1) membership checks
     # execution_time_setup_labelling = @elapsed begin
+    # Set of all 2e route sequences in the pool, for an O(1) "already in pool"
+    # check. Rebuilt whenever a new pool is created (new instance), then kept
+    # in sync below as columns are added.
+    if !isdefined(Main, :routes_2e_seq_owner) || routes_2e_seq_owner !== routes_2e
+        global routes_2e_seq_set = Set{Vector{Int}}()
+        for routes in values(routes_2e_by_start), route in routes
+            push!(routes_2e_seq_set, route.sequence)
+        end
+        global routes_2e_seq_owner = routes_2e
+    end
     satellites_set = BitSet(satellites)
     customers_set = BitSet(customers)
     active_nodes_set = BitSet(vcat(collect(selected_parkings), customers))
 
-    processedLabels = Dict{Int, Vector{LabelOptimized}}()
+    # Processed labels per (node, start parking): dominance only ever compares
+    # labels with the same start, so other starts need not be scanned.
+    processedLabels = Dict{Tuple{Int, Int}, Vector{LabelOptimized}}()
     depotLabels = Vector{LabelOptimized}()
     sizehint!(depotLabels, 1000)  # Pre-allocate space
     result = Vector{LabelOptimized}()
     sizehint!(result, 1000)  # Pre-allocate space
     new_columns_found = false
     
-    # Initialize containers for each node
-    for node in active_nodes_set
-        processedLabels[node] = Vector{LabelOptimized}()
+    # Initialize containers for each (node, start parking)
+    for node in active_nodes_set, parking in selected_parkings
+        processedLabels[(node, parking)] = Vector{LabelOptimized}()
     end
     
     # Use PriorityQueue for O(log n) label selection
@@ -887,7 +911,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
 
 
         # Mark as processed
-        push!(processedLabels[current_node], min_label)
+        push!(processedLabels[(current_node, min_label.visitedSequence[1])], min_label)
         
         # println("selected label:  ",min_label.visitedSequence)
         # Extend label to feasible nodes (iterate directly without creating intermediate array)
@@ -910,10 +934,12 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
             end
 
             # * branching rule : forbidden combination of customer-customer
+            # min_label already respects every rule, so extending to `node` can
+            # only violate a pair that contains `node` (no vcat allocation).
             branching_rule_legal = true
-            for combination in branchingInfo.forbidden_served_together 
-                to_check_sequence = vcat(min_label.visitedSequence, node)
-                if Int(combination[1] in to_check_sequence) + Int(combination[2] in to_check_sequence) == 2
+            for combination in branchingInfo.forbidden_served_together
+                if (combination[1] == node && combination[2] in min_label.visitedSequence) ||
+                   (combination[2] == node && combination[1] in min_label.visitedSequence)
                     branching_rule_legal = false
                     break
                 end
@@ -931,21 +957,10 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
             end
             #endregion
 
-            new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours)
+            new_label = extendLabel_optimized(π2, π3, π4, min_label, node, neighbours, pricing_data)
             if !isnothing(new_label)
                 # execution_time_labelling = @elapsed begin
                 # * Handle depot (satellite) labels
-                #
-                # NOTE: this was briefly changed to admit every feasible
-                # closing move regardless of reduced-cost sign, to work around
-                # a degenerate-tie case where a genuinely-needed column never
-                # looked improving under any dual vector pricing actually
-                # visited. That fixed the specific case but grows the column
-                # pool substantially (every feasible route becomes a column,
-                # not just improving ones), which meaningfully slows down
-                # larger instances. Reverted back to requiring a genuinely
-                # negative reduced cost here; revisit with a more targeted
-                # (e.g. degeneracy-triggered) version if this recurs.
                 if node in satellites_set && new_label.reduced_cost < -1e-8 && length(new_label.visitedSequence) > 2
                     # * branching rule : obligatory combination of customer-customer
                     branching_rule_legal = true
@@ -988,12 +1003,7 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                     end
 
                     # * check existence in routes pool
-                    found_in_pool = false
-                    for route in routes_2e_by_start[new_label.visitedSequence[1]] 
-                        if route.sequence == new_label.visitedSequence
-                            found_in_pool = true
-                        end
-                    end
+                    found_in_pool = new_label.visitedSequence in routes_2e_seq_set
 
                     if !found_in_pool
                         # * Check dominance against existing depot labels
@@ -1023,10 +1033,10 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                             push!(depotLabels, new_label)
                             new_route = generate2eRoute(new_label.visitedSequence)
                             new_columns_found = true
-                            # * PRINT
-                            println("New route found with negative reduced cost: ", new_route.sequence, "  RC: ", round(new_label.reduced_cost, digits=2))
+                            # println("New route found with negative reduced cost: ", new_route.sequence, "  RC: ", round(new_label.reduced_cost, digits=2))
                             push!(routes_2e, new_route)
                             push!(routes_2e_by_start[new_label.visitedSequence[1]], new_route)
+                            push!(routes_2e_seq_set, new_route.sequence)
                             add_2eroute!(new_route)
                             num_new_columns += 1
                         end
@@ -1038,12 +1048,10 @@ function ng_labelling_optimized(π1, π2, π3, π4, π5, π6, selected_parkings,
                     is_dominated = false
                     
                     # Check against processed labels
-                    for proc_label in processedLabels[node]
-                        if proc_label.visitedSequence[1] == new_label.visitedSequence[1]
-                            if dominanceCheckSingle_optimized(new_label, proc_label) == 1
-                                is_dominated = true
-                                break
-                            end
+                    for proc_label in processedLabels[(node, new_label.visitedSequence[1])]
+                        if dominanceCheckSingle_optimized(new_label, proc_label) == 1
+                            is_dominated = true
+                            break
                         end
                     end
                     

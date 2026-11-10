@@ -91,6 +91,41 @@ function solve_1e_tsp_labelling(selected_parkings)
     return route_1e
 end
 
+# Arc-based TSP for the 1e route of the fixed-microhub baseline: one tour from
+# the depot visiting every parking of `selected_parkings` exactly once, with MTZ
+# subtour elimination. Microhubs are not relocated, so the route only
+# replenishes them; generate1eRoute then marks all of them as served (b1 = 1).
+function solve_1e_tsp_arc(selected_parkings)
+    nodes = vcat(1, collect(selected_parkings))
+    n = length(nodes)
+
+    tsp = Model(CPLEX.Optimizer)
+    set_silent(tsp)
+    set_optimizer_attribute(tsp, "CPX_PARAM_THREADS", 1)
+
+    @variable(tsp, x[nodes, nodes], Bin)
+    @variable(tsp, 1 <= u[nodes] <= n - 1)
+
+    @objective(tsp, Min, sum(arc_cost[i,j] * x[i,j] for i in nodes, j in nodes if i != j))
+
+    @constraint(tsp, [i in nodes], x[i,i] == 0)
+    @constraint(tsp, [i in nodes], sum(x[i,j] for j in nodes if j != i) == 1)
+    @constraint(tsp, [i in nodes], sum(x[j,i] for j in nodes if j != i) == 1)
+    @constraint(tsp, [i in nodes[2:end], j in nodes[2:end]; i != j], u[i] - u[j] + (n - 1) * x[i,j] <= n - 2)
+
+    optimize!(tsp)
+
+    # Follow the arcs from the depot to get the visiting order.
+    sequence = [1]
+    current = 1
+    while true
+        current = first(j for j in nodes if j != current && value(x[current, j]) > 0.5)
+        push!(sequence, current)
+        current == 1 && break
+    end
+    return generate1eRoute(sequence)
+end
+
 function dominance_check_tsp(label1, label2)
     visit_status = true
     for node in A1 
@@ -254,10 +289,14 @@ function get_sorted_2e_subproblems()
     execution_time = @elapsed data = build_MDVRP_model()
     println("execution time building MDVRP model: ", round(execution_time, digits=2), " seconds")
     
-    for num_parking in minimum_parkings_required:nb_microhub
-        for parking_subset in combinations(satellites, num_parking)
+    # Fixed-microhub baseline: only parkings that start with a microhub can be
+    # used, and their 1e route comes from the arc-based TSP model.
+    parking_pool = fixed_microhub_baseline ? [s for s in satellites if parking_availability[s] == 1] : collect(satellites)
+
+    for num_parking in minimum_parkings_required:min(nb_microhub, length(parking_pool))
+        for parking_subset in combinations(parking_pool, num_parking)
             @info "Solving LRP subproblem with parking subset: $parking_subset"
-            route_1e = solve_1e_tsp_labelling(parking_subset)
+            route_1e = fixed_microhub_baseline ? solve_1e_tsp_arc(parking_subset) : solve_1e_tsp_labelling(parking_subset)
 
             @info "1e route cost: $(round(route_1e.cost, digits=2)) for parking subset: $parking_subset"
 
